@@ -1,0 +1,7 @@
+@import './base.css';
+@import './normalize.css';
+
+.active-nav{
+  color: #000130;
+  font-weight: 500;
+}
