@@ -1,46 +1,89 @@
 <template>
-    <main class="py-6 bg-white w-full h-screen overflow-y-scroll">
-      <div class="w-4/6 mx-auto py-4 smallTablet:w-5/6">
-        <img class="mx-auto w-21 mb-5" src="../../assets/logo.svg" alt="logo" />
-        <p class="auth_header_text">Sign Up</p>
-        <p class="auth_subheader_text">Access your administrative account</p>
+  <main class="py-6 bg-white w-full h-screen overflow-y-scroll">
+    <div class="w-4/6 mx-auto py-4 smallTablet:w-5/6">
+      <img class="mx-auto w-21 mb-5" src="../../assets/logo.svg" alt="logo" />
 
-        <form class="auth_form">
-            <section class="flex gap-4 phone:flex-col">
-            <!-- form block  -->
-                <div class="w-full">
-                    <label for="firstName" class="input_label">
-                        First Name
-                    </label>
-                    <input id="firstName" name="firstName" class="input mt-4 mb-10"  />
-                </div>
-            <!-- form block  -->
-                <div class="w-full">
-                    <label for="lastName" class="input_label">
-                        Last Name
-                    </label>
-                    <input id="lastName" name="lastName" class="input mt-4 mb-10"  />
-                </div>
-            </section>
-            <!-- form block  -->
-            <label for="email" class="input_label">
-                Email Address
+      <!-- Responsive Header Text -->
+      <p class="auth_header_text text-2xl sm:text-3xl md:text-4xl font-semibold text-center">
+        Sign Up
+      </p>
+
+      <!-- Responsive Subheader Text -->
+      <p class="auth_subheader_text text-base sm:text-lg md:text-xl text-center text-txt_dark2 mt-2 mb-6">
+        Access your administrative account
+      </p>
+
+      <form class="auth_form">
+        <section class="flex gap-4 phone:flex-col">
+          <!-- Form block -->
+          <div class="w-full">
+            <label for="firstName" class="input_label text-sm sm:text-base md:text-xl" >
+              First Name
             </label>
-            <input id="email" name="email" class="input mt-4 mb-10"  />
-            <!-- form block  -->
-            <label for="phoneNumber" class="input_label">
-                Phone Number
+            <input id="firstName" name="firstName" class="input mt-4 mb-10" v-model="firstname"/>
+          </div>
+
+          <!-- Form block -->
+          <div class="w-full">
+            <label for="lastName" class="input_label text-sm sm:text-base md:text-xl">
+              Last Name
             </label>
-            <input id="phoneNumber" name="phoneNumber" class="input mt-4 mb-10"  />
-            
-            <button class="btn btn_primary">
-                Sign Up
-            </button>
-        </form>
-        <p class="text-center mt-7 text-2xl leading-7 text-txt_dark">Already have an account?<router-link to="/register"><span class="text-primary font-bold">Login</span></router-link></p>
-      </div>
-    </main>
-  </template>
+            <input id="lastName" name="lastName" class="input mt-4 mb-10" v-model="lastname"/>
+          </div>
+        </section>
+
+        <!-- Form block -->
+        <label for="email" class="input_label text-sm sm:text-base md:text-xl">
+          Email Address
+        </label>
+        <input id="email" name="email" class="input mt-4 mb-10" v-model="email"/>
+
+        <!-- Form block -->
+        <label for="phoneNumber" class="input_label text-sm sm:text-base md:text-xl">
+          Phone Number
+        </label>
+        <input id="phoneNumber" name="phoneNumber" class="input mt-4 mb-10"  v-model="phoneNumber"/>
+
+          <section class="w-full flex flex-row justify-between gap-2">
+          <label for="password" class="input_label text-sm sm:text-base md:text-xl">Password</label>
+        </section>
+
+        <div class="input flex mt-4 mb-10 items-center">
+          <input
+            class="w-full outline-none border-0"
+            :type="viewPassword ? 'text' : 'password'"
+            v-model="password"
+          />
+          <view-password-icon
+            class="cursor-pointer"
+            @click="togglePassword"
+            v-if="!viewPassword"
+          />
+          <hide-password-icon
+            v-else
+            class="cursor-pointer"
+            @click="togglePassword"
+          />
+        </div>
+
+        <button class="btn btn_primary text-base sm:text-lg" :disabled="isDisabled()">
+          Sign Up
+        </button>
+
+      
+      </form>
+
+      <!-- Responsive Footer Text -->
+      <p class="text-center mt-7 text-base sm:text-lg md:text-xl leading-6 text-txt_dark">
+        Already have an account?
+        <router-link to="/login">
+          <span class="text-primary font-bold">Login</span>
+        </router-link>
+      </p>
+    </div>
+  </main>
+</template>
+
 <script>
 import { AddAdminUser } from "@/api/auth";
 import { useUserStore } from "@/store";
@@ -56,11 +99,12 @@ export default {
         return {
             viewPassword: false,
             isLoading: false,
-            emailAddress: '',
+            email: '',
             firstname: '',
             lastname: '',
             phoneNumber: '',
             accountType: '',
+            password: "",
             store: useUserStore()
         }
     },
@@ -82,12 +126,11 @@ export default {
             }
             return false
         },
-        handleLogin() {
+        handleSignup() {
             const $toast = useToast({position: 'top-right'});
             this.isLoading = true;
             const payload = {
-                emailAddress: this.email,
-                password: this.password
+                ...this
             };
             LoginUser(payload).then(response => {
                 this.isLoading = false;
@@ -96,7 +139,6 @@ export default {
                     localStorage.setItem("_10at_", response.token);
                     const router = useRouter()
                     router.push("/dashboard")
-                    // return navigate("/dashboard");
                 } else {
                     $toast.error(response.responseDescription)
                 }

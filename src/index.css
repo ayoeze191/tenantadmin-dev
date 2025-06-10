@@ -127,6 +127,13 @@
     .ss3{
         @apply bg-danger text-dng;
     }
+    .ss4{
+        @apply bg-[#E5E7EB] text-[#8E6306]
+    }
+    .ss5{
+        @apply text-[#F59E0B] bg-[#FFFBEB]
+    }
+    
     .modal-header{
         @apply relative text-center w-full py-4 border-b border-br1 ;
     }

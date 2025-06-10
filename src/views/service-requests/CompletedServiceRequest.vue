@@ -2,7 +2,7 @@
     <div class="bg-neutral py-5 px-10 w-full overflow-y-scroll h-screen pb-40">
       <section class="list_container mt-10">
           <div class=" flex w-full justify-between border-b border-br1 pb-3 mb-4">
-              <p class="font-medium text-base text-secondary mr-0.5">Completed Service Request  <span class="text-primary font-semibold text-[18px]">(5)</span></p>
+              <p class="font-medium text-base text-secondary mr-0.5">Pending Service Requests  <span class="text-primary font-semibold text-[18px]">({{pending_request.length}})</span></p>
               <aside class="flex gap-3.5">
                   <search-icon/>
                   <div class="pl-3.5 flex border-l border-br1">
@@ -12,8 +12,21 @@
                   </div>
               </aside>
           </div>
-          <ul>
-              <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
+          <ul v-if="pending_request.length > 0">
+              <li class="w-full rounded-md px-4 py-2 bg-grey mb-4" v-for="request in pending_request">
+                  <section class="flex w-full justify-between mb-4">
+                      <p class="font-medium leading-6 text-txt_dark">{{request.subject}} 
+                        <!-- <span class="text-secondary ml-1">Apt T-69, Sean Apartments </span>  -->
+                    </p>
+                      <status-select
+                       :label="'Update Status:'"
+                      ></status-select>
+  
+                  </section>
+                  <a class="text-sm leading-6 text-txt_dark cursor-pointer underline" @click="openModal({})">View full details</a>
+                  
+              </li>
+              <!-- <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
                   <section class="flex w-full justify-between mb-4">
                       <p class="font-medium leading-6 text-txt_dark">Broken Toilet <span class="text-secondary ml-1">Apt T-69, Sean Apartments </span> </p>
                       <status-select
@@ -56,19 +69,11 @@
                   </section>
                   <a class="text-sm leading-6 text-txt_dark cursor-pointer underline" @click="openModal({})">View full details</a>
                   
-              </li>
-              <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
-                  <section class="flex w-full justify-between mb-4">
-                      <p class="font-medium leading-6 text-txt_dark">Broken Toilet <span class="text-secondary ml-1">Apt T-69, Sean Apartments </span> </p>
-                      <status-select
-                       :label="'Update Status:'"
-                      ></status-select>
-  
-                  </section>
-                  <a class="text-sm leading-6 text-txt_dark cursor-pointer underline" @click="openModal({})">View full details</a>
-                  
-              </li>
+              </li> -->
           </ul>
+          <div v-else class="mx-auto ">
+         <p class="text-black w-fit mx-auto">   No completed service request has been made yet</p>
+        </div>
       </section>
     </div>
   
@@ -125,7 +130,8 @@
   export default {
       data() {
           return {
-              selected_Request: {}
+              selected_Request: {},
+              pending_request: []
           }
       },
       components: {
@@ -142,6 +148,18 @@
           onModalClose() {
               console.log("Modal was closed");
           },
-      }
+          handleFetchPendingServiceRequest() {
+            FetchServiceRequests().then(response => {
+        if (response.responseCode == '00') {
+          this.pending_request = response.serviceRequests.filter((req) =>  req.service.serviceStatus == 3);
+        } else handleError(response);
+      })
+        }
+      },
+      
   }
   </script>
+  
+  <style>
+  
+  </style>

@@ -4,7 +4,7 @@
       <section class="flex gap-14 w-full flex-wrap">
         <div>
             <p class="text-secondary font-medium mb-4 text-xl leading-6">Property Information</p>
-            <form class="auth_form bg-white rounded-xl max-w-[700px]" @submit.prevent="handleRegisterAdmin()">
+            <form class="auth_form bg-white rounded-xl max-w-[700px]" @submit.prevent="handleCreateProperty()">
             <!-- form block  -->
             <div class="w-full">
                 <label for="name" class="input_label">
@@ -67,14 +67,16 @@
                 <ul class="flex flex-col gap-2 w-40">
                     <li class="list-disc text-secondary text-xl leading-6">Unit Types</li>
                     <li class="flex gap-2 cursor-pointer" v-for="(item, i) in unitTypes" :key="`${item}${i}`" @click="toggleSelect(item,'types')">
-                        <input type="checkbox" class="w-[22px] h-[22px]" :checked="unitType == item" />
+                        <input type="checkbox" class="w-[22px] h-[22px]" :checked="unitType.includes(item)" />
+
                         <p class="text-secondary text-xl leading-6 font-normal">{{ item }}</p>
                     </li>
                 </ul>
                 <ul class="flex flex-col gap-2 w-72">
                     <li class="list-disc text-secondary text-xl leading-6">Amenities</li>
-                    <li class="flex gap-2 cursor-pointer" v-for="(amenity, i) in amenityList" :key="`${amenity.amenityId}${i}`" @click="toggleSelect(amenity.name,'amenities')">
-                        <input type="checkbox" class="w-[22px] h-[22px]" :checked="amenities.includes(amenity.name)" />
+                    <li class="flex gap-2 cursor-pointer" v-for="(amenity, i) in amenityList" :key="`${amenity.amenityId}${i}`" @click="toggleSelect(amenity,'amenities')">
+                        <input type="checkbox" class="w-[22px] h-[22px]" :checked="amenities.some(a => a.amenityId === amenity.amenityId)"
+ />
                         <p class="text-secondary text-xl leading-6 font-normal">{{ amenity.name }}</p>
                     </li>
                     <li class="flex gap-5 cursor-pointer" @click="openModal()">
@@ -215,7 +217,7 @@
               email: '',
               zipCode: '',
               province: '',
-              unitType: '',
+              unitType: [],
               securityDeposit: '',
               rent: '',
               units: '',
@@ -307,17 +309,21 @@
             this.amenityList = [];
         },
         async handleCreateProperty(){
+            console.log(this.files)
             uploadImages(this.files).then(images => {
+                console.log(images, this.amenities)
                 const payload = {
                     name: this.name,
                     description: this.description,
                     address: this.address,
                     referenceNumber: this.referenceNumber || '',
-                    landlordId: this.store.userProfile.adminUserId,
+                    landlordId: this.store.userProfile.adminUserID,
                     coordinates: this.coordinates,
                     minimumRent: this.rent,
                     maximumRent: this.rent,
-                    images,
+                    AvailableUnits: this.unitType,
+                    amenities: [...this.amenities.map((amen) => amen && {name: amen.name, image: amen.image})],
+                    images: [...images.map((image) => image && {image})],
                     isActive: true
                 }
                 AddProperties(payload).then(response => {
@@ -329,20 +335,22 @@
             })
         },
         toggleSelect(query, key){
-            if(key == 'amenities'){
-                if(this.amenities.includes(query)){
-                    const filteredList = this.amenities.filter(item => item !== query);
-                    this.amenities = filteredList;
-                } else {
-                    this.amenities = [...this.amenities,query];
-                }
-            } else {
-                if(this.unitType !== query){
-                    this.unitType = query
-                } else {
-                    this.unitType = ''
-                }
-            }
+              if (key === 'amenities') {
+        const exists = this.amenities.some(item => item.amenityId === query.amenityId);
+        if (exists) {
+            this.amenities = this.amenities.filter(item => item.amenityId !== query.amenityId);
+        } else {
+            this.amenities = [...this.amenities, query];
+        }
+    } else if (key === 'types') {
+        const index = this.unitType.indexOf(query);
+        if (index !== -1) {
+            this.unitType.splice(index, 1); // remove it
+        } else {
+            this.unitType.push(query); // add it
+        }
+    }
+
         },  
         removeImage(image){
             const filteredImages = this.images.filter(item => item !== image);

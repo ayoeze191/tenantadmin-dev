@@ -76,6 +76,7 @@ export default {
             FetchRoles().then(response => {
                 if(response.result.responseCode == '00'){
                     this.rolesData = response.result.roles.items
+                    console.log(response.result.roles.items)
                 }else handleError(response)
             })
         },
@@ -102,7 +103,7 @@ export default {
                 isVerified: false
             }
             AddAdminUser(payload).then(response => {
-                if(response.result && response.result.responseCode == '00'){
+                if(response.responseCode == '00'){
                     this.handleFormReset();
                     handleToast("Admin Added Successfully",'success')
                 }else handleError(response)

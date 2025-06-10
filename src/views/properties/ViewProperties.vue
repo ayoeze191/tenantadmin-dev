@@ -2,8 +2,8 @@
     <div class="bg-neutral py-5 px-10 w-full overflow-y-scroll h-screen pb-40">
       <p class="text-txt_dark font-semibold text-2xl leading-7 uppercase mb-10">View Properties</p>
       <ul class="flex gap-7 px-[26px] py-4">
-        <li v-for="property in propertyList" class="w-full max-w-[343px] min-h-[363px] cursor-pointer" :key="property.accommodationId" @click="handleRedirect(property)">
-            <img :src="property.images[0].image" class="m-0 p-0 rounded-t-xl w-full object-contain" :alt="property.name + ' ' + property.images[0].imageTitle "/>
+        <li v-for="property in propertyList" v-if="propertyList.length > 0" class="w-full max-w-[343px] min-h-[363px] cursor-pointer" :key="property.accommodationId" @click="handleRedirect(property)">
+            <img v-if="property.images.length > 0" :src="property.images[0].image" class="m-0 p-0 rounded-t-xl w-full object-contain" :alt="property.name + ' ' + property.images[0].imageTitle "/>
             <div class="bg-white w-full border pt-4 px-2 pb-2 text-left flex flex-col gap-2 rounded-b-md">
                 <h1 class="text-primary font-semibold text-2xl leading-7">{{property.name}}</h1>
                 <div class="flex gap-2">
@@ -20,6 +20,9 @@
                     <p class="text-txt_dark text-sm leading-4">{{property.units.length}} Units</p>
                 </div>
             </div>
+        </li>
+        <li v-else>
+            No Apartments
         </li>
       </ul>
     </div>
@@ -67,6 +70,7 @@ export default {
         FetchProperties(this.store.userProfile.adminUserID,query).then(response => {
             if(response.responseCode == '00'){
                 this.propertyList = response.properties.items
+                console.log(response.properties.items)
             }else handleError(response)
         })
 
