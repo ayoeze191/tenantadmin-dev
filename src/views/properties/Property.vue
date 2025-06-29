@@ -1,116 +1,996 @@
 <template>
-  <div class="bg-neutral py-5 px-10 w-full overflow-y-scroll h-screen pb-40">
-    <section class="flex w-full justify-between mt-14 mb-3">
+  <div class="bg-neutral w-full px-4 flex flex-col items-center py-8">
+    <!-- Header -->
+    <div>
+      <section class="w-full max-w-5xl flex justify-between items-center mb-8">
         <router-link to="/properties" class="pt-3">
-            <p class="text-txt_dark flex gap-1 text-xl cursor-pointer"> 
-                <span class="my-auto">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g clip-path="url(#clip0_4621_17743)">
-                            <path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="#808097"/>
-                        </g>
-                        <defs>
-                            <clipPath id="clip0_4621_17743">
-                                <rect width="24" height="24" fill="white"/>
-                            </clipPath>
-                        </defs>
-                    </svg>
-                </span> 
-                Back
-            </p>
+          <a-button
+            type="text"
+            class="flex items-center gap-2 text-base font-medium text-gray-600 bg-gray-100 hover:text-primary rounded-full px-4 py-2 transition-all"
+          >
+            <template #icon>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z"
+                  fill="#404164"
+                />
+              </svg>
+            </template>
+            Back
+          </a-button>
         </router-link>
-
-        <button class="flex gap-3 btn btn_primary font-medium text-base w-[189px] py-2 justify-center rounded">
-            <span>
-                <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 5.5V19.5M5 12.5H19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </span>
+        <div class="flex gap-3 items-center">
+          <a-button
+            type="default"
+            size="large"
+            class="flex gap-1 items-center font-bold text-base px-6 py-1 rounded-2xl shadow hover:shadow-md transition-all"
+            @click="onEdit"
+          >
+            <template #icon>
+              <EditOutlined />
+            </template>
+            Edit
+          </a-button>
+          <a-button
+            type="primary"
+            size="large"
+            class="flex gap-2 items-center font-bold text-base px-8 py-1 rounded-2xl shadow-md hover:shadow-lg transition-all"
+            @click="showAddTenantModal = true"
+          >
+            <template #icon>
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 5.5V19.5M5 12.5H19"
+                  stroke="white"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </template>
             Add Tenant
-        </button>
-    </section>
-    <div class="bg-white py-[29px] px-6 rounded-lg">
-        <section class="flex gap-2 w-full tablet:flex-wrap mb-12">
-            <img :src="propertyData.image1" class="rounded-l-lg w-full max-w-[773px] h-[401px] object-cover" :class="{'w-1/2': !propertyData.image3}" />
-            <ul v-if="propertyData.image4" class="flex flex-col gap-2 w-[285px]">
-                <li>
-                    <img :src="propertyData.image2" class="rounded-r-lg w-[282px] h-[128px] object-cover" />
-                </li>
-                <li>
-                    <img :src="propertyData.image3" class="rounded-r-lg w-[282px] h-[128px] object-cover" />
-                </li>
-                <li>
-                    <img :src="propertyData.image4" class="rounded-r-lg w-[282px] h-[128px] object-cover" />
-                </li>
-            </ul>
-            <ul v-else-if="propertyData.image3" class="flex flex-col justify-between w-[285px]">
-                <li>
-                    <img :src="propertyData.image2" class="rounded-r-lg w-[282px] h-[195px] object-cover" />
-                </li>
-                <li>
-                    <img :src="propertyData.image3" class="rounded-r-lg w-[282px] h-[195px] object-cover" />
-                </li>
-            </ul>
-            <img v-else-if="propertyData.image2" :src="propertyData.image2" class="rounded-l-lg w-full max-w-[773px] h-[401px] object-cover" :class="{'w-1/2': !propertyData.image3}" />
-        </section>
-
-        <h1 class="mb-2 text-txt_dark font-medium text-2xl leading-7">{{ propertyData.name }}</h1>
-        <div class="flex gap-2 mb-2">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M6 7.33594C6 7.86637 6.21071 8.37508 6.58579 8.75015C6.96086 9.12522 7.46957 9.33594 8 9.33594C8.53043 9.33594 9.03914 9.12522 9.41421 8.75015C9.78929 8.37508 10 7.86637 10 7.33594C10 6.8055 9.78929 6.2968 9.41421 5.92172C9.03914 5.54665 8.53043 5.33594 8 5.33594C7.46957 5.33594 6.96086 5.54665 6.58579 5.92172C6.21071 6.2968 6 6.8055 6 7.33594Z" stroke="#404164" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M11.7687 11.1045L8.94006 13.9331C8.69006 14.1829 8.35112 14.3232 7.99773 14.3232C7.64434 14.3232 7.30541 14.1829 7.0554 13.9331L4.22607 11.1045C3.48021 10.3586 2.97229 9.40827 2.76652 8.37371C2.56076 7.33916 2.66639 6.26681 3.07007 5.29229C3.47374 4.31777 4.15733 3.48483 5.03439 2.89881C5.91144 2.31279 6.94258 2 7.9974 2C9.05222 2 10.0834 2.31279 10.9604 2.89881C11.8375 3.48483 12.5211 4.31777 12.9247 5.29229C13.3284 6.26681 13.434 7.33916 13.2283 8.37371C13.0225 9.40827 12.5146 10.3586 11.7687 11.1045Z" stroke="#404164" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <p class="text-secondary text-sm leading-4">{{propertyData.address}}</p>
+          </a-button>
         </div>
-        <div class="flex gap-2 mb-7">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8.66667 14V9.33333L5.33333 6L2 9.33333V14H5.33333M8.66667 14H5.33333M8.66667 14H14V2.66667C14 2.48986 13.9298 2.32029 13.8047 2.19526C13.6797 2.07024 13.5101 2 13.3333 2H6.66667C6.48986 2 6.32029 2.07024 6.19526 2.19526C6.07024 2.32029 6 2.48986 6 2.66667V6.66667M5.33333 14V11.3333M8.66667 4.66667V4.67333M11.3333 4.66667V4.67333M11.3333 7.33333V7.34M11.3333 10V10.0067" stroke="#404164" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <p class="text-secondary text-sm leading-4">{{propertyData.units}} Units</p>
-        </div>
-
-        <h1 class="mb-2 text-txt_dark font-medium leading-5">Description</h1>
-        <p class="text-secondary text-sm leading-4 mb-11">{{propertyData.description}}</p>
-        
-        <h1 class="mb-2 text-txt_dark font-medium leading-5">Units Type</h1>
-        <ul>
-            <li class="text-secondary list-disc text-sm leading-4 ml-4">{{propertyData.unitType}}</li>
-        </ul>
-
+      </section>
+      <!-- Main Card -->
+      <div class="bg-white p-4 rounded-2xl shadow w-full max-w-5xl">
+        <a-spin :spinning="loading">
+          <template v-if="error">
+            <a-result status="404" :title="'Not Found'" :sub-title="error" />
+          </template>
+          <template v-else-if="property">
+            <div>
+              <!-- Images Carousel with Ant Design Preview -->
+              <div
+                class="relative w-full rounded-xl h-[300px] flex items-center justify-center"
+              >
+                <a-image-preview-group v-if="images && images.length">
+                  <a-image
+                    :src="images[currentImageIndex]"
+                    :width="'100%'"
+                    :height="'100%'"
+                    class="w-full h-full object-cover rounded-xl cursor-pointer"
+                    :preview="{ visible: false }"
+                    @click="showPreview(currentImageIndex)"
+                  />
+                  <!-- Hidden images for preview group -->
+                  <template v-for="(img, idx) in images" :key="idx">
+                    <a-image
+                      v-if="idx !== currentImageIndex"
+                      :src="img"
+                      style="display: none"
+                    />
+                  </template>
+                  <!-- Prev Button -->
+                  <button
+                    v-if="images.length > 1"
+                    @click="prevImage"
+                    class="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow rounded-full p-1 z-10"
+                    aria-label="Previous image"
+                  >
+                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
+                      <path
+                        d="M15 6l-6 6 6 6"
+                        stroke="#23234a"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </button>
+                  <!-- Next Button -->
+                  <button
+                    v-if="images.length > 1"
+                    @click="nextImage"
+                    class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow rounded-full p-1 z-10"
+                    aria-label="Next image"
+                  >
+                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
+                      <path
+                        d="M9 6l6 6-6 6"
+                        stroke="#23234a"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </button>
+                  <!-- +N Remaining Images Indicator -->
+                  <div
+                    v-if="images.length > 1"
+                    class="absolute top-2 right-2 bg-black/60 text-white text-xs font-semibold px-3 py-1 rounded-full z-10"
+                  >
+                    +{{ images.length - 1 }}
+                  </div>
+                </a-image-preview-group>
+                <template v-else>
+                  <img
+                    src="/placeholder.png"
+                    class="w-full h-full object-cover rounded-xl"
+                    alt="No Image"
+                  />
+                </template>
+              </div>
+              <!-- Property Info Card -->
+              <div class="flex-1 mt-5">
+                <div class="info-card w-full flex flex-col gap-4">
+                  <div>
+                    <div class="info-label flex items-center gap-2">
+                      <svg
+                        width="18"
+                        height="18"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"
+                          fill="#888"
+                        />
+                      </svg>
+                      Name
+                    </div>
+                    <div class="info-value">{{ property.name }}</div>
+                  </div>
+                  <div>
+                    <div class="info-label flex items-center gap-2">
+                      <svg
+                        width="18"
+                        height="18"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"
+                          fill="#888"
+                        />
+                      </svg>
+                      Address
+                    </div>
+                    <div class="info-value">{{ property.address }}</div>
+                  </div>
+                  <div v-if="property.referenceNumber">
+                    <div class="info-label flex items-center gap-2">
+                      <svg
+                        width="18"
+                        height="18"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="#888"
+                          stroke-width="2"
+                        />
+                        <text
+                          x="12"
+                          y="16"
+                          text-anchor="middle"
+                          font-size="10"
+                          fill="#888"
+                        >
+                          #
+                        </text>
+                      </svg>
+                      Reference #
+                    </div>
+                    <div class="info-value">{{ property.referenceNumber }}</div>
+                  </div>
+                  <div>
+                    <div class="info-label flex items-center gap-2">
+                      <svg
+                        width="18"
+                        height="18"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M4 10V7a8 8 0 1 1 16 0v3"
+                          stroke="#888"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                        <rect
+                          x="2"
+                          y="10"
+                          width="20"
+                          height="10"
+                          rx="2"
+                          fill="#f3f4f6"
+                          stroke="#888"
+                          stroke-width="2"
+                        />
+                      </svg>
+                      Units
+                    </div>
+                    <div class="info-value">
+                      {{
+                        property.units
+                          ? Array.isArray(property.units)
+                            ? property.units.length
+                            : property.units
+                          : "-"
+                      }}
+                    </div>
+                  </div>
+                  <div>
+                    <div class="info-label flex items-center gap-2">
+                      <svg
+                        width="18"
+                        height="18"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M12 21V3m0 0l-4 4m4-4l4 4"
+                          stroke="#888"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                      Rent
+                    </div>
+                    <div class="info-value">
+                      <span v-if="property.minimumRent && property.maximumRent">
+                        ₦{{ property.minimumRent }} - ₦{{
+                          property.maximumRent
+                        }}
+                      </span>
+                      <span v-else-if="property.rent"
+                        >₦{{ property.rent }}</span
+                      >
+                      <span v-else>-</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="info-label flex items-center gap-2">
+                      <svg
+                        width="18"
+                        height="18"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <rect
+                          x="6"
+                          y="10"
+                          width="12"
+                          height="4"
+                          rx="2"
+                          fill="#f3f4f6"
+                          stroke="#888"
+                          stroke-width="2"
+                        />
+                        <path
+                          d="M10 14v2a2 2 0 0 0 4 0v-2"
+                          stroke="#888"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                      Security Deposit
+                    </div>
+                    <div class="info-value">
+                      {{ property.securityDeposit || "-" }}
+                    </div>
+                  </div>
+                  <hr class="my-2 border-gray-200" />
+                  <div>
+                    <div class="info-label flex items-center gap-2">
+                      <svg
+                        width="18"
+                        height="18"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <rect
+                          x="4"
+                          y="4"
+                          width="16"
+                          height="16"
+                          rx="2"
+                          fill="#f3f4f6"
+                          stroke="#888"
+                          stroke-width="2"
+                        />
+                        <path d="M8 8h8v8H8z" fill="#e0e7ef" />
+                      </svg>
+                      Description
+                    </div>
+                    <div class="info-value whitespace-pre-line">
+                      {{ property.description }}
+                    </div>
+                  </div>
+                  <div v-if="unitTypeSummary">
+                    <div class="info-label flex items-center gap-2">
+                      <svg
+                        width="18"
+                        height="18"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <rect
+                          x="4"
+                          y="4"
+                          width="16"
+                          height="16"
+                          rx="2"
+                          fill="#f3f4f6"
+                          stroke="#888"
+                          stroke-width="2"
+                        />
+                        <path d="M8 8h8v8H8z" fill="#e0e7ef" />
+                      </svg>
+                      Unit Types
+                    </div>
+                    <div class="info-value">{{ unitTypeSummary }}</div>
+                  </div>
+                  <hr class="my-2 border-gray-200" />
+                  <div v-if="landlord" class="landlord-section">
+                    <div class="info-label flex items-center gap-2">
+                      <svg
+                        width="18"
+                        height="18"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          cx="12"
+                          cy="8"
+                          r="4"
+                          stroke="#888"
+                          stroke-width="2"
+                        />
+                        <path
+                          d="M4 20v-1a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v1"
+                          stroke="#888"
+                          stroke-width="2"
+                        />
+                      </svg>
+                      Landlord
+                    </div>
+                    <div class="info-value">
+                      <div>
+                        <b>{{ landlord.firstname }} {{ landlord.lastname }}</b>
+                      </div>
+                      <div>Email: {{ landlord.emailAddress }}</div>
+                      <div>Phone: {{ landlord.phoneNumber }}</div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Unit Table -->
+                <div
+                  v-if="
+                    property.units &&
+                    Array.isArray(property.units) &&
+                    property.units.length
+                  "
+                  class="mt-8"
+                >
+                  <h2 class="text-lg text-gray-600 font-semibold mb-2">
+                    Unit Details
+                  </h2>
+                  <a-table
+                    :columns="unitColumns"
+                    :data-source="property.units"
+                    :pagination="false"
+                    row-key="unitId"
+                    size="small"
+                  />
+                </div>
+              </div>
+            </div>
+            <!-- Key Features -->
+            <div
+              v-if="property.keyFeatures && property.keyFeatures.length"
+              class="mt-8"
+            >
+              <h2 class="text-lg font-semibold mb-2">Key Features</h2>
+              <a-list
+                :data-source="property.keyFeatures"
+                bordered
+                :renderItem="
+                  (item) =>
+                    h('li', { class: 'text-secondary text-sm mb-1' }, item)
+                "
+              />
+            </div>
+          </template>
+        </a-spin>
+      </div>
     </div>
+    <a-modal
+      v-model:visible="showAddTenantModal"
+      :footer="null"
+      width="540px"
+      centered
+      :bodyStyle="{ padding: '0' }"
+      class="add-tenants-modal"
+      @cancel="resetTenantModal"
+    >
+      <div class="add-tenants-modal-header">
+        <div class="modal-title">Add Tenants</div>
+      </div>
+      <a-tabs
+        v-model:activeKey="tenantTab"
+        class="add-tenants-tabs tab-gap"
+        centered
+        :tabBarGutter="20"
+      >
+        <a-tab-pane key="single" tab="Single Add">
+          <div class="px-2 py-2">
+            <div class="font-semibold text-gray-700 text-base mb-2">
+              Tenant Information
+            </div>
+            <a-form
+              :model="tenantForm"
+              :rules="tenantRules"
+              ref="tenantFormRef"
+              layout="vertical"
+            >
+              <a-form-item label="Full Name" name="name" required>
+                <a-input
+                  v-model:value="tenantForm.name"
+                  placeholder="Enter full name"
+                  size="large"
+                />
+              </a-form-item>
+              <a-form-item label="Email" name="email" required>
+                <a-input
+                  v-model:value="tenantForm.email"
+                  placeholder="Enter email"
+                  size="large"
+                />
+              </a-form-item>
+              <a-form-item label="Phone Number" name="phone" required>
+                <a-input
+                  v-model:value="tenantForm.phone"
+                  placeholder="Enter phone number"
+                  size="large"
+                />
+              </a-form-item>
+              <div class="font-semibold text-gray-700 text-base mt-6 mb-2">
+                Lease Information
+              </div>
+              <a-form-item label="Property" name="property" required>
+                <a-select
+                  v-model:value="tenantForm.property"
+                  :options="propertyOptions"
+                  placeholder="Select property"
+                  size="large"
+                />
+              </a-form-item>
+              <a-form-item label="Lease Start Date" name="leaseStart" required>
+                <a-date-picker
+                  v-model:value="tenantForm.leaseStart"
+                  style="width: 100%"
+                  size="large"
+                />
+              </a-form-item>
+              <a-form-item label="Lease End Date" name="leaseEnd" required>
+                <a-date-picker
+                  v-model:value="tenantForm.leaseEnd"
+                  style="width: 100%"
+                  size="large"
+                />
+              </a-form-item>
+              <a-form-item label="Monthly Rent" name="monthlyRent" required>
+                <a-input-number
+                  v-model:value="tenantForm.monthlyRent"
+                  style="width: 100%"
+                  min="0"
+                  size="large"
+                />
+              </a-form-item>
+              <div class="flex justify-end gap-3 mt-8">
+                <a-button @click="resetTenantModal" size="large"
+                  >Cancel</a-button
+                >
+                <a-button
+                  type="primary"
+                  :loading="tenantLoading"
+                  @click="submitSingleTenant"
+                  size="large"
+                  class="px-8"
+                  >Add Tenants</a-button
+                >
+              </div>
+            </a-form>
+          </div>
+        </a-tab-pane>
+        <a-tab-pane key="bulk" tab="Bulk Upload">
+          <div class="px-2 py-4">
+            <div class="font-semibold text-gray-700 text-base mb-1">
+              Upload Instructions
+            </div>
+            <div class="text-gray-500 text-sm mb-4">
+              Upload a CSV file containing tenant details. Ensure it follows the
+              required format.
+            </div>
+            <div class="font-medium text-gray-700 mb-1">File Upload</div>
+            <a-upload-dragger
+              :before-upload="() => false"
+              :show-upload-list="true"
+              :accept="'.csv'"
+              v-model:file-list="bulkFileList"
+              class="mb-2"
+            >
+              <div class="flex flex-col items-center justify-center py-2">
+                <svg width="48" height="48" fill="none" viewBox="0 0 24 24">
+                  <path
+                    d="M12 16V4m0 0l-4 4m4-4l4 4"
+                    stroke="#23234a"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <rect
+                    x="4"
+                    y="16"
+                    width="16"
+                    height="4"
+                    rx="2"
+                    fill="#f3f4f6"
+                    stroke="#e5e7eb"
+                    stroke-width="2"
+                  />
+                </svg>
+                <div class="mt-2 text-gray-400 text-base">
+                  Drag and drop CSV file here
+                </div>
+              </div>
+            </a-upload-dragger>
+            <div class="mt-2 mb-1 text-gray-700 font-medium">
+              Download Sample CSV
+            </div>
+            <a
+              @click="downloadSampleFile"
+              class="text-primary cursor-pointer mb-4 block"
+              >sample.co</a
+            >
+            <div class="flex justify-end gap-3 mt-8">
+              <a-button @click="resetTenantModal" size="large">Cancel</a-button>
+              <a-button
+                type="primary"
+                :loading="tenantLoading"
+                @click="submitBulkTenant"
+                size="large"
+                class="px-8"
+                >Upload File</a-button
+              >
+            </div>
+          </div>
+        </a-tab-pane>
+      </a-tabs>
+    </a-modal>
   </div>
 </template>
 
-<script>
-import IconEdit from '@/components/icons/IconEdit.vue';
-import Table from '@/components/Table.vue';
-import { useUserStore } from "@/store";
-import dayjs from 'dayjs';
+<script setup>
+import { EditOutlined } from "@ant-design/icons-vue";
+import { message } from "ant-design-vue";
+import { openDB } from "idb";
+import { computed, h, onMounted, reactive, ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
+const route = useRoute();
+const router = useRouter();
+const property = ref(null);
+const loading = ref(true);
+const error = ref(null);
+const showAddTenantModal = ref(false);
+const tenantTab = ref("single");
+const tenantLoading = ref(false);
+const tenantForm = reactive({
+  name: "",
+  email: "",
+  phone: "",
+  property: null,
+  leaseStart: null,
+  leaseEnd: null,
+  monthlyRent: null,
+});
+const tenantFormRef = ref();
+const tenantRules = {
+  name: [{ required: true, message: "Full name is required" }],
+  email: [
+    { required: true, message: "Email is required" },
+    { type: "email", message: "Invalid email" },
+  ],
+  phone: [
+    { required: true, message: "Phone number is required" },
+    { pattern: /^\d{7,15}$/, message: "Invalid phone number" },
+  ],
+  property: [{ required: true, message: "Property is required" }],
+  leaseStart: [{ required: true, message: "Lease start date is required" }],
+  leaseEnd: [{ required: true, message: "Lease end date is required" }],
+  monthlyRent: [{ required: true, message: "Monthly rent is required" }],
+};
+const propertyOptions = computed(() => {
+  // You can fetch or map your properties here. For demo, use current property only.
+  return property.value
+    ? [{ label: property.value.name, value: property.value.accommodationId }]
+    : [];
+});
 
-export default {
-  components:{
-    "table-component": Table,
-    "edit-icon": IconEdit
-  },
-  created(){
-  },
-  data(){
-    return {
-        store: useUserStore(),
-        propertyData: this.$route.query
-    }
-  },
-  methods: {
-    formatDate(date){
-        return dayjs(date).format('DD MMM,YYYY')
-    },
-    handleRedirect(property){
-        this.$router.push({ path: `/properties/${property.accommodationId}`, query: property })
-    }
+onMounted(async () => {
+  const id = route.params.id || route.params.accommodationId;
+  if (!id) {
+    error.value = "No property ID provided.";
+    loading.value = false;
+    return;
   }
+  try {
+    const db = await openDB("properties-db", 1, {
+      upgrade(db) {
+        if (!db.objectStoreNames.contains("properties")) {
+          db.createObjectStore("properties", { keyPath: "accommodationId" });
+        }
+      },
+    });
+    const data = await db.get("properties", Number(id));
+    if (!data) {
+      error.value = "Property not found.";
+    } else {
+      property.value = data;
+    }
+  } catch (e) {
+    error.value = "Failed to load property details.";
+  } finally {
+    loading.value = false;
+  }
+});
 
+// Main image logic
+const mainImage = computed(() => {
+  if (
+    !property.value ||
+    !property.value.images ||
+    !property.value.images.length
+  )
+    return "/placeholder.png";
+  const main = property.value.images.find((img) => img.isMain);
+  return main ? main.image : property.value.images[0].image;
+});
+
+// Side images
+const sideImages = computed(() => {
+  if (!property.value || !property.value.images) return [];
+  return property.value.images
+    .filter((img) => !img.isMain)
+    .map((img) => img.image)
+    .slice(0, 3);
+});
+
+// Unit type summary
+const unitTypeSummary = computed(() => {
+  if (!property.value) return "";
+  if (property.value.unitTypes && Array.isArray(property.value.unitTypes)) {
+    return property.value.unitTypes
+      .map((u) => `${u.type}: ${u.count}`)
+      .join(", ");
+  }
+  if (property.value.unitType) {
+    return property.value.unitType;
+  }
+  return "";
+});
+
+// Amenities logic
+const amenitiesList = computed(() => {
+  if (!property.value) return [];
+  if (Array.isArray(property.value.amenities)) {
+    return property.value.amenities.map((a) =>
+      typeof a === "object" ? a : { label: a }
+    );
+  }
+  return null;
+});
+
+// Landlord info
+const landlord = computed(() =>
+  property.value && property.value.landlord ? property.value.landlord : null
+);
+
+// Unit table columns
+const unitColumns = [
+  { title: "Unit ID", dataIndex: "unitId", key: "unitId" },
+  { title: "Rooms", dataIndex: "numberOfRooms", key: "numberOfRooms" },
+  {
+    title: "Price",
+    dataIndex: "price",
+    key: "price",
+    customRender: ({ text }) => `₦${text}`,
+  },
+];
+
+function onEdit() {
+  if (property.value && property.value.accommodationId) {
+    router.push({
+      name: "add-admin-properties",
+      params: { id: property.value.accommodationId },
+    });
+  }
+}
+
+// Images array for carousel
+const images = computed(() => {
+  if (
+    !property.value ||
+    !property.value.images ||
+    !property.value.images.length
+  )
+    return [];
+  return property.value.images.map((img) => img.image);
+});
+const currentImageIndex = ref(0);
+function nextImage() {
+  if (!images.value.length) return;
+  currentImageIndex.value = (currentImageIndex.value + 1) % images.value.length;
+}
+function prevImage() {
+  if (!images.value.length) return;
+  currentImageIndex.value =
+    (currentImageIndex.value - 1 + images.value.length) % images.value.length;
+}
+// Reset index if images change
+watch(images, (imgs) => {
+  if (currentImageIndex.value >= imgs.length) {
+    currentImageIndex.value = 0;
+  }
+});
+
+// Add preview logic for Ant Design image preview
+const previewVisible = ref(false);
+const previewIndex = ref(0);
+function showPreview(idx) {
+  previewIndex.value = idx;
+  previewVisible.value = true;
+}
+
+function resetTenantModal() {
+  showAddTenantModal.value = false;
+  tenantTab.value = "single";
+  tenantLoading.value = false;
+  bulkFileList.value = [];
+  Object.assign(tenantForm, {
+    name: "",
+    email: "",
+    phone: "",
+    property: null,
+    leaseStart: null,
+    leaseEnd: null,
+    monthlyRent: null,
+  });
+}
+async function submitSingleTenant() {
+  await tenantFormRef.value.validate().catch(() => {});
+  tenantLoading.value = true;
+  setTimeout(() => {
+    tenantLoading.value = false;
+    message.success("Tenant added (demo only)");
+    resetTenantModal();
+  }, 1200);
+}
+// Bulk upload logic
+const bulkFileList = ref([]);
+function submitBulkTenant() {
+  if (!bulkFileList.value.length) {
+    message.error("Please upload a CSV file.");
+    return;
+  }
+  tenantLoading.value = true;
+  setTimeout(() => {
+    tenantLoading.value = false;
+    message.success("Bulk upload complete (demo only)");
+    resetTenantModal();
+  }, 1200);
+}
+function downloadSampleFile() {
+  // CSV sample
+  const sample = [
+    [
+      "Full Name",
+      "Email",
+      "Phone",
+      "Property",
+      "Lease Start Date",
+      "Lease End Date",
+      "Monthly Rent",
+    ],
+    [
+      "John Doe",
+      "john@example.com",
+      "08012345678",
+      "4",
+      "2024-07-01",
+      "2025-07-01",
+      "500000",
+    ],
+    [
+      "Jane Smith",
+      "jane@example.com",
+      "08023456789",
+      "4",
+      "2024-07-02",
+      "2025-07-02",
+      "500000",
+    ],
+    [
+      "Mike Brown",
+      "mike@example.com",
+      "08034567890",
+      "4",
+      "2024-07-03",
+      "2025-07-03",
+      "500000",
+    ],
+    [
+      "Lisa White",
+      "lisa@example.com",
+      "08045678901",
+      "4",
+      "2024-07-04",
+      "2025-07-04",
+      "500000",
+    ],
+  ];
+  const csv = sample.map((row) => row.join(",")).join("\n");
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "tenant_sample.csv";
+  a.click();
+  URL.revokeObjectURL(url);
 }
 </script>
 
-<style>
+<style scoped>
+.bg-neutral {
+  background: #f7f8fa;
+}
 
+:deep(.ant-btn-primary) {
+  background: #000130;
+  border-color: #000130;
+}
+:deep(.ant-btn-primary:hover),
+:deep(.ant-btn-primary:focus) {
+  background: #23234a;
+  border-color: #23234a;
+}
+.info-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 1.25rem;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.04);
+  padding: 2rem 1.5rem;
+  transition: box-shadow 0.2s;
+}
+.info-card:hover {
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.08);
+}
+.info-label {
+  font-size: 0.85rem;
+  color: #64748b;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 0.1rem;
+}
+.info-value {
+  font-size: 1.08rem;
+  color: #23234a;
+  font-weight: 500;
+  margin-bottom: 0.2rem;
+}
+.landlord-section {
+  background: #f8fafc;
+  border-radius: 0.75rem;
+  padding: 0.7rem 1rem;
+}
+@media (max-width: 700px) {
+  .info-card {
+    padding: 1rem;
+  }
+}
+.add-tenants-modal .ant-modal {
+  margin-top: 40px !important;
+  margin-bottom: 40px !important;
+}
+.add-tenants-modal .ant-modal-content {
+  border-radius: 18px;
+  background: #fafbfc;
+}
+.add-tenants-tabs .ant-tabs-nav {
+  margin-bottom: 0;
+}
+.add-tenants-tabs .ant-tabs-tab {
+  width: 50%;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #23234a;
+  border-radius: 0;
+  background: #f3f4f6;
+  margin: 0;
+}
+.add-tenants-tabs .ant-tabs-tab-active {
+  background: #23234a !important;
+  color: #fff !important;
+}
+.add-tenants-tabs .ant-tabs-ink-bar {
+  display: none;
+}
+.add-tenants-tabs .ant-tabs-nav-list {
+  width: 100%;
+  display: flex;
+}
+.add-tenants-tabs .ant-tabs-tab {
+  flex: 1;
+}
+.add-tenants-modal-header {
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 24px 24px 12px 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.add-tenants-modal-header .back-btn {
+  padding: 0 8px 0 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+}
+.add-tenants-modal-header .modal-title {
+  flex: 1;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #23234a;
+  margin-right: 32px;
+}
+.add-tenants-tabs.tab-gap .ant-tabs-tab + .ant-tabs-tab {
+  margin-left: 20px !important;
+}
+.add-tenants-modal .ant-modal-body {
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-bottom: 0;
+}
 </style>

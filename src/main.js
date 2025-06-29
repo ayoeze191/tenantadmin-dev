@@ -13,6 +13,7 @@ import "vue-toast-notification/dist/theme-bootstrap.css";
 import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
+import Antd from 'ant-design-vue';
 
 const vuetify = createVuetify({
   components,
@@ -60,5 +61,6 @@ app.use(ToastPlugin, {
 
 app.use(router);
 app.use(vuetify);
+app.use(Antd);
 
 app.mount("#app");

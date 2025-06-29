@@ -11,4 +11,17 @@ export default defineConfig({
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
+  css: {
+    preprocessorOptions: {
+      less: {
+        modifyVars: {
+          'primary-color': '#000130',
+          'border-radius-base': '9px',
+          'font-family': 'SF Compact Text, sans-serif',
+        },
+        javascriptEnabled: true,
+      },
+    },
+  },
 });
+// Ant Design Vue theme variables set: primary color, border radius, font family

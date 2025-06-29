@@ -97,7 +97,7 @@ const router = createRouter({
           component: Property
         },
         {
-          path: '/properties/add',
+          path: '/properties/add/:id?',
           name: 'add-admin-properties',
           component: AddProperties
         },
