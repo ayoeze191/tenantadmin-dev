@@ -74,7 +74,7 @@
               <div class="p-4 flex-1 flex flex-col">
                 <p class="text-xs uppercase text-gray-600">Property</p>
                 <h3
-                  class="text-lg font-medium text-gray-800 group-hover:text-blue-600"
+                  class="text-lg font-medium text-gray-800 group-hover:text-blue-600 overflow-hidden whitespace-nowrap truncate"
                 >
                   {{ property.name }}
                 </h3>

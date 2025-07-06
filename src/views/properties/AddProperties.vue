@@ -120,8 +120,8 @@
                 >
               </div>
             </div>
-          </div>
-        </div>
+                </div>
+                </div>
 
         <div v-if="currentStep === 2" class="bg-white p-6 rounded-xl">
           <!-- Step 3: Unit Info -->
@@ -153,7 +153,7 @@
                   size="large"
                 />
               </a-form-item>
-            </div>
+                </div>
             <a-form-item
               name="images"
               :validate-status="fileList.length === 0 ? 'error' : ''"
@@ -198,7 +198,7 @@
               </a-select>
             </a-form-item>
           </a-form>
-        </div>
+                    </div>
 
         <div class="flex gap-4 mt-4">
           <a-button
@@ -255,20 +255,20 @@
             <p class="text-txt_dark text-sm leading-4">
               {{ form.rent ? `$${form.rent}` : "Rent" }}
             </p>
-          </div>
+                    </div>
           <div class="flex items-center gap-2">
             <span>🛏️</span>
             <p class="text-txt_dark text-sm leading-4">
               {{ getUnitTypeSummary() }}
             </p>
-          </div>
+                    </div>
           <div class="flex items-center gap-2">
             <span>⭐</span>
             <p
               class="text-txt_dark text-sm leading-4"
               v-html="getAmenitiesPreview()"
             ></p>
-          </div>
+                </div>
           <div class="mt-2">
             <a-image
               v-if="fileList.length > 0"
@@ -288,12 +288,12 @@
           <p class="text-tgr font-medium text-sm leading-4">
             This is a preview for how your property looks when published
           </p>
-        </section>
-      </div>
+      </section>
+                </div>
     </div>
-  </div>
+    </div>
 </template>
-
+  
 <script setup>
 import { AddProperties } from "@/api/properties";
 import { useUserStore } from "@/store";
@@ -336,8 +336,8 @@ const form = reactive({
   unitTypeCounts: [],
   rent: null,
   securityDeposit: null,
-  images: [],
-  amenities: [],
+              images: [],
+              amenities: [],
 });
 
 const router = useRouter();
@@ -742,7 +742,7 @@ const nextOrSubmit = async () => {
         message.success("Property Added Successfully!");
         router.push("/properties");
         uploadedImageUrls.value = []; // Reset cache on success
-      } else {
+        } else {
         message.error(res?.responseMessage || "Failed to add property");
       }
     } catch (err) {
@@ -838,8 +838,8 @@ function renderAmenityTag({ label, value, closable, onClose }) {
 watch(fileList, (newVal) => {
   form.images = newVal;
 });
-</script>
-
+  </script>
+  
 <style scoped>
 .bg-neutral {
   background: #f7f8fa;

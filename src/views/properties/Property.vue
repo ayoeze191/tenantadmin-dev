@@ -3,7 +3,7 @@
     <!-- Header -->
     <div>
       <section class="w-full max-w-5xl flex justify-between items-center mb-8">
-        <router-link to="/properties" class="pt-3">
+      <router-link to="/properties" class="pt-3">
           <a-button
             type="text"
             class="flex items-center gap-2 text-base font-medium text-gray-600 bg-gray-100 hover:text-primary rounded-full px-4 py-2 transition-all"
@@ -12,19 +12,19 @@
               <svg
                 width="18"
                 height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
                 <path
                   d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z"
                   fill="#404164"
                 />
-              </svg>
+            </svg>
             </template>
-            Back
+          Back
           </a-button>
-        </router-link>
+      </router-link>
         <div class="flex gap-3 items-center">
           <a-button
             type="default"
@@ -48,22 +48,22 @@
                 width="22"
                 height="22"
                 viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M12 5.5V19.5M5 12.5H19"
-                  stroke="white"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 5.5V19.5M5 12.5H19"
+              stroke="white"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
             </template>
-            Add Tenant
+        Add Tenant
           </a-button>
         </div>
-      </section>
+    </section>
       <!-- Main Card -->
       <div class="bg-white p-4 rounded-2xl shadow w-full max-w-5xl">
         <a-spin :spinning="loading">
@@ -214,16 +214,16 @@
                       <svg
                         width="18"
                         height="18"
-                        fill="none"
+          fill="none"
                         viewBox="0 0 24 24"
-                      >
-                        <path
+        >
+          <path
                           d="M4 10V7a8 8 0 1 1 16 0v3"
                           stroke="#888"
                           stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
                         <rect
                           x="2"
                           y="10"
@@ -255,14 +255,14 @@
                         fill="none"
                         viewBox="0 0 24 24"
                       >
-                        <path
+          <path
                           d="M12 21V3m0 0l-4 4m4-4l4 4"
                           stroke="#888"
                           stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
                       Rent
                     </div>
                     <div class="info-value">
@@ -334,7 +334,7 @@
                     <div class="info-value whitespace-pre-line">
                       {{ property.description }}
                     </div>
-                  </div>
+      </div>
                   <div v-if="unitTypeSummary">
                     <div class="info-label flex items-center gap-2">
                       <svg
@@ -346,8 +346,8 @@
                         <rect
                           x="4"
                           y="4"
-                          width="16"
-                          height="16"
+          width="16"
+          height="16"
                           rx="2"
                           fill="#f3f4f6"
                           stroke="#888"
@@ -365,7 +365,7 @@
                       <svg
                         width="18"
                         height="18"
-                        fill="none"
+          fill="none"
                         viewBox="0 0 24 24"
                       >
                         <circle
@@ -375,12 +375,12 @@
                           stroke="#888"
                           stroke-width="2"
                         />
-                        <path
+          <path
                           d="M4 20v-1a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v1"
                           stroke="#888"
                           stroke-width="2"
-                        />
-                      </svg>
+          />
+        </svg>
                       Landlord
                     </div>
                     <div class="info-value">

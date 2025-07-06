@@ -1,0 +1,5 @@
+<template>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L2 7V22H22V7L12 2ZM12 4.5L20 9V20H4V9L12 4.5ZM8 12H10V14H8V12ZM12 12H14V14H12V12ZM16 12H18V14H16V12ZM8 16H10V18H8V16ZM12 16H14V18H12V16ZM16 16H18V18H16V16Z" fill="#C6C6C6"/>
+    </svg>
+</template> 

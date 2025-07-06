@@ -25,6 +25,7 @@ import EditLandlord from '@/views/users/EditLandlord.vue'
 import EditAdmin from '@/views/users/EditAdmin.vue'
 import PendingLease from '@/views/tenants/PendingLease.vue'
 import Property from '@/views/properties/Property.vue'
+import Amenities from '@/views/amenities/Amenities.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -80,6 +81,11 @@ const router = createRouter({
           path: '/service-requests/all',
           name: 'all-service-requests',
           component: ServiceRequest
+        },
+        {
+          path: '/amenities',
+          name: 'amenities',
+          component: Amenities
         },
         {
           path: '/applications',
