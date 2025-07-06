@@ -70,9 +70,11 @@
 
             <!-- Amenity Details -->
             <div class="space-y-2">
-              <h3 class="text-lg font-semibold text-[#23234a] truncate">
-                {{ amenity.name }}
-              </h3>
+              <a-tooltip :title="amenity.name" placement="top">
+                <h3 class="text-lg font-semibold text-[#23234a] truncate cursor-help">
+                  {{ amenity.name }}
+                </h3>
+              </a-tooltip>
 
               <div class="space-y-1">
                 <div class="flex items-start gap-2">
