@@ -71,7 +71,9 @@
             <!-- Amenity Details -->
             <div class="space-y-2">
               <a-tooltip :title="amenity.name" placement="top">
-                <h3 class="text-lg font-semibold text-[#23234a] truncate cursor-help">
+                <h3
+                  class="text-lg font-semibold text-[#23234a] truncate cursor-help"
+                >
                   {{ amenity.name }}
                 </h3>
               </a-tooltip>
@@ -194,7 +196,7 @@
       v-model:visible="modalVisible"
       :title="isEditing ? 'Edit Amenity' : 'Add New Amenity'"
       :footer="null"
-      :width="600"
+      :width="450"
       :centered="true"
       class="!rounded-2xl"
       @cancel="closeModal"

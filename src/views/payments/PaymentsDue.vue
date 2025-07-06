@@ -1,160 +1,298 @@
 <template>
-    <div class="bg-neutral py-5 px-10 w-full overflow-y-scroll h-screen pb-40">
-      <ul class="tab">
-          <li class="tab_item" :class="{selected_tab: selected_tab === 'pending'}" @click="toggleTabs('pending')">Pending Requests</li>
-          <li class="tab_item" :class="{selected_tab: selected_tab === 'completed'}" @click="toggleTabs('completed')">Completed Requests</li>
-          <li class="tab_item" :class="{selected_tab: selected_tab === 'all'}" @click="toggleTabs('all')">All Requests</li>
-      </ul>
-      <section class="list_container mt-10">
-          <div class=" flex w-full justify-between border-b border-br1 pb-3 mb-4">
-              <p class="font-medium text-base text-secondary mr-0.5">Pending Service Requests  <span class="text-primary font-semibold text-[18px]">(5)</span></p>
-              <aside class="flex gap-3.5">
-                  <search-icon/>
-                  <div class="pl-3.5 flex border-l border-br1">
-                      <status-select
-                          :label="'Update All:'"
-                      ></status-select>
-                  </div>
-              </aside>
+  <div class="bg-neutral py-5 px-2 w-full min-h-screen">
+    <div class="max-w-5xl mx-auto">
+      <PaymentStatsCard :stats="paymentStats" />
+      <div class="flex justify-between items-center mb-5">
+        <h2 class="text-2xl font-semibold text-gray-800">PAYMENT DUE</h2>
+        <div class="flex items-center gap-4">
+          <a-select
+            v-model:value="filterType"
+            class="w-40"
+            placeholder="Filter by type"
+          >
+            <a-select-option value="all">Show all</a-select-option>
+            <a-select-option value="Rent">Rent</a-select-option>
+            <a-select-option value="Utility">Utility</a-select-option>
+            <a-select-option value="Security Deposit"
+              >Security Deposit</a-select-option
+            >
+            <a-select-option value="Maintenance Fee"
+              >Maintenance Fee</a-select-option
+            >
+          </a-select>
+        </div>
+      </div>
+      <a-card class="rounded-xl border-none">
+        <PaymentList
+          :payments="filteredPayments"
+          :showInvoiceLink="true"
+          @notify="openNotifyModal"
+          @confirm="openConfirmModal"
+        />
+      </a-card>
+      <PaymentModal
+        :visible="notifyModalVisible"
+        modalType="notify"
+        :payment="selectedPayment"
+        :savedMessages="savedMessages"
+        @ok="sendNotification"
+        @cancel="closeNotifyModal"
+      >
+        <div class="space-y-3 max-w-md mx-auto">
+          <a-form-item
+            :validate-status="notifyErrors.title ? 'error' : ''"
+            :help="notifyErrors.title"
+          >
+            <a-input
+              v-model:value="notifyTitle"
+              placeholder="Enter Title"
+              class="mb-1 rounded-md"
+              size="large"
+            />
+          </a-form-item>
+          <a-form-item
+            :validate-status="notifyErrors.message ? 'error' : ''"
+            :help="notifyErrors.message"
+          >
+            <a-textarea
+              v-model:value="notifyMessage"
+              placeholder="Enter message"
+              rows="4"
+              class="rounded-md"
+            />
+          </a-form-item>
+          <div>
+            <div class="mb-1 text-xs text-gray-400 font-medium">
+              Choose saved messages
+            </div>
+            <div class="flex flex-wrap gap-2 mb-1">
+              <a-tag
+                v-for="msg in savedMessages"
+                :key="msg"
+                @click="notifyMessage = msg"
+                class="cursor-pointer bg-gray-100 hover:bg-primary/10 border-none text-gray-700"
+                >{{ msg.length > 30 ? msg.slice(0, 30) + "..." : msg }}</a-tag
+              >
+            </div>
           </div>
-          <ul>
-              <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
-                  <section class="flex w-full justify-between mb-4">
-                      <p class="font-medium leading-6 text-txt_dark">Broken Toilet <span class="text-secondary ml-1">Apt T-69, Sean Apartments </span> </p>
-                      <status-select
-                       :label="'Update Status:'"
-                      ></status-select>
-  
-                  </section>
-                  <a class="text-sm leading-6 text-txt_dark cursor-pointer underline" @click="openModal({})">View full details</a>
-                  
-              </li>
-              <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
-                  <section class="flex w-full justify-between mb-4">
-                      <p class="font-medium leading-6 text-txt_dark">Broken Toilet <span class="text-secondary ml-1">Apt T-69, Sean Apartments </span> </p>
-                      <status-select
-                       :label="'Update Status:'"
-                      ></status-select>
-  
-                  </section>
-                  <a class="text-sm leading-6 text-txt_dark cursor-pointer underline" @click="openModal({})">View full details</a>
-                  
-              </li>
-              <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
-                  <section class="flex w-full justify-between mb-4">
-                      <p class="font-medium leading-6 text-txt_dark">Broken Toilet <span class="text-secondary ml-1">Apt T-69, Sean Apartments </span> </p>
-                      <status-select
-                       :label="'Update Status:'"
-                      ></status-select>
-  
-                  </section>
-                  <a class="text-sm leading-6 text-txt_dark cursor-pointer underline" @click="openModal({})">View full details</a>
-                  
-              </li>
-              <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
-                  <section class="flex w-full justify-between mb-4">
-                      <p class="font-medium leading-6 text-txt_dark">Broken Toilet <span class="text-secondary ml-1">Apt T-69, Sean Apartments </span> </p>
-                      <status-select
-                       :label="'Update Status:'"
-                      ></status-select>
-  
-                  </section>
-                  <a class="text-sm leading-6 text-txt_dark cursor-pointer underline" @click="openModal({})">View full details</a>
-                  
-              </li>
-              <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
-                  <section class="flex w-full justify-between mb-4">
-                      <p class="font-medium leading-6 text-txt_dark">Broken Toilet <span class="text-secondary ml-1">Apt T-69, Sean Apartments </span> </p>
-                      <status-select
-                       :label="'Update Status:'"
-                      ></status-select>
-  
-                  </section>
-                  <a class="text-sm leading-6 text-txt_dark cursor-pointer underline" @click="openModal({})">View full details</a>
-                  
-              </li>
-          </ul>
-      </section>
+        </div>
+        <template #footer>
+          <div class="flex gap-2 justify-end items-center">
+            <a-button
+              type="primary"
+              :disabled="!notifyTitle.trim() || !notifyMessage.trim()"
+              :loading="notifyLoading"
+              @click="sendNotification"
+              class="rounded-md px-3 py-1.5 flex items-center"
+              >Send notification to tenant</a-button
+            >
+            <a-button
+              :disabled="!notifyTitle.trim() || !notifyMessage.trim()"
+              @click="sendNotificationToUnit"
+              class="rounded-md px-3 py-1.5 flex items-center"
+              >Send notification to unit</a-button
+            >
+          </div>
+        </template>
+      </PaymentModal>
+      <PaymentModal
+        :visible="confirmModalVisible"
+        modalType="confirm"
+        :payment="selectedPayment"
+        @ok="confirmPayment"
+        @cancel="closeConfirmModal"
+      >
+        <div class="space-y-3 max-w-md mx-auto">
+          <div>
+            <div class="text-xs text-gray-400 mb-1">Tenant</div>
+            <div class="font-semibold text-lg text-gray-900 mb-1">
+              {{ selectedPayment?.tenantName }}
+            </div>
+          </div>
+          <div>
+            <div class="text-xs text-gray-400 mb-1">Amount</div>
+            <div class="font-bold text-2xl" style="color: rgba(160, 0, 0, 1)">
+              ${{ selectedPayment?.amount }}
+            </div>
+          </div>
+          <div class="text-xs text-gray-400 mt-1">
+            Once confirmed, this payment will be marked as received and updated
+            in the tenant's account.
+          </div>
+        </div>
+        <template #footer>
+          <div class="flex gap-2 justify-end items-center">
+            <a-button
+              type="primary"
+              @click="confirmPayment"
+              class="rounded-md px-3 py-1.5 flex items-center"
+              >Confirm Payment</a-button
+            >
+            <a-button
+              @click="closeConfirmModal"
+              class="rounded-md px-3 py-1.5 flex items-center"
+              >Cancel</a-button
+            >
+          </div>
+        </template>
+      </PaymentModal>
     </div>
-  
-      <modal-component ref="viewRequestModal" title="B-29 Brina Apartments" @close="onModalClose" :button_label="'Save Changes'">
-          <ul class="grid grid-cols-2 gap-11 w-full max-w-[691px] mx-auto">
-              <li>
-                  <div class="flex gap-2">
-                      <p class="text-secondary font-medium leading-7">Tenant(s):</p>
-                      <p class="text-txt_dark leading-7">Steph Orkuma, Derek Jones</p>
-                  </div>
-              </li>
-              <li class="w-full">
-                  <div class="flex gap-2">
-                      <p class="text-secondary font-medium leading-7">Description(s):</p>
-                      <p class="text-txt_dark leading-7">Last night my roof began to leak right above my bed.    Second room on your left.</p>
-                  </div>
-              </li>
-              <li>
-                  <div class="flex gap-2">
-                      <p class="text-secondary font-medium leading-7">Issue:</p>
-                      <p class="text-txt_dark leading-7">Leaking Roof</p>
-                  </div>
-              </li>
-              <li>
-                  <div class="flex gap-2">
-                      <p class="text-secondary font-medium leading-7">Image:</p>
-                      <div class="rounded-md py-1.5 px-5 bg-bg1 flex gap-2 justify-center">
-                          <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <g clip-path="url(#clip0_4249_15161)">
-                              <path d="M16.3333 4.66667V16.3333H4.66667V4.66667H16.3333ZM16.3333 3H4.66667C3.75 3 3 3.75 3 4.66667V16.3333C3 17.25 3.75 18 4.66667 18H16.3333C17.25 18 18 17.25 18 16.3333V4.66667C18 3.75 17.25 3 16.3333 3ZM12.2833 10.3833L9.78333 13.6083L8 11.45L5.5 14.6667H15.5L12.2833 10.3833Z" fill="#323232"/>
-                              </g>
-                              <defs>
-                              <clipPath id="clip0_4249_15161">
-                              <rect width="20" height="20" fill="white" transform="translate(0.5 0.5)"/>
-                              </clipPath>
-                              </defs>
-                          </svg>
-                          <p class="font-medium text-sm leading-6 text-txt_dark">IMG.9876.JPG</p>
-                      </div>
-                  </div>
-              </li>
-              <li>
-                  <status-select :label="'Service Request Status:'"/>
-              </li>
-          </ul>
-      </modal-component>
-    
-  </template>
-  
-  <script>
-  import StatusSelect from '@/components/StatusSelect.vue';
-  import IconSearch from "../../components/icons/IconSearch.vue"
-  import Modal from '@/components/Modal.vue';
-  export default {
-      data() {
-          return {
-              selected_tab: 'pending',
-              selected_Request: {}
-          }
+  </div>
+</template>
+
+<script>
+import PaymentList from "@/components/payments/PaymentList.vue";
+import PaymentModal from "@/components/payments/PaymentModal.vue";
+import PaymentStatsCard from "@/components/payments/PaymentStatsCard.vue";
+export default {
+  components: { PaymentList, PaymentModal, PaymentStatsCard },
+  data() {
+    return {
+      payments: [
+        // Example data, replace with API/store
+        {
+          id: 1,
+          tenantName: "Steph Orkuma",
+          unit: "Apt B-29, Brina Apartments",
+          dueDate: "2024-08-29",
+          amount: 1200,
+          type: "Rent",
+          invoiceUrl: "Invoice-11658345-211212.pdf",
+        },
+        {
+          id: 2,
+          tenantName: "Darrell Steward",
+          unit: "Apt B-29, Brina Apartments",
+          dueDate: "2024-08-29",
+          amount: 700,
+          type: "Utility",
+          invoiceUrl: "Invoice-11658345-211212.pdf",
+        },
+        {
+          id: 3,
+          tenantName: "Courtney Henry",
+          unit: "Apt B-29, Brina Apartments",
+          dueDate: "2024-08-29",
+          amount: 700,
+          type: "Maintenance Fee",
+          invoiceUrl: "Invoice-11658345-211212.pdf",
+        },
+        {
+          id: 4,
+          tenantName: "Albert Flores",
+          unit: "Apt B-29, Brina Apartments",
+          dueDate: "2024-07-29",
+          amount: 800,
+          type: "Maintenance Fee",
+          invoiceUrl: "Invoice-11658345-211212.pdf",
+        },
+        {
+          id: 5,
+          tenantName: "Jacob Jones",
+          unit: "Apt B-29, Brina Apartments",
+          dueDate: "2024-07-29",
+          amount: 900,
+          type: "Utility",
+          invoiceUrl: "Invoice-11658345-211212.pdf",
+        },
+        {
+          id: 6,
+          tenantName: "Olivia Pope",
+          unit: "Apt B-29, Brina Apartments",
+          dueDate: "2024-07-29",
+          amount: 900,
+          type: "Security Deposit",
+          invoiceUrl: "Invoice-11658345-211212.pdf",
+        },
+        {
+          id: 7,
+          tenantName: "Jenny Bass",
+          unit: "Apt B-29, Brina Apartments",
+          dueDate: "2024-07-29",
+          amount: 1000,
+          type: "Maintenance Fee",
+          invoiceUrl: "Invoice-11658345-211212.pdf",
+        },
+      ],
+      filterType: "all",
+      notifyModalVisible: false,
+      confirmModalVisible: false,
+      selectedPayment: null,
+      notifyTitle: "",
+      notifyMessage: "",
+      notifyErrors: {
+        title: "",
+        message: "",
       },
-      components: {
-          'search-icon': IconSearch,
-          'status-select': StatusSelect,
-          'modal-component': Modal,
-  
-      },
-      methods: {
-          toggleTabs(value) {
-              this.selected_tab = value;
-          },
-          openModal(request) {
-              this.$refs.viewRequestModal.openModal();
-              this.selected_Request = request;
-          },
-          onModalClose() {
-              console.log("Modal was closed");
-          },
-      }
-  }
-  </script>
-  
-  <style>
-  
-  </style>
+      notifyLoading: false,
+      savedMessages: [
+        "A noise complaint has been received.",
+        "Your rent is still unpaid. Kindly settle as soon as possible.",
+        "Your rent is still unpaid. Kindly...",
+      ],
+    };
+  },
+  computed: {
+    filteredPayments() {
+      if (this.filterType === "all") return this.payments;
+      return this.payments.filter((p) => p.type === this.filterType);
+    },
+    paymentStats() {
+      return {
+        due: this.payments.length,
+        utility: this.payments.filter((p) => p.type === "Utility").length,
+        deposit: this.payments.filter((p) => p.type === "Security Deposit")
+          .length,
+        maintenance: this.payments.filter((p) => p.type === "Maintenance Fee")
+          .length,
+        rent: this.payments.filter((p) => p.type === "Rent").length,
+      };
+    },
+  },
+  methods: {
+    openNotifyModal(payment) {
+      this.selectedPayment = payment;
+      this.notifyModalVisible = true;
+    },
+    closeNotifyModal() {
+      this.notifyModalVisible = false;
+      this.selectedPayment = null;
+      this.notifyTitle = "";
+      this.notifyMessage = "";
+    },
+    openConfirmModal(payment) {
+      this.selectedPayment = payment;
+      this.confirmModalVisible = true;
+    },
+    closeConfirmModal() {
+      this.confirmModalVisible = false;
+      this.selectedPayment = null;
+    },
+    sendNotification() {
+      this.notifyErrors.title = this.notifyTitle.trim()
+        ? ""
+        : "Title is required";
+      this.notifyErrors.message = this.notifyMessage.trim()
+        ? ""
+        : "Message is required";
+      if (this.notifyErrors.title || this.notifyErrors.message) return;
+      this.notifyLoading = true;
+      setTimeout(() => {
+        // Simulate async
+        this.notifyLoading = false;
+        this.closeNotifyModal();
+      }, 1000);
+    },
+    sendNotificationToUnit() {
+      // Implement notification to unit logic
+      this.closeNotifyModal();
+    },
+    confirmPayment() {
+      // Implement confirm payment logic
+      this.closeConfirmModal();
+    },
+  },
+};
+</script>
+
+<style></style>

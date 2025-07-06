@@ -30,14 +30,15 @@ export const FetchAmenities = async () => {
   }
 };
 
-export const AddProperties = async (payload) => {
+export const CreateNewProperty = async (payload) => {
   try {
-    const response = await postApi(`Accommodation/AddAccommodation`, payload);
+    const response = await postApi(`Accommodation/Create-New-Property`, payload);
     return response.data;
   } catch (error) {
     handleError(error);
   }
 };
+
 export const AddAmenities = async (payload) => {
   try {
     const response = await postApi(`Amenity/CreateAmenity`, payload);

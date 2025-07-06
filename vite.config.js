@@ -15,7 +15,7 @@ export default defineConfig({
     preprocessorOptions: {
       less: {
         modifyVars: {
-          'primary-color': '#000130',
+          'primary-color': 'rgba(160, 0, 0, 1)',
           'border-radius-base': '9px',
           'font-family': 'SF Compact Text, sans-serif',
         },

@@ -295,7 +295,7 @@
 </template>
   
 <script setup>
-import { AddProperties } from "@/api/properties";
+import { CreateNewProperty } from "@/api/properties";
 import { useUserStore } from "@/store";
 import { useOptionsStore } from "@/stores/options";
 import { uploadImages } from "@/utils/helper";
@@ -705,34 +705,44 @@ const nextOrSubmit = async () => {
           count: form.unitTypeCounts[idx] || 0,
         }))
         .filter((u) => u.count > 0);
-      // Build payload (wrap in 'payload' field)
+      // Build payload according to new API specification
       const payload = {
-        payload: {
-          landlordId:
-            parseInt(store.userProfile.adminUserID, 10) ||
-            store.userProfile.adminUserID, // If not int, leave as is
-          name: form.name,
-          address: form.address,
-          zipCode: form.zipCode,
-          province: form.province,
-          propertyType: form.propertyType,
-          description: form.description,
-          units: units, // now an array of unit objects
-          unitTypes: unitTypes, // keep for reference if needed
-          rent: form.rent,
-          securityDeposit: form.securityDeposit,
-          images: imageObjs,
-          amenities: amenityIds,
-        },
+        landLordId: parseInt(store.userProfile.adminUserID, 10) || store.userProfile.adminUserID,
+        name: form.name,
+        description: form.description,
+        address: form.address,
+        zipCode: form.zipCode,
+        province: form.province,
+        totalUnits: form.units,
+        propertyTypee: form.propertyType, // Note: API has typo 'propertyTypee'
+        unitTypes: unitTypeOptions.value
+          .map((type, idx) => {
+            const count = form.unitTypeCounts[idx] || 0;
+            if (count > 0) {
+              return {
+                quantity: count,
+                unitType: type.value,
+                rentPerMonth: form.rent,
+                securityDeposit: form.securityDeposit,
+                unitImages: imageObjs.map((img, imgIdx) => ({
+                  imageTitle: img.imageTitle,
+                  image: img.image,
+                  isMain: imgIdx === 0 // First image is main
+                }))
+              };
+            }
+            return null;
+          })
+          .filter(Boolean)
       };
-      console.log("Payload to AddProperties:", payload);
-      if (!payload.payload.landlordId) {
+      console.log("Payload to CreateNewProperty:", payload);
+      if (!payload.landLordId) {
         message.error("No landlordId found. Please log in again.");
         loading.value = false;
         return;
       }
-      const res = await AddProperties(payload);
-      console.log("AddProperties API response:", res);
+      const res = await CreateNewProperty(payload);
+      console.log("CreateNewProperty API response:", res);
       if (res) {
         message.success("Property Added Successfully!");
         router.push("/properties");

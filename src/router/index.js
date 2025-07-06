@@ -26,6 +26,8 @@ import EditAdmin from '@/views/users/EditAdmin.vue'
 import PendingLease from '@/views/tenants/PendingLease.vue'
 import Property from '@/views/properties/Property.vue'
 import Amenities from '@/views/amenities/Amenities.vue'
+import RentPayment from '../views/payments/RentPayment.vue'
+import UtilityPayment from '../views/payments/UtilityPayment.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -130,12 +132,12 @@ const router = createRouter({
         {
           path: '/payments/rent',
           name: 'admin-payments-rent',
-          component: Payments
+          component: RentPayment
         },
         {
           path: '/payments/utility',
           name: 'admin-payments-utility',
-          component: Payments
+          component: UtilityPayment
         },
         {
           path: '/payments/deposit', 
