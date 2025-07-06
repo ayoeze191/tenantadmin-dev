@@ -3,7 +3,7 @@
     <!-- Header -->
     <div>
       <section class="w-full max-w-5xl flex justify-between items-center mb-8">
-      <router-link to="/properties" class="pt-3">
+        <router-link to="/properties" class="pt-3">
           <a-button
             type="text"
             class="flex items-center gap-2 text-base font-medium text-gray-600 bg-gray-100 hover:text-primary rounded-full px-4 py-2 transition-all"
@@ -12,19 +12,19 @@
               <svg
                 width="18"
                 height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <path
                   d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z"
                   fill="#404164"
                 />
-            </svg>
+              </svg>
             </template>
-          Back
+            Back
           </a-button>
-      </router-link>
+        </router-link>
         <div class="flex gap-3 items-center">
           <a-button
             type="default"
@@ -48,24 +48,24 @@
                 width="22"
                 height="22"
                 viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M12 5.5V19.5M5 12.5H19"
-              stroke="white"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 5.5V19.5M5 12.5H19"
+                  stroke="white"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
             </template>
-        Add Tenant
+            Add Tenant
           </a-button>
         </div>
-    </section>
+      </section>
       <!-- Main Card -->
-      <div class="bg-white p-4 rounded-2xl shadow w-full max-w-5xl">
+      <div class="bg-white p-4 rounded-2xl w-full max-w-5xl">
         <a-spin :spinning="loading">
           <template v-if="error">
             <a-result status="404" :title="'Not Found'" :sub-title="error" />
@@ -144,251 +144,271 @@
                 </template>
               </div>
               <!-- Property Info Card -->
-              <div class="flex-1 mt-5">
-                <div class="info-card w-full flex flex-col gap-4">
-                  <div>
-                    <div class="info-label flex items-center gap-2">
+              <div class="flex-1 mt-6">
+                <div class="w-full">
+                  <!-- Property Header -->
+                  <div class="property-header mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2">
+                      {{ property.name }}
+                    </h2>
+                    <div class="flex items-center gap-2 text-gray-600">
                       <svg
-                        width="18"
-                        height="18"
+                        width="16"
+                        height="16"
                         fill="none"
                         viewBox="0 0 24 24"
                       >
                         <path
                           d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"
-                          fill="#888"
+                          fill="currentColor"
                         />
                       </svg>
-                      Name
+                      <span class="text-sm">{{ property.address }}</span>
                     </div>
-                    <div class="info-value">{{ property.name }}</div>
                   </div>
-                  <div>
-                    <div class="info-label flex items-center gap-2">
-                      <svg
-                        width="18"
-                        height="18"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"
-                          fill="#888"
-                        />
-                      </svg>
-                      Address
-                    </div>
-                    <div class="info-value">{{ property.address }}</div>
-                  </div>
-                  <div v-if="property.referenceNumber">
-                    <div class="info-label flex items-center gap-2">
-                      <svg
-                        width="18"
-                        height="18"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="#888"
-                          stroke-width="2"
-                        />
-                        <text
-                          x="12"
-                          y="16"
-                          text-anchor="middle"
-                          font-size="10"
-                          fill="#888"
-                        >
-                          #
-                        </text>
-                      </svg>
-                      Reference #
-                    </div>
-                    <div class="info-value">{{ property.referenceNumber }}</div>
-                  </div>
-                  <div>
-                    <div class="info-label flex items-center gap-2">
-                      <svg
-                        width="18"
-                        height="18"
-          fill="none"
-                        viewBox="0 0 24 24"
-        >
-          <path
-                          d="M4 10V7a8 8 0 1 1 16 0v3"
-                          stroke="#888"
-                          stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-                        <rect
-                          x="2"
-                          y="10"
+
+                  <!-- Key Details Grid -->
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <!-- Units -->
+                    <div class="detail-card">
+                      <div class="detail-icon">
+                        <svg
                           width="20"
-                          height="10"
-                          rx="2"
-                          fill="#f3f4f6"
-                          stroke="#888"
-                          stroke-width="2"
-                        />
-                      </svg>
-                      Units
+                          height="20"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M4 10V7a8 8 0 1 1 16 0v3"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <rect
+                            x="2"
+                            y="10"
+                            width="20"
+                            height="10"
+                            rx="2"
+                            fill="currentColor"
+                            fill-opacity="0.1"
+                            stroke="currentColor"
+                            stroke-width="2"
+                          />
+                        </svg>
+                      </div>
+                      <div class="detail-content">
+                        <div class="detail-label">Total Units</div>
+                        <div class="detail-value">
+                          {{
+                            property.units
+                              ? Array.isArray(property.units)
+                                ? property.units.length
+                                : property.units
+                              : "-"
+                          }}
+                        </div>
+                      </div>
                     </div>
-                    <div class="info-value">
-                      {{
-                        property.units
-                          ? Array.isArray(property.units)
-                            ? property.units.length
-                            : property.units
-                          : "-"
-                      }}
+
+                    <!-- Rent -->
+                    <div class="detail-card">
+                      <div class="detail-icon">
+                        <svg
+                          width="20"
+                          height="20"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M12 21V3m0 0l-4 4m4-4l4 4"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      </div>
+                      <div class="detail-content">
+                        <div class="detail-label">Monthly Rent</div>
+                        <div class="detail-value">
+                          <span
+                            v-if="property.minimumRent && property.maximumRent"
+                            class="text-primary"
+                          >
+                            ₦{{ property.minimumRent }} - ₦{{
+                              property.maximumRent
+                            }}
+                          </span>
+                          <span v-else-if="property.rent" class="text-primary"
+                            >₦{{ property.rent }}</span
+                          >
+                          <span v-else class="text-gray-400">-</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Security Deposit -->
+                    <div class="detail-card">
+                      <div class="detail-icon">
+                        <svg
+                          width="20"
+                          height="20"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <rect
+                            x="6"
+                            y="10"
+                            width="12"
+                            height="4"
+                            rx="2"
+                            fill="currentColor"
+                            fill-opacity="0.1"
+                            stroke="currentColor"
+                            stroke-width="2"
+                          />
+                          <path
+                            d="M10 14v2a2 2 0 0 0 4 0v-2"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                          />
+                        </svg>
+                      </div>
+                      <div class="detail-content">
+                        <div class="detail-label">Security Deposit</div>
+                        <div class="detail-value">
+                          <span
+                            v-if="property.securityDeposit"
+                            class="text-primary"
+                            >₦{{ property.securityDeposit }}</span
+                          >
+                          <span v-else class="text-gray-400">-</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Reference Number -->
+                    <div v-if="property.referenceNumber" class="detail-card">
+                      <div class="detail-icon">
+                        <svg
+                          width="20"
+                          height="20"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            stroke-width="2"
+                          />
+                          <text
+                            x="12"
+                            y="16"
+                            text-anchor="middle"
+                            font-size="10"
+                            fill="currentColor"
+                          >
+                            #
+                          </text>
+                        </svg>
+                      </div>
+                      <div class="detail-content">
+                        <div class="detail-label">Reference Number</div>
+                        <div class="detail-value">
+                          {{ property.referenceNumber }}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div>
-                    <div class="info-label flex items-center gap-2">
-                      <svg
-                        width="18"
-                        height="18"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-          <path
-                          d="M12 21V3m0 0l-4 4m4-4l4 4"
-                          stroke="#888"
-                          stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-                      Rent
-                    </div>
-                    <div class="info-value">
-                      <span v-if="property.minimumRent && property.maximumRent">
-                        ₦{{ property.minimumRent }} - ₦{{
-                          property.maximumRent
-                        }}
-                      </span>
-                      <span v-else-if="property.rent"
-                        >₦{{ property.rent }}</span
-                      >
-                      <span v-else>-</span>
+
+                  <!-- Unit Types -->
+                  <div v-if="unitTypeSummary" class="mb-6">
+                    <div class="section-title">Unit Types</div>
+                    <div class="unit-types-grid">
+                      <div class="unit-type-badge">{{ unitTypeSummary }}</div>
                     </div>
                   </div>
-                  <div>
-                    <div class="info-label flex items-center gap-2">
-                      <svg
-                        width="18"
-                        height="18"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <rect
-                          x="6"
-                          y="10"
-                          width="12"
-                          height="4"
-                          rx="2"
-                          fill="#f3f4f6"
-                          stroke="#888"
-                          stroke-width="2"
-                        />
-                        <path
-                          d="M10 14v2a2 2 0 0 0 4 0v-2"
-                          stroke="#888"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                        />
-                      </svg>
-                      Security Deposit
-                    </div>
-                    <div class="info-value">
-                      {{ property.securityDeposit || "-" }}
-                    </div>
-                  </div>
-                  <hr class="my-2 border-gray-200" />
-                  <div>
-                    <div class="info-label flex items-center gap-2">
-                      <svg
-                        width="18"
-                        height="18"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <rect
-                          x="4"
-                          y="4"
-                          width="16"
-                          height="16"
-                          rx="2"
-                          fill="#f3f4f6"
-                          stroke="#888"
-                          stroke-width="2"
-                        />
-                        <path d="M8 8h8v8H8z" fill="#e0e7ef" />
-                      </svg>
-                      Description
-                    </div>
-                    <div class="info-value whitespace-pre-line">
+
+                  <!-- Description -->
+                  <div class="mb-6">
+                    <div class="section-title">Description</div>
+                    <div class="description-content">
                       {{ property.description }}
                     </div>
-      </div>
-                  <div v-if="unitTypeSummary">
-                    <div class="info-label flex items-center gap-2">
-                      <svg
-                        width="18"
-                        height="18"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <rect
-                          x="4"
-                          y="4"
-          width="16"
-          height="16"
-                          rx="2"
-                          fill="#f3f4f6"
-                          stroke="#888"
-                          stroke-width="2"
-                        />
-                        <path d="M8 8h8v8H8z" fill="#e0e7ef" />
-                      </svg>
-                      Unit Types
-                    </div>
-                    <div class="info-value">{{ unitTypeSummary }}</div>
                   </div>
-                  <hr class="my-2 border-gray-200" />
-                  <div v-if="landlord" class="landlord-section">
-                    <div class="info-label flex items-center gap-2">
-                      <svg
-                        width="18"
-                        height="18"
-          fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          cx="12"
-                          cy="8"
-                          r="4"
-                          stroke="#888"
-                          stroke-width="2"
-                        />
-          <path
-                          d="M4 20v-1a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v1"
-                          stroke="#888"
-                          stroke-width="2"
-          />
-        </svg>
-                      Landlord
-                    </div>
-                    <div class="info-value">
-                      <div>
-                        <b>{{ landlord.firstname }} {{ landlord.lastname }}</b>
+
+                  <!-- Landlord Information -->
+                  <div v-if="landlord" class="landlord-card">
+                    <div class="section-title">Property Owner</div>
+                    <div class="landlord-info">
+                      <div class="landlord-avatar">
+                        <svg
+                          width="24"
+                          height="24"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            cx="12"
+                            cy="8"
+                            r="4"
+                            stroke="currentColor"
+                            stroke-width="2"
+                          />
+                          <path
+                            d="M4 20v-1a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v1"
+                            stroke="currentColor"
+                            stroke-width="2"
+                          />
+                        </svg>
                       </div>
-                      <div>Email: {{ landlord.emailAddress }}</div>
-                      <div>Phone: {{ landlord.phoneNumber }}</div>
+                      <div class="landlord-details">
+                        <div class="landlord-name">
+                          {{ landlord.firstname }} {{ landlord.lastname }}
+                        </div>
+                        <div class="landlord-contact">
+                          <span class="contact-item">
+                            <svg
+                              width="14"
+                              height="14"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                                stroke="currentColor"
+                                stroke-width="2"
+                              />
+                              <polyline
+                                points="22,6 12,13 2,6"
+                                stroke="currentColor"
+                                stroke-width="2"
+                              />
+                            </svg>
+                            {{ landlord.emailAddress }}
+                          </span>
+                          <span class="contact-item">
+                            <svg
+                              width="14"
+                              height="14"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
+                                stroke="currentColor"
+                                stroke-width="2"
+                              />
+                            </svg>
+                            {{ landlord.phoneNumber }}
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -893,41 +913,188 @@ function downloadSampleFile() {
   background: #23234a;
   border-color: #23234a;
 }
-.info-card {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 1.25rem;
-  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.04);
-  padding: 2rem 1.5rem;
-  transition: box-shadow 0.2s;
+
+/* Property Header */
+.property-header h2 {
+  color: #1f2937;
+  font-weight: 700;
+  line-height: 1.2;
 }
-.info-card:hover {
-  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.08);
-}
-.info-label {
-  font-size: 0.85rem;
-  color: #64748b;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  margin-bottom: 0.1rem;
-}
-.info-value {
-  font-size: 1.08rem;
-  color: #23234a;
-  font-weight: 500;
-  margin-bottom: 0.2rem;
-}
-.landlord-section {
+
+/* Detail Cards */
+.detail-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
   background: #f8fafc;
   border-radius: 0.75rem;
-  padding: 0.7rem 1rem;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
 }
-@media (max-width: 700px) {
-  .info-card {
+
+.detail-card:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+}
+
+.detail-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  background: #000130;
+  border-radius: 0.5rem;
+  color: white;
+  flex-shrink: 0;
+}
+
+.detail-content {
+  flex: 1;
+}
+
+.detail-label {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.detail-value {
+  font-size: 1.125rem;
+  color: #1f2937;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+/* Section Titles */
+.section-title {
+  font-size: 1.125rem;
+  color: #1f2937;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e5e7eb;
+  position: relative;
+}
+
+.section-title::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 3rem;
+  height: 2px;
+  background: #000130;
+}
+
+/* Unit Types */
+.unit-types-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.unit-type-badge {
+  background: #000130;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Description */
+.description-content {
+  background: #f8fafc;
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  border: 1px solid #e2e8f0;
+  color: #374151;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+/* Landlord Card */
+.landlord-card {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  padding: 1.5rem;
+}
+
+.landlord-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.landlord-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  background: #000130;
+  border-radius: 50%;
+  color: white;
+  flex-shrink: 0;
+}
+
+.landlord-details {
+  flex: 1;
+}
+
+.landlord-name {
+  font-size: 1.125rem;
+  color: #1f2937;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.landlord-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.contact-item svg {
+  color: #000130;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .detail-card {
     padding: 1rem;
   }
+
+  .detail-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .landlord-info {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .landlord-contact {
+    align-items: center;
+  }
 }
+
 .add-tenants-modal .ant-modal {
   margin-top: 40px !important;
   margin-bottom: 40px !important;

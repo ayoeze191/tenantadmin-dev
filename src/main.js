@@ -13,12 +13,21 @@ import "vue-toast-notification/dist/theme-bootstrap.css";
 import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
-import Antd from 'ant-design-vue';
+import Antd, { ConfigProvider } from 'ant-design-vue';
+import 'ant-design-vue/dist/reset.css';
 
 const vuetify = createVuetify({
   components,
   directives,
 });
+
+// Ant Design theme configuration
+const theme = {
+  token: {
+    colorPrimary: '#000130',
+    borderRadius: 9,
+  },
+};
 
 // Add a request interceptor
 axios.interceptors.request.use(
@@ -62,5 +71,8 @@ app.use(ToastPlugin, {
 app.use(router);
 app.use(vuetify);
 app.use(Antd);
+
+// Provide theme configuration globally
+app.provide('theme', theme);
 
 app.mount("#app");

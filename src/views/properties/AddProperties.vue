@@ -1,11 +1,12 @@
 <template>
-  <div
-    class="bg-neutral py-5 px-6 w-full"
-  >
+  <div class="bg-neutral py-5 px-6 w-full">
     <div v-if="loading" class="flex items-center justify-center min-h-[300px]">
       <a-spin size="large" />
     </div>
-    <div v-else-if="error" class="flex items-center justify-center min-h-[300px]">
+    <div
+      v-else-if="error"
+      class="flex items-center justify-center min-h-[300px]"
+    >
       <a-result status="404" :title="'Not Found'" :sub-title="error" />
     </div>
     <div v-else class="max-w-[85rem] flex pb-8 mx-auto">
@@ -120,8 +121,8 @@
                 >
               </div>
             </div>
-                </div>
-                </div>
+          </div>
+        </div>
 
         <div v-if="currentStep === 2" class="bg-white p-6 rounded-xl">
           <!-- Step 3: Unit Info -->
@@ -153,7 +154,7 @@
                   size="large"
                 />
               </a-form-item>
-                </div>
+            </div>
             <a-form-item
               name="images"
               :validate-status="fileList.length === 0 ? 'error' : ''"
@@ -198,7 +199,7 @@
               </a-select>
             </a-form-item>
           </a-form>
-                    </div>
+        </div>
 
         <div class="flex gap-4 mt-4">
           <a-button
@@ -238,37 +239,37 @@
           <h1 class="text-primary font-semibold text-xl leading-7">
             {{ form.name || "Property Name" }}
           </h1>
-          <div class="flex items-center gap-2">
+          <div class="flex gap-2">
             <span>📍</span>
             <p class="text-txt_dark text-sm leading-4">
               {{ form.address || "Property Address" }}
             </p>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="flex gap-2">
             <span>🏢</span>
             <p class="text-txt_dark text-sm leading-4">
               {{ form.units || 0 }} Units
             </p>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="flex gap-2">
             <span>💰</span>
             <p class="text-txt_dark text-sm leading-4">
               {{ form.rent ? `$${form.rent}` : "Rent" }}
             </p>
-                    </div>
-          <div class="flex items-center gap-2">
+          </div>
+          <div class="flex gap-2">
             <span>🛏️</span>
             <p class="text-txt_dark text-sm leading-4">
               {{ getUnitTypeSummary() }}
             </p>
-                    </div>
-          <div class="flex items-center gap-2">
+          </div>
+          <div class="flex gap-2">
             <span>⭐</span>
             <p
               class="text-txt_dark text-sm leading-4"
               v-html="getAmenitiesPreview()"
             ></p>
-                </div>
+          </div>
           <div class="mt-2">
             <a-image
               v-if="fileList.length > 0"
@@ -288,34 +289,34 @@
           <p class="text-tgr font-medium text-sm leading-4">
             This is a preview for how your property looks when published
           </p>
-      </section>
-                </div>
+        </section>
+      </div>
     </div>
-    </div>
+  </div>
 </template>
-  
+
 <script setup>
 import { CreateNewProperty } from "@/api/properties";
 import { useUserStore } from "@/store";
 import { useOptionsStore } from "@/stores/options";
 import { uploadImages } from "@/utils/helper";
 import {
-CheckOutlined,
-LeftOutlined,
-RightOutlined
+  CheckOutlined,
+  LeftOutlined,
+  RightOutlined,
 } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
-import {
-defineComponent,
-h,
-nextTick,
-onMounted,
-reactive,
-ref,
-watch,
-} from "vue";
-import { useRouter, useRoute } from "vue-router";
 import { openDB } from "idb";
+import {
+  defineComponent,
+  h,
+  nextTick,
+  onMounted,
+  reactive,
+  ref,
+  watch,
+} from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 const unitTypeOptions = ref([]);
 const propertyTypeOptions = ref([]);
@@ -336,8 +337,8 @@ const form = reactive({
   unitTypeCounts: [],
   rent: null,
   securityDeposit: null,
-              images: [],
-              amenities: [],
+  images: [],
+  amenities: [],
 });
 
 const router = useRouter();
@@ -385,8 +386,12 @@ onMounted(async () => {
         form.rent = data.minimumRent || data.rent || null;
         form.securityDeposit = data.securityDeposit || null;
         // Ensure images have .url property for preview logic
-        form.images = (data.images || []).map(img => img.url ? img : { ...img, url: img.image });
-        fileList.value = (data.images || []).map(img => img.url ? img : { ...img, url: img.image });
+        form.images = (data.images || []).map((img) =>
+          img.url ? img : { ...img, url: img.image }
+        );
+        fileList.value = (data.images || []).map((img) =>
+          img.url ? img : { ...img, url: img.image }
+        );
         form.amenities = data.amenities || [];
         // If you have more fields, map them here
       }
@@ -707,7 +712,9 @@ const nextOrSubmit = async () => {
         .filter((u) => u.count > 0);
       // Build payload according to new API specification
       const payload = {
-        landLordId: parseInt(store.userProfile.adminUserID, 10) || store.userProfile.adminUserID,
+        landLordId:
+          parseInt(store.userProfile.adminUserID, 10) ||
+          store.userProfile.adminUserID,
         name: form.name,
         description: form.description,
         address: form.address,
@@ -727,13 +734,13 @@ const nextOrSubmit = async () => {
                 unitImages: imageObjs.map((img, imgIdx) => ({
                   imageTitle: img.imageTitle,
                   image: img.image,
-                  isMain: imgIdx === 0 // First image is main
-                }))
+                  isMain: imgIdx === 0, // First image is main
+                })),
               };
             }
             return null;
           })
-          .filter(Boolean)
+          .filter(Boolean),
       };
       console.log("Payload to CreateNewProperty:", payload);
       if (!payload.landLordId) {
@@ -752,7 +759,7 @@ const nextOrSubmit = async () => {
         message.success("Property Added Successfully!");
         router.push("/properties");
         uploadedImageUrls.value = []; // Reset cache on success
-        } else {
+      } else {
         message.error(res?.responseMessage || "Failed to add property");
       }
     } catch (err) {
@@ -848,8 +855,8 @@ function renderAmenityTag({ label, value, closable, onClose }) {
 watch(fileList, (newVal) => {
   form.images = newVal;
 });
-  </script>
-  
+</script>
+
 <style scoped>
 .bg-neutral {
   background: #f7f8fa;

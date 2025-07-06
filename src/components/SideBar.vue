@@ -1,5 +1,8 @@
 <template>
-  <a-layout-sider width="260" class="h-full min-h-screen overflow-y-auto bg-white">
+  <a-layout-sider
+    width="260"
+    class="h-full min-h-screen overflow-y-auto bg-white"
+  >
     <div class="flex flex-col items-center py-4 pb-6">
       <img class="w-12 mb-3.5" src="../assets/logo.svg" alt="logo" />
       <p class="text-gray-600 font-medium text-sm leading-4 mb-3.5">Menu</p>
@@ -13,7 +16,7 @@
       <a-menu-item key="dashboard">
         <router-link :to="{ name: 'admin-dashboard' }">
           <template #icon><overview-icon /></template>
-            Overview
+          Overview
         </router-link>
       </a-menu-item>
       <a-sub-menu key="service-requests" title="Service Requests">
@@ -37,7 +40,7 @@
       <a-menu-item key="admin-applications">
         <router-link :to="{ name: 'admin-applications' }">
           <template #icon><application-icon /></template>
-            Tenancy Applications
+          Tenancy Applications
         </router-link>
       </a-menu-item>
       <a-sub-menu key="properties" title="My Properties">
@@ -126,13 +129,13 @@
       <a-menu-item key="amenities">
         <router-link :to="{ name: 'amenities' }">
           <template #icon><amenities-icon /></template>
-            Amenities
+          Amenities
         </router-link>
       </a-menu-item>
       <a-menu-item key="admin-users-notification">
         <router-link :to="{ name: 'admin-users-notification' }">
           <template #icon><notification-icon /></template>
-            User Notification
+          User Notification
         </router-link>
       </a-menu-item>
     </a-menu>
@@ -194,5 +197,22 @@ export default {
   min-height: 100vh;
   overflow-y: auto;
   box-shadow: 2px 0 8px #f0f1f2;
+}
+
+/* Custom styling for active menu items */
+:deep(.ant-menu-item-selected) {
+  background-color: var(--vt-c-text-dark-2) !important;
+}
+
+:deep(.ant-menu-item:hover) {
+  background-color: var(--vt-c-text-dark-2) !important;
+}
+
+:deep(.ant-menu-submenu-title:hover) {
+  background-color: var(--vt-c-text-dark-2) !important;
+}
+
+:deep(.ant-menu-submenu-selected > .ant-menu-submenu-title) {
+  background-color: var(--vt-c-text-dark-2) !important;
 }
 </style>

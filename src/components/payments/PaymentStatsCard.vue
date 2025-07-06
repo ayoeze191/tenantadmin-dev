@@ -30,7 +30,7 @@ export default {
   computed: {
     statsList() {
       return [
-        { label: "Payment Due", count: this.stats.due, color: "text-blue-600" },
+        { label: "Payment Due", count: this.stats.due, color: "text-primary" },
         {
           label: "Utility",
           count: this.stats.utility,

@@ -12,7 +12,7 @@
         <a-button
           type="primary"
           size="large"
-          class="!bg-blue-600 !border-blue-600 !text-white hover:!bg-blue-700 flex items-center"
+          class="!bg-primary !border-primary !text-white hover:!bg-primary flex items-center"
           @click="openAddModal"
         >
           <template #icon>
@@ -317,7 +317,7 @@
             type="primary"
             html-type="submit"
             :loading="submitting"
-            class="!bg-blue-600 !border-blue-600 flex items-center"
+            class="!bg-primary !border-primary flex items-center"
           >
             <span v-if="submitting">Saving...</span>
             <span v-else>{{

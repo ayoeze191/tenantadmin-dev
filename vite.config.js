@@ -11,17 +11,5 @@ export default defineConfig({
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
-  css: {
-    preprocessorOptions: {
-      less: {
-        modifyVars: {
-          'primary-color': 'rgba(160, 0, 0, 1)',
-          'border-radius-base': '9px',
-          'font-family': 'SF Compact Text, sans-serif',
-        },
-        javascriptEnabled: true,
-      },
-    },
-  },
 });
-// Ant Design Vue theme variables set: primary color, border radius, font family
+// Ant Design Vue theme is configured via CSS variables in src/assets/base.css
