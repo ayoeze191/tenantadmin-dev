@@ -1,8 +1,10 @@
 <template>
-  <div class="bg-neutral w-full px-4 flex flex-col items-center py-8">
+  <div class="bg-neutral w-full px-4 py-8">
     <!-- Header -->
     <div>
-      <section class="w-full max-w-5xl flex justify-between items-center mb-8">
+      <section
+        class="w-full max-w-5xl mx-auto flex justify-between items-center mb-8"
+      >
         <router-link to="/properties" class="pt-3">
           <a-button
             type="text"
@@ -65,7 +67,7 @@
         </div>
       </section>
       <!-- Main Card -->
-      <div class="bg-white p-4 rounded-2xl w-full max-w-5xl">
+      <div class="bg-white p-4 rounded-2xl w-full max-w-5xl mx-auto">
         <a-spin :spinning="loading">
           <template v-if="error">
             <a-result status="404" :title="'Not Found'" :sub-title="error" />
