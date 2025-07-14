@@ -108,7 +108,7 @@
           </div>
         </template>
         <a-empty v-else description="No service requests found" class="my-10" />
-      </div>
+        </div>
     </a-card>
 
     <a-modal
@@ -182,7 +182,7 @@
                   }}</span>
                 </div>
               </div>
-            </div>
+  </div>
 
             <div class="bg-white border border-gray-100 rounded-lg p-4">
               <h4
@@ -313,7 +313,7 @@
                     Click to view
                   </span>
                 </div>
-              </div>
+                    </div>
             </template>
             <div v-else class="flex items-center justify-center w-full py-8">
               <div class="text-center">
@@ -365,7 +365,7 @@
                 :loading="updatingStatusLoading"
                 :disabled="updatingStatusLoading"
               >
-                Send notification
+                    Send notification
               </a-button>
               <a-button
                 class="border-blue-300 text-blue-700 px-6"
@@ -374,7 +374,7 @@
                 Send to unit
               </a-button>
             </div>
-          </div>
+            </div>
         </div>
       </div>
     </a-modal>
@@ -404,11 +404,11 @@ import {
 import { h } from "vue";
 import IconSearch from "../../components/icons/IconSearch.vue";
 export default {
-  data() {
-    return {
+    data() {
+        return {
       selected_tab: "all",
       userSelectedOption: "",
-      selected_Request: {},
+            selected_Request: {},
       notificationMessage: "",
       serviceLiterals: [
         "Requested",
@@ -429,8 +429,8 @@ export default {
       updatingStatusId: null,
       updatingStatusLoading: false,
     };
-  },
-  components: {
+    },
+    components: {
     "search-icon": IconSearch,
     "status-select": StatusSelect,
     StatusDropdown,
@@ -480,32 +480,32 @@ export default {
       this.store.fetchRequests();
     }
   },
-  methods: {
-    getStatusLabel(service) {
-      return this.serviceLiterals[service.serviceStatus];
-    },
-    openModal(request) {
+    methods: {
+        getStatusLabel(service) {
+    return this.serviceLiterals[service.serviceStatus];
+        },
+        openModal(request) {
       this.modalVisible = true;
-      this.selected_Request = request;
-    },
-    onModalClose() {
+            this.selected_Request = request;
+        },
+        onModalClose() {
       this.modalVisible = false;
-    },
+        },
     onStatusChangeModal(newStatus) {
       this.selected_Request = {
         ...this.selected_Request,
         serviceStatus: this.statusToIndex[newStatus],
       };
-    },
+        },
     handleSubmit() {
-      updateServiceRequest({
-        serviceRequestId: this.selected_Request.serviceRequestId,
+  updateServiceRequest({ 
+      serviceRequestId: this.selected_Request.serviceRequestId, 
         status: this.selected_Request.serviceStatus,
       }).then((response) => {
         // handle response
-      });
-    },
-    onStatusChange(service, newStatus) {
+    });
+        },  
+        onStatusChange(service, newStatus) {
       const oldStatusIndex = service.serviceStatus;
       const oldStatusLabel = this.serviceLiterals[oldStatusIndex];
       const newStatusIndex = this.serviceLiterals.indexOf(newStatus);
@@ -523,7 +523,7 @@ export default {
           self.updatingStatusLoading = true;
           try {
             const response = await updateServiceRequest({
-              serviceRequestId: service.serviceRequestId,
+      serviceRequestId: service.serviceRequestId, 
               status: newStatusIndex,
             });
             if (response && response.responseCode === "00") {

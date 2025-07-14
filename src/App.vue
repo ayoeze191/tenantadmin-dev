@@ -9,7 +9,7 @@ const theme = inject('theme')
 
 <template>
   <ConfigProvider :theme="theme">
-    <RouterView />
+  <RouterView />
   </ConfigProvider>
 </template>
 

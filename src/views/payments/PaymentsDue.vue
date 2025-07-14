@@ -107,19 +107,19 @@
             <div class="text-xs text-gray-400 mb-1">Tenant</div>
             <div class="font-semibold text-lg text-gray-900 mb-1">
               {{ selectedPayment?.tenantName }}
-            </div>
+                  </div>
           </div>
           <div>
             <div class="text-xs text-gray-400 mb-1">Amount</div>
             <div class="font-bold text-2xl" style="color: rgba(160, 0, 0, 1)">
               ${{ selectedPayment?.amount }}
             </div>
-          </div>
+    </div>
           <div class="text-xs text-gray-400 mt-1">
             Once confirmed, this payment will be marked as received and updated
             in the tenant's account.
-          </div>
-        </div>
+                  </div>
+                  </div>
         <template #footer>
           <div class="flex gap-2 justify-end items-center">
             <a-button
@@ -133,21 +133,21 @@
               class="rounded-md px-3 py-1.5 flex items-center"
               >Cancel</a-button
             >
-          </div>
+                  </div>
         </template>
       </PaymentModal>
-    </div>
-  </div>
-</template>
-
-<script>
+                      </div>
+                  </div>
+  </template>
+  
+  <script>
 import PaymentList from "@/components/payments/PaymentList.vue";
 import PaymentModal from "@/components/payments/PaymentModal.vue";
 import PaymentStatsCard from "@/components/payments/PaymentStatsCard.vue";
-export default {
+  export default {
   components: { PaymentList, PaymentModal, PaymentStatsCard },
-  data() {
-    return {
+      data() {
+          return {
       payments: [
         // Example data, replace with API/store
         {
@@ -248,8 +248,8 @@ export default {
         rent: this.payments.filter((p) => p.type === "Rent").length,
       };
     },
-  },
-  methods: {
+      },
+      methods: {
     openNotifyModal(payment) {
       this.selectedPayment = payment;
       this.notifyModalVisible = true;
@@ -293,6 +293,7 @@ export default {
     },
   },
 };
-</script>
-
+  </script>
+  
 <style></style>
+  

@@ -5,7 +5,7 @@
       <section
         class="w-full max-w-5xl mx-auto flex justify-between items-center mb-8"
       >
-        <router-link to="/properties" class="pt-3">
+      <router-link to="/properties" class="pt-3">
           <a-button
             type="text"
             class="flex items-center gap-2 text-base font-medium text-gray-600 bg-gray-100 hover:text-primary rounded-full px-4 py-2 transition-all"
@@ -14,19 +14,19 @@
               <svg
                 width="18"
                 height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
                 <path
                   d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z"
                   fill="#404164"
                 />
-              </svg>
+            </svg>
             </template>
-            Back
+          Back
           </a-button>
-        </router-link>
+      </router-link>
         <div class="flex gap-3 items-center">
           <a-button
             type="default"
@@ -50,22 +50,22 @@
                 width="22"
                 height="22"
                 viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M12 5.5V19.5M5 12.5H19"
-                  stroke="white"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 5.5V19.5M5 12.5H19"
+              stroke="white"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
             </template>
-            Add Tenant
+        Add Tenant
           </a-button>
         </div>
-      </section>
+    </section>
       <!-- Main Card -->
       <div class="bg-white p-4 rounded-2xl w-full max-w-5xl mx-auto">
         <a-spin :spinning="loading">
@@ -103,13 +103,13 @@
                     aria-label="Previous image"
                   >
                     <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
-                      <path
+          <path
                         d="M15 6l-6 6 6 6"
                         stroke="#23234a"
                         stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
                     </svg>
                   </button>
                   <!-- Next Button -->
@@ -120,14 +120,14 @@
                     aria-label="Next image"
                   >
                     <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
-                      <path
+          <path
                         d="M9 6l6 6-6 6"
                         stroke="#23234a"
                         stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
                   </button>
                   <!-- +N Remaining Images Indicator -->
                   <div
@@ -144,7 +144,7 @@
                     alt="No Image"
                   />
                 </template>
-              </div>
+      </div>
               <!-- Property Info Card -->
               <div class="flex-1 mt-6">
                 <div class="w-full">
@@ -154,9 +154,9 @@
                       {{ property.name }}
                     </h2>
                     <div class="flex items-center gap-2 text-gray-600">
-                      <svg
-                        width="16"
-                        height="16"
+        <svg
+          width="16"
+          height="16"
                         fill="none"
                         viewBox="0 0 24 24"
                       >
@@ -220,17 +220,17 @@
                         <svg
                           width="20"
                           height="20"
-                          fill="none"
+          fill="none"
                           viewBox="0 0 24 24"
-                        >
-                          <path
+        >
+          <path
                             d="M12 21V3m0 0l-4 4m4-4l4 4"
                             stroke="currentColor"
                             stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                        </svg>
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
                       </div>
                       <div class="detail-content">
                         <div class="detail-label">Monthly Rent</div>

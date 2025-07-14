@@ -43,110 +43,34 @@
 
       <!-- Content -->
       <div v-else>
-        <!-- Amenities Grid -->
-        <div
+        <!-- Amenities List -->
+        <a-list
           v-if="amenities.length > 0"
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-6"
+          :data-source="amenities"
+          bordered
+          class="bg-white rounded-xl"
         >
-          <a-card
-            v-for="amenity in amenities"
-            :key="amenity.amenityId"
-            class="!rounded-xl !border !border-gray-100 !shadow-sm hover:!shadow-md transition-shadow duration-200"
-            :bodyStyle="{ padding: '1rem' }"
-          >
-            <!-- Amenity Image -->
-            <div class="relative mb-3">
-              <div
-                class="w-full h-32 bg-blue-100 rounded-lg flex items-center justify-center"
-              >
+          <template #renderItem="{ item }">
+            <a-list-item class="flex items-center justify-between py-3 px-2 border-b last:border-b-0">
+              <div class="flex items-center gap-4">
                 <img
-                  :src="amenity.image || '/placeholder.png'"
-                  :alt="amenity.name"
-                  class="w-full h-full object-cover rounded-lg"
-                  @error="handleImageError"
+                  :src="item.image || '/placeholder.png'"
+                  :alt="item.name"
+                  class="w-10 h-10 object-contain rounded bg-gray-100"
+                  style="min-width:2.5rem;"
                 />
-              </div>
-            </div>
-
-            <!-- Amenity Details -->
-            <div class="space-y-2">
-              <a-tooltip :title="amenity.name" placement="top">
-                <h3
-                  class="text-lg font-semibold text-[#23234a] truncate cursor-help"
-                >
-                  {{ amenity.name }}
-                </h3>
-              </a-tooltip>
-
-              <div class="space-y-1">
-                <div class="flex items-start gap-2">
-                  <span
-                    class="text-xs text-gray-500 font-medium whitespace-nowrap"
-                    >Keywords:</span
-                  >
-                  <a-tooltip :title="amenity.amenitiesKeyWords" placement="top">
-                    <a-tag
-                      color="green"
-                      class="!text-xs truncate max-w-full cursor-help"
-                    >
-                      {{ amenity.amenitiesKeyWords }}
-                    </a-tag>
-                  </a-tooltip>
+                <div>
+                  <div class="font-semibold text-base text-[#23234a]">{{ item.name }}</div>
+                  <div class="text-xs text-gray-500">{{ item.amenitiesKeyWords }}</div>
                 </div>
               </div>
-
-              <!-- Action Buttons -->
-              <div class="flex gap-2 pt-1">
-                <a-button
-                  type="default"
-                  size="small"
-                  class="flex-1 flex items-center justify-center"
-                  @click="editAmenity(amenity)"
-                >
-                  <template #icon>
-                    <svg
-                      class="w-3 h-3"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                      ></path>
-                    </svg>
-                  </template>
-                  <span class="ml-1">Edit</span>
-                </a-button>
-                <a-button
-                  type="default"
-                  size="small"
-                  danger
-                  class="flex items-center justify-center"
-                  @click="deleteAmenity(amenity)"
-                >
-                  <template #icon>
-                    <svg
-                      class="w-3 h-3"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                      ></path>
-                    </svg>
-                  </template>
-                </a-button>
+              <div class="flex gap-2">
+                <a-button type="default" size="small" @click="editAmenity(item)">Edit</a-button>
+                <a-button type="default" size="small" danger @click="deleteAmenity(item)">Delete</a-button>
               </div>
-            </div>
-          </a-card>
-        </div>
+            </a-list-item>
+          </template>
+        </a-list>
 
         <!-- Empty State -->
         <a-empty v-else description="No amenities found" class="my-16">
@@ -189,70 +113,102 @@
           />
         </div>
       </div>
-    </a-card>
 
-    <!-- Add/Edit Amenity Modal -->
-    <a-modal
-      v-model:visible="modalVisible"
-      :title="isEditing ? 'Edit Amenity' : 'Add New Amenity'"
-      :footer="null"
-      :width="450"
-      :centered="true"
-      class="!rounded-2xl"
-      @cancel="closeModal"
-    >
-      <a-form
-        ref="formRef"
-        :model="form"
-        :rules="rules"
-        layout="vertical"
-        @finish="handleSubmit"
+      <!-- Add/Edit Amenity Modal (unchanged) -->
+      <a-modal
+        v-model:visible="modalVisible"
+        :title="isEditing ? 'Edit Amenity' : 'Add New Amenity'"
+        :footer="null"
+        :width="450"
+        :centered="true"
+        class="!rounded-2xl"
+        @cancel="closeModal"
       >
-        <!-- Amenity Name -->
-        <a-form-item label="Amenity Name" name="name" required>
-          <a-input
-            v-model:value="form.name"
-            placeholder="Enter amenity name (e.g., Swimming Pool, Gym)"
-            size="large"
-            class="!rounded-lg"
-          />
-        </a-form-item>
+        <a-form
+          ref="formRef"
+          :model="form"
+          :rules="rules"
+          layout="vertical"
+          @finish="handleSubmit"
+        >
+          <!-- Amenity Name -->
+          <a-form-item label="Amenity Name" name="name" required>
+            <a-input
+              v-model:value="form.name"
+              placeholder="Enter amenity name (e.g., Swimming Pool, Gym)"
+              size="large"
+              class="!rounded-lg"
+            />
+          </a-form-item>
 
-        <!-- Keywords -->
-        <a-form-item label="Keywords" name="amenitiesKeyWords" required>
-          <a-input
-            v-model:value="form.amenitiesKeyWords"
-            placeholder="Enter keywords (e.g., pool, swimming, fitness)"
-            size="large"
-            class="!rounded-lg"
-          />
-          <template #help>
-            <span class="text-xs text-gray-500"
-              >Keywords help in searching and categorizing amenities</span
-            >
-          </template>
-        </a-form-item>
-
-        <!-- Image Upload -->
-        <a-form-item label="Amenity Image" name="image" required>
-          <div class="space-y-4">
-            <!-- Image Preview -->
-            <div v-if="imagePreview" class="relative">
-              <img
-                :src="imagePreview"
-                alt="Preview"
-                class="w-full h-48 object-cover rounded-lg border border-gray-200"
-              />
-              <a-button
-                type="text"
-                danger
-                size="small"
-                class="absolute top-2 right-2 bg-white/80 rounded-full"
-                @click="removeImage"
+          <!-- Keywords -->
+          <a-form-item label="Keywords" name="amenitiesKeyWords" required>
+            <a-input
+              v-model:value="form.amenitiesKeyWords"
+              placeholder="Enter keywords (e.g., pool, swimming, fitness)"
+              size="large"
+              class="!rounded-lg"
+            />
+            <template #help>
+              <span class="text-xs text-gray-500"
+                >Keywords help in searching and categorizing amenities</span
               >
-                <template #icon>
+            </template>
+          </a-form-item>
+
+          <!-- Image Upload -->
+          <a-form-item label="Amenity Image" name="image" required>
+            <div class="space-y-4">
+              <!-- Image Preview -->
+              <div v-if="imagePreview" class="relative">
+                <img
+                  :src="imagePreview"
+                  alt="Preview"
+                  class="w-full h-48 object-cover rounded-lg border border-gray-200"
+                />
+                <a-button
+                  type="text"
+                  danger
+                  size="small"
+                  class="absolute top-2 right-2 bg-white/80 rounded-full"
+                  @click="removeImage"
+                >
+                  <template #icon>
+                    <svg
+                      class="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12"
+                      ></path>
+                    </svg>
+                  </template>
+                </a-button>
+              </div>
+
+              <!-- Upload Area -->
+              <div
+                v-if="!imagePreview"
+                class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors cursor-pointer"
+                @click="triggerFileInput"
+                @dragover.prevent
+                @drop.prevent="handleDrop"
+              >
+                <input
+                  ref="fileInput"
+                  type="file"
+                  accept="image/*"
+                  style="display: none"
+                  @change="handleFileSelect"
+                />
+                <div class="space-y-3">
                   <svg
-                    class="w-4 h-4"
+                    class="w-12 h-12 text-gray-400 mx-auto"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -261,72 +217,40 @@
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
-                      d="M6 18L18 6M6 6l12 12"
+                      d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                     ></path>
                   </svg>
-                </template>
-              </a-button>
-            </div>
-
-            <!-- Upload Area -->
-            <div
-              v-if="!imagePreview"
-              class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors cursor-pointer"
-              @click="triggerFileInput"
-              @dragover.prevent
-              @drop.prevent="handleDrop"
-            >
-              <input
-                ref="fileInput"
-                type="file"
-                accept="image/*"
-                style="display: none"
-                @change="handleFileSelect"
-              />
-              <div class="space-y-3">
-                <svg
-                  class="w-12 h-12 text-gray-400 mx-auto"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                  ></path>
-                </svg>
-                <div>
-                  <p class="text-sm font-medium text-gray-700">
-                    Click to upload or drag and drop
-                  </p>
-                  <p class="text-xs text-gray-500 mt-1">
-                    PNG, JPG, JPEG up to 10MB
-                  </p>
+                  <div>
+                    <p class="text-sm font-medium text-gray-700">
+                      Click to upload or drag and drop
+                    </p>
+                    <p class="text-xs text-gray-500 mt-1">
+                      PNG, JPG, JPEG up to 10MB
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </a-form-item>
+          </a-form-item>
 
-        <!-- Form Actions -->
-        <div class="flex gap-3 justify-end pt-4 border-t border-gray-100">
-          <a-button @click="closeModal"> Cancel </a-button>
-          <a-button
-            type="primary"
-            html-type="submit"
-            :loading="submitting"
-            class="!bg-primary !border-primary flex items-center"
-          >
-            <span v-if="submitting">Saving...</span>
-            <span v-else>{{
-              isEditing ? "Update Amenity" : "Add Amenity"
-            }}</span>
-          </a-button>
-        </div>
-      </a-form>
-    </a-modal>
+          <!-- Form Actions -->
+          <div class="flex gap-3 justify-end pt-4 border-t border-gray-100">
+            <a-button @click="closeModal"> Cancel </a-button>
+            <a-button
+              type="primary"
+              html-type="submit"
+              :loading="submitting"
+              class="!bg-primary !border-primary flex items-center"
+            >
+              <span v-if="submitting">Saving...</span>
+              <span v-else>{{
+                isEditing ? "Update Amenity" : "Add Amenity"
+              }}</span>
+            </a-button>
+          </div>
+        </a-form>
+      </a-modal>
+    </a-card>
   </div>
 </template>
 
@@ -345,6 +269,7 @@ import {
   Spin,
   Tag,
   Tooltip,
+  List, // Added List import
 } from "ant-design-vue";
 
 export default {
@@ -361,6 +286,7 @@ export default {
     "a-spin": Spin,
     "a-tag": Tag,
     "a-tooltip": Tooltip,
+    "a-list": List, // Added List component
   },
   data() {
     return {
@@ -532,21 +458,20 @@ export default {
           }
         }
 
-        const payload = {
-          amenityId: this.isEditing ? this.form.amenityId : 0,
-          name: this.form.name,
-          image: imageUrl,
-          amenitiesKeyWords: this.form.amenitiesKeyWords,
-        };
-
         let response;
         if (this.isEditing) {
+          const payload = {
+            amenityId: this.form.amenityId,
+            name: this.form.name,
+            image: imageUrl,
+          };
           response = await updateAmenity(payload);
         } else {
           response = await createAmenity(payload);
         }
 
-        if (response && response.responseCode === "00") {
+        // Check for HTTP 200 status and successful response
+        if (response && response.status === 200 && response.responseCode === "00") {
           message.success(
             this.isEditing
               ? "Amenity updated successfully!"

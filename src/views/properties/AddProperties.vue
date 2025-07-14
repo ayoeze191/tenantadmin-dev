@@ -25,6 +25,40 @@
             ref="propertyFormRef"
             layout="vertical"
           >
+            <a-form-item label="Select Landlord" name="landlordId" required>
+              <a-select
+                v-model:value="form.landlordId"
+                placeholder="Search and select a landlord"
+                size="large"
+                show-search
+                :filter-option="false"
+                :loading="landlordLoading"
+                :options="landlordOptions"
+                @search="onLandlordSearch"
+                @popup-scroll="onLandlordScroll"
+                :field-names="{ label: 'label', value: 'value' }"
+                :not-found-content="
+                  landlordLoading ? 'Loading...' : 'No landlords found'
+                "
+              >
+                <template #option="{ label, value, data }">
+                  <div class="flex flex-col">
+                    <span class="font-medium"
+                      >{{ data.firstname }} {{ data.lastname }}</span
+                    >
+                    <span class="text-sm text-gray-500">{{
+                      data.emailAddress
+                    }}</span>
+                    <span class="text-xs text-gray-400"
+                      >ID: {{ data.accountRefNumber }}</span
+                    >
+                  </div>
+                </template>
+                <template #suffixIcon>
+                  <a-spin v-if="landlordLoading" size="small" />
+                </template>
+              </a-select>
+            </a-form-item>
             <a-form-item label="Property Name" name="name" required>
               <a-input
                 v-model:value="form.name"
@@ -93,7 +127,7 @@
 
         <div v-if="currentStep === 1" class="bg-white p-6 rounded-xl">
           <!-- Step 2: Unit Allocation -->
-          <div>
+        <div>
             <label class="block text-txt_dark2 text-lg mb-4 font-semibold"
               >Unit Type(s)</label
             >
@@ -124,82 +158,179 @@
           </div>
         </div>
 
-        <div v-if="currentStep === 2" class="bg-white p-6 rounded-xl">
+        <div v-if="currentStep === 2" class="bg-white p-4 rounded-xl">
           <!-- Step 3: Unit Info -->
           <a-form :model="form" ref="unitInfoFormRef" layout="vertical">
-            <div class="flex gap-4">
-              <a-form-item
-                label="Rent (per month)"
-                name="rent"
-                required
-                class="flex-1"
-              >
-                <a-input-number
-                  v-model:value="form.rent"
-                  style="width: 100%"
-                  min="0"
+            <div
+              v-if="form.unitTypeDetails.length === 0"
+              class="text-center py-8"
+            >
+              <p class="text-gray-500">
+                No unit types selected. Please go back to Step 2 and select unit
+                types.
+              </p>
+            </div>
+            <div v-else>
+              <!-- Sub-stepper UI -->
+              <div class="flex items-center justify-center mb-3">
+                <div class="flex items-center gap-2">
+                  <a-button
+                    type="text"
+                    :disabled="currentUnitTypeIndex === 0"
+                    @click="
+                      () => currentUnitTypeIndex > 0 && currentUnitTypeIndex--
+                    "
+                    class="flex items-center gap-1"
+                  >
+                    <LeftOutlined style="font-size: 16px" />
+                    Previous
+                  </a-button>
+                  <span class="text-base">
+                    <span :class="'font-semibold underline text-primary'">{{
+                      currentUnitTypeIndex + 1
+                    }}</span>
+                    of {{ form.unitTypeDetails.length }}
+                  </span>
+                  <a-button
+                    type="text"
+                    :disabled="
+                      currentUnitTypeIndex === form.unitTypeDetails.length - 1
+                    "
+                    @click="
+                      () =>
+                        currentUnitTypeIndex <
+                          form.unitTypeDetails.length - 1 &&
+                        currentUnitTypeIndex++
+                    "
+                    class="flex items-center gap-1"
+                  >
+                    Next
+                    <RightOutlined style="font-size: 16px" />
+                  </a-button>
+                </div>
+                </div>
+              <!-- Only show the current unit type's form -->
+              <div>
+                <div class="flex items-center justify-between mb-4">
+                  <h4 class="text-base font-bold text-gray-900">
+                    {{ form.unitTypeDetails[currentUnitTypeIndex].label }}
+                  </h4>
+                  <span class="text-sm text-gray-600"
+                    >Quantity:
+                    {{
+                      form.unitTypeDetails[currentUnitTypeIndex].quantity
+                    }}</span
+                  >
+                </div>
+                <div class="grid grid-cols-1">
+                  <a-form-item
+                    :label="`Rent (per month) - ${form.unitTypeDetails[currentUnitTypeIndex].label}`"
+                    :name="[
+                      'unitTypeDetails',
+                      currentUnitTypeIndex,
+                      'rentPerMonth',
+                    ]"
+                    required
+                  >
+                    <a-input-number
+                      v-model:value="
+                        form.unitTypeDetails[currentUnitTypeIndex].rentPerMonth
+                      "
+                      style="width: 100%"
+                      min="0"
+                      size="large"
+                      placeholder="Enter rent amount"
+                    />
+                  </a-form-item>
+                  <a-form-item
+                    :label="`Security Deposit - ${form.unitTypeDetails[currentUnitTypeIndex].label}`"
+                    :name="[
+                      'unitTypeDetails',
+                      currentUnitTypeIndex,
+                      'securityDeposit',
+                    ]"
+                    required
+                  >
+                    <a-input-number
+                      v-model:value="
+                        form.unitTypeDetails[currentUnitTypeIndex]
+                          .securityDeposit
+                      "
+                      style="width: 100%"
+                      min="0"
+                      size="large"
+                      placeholder="Enter security deposit"
+                    />
+                  </a-form-item>
+                </div>
+                <a-form-item
+                  :label="`Unit Images - ${form.unitTypeDetails[currentUnitTypeIndex].label}`"
+                  :name="[
+                    'unitTypeDetails',
+                    currentUnitTypeIndex,
+                    'unitImages',
+                  ]"
+                  :validate-status="
+                    form.unitTypeDetails[currentUnitTypeIndex].unitImages
+                      .length === 0
+                      ? 'error'
+                      : ''
+                  "
+                  :help="
+                    form.unitTypeDetails[currentUnitTypeIndex].unitImages
+                      .length === 0
+                      ? 'At least one image is required'
+                      : ''
+                  "
+                  required
+                >
+                  <template #label>
+                    Unit Images -
+                    {{ form.unitTypeDetails[currentUnitTypeIndex].label }}
+                    <span style="color: red">*</span>
+                  </template>
+                  <CustomImageUpload
+                    v-model="
+                      form.unitTypeDetails[currentUnitTypeIndex].unitImages
+                    "
+                  />
+                </a-form-item>
+                </div>
+              <a-form-item label="Amenities" name="amenities">
+                <a-select
+                  v-model:value="form.amenities"
+                  mode="multiple"
+                  placeholder="Select amenities"
+                  :options="amenityOptions"
                   size="large"
-                />
-              </a-form-item>
-              <a-form-item
-                label="Security Deposit"
-                name="securityDeposit"
-                required
-                class="flex-1"
-              >
-                <a-input-number
-                  v-model:value="form.securityDeposit"
-                  style="width: 100%"
-                  min="0"
-                  size="large"
-                />
+                  :field-names="{ label: 'label', value: 'value' }"
+                  :option-label-prop="'label'"
+                  :tagRender="renderAmenityTag"
+                >
+                  <template #option="{ value, label }">
+                    <span class="flex items-center gap-2">
+                      <img
+                        v-if="
+                          amenityOptions.find((o) => o.value === value)?.image
+                        "
+                        :src="
+                          amenityOptions.find((o) => o.value === value).image
+                        "
+                        style="
+                          width: 20px;
+                          height: 20px;
+                          object-fit: cover;
+                          border-radius: 4px;
+                        "
+                      />
+                      <span>{{ label }}</span>
+                    </span>
+                  </template>
+                </a-select>
               </a-form-item>
             </div>
-            <a-form-item
-              name="images"
-              :validate-status="fileList.length === 0 ? 'error' : ''"
-              :help="
-                fileList.length === 0 ? 'At least one image is required' : ''
-              "
-              required
-            >
-              <template #label>
-                Property Images <span style="color: red">*</span>
-              </template>
-              <CustomImageUpload v-model="fileList" />
-            </a-form-item>
-            <a-form-item label="Amenities" name="amenities">
-              <a-select
-                v-model:value="form.amenities"
-                mode="multiple"
-                placeholder="Select amenities"
-                :options="amenityOptions"
-                size="large"
-                :field-names="{ label: 'label', value: 'value' }"
-                :option-label-prop="'label'"
-                :tagRender="renderAmenityTag"
-              >
-                <template #option="{ value, label }">
-                  <span class="flex items-center gap-2">
-                    <img
-                      v-if="
-                        amenityOptions.find((o) => o.value === value)?.image
-                      "
-                      :src="amenityOptions.find((o) => o.value === value).image"
-                      style="
-                        width: 20px;
-                        height: 20px;
-                        object-fit: cover;
-                        border-radius: 4px;
-                      "
-                    />
-                    <span>{{ label }}</span>
-                  </span>
-                </template>
-              </a-select>
-            </a-form-item>
           </a-form>
-        </div>
+                    </div>
 
         <div class="flex gap-4 mt-4">
           <a-button
@@ -251,29 +382,29 @@
               {{ form.units || 0 }} Units
             </p>
           </div>
-          <div class="flex gap-2">
+                    <div class="flex gap-2">
             <span>💰</span>
             <p class="text-txt_dark text-sm leading-4">
-              {{ form.rent ? `$${form.rent}` : "Rent" }}
+              {{ form.unitTypeDetails.length > 0 ? formatPrice(form.unitTypeDetails[0].rentPerMonth) : (form.rent ? formatPrice(form.rent) : 'Rent') }}
             </p>
-          </div>
-          <div class="flex gap-2">
+                    </div>
+                    <div class="flex gap-2">
             <span>🛏️</span>
             <p class="text-txt_dark text-sm leading-4">
               {{ getUnitTypeSummary() }}
             </p>
-          </div>
+                    </div>
           <div class="flex gap-2">
             <span>⭐</span>
             <p
               class="text-txt_dark text-sm leading-4"
               v-html="getAmenitiesPreview()"
             ></p>
-          </div>
+                </div>
           <div class="mt-2">
             <a-image
-              v-if="fileList.length > 0"
-              :src="getPreviewImage(fileList[0])"
+              v-if="getPreviewImageFromUnitTypes()"
+              :src="getPreviewImageFromUnitTypes()"
               width="100%"
               style="border-radius: 8px; object-fit: cover; height: 120px"
             />
@@ -289,14 +420,14 @@
           <p class="text-tgr font-medium text-sm leading-4">
             This is a preview for how your property looks when published
           </p>
-        </section>
-      </div>
+      </section>
+                </div>
     </div>
-  </div>
+    </div>
 </template>
-
+  
 <script setup>
-import { CreateNewProperty } from "@/api/properties";
+import { CreateNewProperty, FetchLandlords } from "@/api/properties";
 import { useUserStore } from "@/store";
 import { useOptionsStore } from "@/stores/options";
 import { uploadImages } from "@/utils/helper";
@@ -318,15 +449,42 @@ import {
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-const unitTypeOptions = ref([]);
-const propertyTypeOptions = ref([]);
+// 1. Define the enum array at the top of the script
+const UNIT_TYPE_ENUM = [
+  { label: "Studio", value: 0 },
+  { label: "One Bedroom", value: 1 },
+  { label: "Two Bedroom", value: 2 },
+  { label: "Three Bedroom", value: 3 },
+  { label: "PentHouse", value: 4 },
+  { label: "Loft", value: 5 },
+  { label: "TownHouse", value: 6 },
+  { label: "Duplex", value: 7 },
+  { label: "Villa", value: 8 },
+  { label: "Serviced Apartment", value: 9 },
+  { label: "Shared Accommodation", value: 10 },
+  { label: "Hostel/Dormitory", value: 11 },
+];
+
+// 2. Use this for unitTypeOptions
+const unitTypeOptions = ref(UNIT_TYPE_ENUM);
+
+// Use the same enum for propertyTypeOptions
+const propertyTypeOptions = ref(UNIT_TYPE_ENUM);
+
 const amenityOptions = ref([]);
+const landlordOptions = ref([]);
+const landlordLoading = ref(false);
+const landlordSearchValue = ref("");
+const landlordCurrentPage = ref(1);
+const landlordTotalItems = ref(0);
 
 const currentStep = ref(0);
 const loading = ref(false);
 const error = ref(null);
+const currentUnitTypeIndex = ref(0);
 
 const form = reactive({
+  landlordId: null,
   name: "",
   address: "",
   zipCode: "",
@@ -335,10 +493,9 @@ const form = reactive({
   description: "",
   units: null,
   unitTypeCounts: [],
-  rent: null,
-  securityDeposit: null,
-  images: [],
-  amenities: [],
+  unitTypeDetails: [], // New array to store details for each unit type
+              images: [],
+              amenities: [],
 });
 
 const router = useRouter();
@@ -348,20 +505,22 @@ const optionsStore = useOptionsStore();
 
 onMounted(async () => {
   await optionsStore.fetchAmenities();
-  await optionsStore.fetchUnitTypes();
+  // await optionsStore.fetchUnitTypes(); // Removed as per edit hint
+  await fetchLandlords();
+
   amenityOptions.value = optionsStore.amenities.map((a) => ({
     label: a.name,
     value: a.amenityId,
     image: a.image || a.icon || null,
   }));
-  unitTypeOptions.value = optionsStore.unitTypes.map((u) => ({
-    label: u,
-    value: u,
-  }));
-  propertyTypeOptions.value = optionsStore.unitTypes.map((u) => ({
-    label: u,
-    value: u,
-  }));
+  // unitTypeOptions.value = optionsStore.unitTypes.map((u) => ({ // Removed as per edit hint
+  //   label: u,
+  //   value: u,
+  // }));
+  // propertyTypeOptions.value = optionsStore.unitTypes.map((u) => ({ // Removed as per edit hint
+  //   label: u,
+  //   value: u,
+  // }));
   form.unitTypeCounts = Array(optionsStore.unitTypes.length).fill(0);
 
   // EDIT MODE: If route has id, fetch property from IndexedDB
@@ -404,6 +563,7 @@ onMounted(async () => {
 });
 
 const rules = {
+  landlordId: [{ required: true, message: "Landlord is required" }],
   name: [{ required: true, message: "Property name is required" }],
   address: [{ required: true, message: "Address is required" }],
   zipCode: [{ required: true, message: "Zip code is required" }],
@@ -411,15 +571,84 @@ const rules = {
   propertyType: [{ required: true, message: "Property type is required" }],
   description: [{ required: true, message: "Description is required" }],
   units: [{ required: true, message: "Total number of units is required" }],
-  rent: [{ required: true, message: "Rent is required" }],
-  securityDeposit: [
-    { required: true, message: "Security deposit is required" },
-  ],
   images: [{ required: true, message: "At least one image is required" }],
 };
 
 const fileList = ref([]);
 const uploadedImageUrls = ref([]); // Cache for uploaded image URLs
+
+// Landlord functions
+const fetchLandlords = async (searchName = "", page = 1) => {
+  landlordLoading.value = true;
+  try {
+    const response = await FetchLandlords({
+      name: searchName,
+      currentPage: page,
+      pageSize: 10,
+    });
+
+    if (response && response.accountList) {
+      const landlords = response.accountList.items.map((landlord) => ({
+        label: `${landlord.firstname} ${landlord.lastname} (${landlord.emailAddress})`,
+        value: landlord.accountId,
+        data: landlord,
+      }));
+
+      if (page === 1) {
+        landlordOptions.value = landlords;
+      } else {
+        landlordOptions.value = [...landlordOptions.value, ...landlords];
+      }
+
+      landlordTotalItems.value = response.accountList.totalItemCount;
+      landlordCurrentPage.value = page;
+    }
+  } catch (error) {
+    console.error("Error fetching landlords:", error);
+  } finally {
+    landlordLoading.value = false;
+  }
+};
+
+const onLandlordSearch = (value) => {
+  landlordSearchValue.value = value;
+  landlordCurrentPage.value = 1;
+  fetchLandlords(value, 1);
+};
+
+const onLandlordScroll = (e) => {
+  const { target } = e;
+  if (target.scrollTop + target.offsetHeight === target.scrollHeight) {
+    // Reached bottom, load more
+    if (
+      landlordOptions.value.length < landlordTotalItems.value &&
+      !landlordLoading.value
+    ) {
+      fetchLandlords(landlordSearchValue.value, landlordCurrentPage.value + 1);
+    }
+  }
+};
+
+// Update initializeUnitTypeDetails
+const initializeUnitTypeDetails = () => {
+  form.unitTypeDetails = unitTypeOptions.value
+    .map((type, idx) => {
+      const count = form.unitTypeCounts[idx] || 0;
+      if (count > 0) {
+        return {
+          unitType: type.value, // enum id
+          value: type.value,    // enum id (for clarity)
+          label: type.label,
+          quantity: count,
+          rentPerMonth: null,
+          securityDeposit: null,
+          unitImages: [],
+        };
+      }
+      return null;
+    })
+    .filter(Boolean);
+};
 
 const CustomImageUpload = defineComponent({
   name: "CustomImageUpload",
@@ -641,167 +870,22 @@ const CustomImageUpload = defineComponent({
   },
 });
 
-const nextOrSubmit = async () => {
-  if (currentStep.value === 0) {
-    // Validate Step 1 form
-    const propertyForm = propertyFormRef.value;
-    try {
-      await propertyForm.validate();
-      currentStep.value++;
-    } catch (err) {
-      return;
-    }
-  } else if (currentStep.value === 1) {
-    // No form to validate in Step 2, just go to next step
-    currentStep.value++;
-  } else if (currentStep.value === 2) {
-    // EDIT MODE: If editing, show loader for 1.5s then show message
-    if (route.params.id) {
-      loading.value = true;
-      setTimeout(() => {
-        loading.value = false;
-        message.info("Edit functionality is not available yet.");
-      }, 1500);
-      return;
-    }
-    // Validate Step 3 form (unitInfoFormRef)
-    const unitInfoForm = unitInfoFormRef.value;
-    try {
-      await unitInfoForm.validate();
-    } catch (err) {
-      console.error("Validation error:", err);
-      return;
-    }
-    if (fileList.value.length === 0) {
-      message.error("Please upload at least one property image.");
-      return;
-    }
-    loading.value = true;
-    try {
-      // Only upload images if not already uploaded
-      if (!uploadedImageUrls.value.length) {
-        uploadedImageUrls.value = await uploadImages(fileList.value);
-      }
-      const imageObjs = fileList.value.map((file, idx) => ({
-        image: uploadedImageUrls.value[idx],
-        imageTitle: file.name || `Image ${idx + 1}`,
-      }));
-      // Prepare amenities as IDs
-      const amenityIds = form.amenities.map((a) =>
-        typeof a === "object" ? a.value : a
-      );
-      // Prepare unit types as array of unit objects (not just count)
-      const units = unitTypeOptions.value
-        .map((type, idx) => {
-          const count = form.unitTypeCounts[idx] || 0;
-          if (count > 0) {
-            return {
-              unitType: type.value,
-              count: count,
-            };
-          }
-          return null;
-        })
-        .filter(Boolean);
-      // Prepare unit types
-      const unitTypes = unitTypeOptions.value
-        .map((type, idx) => ({
-          type: type.value,
-          count: form.unitTypeCounts[idx] || 0,
-        }))
-        .filter((u) => u.count > 0);
-      // Build payload according to new API specification
-      const payload = {
-        landLordId:
-          parseInt(store.userProfile.adminUserID, 10) ||
-          store.userProfile.adminUserID,
-        name: form.name,
-        description: form.description,
-        address: form.address,
-        zipCode: form.zipCode,
-        province: form.province,
-        totalUnits: form.units,
-        propertyTypee: form.propertyType, // Note: API has typo 'propertyTypee'
-        unitTypes: unitTypeOptions.value
-          .map((type, idx) => {
-            const count = form.unitTypeCounts[idx] || 0;
-            if (count > 0) {
-              return {
-                quantity: count,
-                unitType: type.value,
-                rentPerMonth: form.rent,
-                securityDeposit: form.securityDeposit,
-                unitImages: imageObjs.map((img, imgIdx) => ({
-                  imageTitle: img.imageTitle,
-                  image: img.image,
-                  isMain: imgIdx === 0, // First image is main
-                })),
-              };
-            }
-            return null;
-          })
-          .filter(Boolean),
-      };
-      console.log("Payload to CreateNewProperty:", payload);
-      if (!payload.landLordId) {
-        message.error("No landlordId found. Please log in again.");
-        loading.value = false;
-        return;
-      }
-      const res = await CreateNewProperty(payload);
-      console.log("CreateNewProperty API response:", res);
-      if (res) {
-        message.success("Property Added Successfully!");
-        router.push("/properties");
-        uploadedImageUrls.value = []; // Reset cache on success
-      } else if (res && (res.success || res.status === 200)) {
-        // Fallback: if API returns a different success indicator
-        message.success("Property Added Successfully!");
-        router.push("/properties");
-        uploadedImageUrls.value = []; // Reset cache on success
-      } else {
-        message.error(res?.responseMessage || "Failed to add property");
-      }
-    } catch (err) {
-      message.error("An error occurred while saving the property.");
-    } finally {
-      loading.value = false;
-    }
-  }
-};
-
-const prevStep = () => {
-  if (currentStep.value > 0) currentStep.value--;
-};
-
-// Add refs for forms
-const propertyFormRef = ref();
-const unitFormRef = ref();
-const unitInfoFormRef = ref();
-
-const getPreviewImage = (file) => {
-  if (file instanceof File) {
-    return URL.createObjectURL(file);
-  }
-  if (file.originFileObj) {
-    return URL.createObjectURL(file.originFileObj);
-  }
-  // Support both .url and .image for edit mode
-  return file.url || file.image || file.thumbUrl;
-};
-
-function incrementUnitType(idx) {
-  form.unitTypeCounts[idx] = (form.unitTypeCounts[idx] || 0) + 1;
-  form.unitTypeCounts = [...form.unitTypeCounts];
-}
-function decrementUnitType(idx) {
-  if ((form.unitTypeCounts[idx] || 0) > 0) {
-    form.unitTypeCounts[idx]--;
-    form.unitTypeCounts = [...form.unitTypeCounts];
-  }
+// Add this utility function
+function formatPrice(val) {
+  if (val === undefined || val === null || val === "") return '-';
+  return '₦' + Number(val).toLocaleString();
 }
 
+// Update getUnitTypeSummary to use formatPrice
 function getUnitTypeSummary() {
+  if (form.unitTypeDetails.length > 0) {
+    return form.unitTypeDetails
+      .map(
+        (unitDetail) =>
+          `${unitDetail.label}: ${unitDetail.quantity} (${formatPrice(unitDetail.rentPerMonth)})`
+      )
+      .join(", ");
+  }
   return unitTypeOptions.value
     .map((type, idx) => {
       const count = form.unitTypeCounts[idx];
@@ -855,8 +939,164 @@ function renderAmenityTag({ label, value, closable, onClose }) {
 watch(fileList, (newVal) => {
   form.images = newVal;
 });
-</script>
 
+// Update getPreviewImageFromUnitTypes to find the first available image from any unit type
+function getPreviewImageFromUnitTypes() {
+  for (const unit of form.unitTypeDetails) {
+    if (unit.unitImages && unit.unitImages.length > 0) {
+      const img = unit.unitImages[0];
+      return img.url || img.image || img.thumbUrl || (img instanceof File ? URL.createObjectURL(img) : null);
+    }
+  }
+  return null;
+}
+
+const nextOrSubmit = async () => {
+  if (currentStep.value === 0) {
+    // Validate Step 1 form
+    const propertyForm = propertyFormRef.value;
+    try {
+      await propertyForm.validate();
+      currentStep.value++;
+    } catch (err) {
+      return;
+    }
+  } else if (currentStep.value === 1) {
+    // Initialize unit type details for Step 3
+    initializeUnitTypeDetails();
+    currentStep.value++;
+  } else if (currentStep.value === 2) {
+    // EDIT MODE: If editing, show loader for 1.5s then show message
+    if (route.params.id) {
+      loading.value = true;
+      setTimeout(() => {
+        loading.value = false;
+        message.info("Edit functionality is not available yet.");
+      }, 1500);
+      return;
+    }
+    // Validate Step 3 form (unitInfoFormRef)
+    const unitInfoForm = unitInfoFormRef.value;
+    try {
+      await unitInfoForm.validate();
+    } catch (err) {
+      console.error("Validation error:", err);
+      return;
+    }
+    // Check if all unit types have images
+    const hasAllImages = form.unitTypeDetails.every(
+      (unitDetail) => unitDetail.unitImages && unitDetail.unitImages.length > 0
+    );
+    if (!hasAllImages) {
+      message.error("Please upload at least one image for each unit type.");
+      return;
+    }
+    loading.value = true;
+    try {
+      // Upload images for each unit type
+      for (const unitDetail of form.unitTypeDetails) {
+        // Only upload if not already uploaded (no .url or .image string)
+        const filesToUpload = unitDetail.unitImages.filter(img => img instanceof File || img.originFileObj);
+        if (filesToUpload.length > 0) {
+          const uploadedUrls = await uploadImages(filesToUpload);
+          let uploadIdx = 0;
+          unitDetail.unitImages = unitDetail.unitImages.map(img => {
+            if (img instanceof File || img.originFileObj) {
+              const url = uploadedUrls[uploadIdx++];
+              return { url, imageTitle: img.name || 'Image', isMain: false };
+            }
+            // Already uploaded
+            return img;
+          });
+          // Mark the first image as main
+          if (unitDetail.unitImages.length > 0) {
+            unitDetail.unitImages[0].isMain = true;
+          }
+        }
+      }
+      // Build payload according to new API specification
+      const payload = {
+        landLordId: form.landlordId,
+        name: form.name,
+        description: form.description,
+        address: form.address,
+        zipCode: form.zipCode,
+        province: form.province,
+        totalUnits: form.units,
+        propertyTypee: form.propertyType, // Note: API has typo 'propertyTypee'
+        unitTypes: form.unitTypeDetails.map((unitDetail) => {
+          const unitImageObjs = unitDetail.unitImages.map((img, imgIdx) => ({
+            imageTitle: img.imageTitle || `Image ${imgIdx + 1}`,
+            image: img.url || img.image || img.thumbUrl,
+            isMain: !!img.isMain,
+          }));
+          return {
+            quantity: unitDetail.quantity,
+            unitType: unitDetail.value, // Use the enum value for unitType
+            rentPerMonth: unitDetail.rentPerMonth,
+            securityDeposit: unitDetail.securityDeposit,
+            unitImages: unitImageObjs,
+          };
+        }),
+      };
+      console.log("Payload to CreateNewProperty:", payload);
+      if (!payload.landLordId) {
+        message.error("Please select a landlord.");
+        loading.value = false;
+        return;
+      }
+      const res = await CreateNewProperty(payload);
+      console.log("CreateNewProperty API response:", res);
+      if (res) {
+        message.success("Property Added Successfully!");
+        router.push("/properties");
+      } else if (res && (res.success || res.status === 200)) {
+        // Fallback: if API returns a different success indicator
+        message.success("Property Added Successfully!");
+        router.push("/properties");
+        } else {
+        message.error(res?.responseMessage || "Failed to add property");
+      }
+    } catch (err) {
+      message.error("An error occurred while saving the property.");
+    } finally {
+      loading.value = false;
+    }
+  }
+};
+
+const prevStep = () => {
+  if (currentStep.value > 0) currentStep.value--;
+};
+
+// Add refs for forms
+const propertyFormRef = ref();
+const unitFormRef = ref();
+const unitInfoFormRef = ref();
+
+const getPreviewImage = (file) => {
+  if (file instanceof File) {
+    return URL.createObjectURL(file);
+  }
+  if (file.originFileObj) {
+    return URL.createObjectURL(file.originFileObj);
+  }
+  // Support both .url and .image for edit mode
+  return file.url || file.image || file.thumbUrl;
+};
+
+function incrementUnitType(idx) {
+  form.unitTypeCounts[idx] = (form.unitTypeCounts[idx] || 0) + 1;
+  form.unitTypeCounts = [...form.unitTypeCounts];
+}
+function decrementUnitType(idx) {
+  if ((form.unitTypeCounts[idx] || 0) > 0) {
+    form.unitTypeCounts[idx]--;
+    form.unitTypeCounts = [...form.unitTypeCounts];
+      }
+  }
+  </script>
+  
 <style scoped>
 .bg-neutral {
   background: #f7f8fa;

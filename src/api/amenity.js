@@ -19,11 +19,11 @@ export const createAmenity = async (body) => {
   }
 };
 
-export const updateAmenity = async (body) => {
+export const updateAmenity = async (payload) => {
   try {
-    const response = await putApi("/Amenity/UpdateAmenity", body);
+    const response = await postApi("/Amenity/EditAmenity", payload);
     return response.data;
-  } catch (err) {
-    handleError(err);
+  } catch (error) {
+    handleError(error);
   }
 }; 
