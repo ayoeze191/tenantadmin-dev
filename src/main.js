@@ -13,8 +13,9 @@ import "vue-toast-notification/dist/theme-bootstrap.css";
 import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
-import Antd, { ConfigProvider } from 'ant-design-vue';
-import 'ant-design-vue/dist/reset.css';
+import Antd, { ConfigProvider } from "ant-design-vue";
+import "ant-design-vue/dist/reset.css";
+import * as AntIcons from "@ant-design/icons-vue";
 
 const vuetify = createVuetify({
   components,
@@ -24,7 +25,7 @@ const vuetify = createVuetify({
 // Ant Design theme configuration
 const theme = {
   token: {
-    colorPrimary: '#000130',
+    colorPrimary: "#000130",
     borderRadius: 9,
   },
 };
@@ -71,8 +72,11 @@ app.use(ToastPlugin, {
 app.use(router);
 app.use(vuetify);
 app.use(Antd);
+Object.keys(AntIcons).forEach((key) => {
+  app.component(key, AntIcons[key]);
+});
 
 // Provide theme configuration globally
-app.provide('theme', theme);
+app.provide("theme", theme);
 
 app.mount("#app");

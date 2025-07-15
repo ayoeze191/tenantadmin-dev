@@ -14,7 +14,9 @@
           >All My Properties</a-select-option
         >
       </a-select>
-      <h1 class="text-txt_dark font-semibold text-2xl leading-8">
+      <h1 class="text-txt_dark font-[600] text-[36px]  leading-[100%]"
+      :style="{  fontFamily: 'SF Compact Text' }"
+      >
         {{ routeName }}
       </h1>
     </section>

@@ -1,431 +1,400 @@
 <template>
-  <div class="bg-neutral py-5 px-6 w-full">
+  <div class="bg-neutral py-[50px] px-6 w-full">
+    <a-typography-title 
+      class="font-sf m-0 p-0"
+      :style="{ color: '#404164', fontFamily: 'SF Compact Text' }"
+      :level="3"
+    >
+      ADD PROPERTIES
+    </a-typography-title>
+
     <div v-if="loading" class="flex items-center justify-center min-h-[300px]">
       <a-spin size="large" />
     </div>
-    <div
-      v-else-if="error"
-      class="flex items-center justify-center min-h-[300px]"
-    >
+
+    <div v-else-if="error" class="flex items-center justify-center min-h-[300px]">
       <a-result status="404" :title="'Not Found'" :sub-title="error" />
     </div>
-    <div v-else class="max-w-[85rem] flex pb-8 mx-auto">
-      <div class="flex-1">
-        <a-steps :current="currentStep" class="mb-8">
-          <a-step title="Property Info" />
-          <a-step title="Unit Allocation" />
-          <a-step title="Unit Info" />
-        </a-steps>
 
-        <div v-if="currentStep === 0" class="bg-white p-6 rounded-xl">
-          <!-- Step 1: Property Info -->
-          <a-form
-            :model="form"
-            :rules="rules"
-            ref="propertyFormRef"
-            layout="vertical"
-          >
-            <a-form-item label="Select Landlord" name="landlordId" required>
-              <a-select
-                v-model:value="form.landlordId"
-                placeholder="Search and select a landlord"
-                size="large"
-                show-search
-                :filter-option="false"
-                :loading="landlordLoading"
-                :options="landlordOptions"
-                @search="onLandlordSearch"
-                @popup-scroll="onLandlordScroll"
-                :field-names="{ label: 'label', value: 'value' }"
-                :not-found-content="
-                  landlordLoading ? 'Loading...' : 'No landlords found'
-                "
-              >
-                <template #option="{ label, value, data }">
-                  <div class="flex flex-col">
-                    <span class="font-medium"
-                      >{{ data.firstname }} {{ data.lastname }}</span
-                    >
-                    <span class="text-sm text-gray-500">{{
-                      data.emailAddress
-                    }}</span>
-                    <span class="text-xs text-gray-400"
-                      >ID: {{ data.accountRefNumber }}</span
-                    >
-                  </div>
-                </template>
-                <template #suffixIcon>
-                  <a-spin v-if="landlordLoading" size="small" />
-                </template>
-              </a-select>
-            </a-form-item>
-            <a-form-item label="Property Name" name="name" required>
-              <a-input
-                v-model:value="form.name"
-                placeholder="Enter property name"
-                size="large"
-              />
-            </a-form-item>
-            <a-form-item label="Property Address" name="address" required>
-              <a-input
-                v-model:value="form.address"
-                placeholder="Enter address"
-                size="large"
-              />
-            </a-form-item>
-            <div class="flex gap-4">
-              <a-form-item
-                label="Zip Code"
-                name="zipCode"
-                required
-                class="flex-1"
-              >
-                <a-input
-                  v-model:value="form.zipCode"
-                  placeholder="Zip code"
-                  size="large"
-                />
-              </a-form-item>
-              <a-form-item
-                label="Province"
-                name="province"
-                required
-                class="flex-1"
-              >
-                <a-input
-                  v-model:value="form.province"
-                  placeholder="Province"
-                  size="large"
-                />
-              </a-form-item>
-            </div>
-            <a-form-item label="Property Type" name="propertyType" required>
-              <a-select
-                v-model:value="form.propertyType"
-                placeholder="Select property type"
-                :options="propertyTypeOptions"
-                size="large"
-              />
-            </a-form-item>
-            <a-form-item label="Description" name="description" required>
-              <a-textarea
-                v-model:value="form.description"
-                placeholder="Description"
-                size="large"
-              />
-            </a-form-item>
-            <a-form-item label="Total Number of Units" name="units" required>
-              <a-input-number
-                v-model:value="form.units"
-                style="width: 100%"
-                min="1"
-                size="large"
-              />
-            </a-form-item>
-          </a-form>
-        </div>
+    <div v-else class="max-w-[85rem] flex flex-col pb-8 mt-[13px]">
+      <!-- Stepper -->
+      <a-steps :current="currentStep" class="max-w-[529px] mb-8">
+        <a-step title="Property Info" />
+        <a-step title="Unit Allocation" />
+        <a-step title="Unit " />
+      </a-steps>
 
-        <div v-if="currentStep === 1" class="bg-white p-6 rounded-xl">
-          <!-- Step 2: Unit Allocation -->
-        <div>
-            <label class="block text-txt_dark2 text-lg mb-4 font-semibold"
-              >Unit Type(s)</label
+      <!-- Step 1: Property Info -->
+       <div class="flex w-full gap-[22px]">
+        <div class="w-[60%] min-w-[600px] ">
+      <div v-if="currentStep === 0" class="bg-white p-6 rounded-xl">
+        <a-form :model="form" :rules="rules" ref="propertyFormRef" layout="vertical">
+          <!-- <a-form-item label="Select Landlord" name="landlordId" required>
+            <a-select
+              v-model:value="form.landlordId"
+              placeholder="Search and select a landlord"
+              size="large"
+              show-search
+              :filter-option="false"
+              :loading="landlordLoading"
+              :options="landlordOptions"
+              @search="onLandlordSearch"
+              @popup-scroll="onLandlordScroll"
+              :field-names="{ label: 'label', value: 'value' }"
+              :not-found-content="landlordLoading ? 'Loading...' : 'No landlords found'"
             >
-            <div
-              v-for="(type, idx) in unitTypeOptions"
-              :key="type.value"
-              class="flex items-center justify-between py-2 border-b last:border-b-0"
-            >
-              <span class="text-txt_dark text-base">{{ type.label }}</span>
-              <div class="flex items-center gap-2">
-                <a-button
-                  size="small"
-                  shape="circle"
-                  @click="decrementUnitType(idx)"
-                  >-</a-button
-                >
-                <span class="text-gray-700">{{
-                  form.unitTypeCounts[idx] || 0
-                }}</span>
-                <a-button
-                  size="small"
-                  shape="circle"
-                  @click="incrementUnitType(idx)"
-                  >+</a-button
-                >
-              </div>
-            </div>
+              <template #option="{ label, value, data }">
+                <div class="flex flex-col">
+                  <span class="font-medium">{{ data.firstname }} {{ data.lastname }}</span>
+                  <span class="text-sm text-gray-500">{{ data.emailAddress }}</span>
+                  <span class="text-xs text-gray-400">ID: {{ data.accountRefNumber }}</span>
+                </div>
+              </template>
+              <template #suffixIcon>
+                <a-spin v-if="landlordLoading" size="small" />
+              </template>
+            </a-select>
+          </a-form-item> -->
+
+          <a-form-item label="Property Name" name="name" required class="form-labels">
+            <a-input v-model:value="form.name" placeholder="Enter property name" size="large" />
+          </a-form-item>
+
+          <a-form-item label="Property Address" name="address" required class="form-labels">
+            <a-input v-model:value="form.address" placeholder="Enter address" size="large" />
+          </a-form-item>
+
+          <div class="flex gap-4">
+            <a-form-item label="Zip Code" name="zipCode" required class="flex-1 form-labels">
+              <a-input v-model:value="form.zipCode" placeholder="Zip code" size="large" />
+            </a-form-item>
+            <a-form-item label="Province" name="province" required class="flex-1 form-labels">
+              <a-input v-model:value="form.province" placeholder="Province" size="large" />
+            </a-form-item>
           </div>
-        </div>
 
-        <div v-if="currentStep === 2" class="bg-white p-4 rounded-xl">
-          <!-- Step 3: Unit Info -->
-          <a-form :model="form" ref="unitInfoFormRef" layout="vertical">
-            <div
-              v-if="form.unitTypeDetails.length === 0"
-              class="text-center py-8"
-            >
-              <p class="text-gray-500">
-                No unit types selected. Please go back to Step 2 and select unit
-                types.
-              </p>
-            </div>
-            <div v-else>
-              <!-- Sub-stepper UI -->
-              <div class="flex items-center justify-center mb-3">
-                <div class="flex items-center gap-2">
-                  <a-button
-                    type="text"
-                    :disabled="currentUnitTypeIndex === 0"
-                    @click="
-                      () => currentUnitTypeIndex > 0 && currentUnitTypeIndex--
-                    "
-                    class="flex items-center gap-1"
-                  >
-                    <LeftOutlined style="font-size: 16px" />
-                    Previous
-                  </a-button>
-                  <span class="text-base">
-                    <span :class="'font-semibold underline text-primary'">{{
-                      currentUnitTypeIndex + 1
-                    }}</span>
-                    of {{ form.unitTypeDetails.length }}
-                  </span>
-                  <a-button
-                    type="text"
-                    :disabled="
-                      currentUnitTypeIndex === form.unitTypeDetails.length - 1
-                    "
-                    @click="
-                      () =>
-                        currentUnitTypeIndex <
-                          form.unitTypeDetails.length - 1 &&
-                        currentUnitTypeIndex++
-                    "
-                    class="flex items-center gap-1"
-                  >
-                    Next
-                    <RightOutlined style="font-size: 16px" />
-                  </a-button>
-                </div>
-                </div>
-              <!-- Only show the current unit type's form -->
-              <div>
-                <div class="flex items-center justify-between mb-4">
-                  <h4 class="text-base font-bold text-gray-900">
-                    {{ form.unitTypeDetails[currentUnitTypeIndex].label }}
-                  </h4>
-                  <span class="text-sm text-gray-600"
-                    >Quantity:
-                    {{
-                      form.unitTypeDetails[currentUnitTypeIndex].quantity
-                    }}</span
-                  >
-                </div>
-                <div class="grid grid-cols-1">
-                  <a-form-item
-                    :label="`Rent (per month) - ${form.unitTypeDetails[currentUnitTypeIndex].label}`"
-                    :name="[
-                      'unitTypeDetails',
-                      currentUnitTypeIndex,
-                      'rentPerMonth',
-                    ]"
-                    required
-                  >
-                    <a-input-number
-                      v-model:value="
-                        form.unitTypeDetails[currentUnitTypeIndex].rentPerMonth
-                      "
-                      style="width: 100%"
-                      min="0"
-                      size="large"
-                      placeholder="Enter rent amount"
-                    />
-                  </a-form-item>
-                  <a-form-item
-                    :label="`Security Deposit - ${form.unitTypeDetails[currentUnitTypeIndex].label}`"
-                    :name="[
-                      'unitTypeDetails',
-                      currentUnitTypeIndex,
-                      'securityDeposit',
-                    ]"
-                    required
-                  >
-                    <a-input-number
-                      v-model:value="
-                        form.unitTypeDetails[currentUnitTypeIndex]
-                          .securityDeposit
-                      "
-                      style="width: 100%"
-                      min="0"
-                      size="large"
-                      placeholder="Enter security deposit"
-                    />
-                  </a-form-item>
-                </div>
-                <a-form-item
-                  :label="`Unit Images - ${form.unitTypeDetails[currentUnitTypeIndex].label}`"
-                  :name="[
-                    'unitTypeDetails',
-                    currentUnitTypeIndex,
-                    'unitImages',
-                  ]"
-                  :validate-status="
-                    form.unitTypeDetails[currentUnitTypeIndex].unitImages
-                      .length === 0
-                      ? 'error'
-                      : ''
-                  "
-                  :help="
-                    form.unitTypeDetails[currentUnitTypeIndex].unitImages
-                      .length === 0
-                      ? 'At least one image is required'
-                      : ''
-                  "
-                  required
-                >
-                  <template #label>
-                    Unit Images -
-                    {{ form.unitTypeDetails[currentUnitTypeIndex].label }}
-                    <span style="color: red">*</span>
-                  </template>
-                  <CustomImageUpload
-                    v-model="
-                      form.unitTypeDetails[currentUnitTypeIndex].unitImages
-                    "
-                  />
-                </a-form-item>
-                </div>
-              <a-form-item label="Amenities" name="amenities">
-                <a-select
-                  v-model:value="form.amenities"
-                  mode="multiple"
-                  placeholder="Select amenities"
-                  :options="amenityOptions"
-                  size="large"
-                  :field-names="{ label: 'label', value: 'value' }"
-                  :option-label-prop="'label'"
-                  :tagRender="renderAmenityTag"
-                >
-                  <template #option="{ value, label }">
-                    <span class="flex items-center gap-2">
-                      <img
-                        v-if="
-                          amenityOptions.find((o) => o.value === value)?.image
-                        "
-                        :src="
-                          amenityOptions.find((o) => o.value === value).image
-                        "
-                        style="
-                          width: 20px;
-                          height: 20px;
-                          object-fit: cover;
-                          border-radius: 4px;
-                        "
-                      />
-                      <span>{{ label }}</span>
-                    </span>
-                  </template>
-                </a-select>
-              </a-form-item>
-            </div>
-          </a-form>
-                    </div>
+          <a-form-item label="Property Type" name="propertyType" required class="form-labels">
+            <a-select
+              v-model:value="form.propertyType"
+              placeholder="Select property type"
+              :options="propertyTypeOptions"
+              size="large"
+            />
+          </a-form-item>
 
-        <div class="flex gap-4 mt-4">
-          <a-button
-            v-if="currentStep > 0"
-            @click="prevStep"
-            size="large"
-            type="default"
-            shape="round"
-            class="inline-flex items-center"
-          >
-            <template #icon>
-              <LeftOutlined />
-            </template>
-            Previous
-          </a-button>
-          <a-button
-            type="primary"
-            @click="nextOrSubmit"
-            :loading="loading"
-            size="large"
-            shape="round"
-            :class="'shadow-md inline-flex items-center'"
-          >
-            <template #icon>
-              <CheckOutlined v-if="currentStep === 2" />
-              <RightOutlined v-else />
-            </template>
-            {{ currentStep === 2 ? "Save" : "Continue" }}
-          </a-button>
+          <a-form-item label="Description" name="description" required class="form-labels ">
+            <a-textarea v-model:value="form.description" placeholder="Description" size="large" />
+          </a-form-item>
+
+          <a-form-item label="Total Number of Units" name="units" required class="form-labels">
+            <a-input-number v-model:value="form.units" style="width: 100%" min="1" size="large" />
+          </a-form-item>
+        </a-form>
+      </div>
+
+      <!-- Step 2: Unit Allocation -->
+      <div v-if="currentStep === 1" class="bg-white p-6 rounded-xl">
+        <label class="block text-txt_dark2 text-lg mb-4 font-semibold">Unit Type(s)</label>
+        <div v-for="(type, idx) in unitTypeOptions" :key="type.value" class="flex items-center justify-between py-2 border-b last:border-b-0">
+          <span class="text-txt_dark text-base">{{ type.label }}</span>
+          <div class="flex items-center gap-2">
+
+            <a-button size="small" class="border-none text-[#404164]" shape="circle" @click="incrementUnitType(idx)">+</a-button>
+            <span class="text-gray-700">{{ form.unitTypeCounts[idx] || 0 }}</span>
+                       <a-button size="small" class="border-none text-[#404164]" shape="circle" @click="decrementUnitType(idx)">-</a-button>
+          </div>
         </div>
       </div>
-      <div class="w-[350px] ml-10">
-        <!-- Quick Preview Panel -->
-        <div
-          class="bg-white w-full border p-4 text-left flex flex-col gap-2 rounded-xl"
+
+      <!-- Step 3: Unit Info -->
+       <div v-if="currentStep === 2">
+        <div v-if="form.unitTypeDetails.length !== 0" class="flex items-center justify-between ">
+          <div class="flex items-center justify-between ">
+                <h4 class="text-base font-bold text-gray-900">
+                  {{ form.unitTypeDetails[currentUnitTypeIndex].label }}
+                </h4>
+                <!-- <span class="text-sm text-gray-600">
+                  Quantity: {{ form.unitTypeDetails[currentUnitTypeIndex].quantity }}
+                </span> -->
+              </div>
+              <div class="flex items-center gap-2 mb-2">
+                <a-button
+                  type="text"
+                  :disabled="currentUnitTypeIndex === 0"
+                  @click="() => currentUnitTypeIndex > 0 && currentUnitTypeIndex--"
+                  class="flex items-center gap-1"
+                  style="color: #404164"
+                >
+                  <LeftOutlined style="font-size: 16px" />
+                  Previous
+                </a-button>
+                <span class="text-base text-txt_dark leading-[28px]">
+                  <span class="font-semibold underline text-txt_dark">{{ currentUnitTypeIndex + 1 }}</span>
+                  of {{ form.unitTypeDetails.length }}
+                </span>
+                <a-button
+                  type="text"
+                  :disabled="currentUnitTypeIndex === form.unitTypeDetails.length - 1"
+                  @click="() => currentUnitTypeIndex < form.unitTypeDetails.length - 1 && currentUnitTypeIndex++"
+                  class="flex items-center gap-1 "
+                   style="color: #404164"
+                >
+                  Next
+                  <RightOutlined style="font-size: 16px" />
+                </a-button>
+              </div>
+              
+            </div>
+      <div  class="bg-white px-8 py-[16px] rounded-xl">
+        <a-form :model="form" ref="unitInfoFormRef" layout="vertical">
+          <div v-if="form.unitTypeDetails.length === 0" class="text-center py-8">
+            <p class="text-gray-500">
+              No unit types selected. Please go back to Step 2 and select unit types.
+            </p>
+          </div>
+
+          <div v-else>
+            <!-- Current Unit Type Form -->
+            <div>
+            
+              <div class=" flex gap-4">
+                <a-form-item
+                  :label="`Rent (per month)`"
+                  :name="['unitTypeDetails', currentUnitTypeIndex, 'rentPerMonth']"
+                  required
+                  class="w-full form-labels"
+                >
+                  <a-input-number
+                    v-model:value="form.unitTypeDetails[currentUnitTypeIndex].rentPerMonth"
+                    style="width: 100%"
+                    min="0"
+                    size="large"
+                    placeholder=""
+                  />
+                </a-form-item>
+
+                <a-form-item
+                  :label="`Security Deposit`"
+                  :name="['unitTypeDetails', currentUnitTypeIndex, 'securityDeposit']"
+                  required
+                   class="w-full form-labels"
+                >
+                  <a-input-number
+                    v-model:value="form.unitTypeDetails[currentUnitTypeIndex].securityDeposit"
+                    style="width: 100%"
+                    min="0"
+                    size="large"
+                    placeholder=""
+                  />
+                </a-form-item>
+              </div>
+            </div>
+
+            <a-form-item
+  label="• Add Amenities"
+  name="amenities"
+  class="amenities-form"
+             :label-col="{ style: { color: '#808097', fontSize: '20px', fontWeight: '400' } }"
+            >
+              <a-checkbox-group v-model:value="form.amenities" class="flex flex-col gap-2">
+  <a-checkbox
+    v-for="option in amenityOptions"
+    :key="option.value"
+    :value="option.value"
+    class="flex items-center gap-2"
+  >
+    <span class="text-[20px] text-[#808097] ">{{ option.label }}</span>
+  </a-checkbox>
+</a-checkbox-group>
+              <!-- <a-checkbox-group
+                v-model:value="form.amenities"
+                :options="amenityOptions"
+                option-label-prop="label"
+                option-value-prop="value"
+                class="flex flex-col flex-wrap gap-2 text-[#808097]" /> -->
+              <!-- <a-select
+                v-model:value="form.amenities"
+                mode="multiple"
+                placeholder="Select amenities"
+                :options="amenityOptions"
+                size="large"
+                :field-names="{ label: 'label', value: 'value' }"
+                :option-label-prop="'label'"
+                :tagRender="renderAmenityTag"
+              >
+                <template #option="{ value, label }">
+                  <span class="flex items-center gap-2">
+                    <img
+                      v-if="amenityOptions.find((o) => o.value === value)?.image"
+                      :src="amenityOptions.find((o) => o.value === value).image"
+                      class="w-[20px] h-[20px] object-cover rounded"
+                    />
+                    <span>{{ label }}</span>
+                  </span>
+                </template>
+              </a-select> -->
+            </a-form-item>
+
+             <a-form-item
+                :label="``"
+                :name="['unitTypeDetails', currentUnitTypeIndex, 'unitImages']"
+                :validate-status="form.unitTypeDetails[currentUnitTypeIndex].unitImages.length === 0 ? 'error' : ''"
+                :help="form.unitTypeDetails[currentUnitTypeIndex].unitImages.length === 0 ? 'At least one image is required' : ''"
+                required
+              >
+                <template #label>
+                  Unit Images - {{ form.unitTypeDetails[currentUnitTypeIndex].label }}
+                  <span style="color: red">*</span>
+                </template>
+                <CustomImageUpload
+                  v-model="form.unitTypeDetails[currentUnitTypeIndex].unitImages"
+                />
+              </a-form-item>
+          </div>
+        </a-form>
+      </div>
+      </div>
+
+      <!-- Navigation Buttons -->
+      <div class="flex gap-4 mt-4">
+        <!-- <a-button
+          v-if="currentStep > 0"
+          @click="prevStep"
+          size="large"
+          type="default"
+          shape="round"
+          class="inline-flex items-center"
         >
-          <h1 class="text-primary font-semibold text-xl leading-7">
-            {{ form.name || "Property Name" }}
-          </h1>
-          <div class="flex gap-2">
-            <span>📍</span>
-            <p class="text-txt_dark text-sm leading-4">
-              {{ form.address || "Property Address" }}
+          <template #icon>
+            <LeftOutlined />
+          </template>
+          Previous
+        </a-button> -->
+        <a-button
+          type="primary"
+          @click="nextOrSubmit"
+          :loading="loading"
+          :class="'shadow-md rounded-[4px] flex items-center justify-center w-full text-center h-fit py-[9px] text-base font-medium'"
+        >
+          {{ currentStep === 2 ? 'Save' : 'Continue' }}
+        </a-button>
+      </div>
+      </div>
+        <div class="w-[40%] min-w-[445px] ">
+        <a-typography-title class="" :level="4" font-family="Inter">
+          Quick Preview 
+        </a-typography-title>
+        <div
+          class="bg-white border-[#C7C7C7] border-[1px] w-full   py-0 text-left flex flex-col gap-2 rounded-xl"
+        >
+       
+         <div class="">
+            <a-image
+              v-if="getPreviewImageFromUnitTypes()"
+              :src="getPreviewImageFromUnitTypes()"
+              width="100%"
+              style="border-radius: 8px; object-fit: cover; height: 216px"
+            />
+            <div
+              v-else
+              class="w-full h-[216px] bg-gray-200 rounded-t-lg flex items-center justify-center text-gray-400"
+            >
+              No Image
+            </div>
+          </div>
+         <div class="flex justify-between items-center px-[10px] text-[12px] text-[#808097] font-medium ">
+            <span class="flex gap-2.5 leading-[25px]"><CheckOutlined v-if="form.name" /> <CloseOutlined v-else/>Property Name</span>
+            <p class="text-[#808097] m-0">
+              {{ form.name || "Not Set" }}
             </p>
           </div>
-          <div class="flex gap-2">
-            <span>🏢</span>
-            <p class="text-txt_dark text-sm leading-4">
-              {{ form.units || 0 }} Units
+          <div class="flex justify-between items-center px-[10px] text-[12px] text-[#808097] font-medium ">
+            <span class="flex gap-2.5 leading-[25px]"><CheckOutlined v-if="form.address" /> <CloseOutlined v-else/>Property Address</span>
+            <p class="text-[#808097] m-0">
+              {{ form.address || "Not Set" }}
             </p>
           </div>
-                    <div class="flex gap-2">
+          <div class="flex justify-between items-center px-[10px] text-[12px] text-[#808097] font-medium ">
+            <span class="flex gap-2.5 leading-[25px]"><CheckOutlined v-if="form.zipCode" /> <CloseOutlined v-else/>Zip Code</span>
+            <p class="text-[#808097] m-0">
+              {{ form.zipCode || "Not Set" }}
+            </p>
+          </div>
+           <div class="flex justify-between items-center px-[10px] text-[12px] text-[#808097] font-medium ">
+            <span class="flex gap-2.5 leading-[25px]"><CheckOutlined v-if="form.province" /> <CloseOutlined v-else/>Province</span>
+            <p class="text-[#808097] m-0">
+              {{ form.province || "Not Set" }}
+            </p>
+          </div>
+
+           <div class="flex justify-between items-center px-[10px] text-[12px] text-[#808097] font-medium ">
+            <span class="flex gap-2.5 leading-[25px] font-medium"><CheckOutlined v-if="form.propertyType" /> <CloseOutlined v-else/>Property Type</span>
+            <p class="text-[#808097] m-0">
+              {{ form.propertyType || "Not Set" }}
+            </p>
+          </div>
+          <div class="flex justify-between items-center px-[10px] text-[12px] text-[#808097] font-medium ">
+            <span class="flex gap-2.5 leading-[25px] font-medium"><CheckOutlined v-if="form.units" /> <CloseOutlined v-else/>Total Number of Units</span>
+            <p class="text-[#808097] m-0">
+              {{ form.units || "Not Set" }}
+            </p>
+          </div>
+
+           <div class="flex justify-between items-center px-[10px] text-[12px] text-[#808097] font-medium ">
+            <span class="flex gap-2.5 leading-[25px] font-medium"><CheckOutlined v-if="form.unitTypeDetails.length > 0" /> <CloseOutlined v-else/>Unit Type (s)</span>
+            <p class="text-[#808097] m-0">
+             {{ form.unitTypeDetails.map(detail => detail.label).join(', ') || "Not Set" }}
+            </p>
+          </div>
+          <div class="px-[8px]">
+        <a-button
+  type="primary"
+  @click="nextOrSubmit"
+  :disabled="!form.name || !form.address || !form.zipCode || !form.province || !form.propertyType || !form.units || form.unitTypeDetails.length === 0"
+  shape=""
+  :class="['shadow-md rounded-[4px] flex items-center justify-center w-full text-center h-fit py-[9px] text-base font-medium  mb-[12px]']"
+  :style="{ color: 'white' }"
+>
+  View Details
+</a-button>
+</div>
+
+                    <!-- <div class="flex gap-2">
             <span>💰</span>
             <p class="text-txt_dark text-sm leading-4">
               {{ form.unitTypeDetails.length > 0 ? formatPrice(form.unitTypeDetails[0].rentPerMonth) : (form.rent ? formatPrice(form.rent) : 'Rent') }}
             </p>
-                    </div>
-                    <div class="flex gap-2">
+                    </div> -->
+                    <!-- <div class="flex gap-2">
             <span>🛏️</span>
             <p class="text-txt_dark text-sm leading-4">
               {{ getUnitTypeSummary() }}
             </p>
-                    </div>
-          <div class="flex gap-2">
+                    </div> -->
+          <!-- <div class="flex gap-2">
             <span>⭐</span>
             <p
               class="text-txt_dark text-sm leading-4"
               v-html="getAmenitiesPreview()"
             ></p>
                 </div>
-          <div class="mt-2">
-            <a-image
-              v-if="getPreviewImageFromUnitTypes()"
-              :src="getPreviewImageFromUnitTypes()"
-              width="100%"
-              style="border-radius: 8px; object-fit: cover; height: 120px"
-            />
-            <div
-              v-else
-              class="w-full h-[120px] bg-gray-200 rounded-lg flex items-center justify-center text-gray-400"
-            >
-              No Image
-            </div>
-          </div>
+          -->
         </div>
-        <section class="flex gap-0.5 rounded-md p-2 bg-bg2 mt-2">
-          <p class="text-tgr font-medium text-sm leading-4">
-            This is a preview for how your property looks when published
-          </p>
-      </section>
+       
+         <a-button
+  class="mt-[13px] w-full flex items-start gap-2 text-[#1A7D36] h-fit border-[#29C354]  border-[0.5px] rounded-[6px] px-[4px] font-medium text-[13px] leading-4"
+>
+  <span class="text-[#1A7D36] "><InfoCircleOutlined /></span>
+  <span>
+  This is a preview for how your property looks when it is published
+  </span>
+</a-button>
                 </div>
+      </div>
     </div>
-    </div>
+  </div>
 </template>
-  
+
 <script setup>
 import { CreateNewProperty, FetchLandlords } from "@/api/properties";
 import { useUserStore } from "@/store";
@@ -715,8 +684,8 @@ const CustomImageUpload = defineComponent({
           "div",
           {
             class: [
-              "border",
-              "border-dashed",
+              // "border",
+              // "border-dashed",
               "rounded-lg",
               "p-4",
               "mb-4",
@@ -1113,4 +1082,104 @@ function decrementUnitType(idx) {
 .bg-bg2 {
   background: #f0f2f5;
 }
+:deep(.ant-steps-item-finish .ant-steps-item-icon) {
+  background-color: #000130 !important;
+  
+}
+:deep(.ant-steps-item-finish .ant-steps-item-icon span) {
+  color: #fff !important;
+}
+.ant-steps-item-wait .ant-steps-item-title {
+    /* color: red !important; */
+}
+:deep(.ant-steps-item-wait .ant-steps-item-icon) {
+  background-color: #f0f2f5 !important;
+  /* color: red !important; */
+}
+:deep(.ant-steps-item-wait .ant-steps-item-icon span) {
+  color: #C7C7C7 !important;
+}
+/*  */
+
+
+
+
+
+
+
+/* Scoped: use :deep to penetrate shadow DOM */
+:deep(.ant-checkbox-inner) {
+  width: 22px;
+  height: 22px;
+  border-radius: 2px;
+  border: 1px solid #213595;
+}
+
+/* When checked */
+:deep(.ant-checkbox-checked .ant-checkbox-inner) {
+  /* background-color: #29C354; */
+  border-color: #213595;
+}
+
+/* Optional: Checkmark color (it's a pseudo-element) */
+:deep(.ant-checkbox-checked .ant-checkbox-inner::after) {
+  border-color: white; 
+}
+:deep(.amenities-form .ant-form-item-label > label) {
+  color: #808097;
+  font-size: 20px;
+  font-weight: 400;
+
+}
+:deep(.form-labels .ant-form-item-label > label) {
+  color: #404164;
+  font-weight: 350;
+  line-height: 100%;
+  font-size: 16px;
+  font-family: 'SF Compact Text';
+  
+}
+
+
+
+
+
+:deep(.ant-steps-item-icon) {
+  height: 24px;
+  width: 24px;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+:deep(.ant-steps-item-container){
+  display: flex;
+  align-items: center;
+}
+:deep(.ant-steps-item-title){
+  font-size: 18px;
+  font-weight: 500;
+  color: #404164 !important;
+}
 </style>
+        <!-- <div class="flex gap-2">
+            <span>💰</span>
+            <p class="text-txt_dark text-sm leading-4">
+              {{ form.unitTypeDetails.length > 0 ? formatPrice(form.unitTypeDetails[0].rentPerMonth) : (form.rent ? formatPrice(form.rent) : 'Rent') }}
+            </p>
+                    </div> -->
+                    <!-- <div class="flex gap-2">
+            <span>🛏️</span>
+            <p class="text-txt_dark text-sm leading-4">
+              {{ getUnitTypeSummary() }}
+            </p>
+                    </div> -->
+          <!-- <div class="flex gap-2">
+            <span>⭐</span>
+            <p
+              class="text-txt_dark text-sm leading-4"
+              v-html="getAmenitiesPreview()"
+            ></p>
+                </div>
+          -->
