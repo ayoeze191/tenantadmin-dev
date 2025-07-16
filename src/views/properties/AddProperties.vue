@@ -37,7 +37,7 @@
               ref="propertyFormRef"
               layout="vertical"
             >
-              <a-form-item label="Select Landlord" name="landlordId" required>
+              <a-form-item label="Select Landlord" name="landlordId" required class="form-labels">
                 <a-select
                   v-model:value="form.landlordId"
                   placeholder="Search and select a landlord"
@@ -724,18 +724,18 @@ import { useRoute, useRouter } from "vue-router";
 
 // 1. Define the enum array at the top of the script
 const UNIT_TYPE_ENUM = [
-  { label: "Studio", value: 0 },
-  { label: "One Bedroom", value: 1 },
-  { label: "Two Bedroom", value: 2 },
-  { label: "Three Bedroom", value: 3 },
-  { label: "PentHouse", value: 4 },
-  { label: "Loft", value: 5 },
-  { label: "TownHouse", value: 6 },
-  { label: "Duplex", value: 7 },
-  { label: "Villa", value: 8 },
-  { label: "Serviced Apartment", value: 9 },
-  { label: "Shared Accommodation", value: 10 },
-  { label: "Hostel/Dormitory", value: 11 },
+  { label: "Single Unit", value: 0 },
+  { label: "Multi Unit", value: 1 },
+  // { label: "Two Bedroom", value: 2 },
+  // { label: "Three Bedroom", value: 3 },
+  // { label: "PentHouse", value: 4 },
+  // { label: "Loft", value: 5 },
+  // { label: "TownHouse", value: 6 },
+  // { label: "Duplex", value: 7 },
+  // { label: "Villa", value: 8 },
+  // { label: "Serviced Apartment", value: 9 },
+  // { label: "Shared Accommodation", value: 10 },
+  // { label: "Hostel/Dormitory", value: 11 },
 ];
 const showAmenitiesModal = ref(false)
 // 2. Use this for unitTypeOptions
