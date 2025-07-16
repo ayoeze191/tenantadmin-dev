@@ -1,11 +1,9 @@
 <template>
-  <div class="bg-neutral w-full px-4 py-8">
+  <div class="bg-neutral w-full px-8 py-10">
     <!-- Header -->
     <div>
-      <section
-        class="w-full max-w-5xl mx-auto flex justify-between items-center mb-8"
-      >
-      <router-link to="/properties" class="pt-3">
+      <section class="w-full mx-auto flex justify-between items-center mb-4">
+        <router-link to="/properties" class="pt-3">
           <a-button
             type="text"
             class="flex items-center gap-2 text-base font-medium text-gray-600 bg-gray-100 hover:text-primary rounded-full px-4 py-2 transition-all"
@@ -14,443 +12,188 @@
               <svg
                 width="18"
                 height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <path
                   d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z"
                   fill="#404164"
                 />
-            </svg>
+              </svg>
             </template>
-          Back
+            Back
           </a-button>
-      </router-link>
+        </router-link>
         <div class="flex gap-3 items-center">
-          <a-button
-            type="default"
-            size="large"
-            class="flex gap-1 items-center font-bold text-base px-6 py-1 rounded-2xl shadow hover:shadow-md transition-all"
-            @click="onEdit"
-          >
-            <template #icon>
-              <EditOutlined />
-            </template>
-            Edit
-          </a-button>
-          <a-button
-            type="primary"
-            size="large"
-            class="flex gap-2 items-center font-bold text-base px-8 py-1 rounded-2xl shadow-md hover:shadow-lg transition-all"
-            @click="showAddTenantModal = true"
-          >
-            <template #icon>
-              <svg
-                width="22"
-                height="22"
-                viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M12 5.5V19.5M5 12.5H19"
-              stroke="white"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-            </template>
-        Add Tenant
-          </a-button>
+          <div class="flex gap-3 items-center flex-wrap">
+            <button
+              class="text-txt_dark px-[33px] py-2 h-fit rounded-[4px] hover:bg-primary hover:text-white bg-inherit border-[#000130] border-[1px] w-fit font-semibold font-sf leading-[28px] min-w-[120px] transition-all sm:px-6 sm:py-2 sm:text-base xs:px-3 xs:py-2 xs:text-sm xs:min-w-[90px]"
+              @click="onEdit"
+            >
+              Edit Property
+            </button>
+            <button
+              class="h-fit flex bg-[#000130] text-white items-center gap-[12px] font-medium rounded-[4px] border-[1px] px-[33px] py-2 w-fit leading-[28px] min-w-[120px] transition-all sm:px-6 sm:py-2 sm:text-base xs:px-3 xs:py-2 xs:text-sm xs:min-w-[90px]"
+              @click="showAddTenantModal = true"
+            >
+              <div>
+                <svg
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 5.5V19.5M5 12.5H19"
+                    stroke="white"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+              <span class="">Add Tenant</span>
+            </button>
+          </div>
         </div>
-    </section>
+      </section>
       <!-- Main Card -->
-      <div class="bg-white p-4 rounded-2xl w-full max-w-5xl mx-auto">
+      <div class="bg-white px-[50px] py-[26px] rounded-2xl w-full mx-auto">
         <a-spin :spinning="loading">
           <template v-if="error">
             <a-result status="404" :title="'Not Found'" :sub-title="error" />
           </template>
           <template v-else-if="property">
             <div>
-              <!-- Images Carousel with Ant Design Preview -->
-              <div
-                class="relative w-full rounded-xl h-[300px] flex items-center justify-center"
-              >
-                <a-image-preview-group v-if="images && images.length">
-                  <a-image
-                    :src="images[currentImageIndex]"
-                    :width="'100%'"
-                    :height="'100%'"
-                    class="w-full h-full object-cover rounded-xl cursor-pointer"
-                    :preview="{ visible: false }"
-                    @click="showPreview(currentImageIndex)"
-                  />
-                  <!-- Hidden images for preview group -->
-                  <template v-for="(img, idx) in images" :key="idx">
+              <div class="flex h-[300px]">
+                <!-- Images Carousel with Ant Design Preview -->
+                <div
+                  class="relative w-full rounded-xl h-full flex gap-2 items-center justify-center"
+                >
+                  <a-image-preview-group v-if="images && images.length">
                     <a-image
-                      v-if="idx !== currentImageIndex"
-                      :src="img"
-                      style="display: none"
+                      :src="images[currentImageIndex]"
+                      :width="'100%'"
+                      :height="'100%'"
+                      class="w-full h-full object-cover rounded-xl cursor-pointer"
+                      :preview="{ visible: false }"
+                      @click="showPreview(currentImageIndex)"
                     />
-                  </template>
-                  <!-- Prev Button -->
-                  <button
-                    v-if="images.length > 1"
-                    @click="prevImage"
-                    class="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow rounded-full p-1 z-10"
-                    aria-label="Previous image"
-                  >
-                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
-          <path
-                        d="M15 6l-6 6 6 6"
-                        stroke="#23234a"
-                        stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-                    </svg>
-                  </button>
-                  <!-- Next Button -->
-                  <button
-                    v-if="images.length > 1"
-                    @click="nextImage"
-                    class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow rounded-full p-1 z-10"
-                    aria-label="Next image"
-                  >
-                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
-          <path
-                        d="M9 6l6 6-6 6"
-                        stroke="#23234a"
-                        stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-                  </button>
-                  <!-- +N Remaining Images Indicator -->
-                  <div
-                    v-if="images.length > 1"
-                    class="absolute top-2 right-2 bg-black/60 text-white text-xs font-semibold px-3 py-1 rounded-full z-10"
-                  >
-                    +{{ images.length - 1 }}
-                  </div>
-                </a-image-preview-group>
-                <template v-else>
-                  <img
-                    src="/placeholder.png"
-                    class="w-full h-full object-cover rounded-xl"
-                    alt="No Image"
-                  />
-                </template>
-      </div>
-              <!-- Property Info Card -->
-              <div class="flex-1 mt-6">
-                <div class="w-full">
-                  <!-- Property Header -->
-                  <div class="property-header mb-6">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-2">
-                      {{ property.name }}
-                    </h2>
-                    <div class="flex items-center gap-2 text-gray-600">
-        <svg
-          width="16"
-          height="16"
+                    <!-- Hidden images for preview group -->
+                    <template v-for="(img, idx) in images" :key="idx">
+                      <a-image
+                        v-if="idx !== currentImageIndex"
+                        :src="img"
+                        style="display: none"
+                      />
+                    </template>
+                    <!-- Prev Button -->
+                    <button
+                      v-if="images.length > 1"
+                      @click="prevImage"
+                      class="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow rounded-full p-1 z-10"
+                      aria-label="Previous image"
+                    >
+                      <svg
+                        width="24"
+                        height="24"
                         fill="none"
                         viewBox="0 0 24 24"
                       >
                         <path
-                          d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"
-                          fill="currentColor"
+                          d="M15 6l-6 6 6 6"
+                          stroke="#23234a"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
                         />
                       </svg>
-                      <span class="text-sm">{{ property.address }}</span>
+                    </button>
+                    <!-- Next Button -->
+                    <button
+                      v-if="images.length > 1"
+                      @click="nextImage"
+                      class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow rounded-full p-1 z-10"
+                      aria-label="Next image"
+                    >
+                      <svg
+                        width="24"
+                        height="24"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M9 6l6 6-6 6"
+                          stroke="#23234a"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </button>
+                    <!-- +N Remaining Images Indicator -->
+                    <div
+                      v-if="images.length > 1"
+                      class="absolute top-2 right-2 bg-black/60 text-white text-xs font-semibold px-3 py-1 rounded-full z-10"
+                    >
+                      +{{ images.length - 1 }}
                     </div>
-                  </div>
-
-                  <!-- Key Details Grid -->
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                    <!-- Units -->
-                    <div class="detail-card">
-                      <div class="detail-icon">
-                        <svg
-                          width="20"
-                          height="20"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            d="M4 10V7a8 8 0 1 1 16 0v3"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                          <rect
-                            x="2"
-                            y="10"
-                            width="20"
-                            height="10"
-                            rx="2"
-                            fill="currentColor"
-                            fill-opacity="0.1"
-                            stroke="currentColor"
-                            stroke-width="2"
-                          />
-                        </svg>
-                      </div>
-                      <div class="detail-content">
-                        <div class="detail-label">Total Units</div>
-                        <div class="detail-value">
-                          {{
-                            property.units
-                              ? Array.isArray(property.units)
-                                ? property.units.length
-                                : property.units
-                              : "-"
-                          }}
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Rent -->
-                    <div class="detail-card">
-                      <div class="detail-icon">
-                        <svg
-                          width="20"
-                          height="20"
-          fill="none"
-                          viewBox="0 0 24 24"
-        >
-          <path
-                            d="M12 21V3m0 0l-4 4m4-4l4 4"
-                            stroke="currentColor"
-                            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-                      </div>
-                      <div class="detail-content">
-                        <div class="detail-label">Monthly Rent</div>
-                        <div class="detail-value">
-                          <span
-                            v-if="property.minimumRent && property.maximumRent"
-                            class="text-primary"
-                          >
-                            ₦{{ property.minimumRent }} - ₦{{
-                              property.maximumRent
-                            }}
-                          </span>
-                          <span v-else-if="property.rent" class="text-primary"
-                            >₦{{ property.rent }}</span
-                          >
-                          <span v-else class="text-gray-400">-</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Security Deposit -->
-                    <div class="detail-card">
-                      <div class="detail-icon">
-                        <svg
-                          width="20"
-                          height="20"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <rect
-                            x="6"
-                            y="10"
-                            width="12"
-                            height="4"
-                            rx="2"
-                            fill="currentColor"
-                            fill-opacity="0.1"
-                            stroke="currentColor"
-                            stroke-width="2"
-                          />
-                          <path
-                            d="M10 14v2a2 2 0 0 0 4 0v-2"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                          />
-                        </svg>
-                      </div>
-                      <div class="detail-content">
-                        <div class="detail-label">Security Deposit</div>
-                        <div class="detail-value">
-                          <span
-                            v-if="property.securityDeposit"
-                            class="text-primary"
-                            >₦{{ property.securityDeposit }}</span
-                          >
-                          <span v-else class="text-gray-400">-</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Reference Number -->
-                    <div v-if="property.referenceNumber" class="detail-card">
-                      <div class="detail-icon">
-                        <svg
-                          width="20"
-                          height="20"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            stroke-width="2"
-                          />
-                          <text
-                            x="12"
-                            y="16"
-                            text-anchor="middle"
-                            font-size="10"
-                            fill="currentColor"
-                          >
-                            #
-                          </text>
-                        </svg>
-                      </div>
-                      <div class="detail-content">
-                        <div class="detail-label">Reference Number</div>
-                        <div class="detail-value">
-                          {{ property.referenceNumber }}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Unit Types -->
-                  <div v-if="unitTypeSummary" class="mb-6">
-                    <div class="section-title">Unit Types</div>
-                    <div class="unit-types-grid">
-                      <div class="unit-type-badge">{{ unitTypeSummary }}</div>
-                    </div>
-                  </div>
-
-                  <!-- Description -->
-                  <div class="mb-6">
-                    <div class="section-title">Description</div>
-                    <div class="description-content">
-                      {{ property.description }}
-                    </div>
-                  </div>
-
-                  <!-- Landlord Information -->
-                  <div v-if="landlord" class="landlord-card">
-                    <div class="section-title">Property Owner</div>
-                    <div class="landlord-info">
-                      <div class="landlord-avatar">
-                        <svg
-                          width="24"
-                          height="24"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            cx="12"
-                            cy="8"
-                            r="4"
-                            stroke="currentColor"
-                            stroke-width="2"
-                          />
-                          <path
-                            d="M4 20v-1a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v1"
-                            stroke="currentColor"
-                            stroke-width="2"
-                          />
-                        </svg>
-                      </div>
-                      <div class="landlord-details">
-                        <div class="landlord-name">
-                          {{ landlord.firstname }} {{ landlord.lastname }}
-                        </div>
-                        <div class="landlord-contact">
-                          <span class="contact-item">
-                            <svg
-                              width="14"
-                              height="14"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
-                                stroke="currentColor"
-                                stroke-width="2"
-                              />
-                              <polyline
-                                points="22,6 12,13 2,6"
-                                stroke="currentColor"
-                                stroke-width="2"
-                              />
-                            </svg>
-                            {{ landlord.emailAddress }}
-                          </span>
-                          <span class="contact-item">
-                            <svg
-                              width="14"
-                              height="14"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
-                                stroke="currentColor"
-                                stroke-width="2"
-                              />
-                            </svg>
-                            {{ landlord.phoneNumber }}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  </a-image-preview-group>
+                  <template v-else>
+                    <img
+                      src="/placeholder.png"
+                      class="w-full h-full object-cover rounded-xl"
+                      alt="No Image"
+                    />
+                  </template>
                 </div>
-                <!-- Unit Table -->
-                <div
-                  v-if="
-                    property.units &&
-                    Array.isArray(property.units) &&
-                    property.units.length
-                  "
-                  class="mt-8"
-                >
-                  <h2 class="text-lg text-gray-600 font-semibold mb-2">
-                    Unit Details
-                  </h2>
-                  <a-table
-                    :columns="unitColumns"
-                    :data-source="property.units"
-                    :pagination="false"
-                    row-key="unitId"
-                    size="small"
+                <div class="flex flex-col gap-[8px] overflow-y-scroll">
+                  <img
+                    :src="img"
+                    v-for="img in images"
+                    class="h-[128px] w-[145px] rounded-lg"
                   />
                 </div>
               </div>
+              <div class="tabs">
+                <a-tabs
+                  v-model:activeKey="activeKey"
+                  :destroyInactiveTabPane="true"
+                >
+                  {{ console.log(property, "prop") }}
+                  <a-tab-pane key="1" tab="Property Info">
+                    <propertyheader :property="property" />
+                    <div class="mt-4 text-[#808097]">
+                      <h1
+                        class="font-medium text-base text-txt_dark leading-[100%]"
+                      >
+                        Description
+                      </h1>
+                      <p
+                        class="text-[#808097]"
+                        style="color: #808097 !important"
+                      >
+                        {{ property.description }}
+                      </p>
+                    </div>
+                    <div class="mt-[16px]">
+                      <li
+                        class="font-medium text-base text-txt_dark leading-[100%]"
+                      >
+                        Key Features
+                      </li>
+                    </div>
+                  </a-tab-pane>
+                  <!-- <a-tab-pane key="2" v-for="prop in property." tab="Tab 2"
+                    >Tab 2</a-tab-pane
+                  > -->
+                </a-tabs>
+              </div>
+              <!-- Property Info Card -->
             </div>
             <!-- Key Features -->
-            <div
-              v-if="property.keyFeatures && property.keyFeatures.length"
-              class="mt-8"
-            >
-              <h2 class="text-lg font-semibold mb-2">Key Features</h2>
-              <a-list
-                :data-source="property.keyFeatures"
-                bordered
-                :renderItem="
-                  (item) =>
-                    h('li', { class: 'text-secondary text-sm mb-1' }, item)
-                "
-              />
-            </div>
           </template>
         </a-spin>
       </div>
@@ -462,11 +205,26 @@
       centered
       :bodyStyle="{ padding: '0' }"
       class="add-tenants-modal"
+      :closable="false"
       @cancel="resetTenantModal"
     >
-      <div class="add-tenants-modal-header">
+      <!-- <div class="add-tenants-modal-header">
         <div class="modal-title">Add Tenants</div>
-      </div>
+      </div> -->
+      <template #title>
+        <div
+          class="flex items-center justify-between border-b border-[#C7C7C7] py-[12px]"
+        >
+          <div
+            class="cursor-pointer flex items-center gap-[8px] text-txt_dark text-[18px] font-medium"
+          >
+            <ArrowLeftOutlined @click="goBack" class="text-[18px]" />
+            Back
+          </div>
+          <span class="modal-title">Add Tenants</span>
+          <span></span>
+        </div>
+      </template>
       <a-tabs
         v-model:activeKey="tenantTab"
         class="add-tenants-tabs tab-gap"
@@ -628,7 +386,9 @@ import { message } from "ant-design-vue";
 import { openDB } from "idb";
 import { computed, h, onMounted, reactive, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import Propertyheader from "@/components/Propertyheader.vue";
 const route = useRoute();
+const activeKey = ref("1");
 const router = useRouter();
 const property = ref(null);
 const loading = ref(true);
@@ -1100,6 +860,7 @@ function downloadSampleFile() {
 .add-tenants-modal .ant-modal {
   margin-top: 40px !important;
   margin-bottom: 40px !important;
+  padding: 0 !important;
 }
 .add-tenants-modal .ant-modal-content {
   border-radius: 18px;
@@ -1150,7 +911,8 @@ function downloadSampleFile() {
   flex: 1;
   text-align: center;
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 500;
+  font-family: "SF Compact Text";
   color: #23234a;
   margin-right: 32px;
 }
@@ -1161,5 +923,10 @@ function downloadSampleFile() {
   max-height: 70vh;
   overflow-y: auto;
   padding-bottom: 0;
+}
+:deep(.ant-tabs-nav) {
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  padding: 8px;
 }
 </style>
