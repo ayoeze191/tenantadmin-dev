@@ -14,12 +14,12 @@
             >({{ pending_request.length }})</span
           >
         </p>
-        <aside class="flex gap-3.5">
+        <!-- <aside class="flex gap-3.5">
           <search-icon />
           <div class="pl-3.5 flex border-l border-br1">
             <status-select :label="'Update All:'"></status-select>
           </div>
-        </aside>
+        </aside> -->
       </div>
       <ul v-if="pending_request.length > 0">
         <li
