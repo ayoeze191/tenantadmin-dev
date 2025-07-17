@@ -921,8 +921,8 @@ function downloadSampleFile() {
   padding-bottom: 0;
 }
 :deep(.ant-tabs-nav) {
-  border: 1px solid #d9d9d9;
-  border-radius: 8px;
+  /* border: 1px solid #d9d9d9; */
+  /* border-radius: 8px; */
   padding: 8px;
 }
 </style>

@@ -1313,7 +1313,7 @@ const nextOrSubmit = async () => {
         zipCode: form.zipCode,
         province: form.province,
         totalUnits: form.units,
-        propertyTypee: form.propertyType, // Note: API has typo 'propertyTypee'
+        propertyType: form.propertyType, // Note: API has typo 'propertyTypee'
         unitTypes: form.unitTypeDetails.map((unitDetail) => {
           const unitImageObjs = unitDetail.unitImages.map((img, imgIdx) => ({
             imageTitle: img.imageTitle || `Image ${imgIdx + 1}`,
