@@ -162,7 +162,6 @@
                   v-model:activeKey="activeKey"
                   :destroyInactiveTabPane="true"
                 >
-                  {{ console.log(property, "prop") }}
                   <a-tab-pane key="1" tab="Property Info">
                     <propertyheader :property="property" />
                     <div class="mt-4 text-[#808097]">
@@ -186,9 +185,6 @@
                       </li>
                     </div>
                   </a-tab-pane>
-                  <!-- <a-tab-pane key="2" v-for="prop in property." tab="Tab 2"
-                    >Tab 2</a-tab-pane
-                  > -->
                 </a-tabs>
               </div>
               <!-- Property Info Card -->

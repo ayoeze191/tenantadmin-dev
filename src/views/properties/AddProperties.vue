@@ -37,7 +37,7 @@
               ref="propertyFormRef"
               layout="vertical"
             >
-              <a-form-item label="Select Landlord" name="landlordId" required class="form-labels">
+              <!-- <a-form-item label="Select Landlord" name="landlordId" required class="form-labels">
                 <a-select
                   v-model:value="form.landlordId"
                   placeholder="Search and select a landlord"
@@ -70,7 +70,7 @@
                     <a-spin v-if="landlordLoading" size="small" />
                   </template>
                 </a-select>
-              </a-form-item>
+              </a-form-item> -->
 
               <a-form-item
                 label="Property Name"
@@ -185,6 +185,8 @@
                   class="border-none text-[#404164]"
                   shape="circle"
                   @click="incrementUnitType(idx)"
+                  :disabled="true"
+
                   >+</a-button
                 >
                 <span class="text-gray-700">{{
@@ -194,6 +196,8 @@
                   size="small"
                   class="border-none text-[#404164]"
                   shape="circle"
+                  :disabled="true"
+
                   @click="decrementUnitType(idx)"
                   >-</a-button
                 >
@@ -607,11 +611,12 @@
               class="flex justify-between items-center px-[10px] text-[12px] text-[#808097] font-medium"
             >
               <span class="flex gap-2.5 leading-[25px] font-medium"
-                ><CheckOutlined v-if="form.propertyType" />
+                ><CheckOutlined v-if="form.propertyType !== null" />
                 <CloseOutlined v-else />Property Type</span
               >
+              {{ console.log(form.propertyType) }}
               <p class="text-[#808097] m-0">
-                {{ form.propertyType || "Not Set" }}
+                {{ form.propertyType !== null ? PROPERTY_TYPE_ENUM.find((prop) => prop.value == form.propertyType).label:  "Not Set" }}
               </p>
             </div>
             <div
@@ -724,25 +729,28 @@ import { useRoute, useRouter } from "vue-router";
 
 // 1. Define the enum array at the top of the script
 const UNIT_TYPE_ENUM = [
+  
+  { label: "Two Bedroom", value: 2 },
+  { label: "Three Bedroom", value: 3 },
+  { label: "PentHouse", value: 4 },
+  { label: "Loft", value: 5 },
+  { label: "TownHouse", value: 6 },
+  { label: "Duplex", value: 7 },
+  { label: "Villa", value: 8 },
+  { label: "Serviced Apartment", value: 9 },
+  { label: "Shared Accommodation", value: 10 },
+  { label: "Hostel/Dormitory", value: 11 },
+];
+const PROPERTY_TYPE_ENUM = [
   { label: "Single Unit", value: 0 },
   { label: "Multi Unit", value: 1 },
-  // { label: "Two Bedroom", value: 2 },
-  // { label: "Three Bedroom", value: 3 },
-  // { label: "PentHouse", value: 4 },
-  // { label: "Loft", value: 5 },
-  // { label: "TownHouse", value: 6 },
-  // { label: "Duplex", value: 7 },
-  // { label: "Villa", value: 8 },
-  // { label: "Serviced Apartment", value: 9 },
-  // { label: "Shared Accommodation", value: 10 },
-  // { label: "Hostel/Dormitory", value: 11 },
-];
+]
 const showAmenitiesModal = ref(false)
 // 2. Use this for unitTypeOptions
 const unitTypeOptions = ref(UNIT_TYPE_ENUM);
 
 // Use the same enum for propertyTypeOptions
-const propertyTypeOptions = ref(UNIT_TYPE_ENUM);
+const propertyTypeOptions = ref(PROPERTY_TYPE_ENUM);
 
 const amenityOptions = ref([]);
 const landlordOptions = ref([]);
