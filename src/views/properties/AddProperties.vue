@@ -184,7 +184,7 @@
                   size="small"
                   class="border-none text-[#404164]"
                   shape="circle"
-                  @click="incrementUnitType(type.value)"
+                  @click="incrementUnitType(type.value, type.label)"
                   :disabled="disableIncrementButton()"
                   >+</a-button
                 >
@@ -206,12 +206,13 @@
           <!-- Step 3: Unit Info -->
           <div v-if="currentStep === 2">
             <div
-              v-if="form.unitTypeDetails.length !== 0"
+              v-if="form.unitTypeCounts.length !== 0"
               class="flex items-center justify-between"
             >
               <div class="flex items-center justify-between">
                 <h4 class="text-base font-bold text-gray-900">
-                  {{ form.unitTypeDetails[currentUnitTypeIndex].label }}
+                  
+                  {{ form.unitTypeCounts[currentUnitTypeIndex].label }}
                 </h4>
                 <!-- <span class="text-sm text-gray-600">
                   Quantity: {{ form.unitTypeDetails[currentUnitTypeIndex].quantity }}
@@ -234,16 +235,16 @@
                   <span class="font-semibold underline text-txt_dark">{{
                     currentUnitTypeIndex + 1
                   }}</span>
-                  of {{ form.unitTypeDetails.length }}
+                  of {{ form.unitTypeCounts.length }}
                 </span>
                 <a-button
                   type="text"
                   :disabled="
-                    currentUnitTypeIndex === form.unitTypeDetails.length - 1
+                    currentUnitTypeIndex === form.unitTypeCounts.length - 1
                   "
                   @click="
                     () =>
-                      currentUnitTypeIndex < form.unitTypeDetails.length - 1 &&
+                      currentUnitTypeIndex < form.unitTypeCounts.length - 1 &&
                       currentUnitTypeIndex++
                   "
                   class="flex items-center gap-1"
@@ -257,7 +258,7 @@
             <div class="bg-white px-8 py-[16px] rounded-xl">
               <a-form :model="form" ref="unitInfoFormRef" layout="vertical">
                 <div
-                  v-if="form.unitTypeDetails.length === 0"
+                  v-if="form.unitTypeCounts.length === 0"
                   class="text-center py-8"
                 >
                   <p class="text-gray-500">
@@ -282,7 +283,7 @@
                       >
                         <a-input-number
                           v-model:value="
-                            form.unitTypeDetails[currentUnitTypeIndex]
+                            form.unitTypeCounts[currentUnitTypeIndex]
                               .rentPerMonth
                           "
                           style="width: 100%"
@@ -304,7 +305,7 @@
                       >
                         <a-input-number
                           v-model:value="
-                            form.unitTypeDetails[currentUnitTypeIndex]
+                            form.unitTypeCounts[currentUnitTypeIndex]
                               .securityDeposit
                           "
                           style="width: 100%"
@@ -400,7 +401,7 @@
           <a-form-item label="Image Upload" name="image" required>
             <div class="space-y-4">
               <!-- Image Preview -->
-              <div v-if="imagePreview" class="relative">
+              <!-- <div v-if="imagePreview" class="relative">
                 <img
                   :src="imagePreview"
                   alt="Preview"
@@ -429,7 +430,7 @@
                     </svg>
                   </template>
                 </a-button>
-              </div>
+              </div> -->
 
               <!-- Upload Area -->
               <div
@@ -498,13 +499,13 @@
                       'unitImages',
                     ]"
                     :validate-status="
-                      form.unitTypeDetails[currentUnitTypeIndex].unitImages
+                      form.unitTypeCounts[currentUnitTypeIndex].unitImages
                         .length === 0
                         ? 'error'
                         : ''
                     "
                     :help="
-                      form.unitTypeDetails[currentUnitTypeIndex].unitImages
+                      form.unitTypeCounts[currentUnitTypeIndex].unitImages
                         .length === 0
                         ? 'At least one image is required'
                         : ''
@@ -513,12 +514,12 @@
                   >
                     <template #label>
                       Unit Images -
-                      {{ form.unitTypeDetails[currentUnitTypeIndex].label }}
+                      {{ form.unitTypeCounts[currentUnitTypeIndex].label }}
                       <span style="color: red">*</span>
                     </template>
                     <CustomImageUpload
                       v-model="
-                        form.unitTypeDetails[currentUnitTypeIndex].unitImages
+                        form.unitTypeCounts[currentUnitTypeIndex].unitImages
                       "
                     />
                   </a-form-item>
@@ -1371,14 +1372,14 @@ function disableDecrementButton(idx){
     return true
   }
 }
-function incrementUnitType(idx) {
+function incrementUnitType(idx, label='') {
   // check if it exist before
   const check = form.unitTypeCounts.find((unit) => unit.unitype == idx)
   if(check !== undefined){
     form.unitTypeCounts = form.unitTypeCounts.map((unit) => unit.unitype == idx ? {...unit, numberofrooms:unit.numberofrooms + 1 }: {...unit} )
   }
   else{
-    form.unitTypeCounts.push({unitype: idx, numberofrooms:1})
+    form.unitTypeCounts.push({unitype: idx, numberofrooms:1, label, securityDeposit: 0, rentPerMonth: 0, unitImages:[]})
   }
 }
 function decrementUnitType(idx) {
