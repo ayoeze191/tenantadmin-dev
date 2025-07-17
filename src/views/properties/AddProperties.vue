@@ -184,21 +184,19 @@
                   size="small"
                   class="border-none text-[#404164]"
                   shape="circle"
-                  @click="incrementUnitType(idx)"
-                  :disabled="true"
-
+                  @click="incrementUnitType(type.value)"
+                  :disabled="disableIncrementButton()"
                   >+</a-button
                 >
                 <span class="text-gray-700">{{
-                  form.unitTypeCounts[idx] || 0
+                   form.unitTypeCounts.find((unit) => unit.unitype == type.value) ? form.unitTypeCounts.find((unit) => unit.unitype == type.value).numberofrooms : 0
                 }}</span>
                 <a-button
                   size="small"
                   class="border-none text-[#404164]"
                   shape="circle"
-                  :disabled="true"
 
-                  @click="decrementUnitType(idx)"
+                  @click="decrementUnitType(type.value)"
                   >-</a-button
                 >
               </div>
@@ -729,7 +727,6 @@ import { useRoute, useRouter } from "vue-router";
 
 // 1. Define the enum array at the top of the script
 const UNIT_TYPE_ENUM = [
-  
   { label: "Two Bedroom", value: 2 },
   { label: "Three Bedroom", value: 3 },
   { label: "PentHouse", value: 4 },
@@ -1157,26 +1154,6 @@ function formatPrice(val) {
   return "₦" + Number(val).toLocaleString();
 }
 
-// Update getUnitTypeSummary to use formatPrice
-function getUnitTypeSummary() {
-  if (form.unitTypeDetails.length > 0) {
-    return form.unitTypeDetails
-      .map(
-        (unitDetail) =>
-          `${unitDetail.label}: ${unitDetail.quantity} (${formatPrice(
-            unitDetail.rentPerMonth
-          )})`
-      )
-      .join(", ");
-  }
-  return unitTypeOptions.value
-    .map((type, idx) => {
-      const count = form.unitTypeCounts[idx];
-      return count > 0 ? `${type.label}: ${count}` : null;
-    })
-    .filter(Boolean)
-    .join(", ");
-}
 
 function getAmenitiesPreview() {
   if (!form.amenities || form.amenities.length === 0) return "Amenities";
@@ -1374,15 +1351,49 @@ const getPreviewImage = (file) => {
   // Support both .url and .image for edit mode
   return file.url || file.image || file.thumbUrl;
 };
-
+function disableIncrementButton() {
+  const totalnumberofrooms = form.unitTypeCounts.reduce((acc, curr) => acc + curr.numberofrooms,0)
+  console.log(totalnumberofrooms, 'totalnumberofrooms')
+  if(totalnumberofrooms == form.units){
+    return true
+  }
+  else{
+    return false
+  }
+}
+function disableDecrementButton(idx){
+  const check = form.unitTypeCounts.find((unit) => unit.unittype == idx)
+  console.log(check)
+  if(check){
+    return false
+  }
+  else{
+    return true
+  }
+}
 function incrementUnitType(idx) {
-  form.unitTypeCounts[idx] = (form.unitTypeCounts[idx] || 0) + 1;
-  form.unitTypeCounts = [...form.unitTypeCounts];
+  // check if it exist before
+  const check = form.unitTypeCounts.find((unit) => unit.unitype == idx)
+  if(check !== undefined){
+    form.unitTypeCounts = form.unitTypeCounts.map((unit) => unit.unitype == idx ? {...unit, numberofrooms:unit.numberofrooms + 1 }: {...unit} )
+  }
+  else{
+    form.unitTypeCounts.push({unitype: idx, numberofrooms:1})
+  }
 }
 function decrementUnitType(idx) {
-  if ((form.unitTypeCounts[idx] || 0) > 0) {
-    form.unitTypeCounts[idx]--;
-    form.unitTypeCounts = [...form.unitTypeCounts];
+  const unitIndex = form.unitTypeCounts.findIndex((unit) => unit.unitype == idx);
+  if (unitIndex !== -1) {
+    if (form.unitTypeCounts[unitIndex].numberofrooms > 1) {
+      form.unitTypeCounts = form.unitTypeCounts.map((unit, i) =>
+        i === unitIndex
+          ? { ...unit, numberofrooms: unit.numberofrooms - 1 }
+          : { ...unit }
+      );
+    } else {
+      // Remove the unit type if numberofrooms becomes 0
+      form.unitTypeCounts.splice(unitIndex, 1);
+    }
   }
 }
 </script>
