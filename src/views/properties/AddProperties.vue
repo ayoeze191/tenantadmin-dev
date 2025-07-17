@@ -639,7 +639,7 @@
               >
               <p class="text-[#808097] m-0">
                 {{
-                  form.unitTypeDetails
+                  form.unitTypeCounts
                     .map((detail) => detail.label)
                     .join(", ") || "Not Set"
                 }}
@@ -1203,7 +1203,7 @@ watch(fileList, (newVal) => {
 
 // Update getPreviewImageFromUnitTypes to find the first available image from any unit type
 function getPreviewImageFromUnitTypes() {
-  for (const unit of form.unitTypeDetails) {
+  for (const unit of form.unitTypeCounts) {
     if (unit.unitImages && unit.unitImages.length > 0) {
       const img = unit.unitImages[0];
       return (
