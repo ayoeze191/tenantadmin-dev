@@ -1,13 +1,13 @@
 <template>
-  <div
-    class="mx-auto bg-neutral py-4 px-8 w-full pb-4"
-  >
+  <div class="mx-auto bg-neutral px-8 w-full pb-4 font-sf">
     <div class="max-w-[95rem] mx-auto">
-      <p class="text-txt_dark font-semibold text-xl leading-7 uppercase mb-8">
-      View Properties
-    </p>
+      <p
+        class="text-txt_dark font-semibold text-[24px] pt-[50px] leading-7 uppercase"
+      >
+        View Properties
+      </p>
       <div class="w-full">
-        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <!-- Loading State -->
           <template v-if="loading">
             <div
@@ -46,9 +46,9 @@
           <!-- Data State -->
           <template v-else>
             <a
-        v-for="property in propertyList"
+              v-for="property in propertyList"
               class="group flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl hover:shadow-md transition cursor-pointer"
-        :key="property.accommodationId"
+              :key="property.accommodationId"
               @click.prevent="handleRedirect(property)"
             >
               <div class="aspect-[16/12] relative">
@@ -63,84 +63,83 @@
                 <!-- Real image: show if images exist, no opacity/imageLoadedMap logic for debugging -->
                 <img
                   v-if="property.images && property.images.length > 0"
-          :src="property.images[0].image"
+                  :src="property.images[0].image"
                   class="w-full object-cover rounded-t-xl h-full absolute top-0 left-0 z-10"
-          :alt="property.name + ' ' + property.images[0].imageTitle"
+                  :alt="property.name + ' ' + property.images[0].imageTitle"
                   loading="lazy"
                   @load="onImgLoad(property.accommodationId)"
                   @error="onImgError(property.accommodationId, $event)"
                 />
               </div>
-              <div class="p-4 flex-1 flex flex-col">
-                <p class="text-xs uppercase text-gray-600">Property</p>
+              <div class="flex-1 flex flex-col">
                 <h3
-                  class="text-lg font-medium text-gray-800 group-hover:text-blue-600 overflow-hidden whitespace-nowrap truncate"
+                  class="text-[24px] mt-[10px] px-[8px] font-[600] text-gray-800 group-hover:text-blue-600 overflow-hidden whitespace-nowrap truncate"
                 >
-            {{ property.name }}
+                  {{ property.name }}
                 </h3>
-                <div class="mt-2 flex flex-col gap-1 text-gray-500 text-sm">
+                <div class="px-2 flex flex-col gap-1 text-gray-500 text-sm">
                   <span
                     class="flex items-center gap-1 overflow-hidden whitespace-nowrap truncate"
                   >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M6 7.33594C6 7.86637 6.21071 8.37508 6.58579 8.75015C6.96086 9.12522 7.46957 9.33594 8 9.33594C8.53043 9.33594 9.03914 9.12522 9.41421 8.75015C9.78929 8.37508 10 7.86637 10 7.33594C10 6.8055 9.78929 6.2968 9.41421 5.92172C9.03914 5.54665 8.53043 5.33594 8 5.33594C7.46957 5.33594 6.96086 5.54665 6.58579 5.92172C6.21071 6.2968 6 6.8055 6 7.33594Z"
-                stroke="#404164"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M11.7687 11.1045L8.94006 13.9331C8.69006 14.1829 8.35112 14.3232 7.99773 14.3232C7.64434 14.3232 7.30541 14.1829 7.0554 13.9331L4.22607 11.1045C3.48021 10.3586 2.97229 9.40827 2.76652 8.37371C2.56076 7.33916 2.66639 6.26681 3.07007 5.29229C3.47374 4.31777 4.15733 3.48483 5.03439 2.89881C5.91144 2.31279 6.94258 2 7.9974 2C9.05222 2 10.0834 2.31279 10.9604 2.89881C11.8375 3.48483 12.5211 4.31777 12.9247 5.29229C13.3284 6.26681 13.434 7.33916 13.2283 8.37371C13.0225 9.40827 12.5146 10.3586 11.7687 11.1045Z"
-                stroke="#404164"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-              {{ property.address }}
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M6 7.33594C6 7.86637 6.21071 8.37508 6.58579 8.75015C6.96086 9.12522 7.46957 9.33594 8 9.33594C8.53043 9.33594 9.03914 9.12522 9.41421 8.75015C9.78929 8.37508 10 7.86637 10 7.33594C10 6.8055 9.78929 6.2968 9.41421 5.92172C9.03914 5.54665 8.53043 5.33594 8 5.33594C7.46957 5.33594 6.96086 5.54665 6.58579 5.92172C6.21071 6.2968 6 6.8055 6 7.33594Z"
+                        stroke="#404164"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M11.7687 11.1045L8.94006 13.9331C8.69006 14.1829 8.35112 14.3232 7.99773 14.3232C7.64434 14.3232 7.30541 14.1829 7.0554 13.9331L4.22607 11.1045C3.48021 10.3586 2.97229 9.40827 2.76652 8.37371C2.56076 7.33916 2.66639 6.26681 3.07007 5.29229C3.47374 4.31777 4.15733 3.48483 5.03439 2.89881C5.91144 2.31279 6.94258 2 7.9974 2C9.05222 2 10.0834 2.31279 10.9604 2.89881C11.8375 3.48483 12.5211 4.31777 12.9247 5.29229C13.3284 6.26681 13.434 7.33916 13.2283 8.37371C13.0225 9.40827 12.5146 10.3586 11.7687 11.1045Z"
+                        stroke="#404164"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                    {{ property.address }}
                   </span>
                   <span class="flex items-center gap-1">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M8.66667 14V9.33333L5.33333 6L2 9.33333V14H5.33333M8.66667 14H5.33333M8.66667 14H14V2.66667C14 2.48986 13.9298 2.32029 13.8047 2.19526C13.6797 2.07024 13.5101 2 13.3333 2H6.66667C6.48986 2 6.32029 2.07024 6.19526 2.19526C6.07024 2.32029 6 2.48986 6 2.66667V6.66667M5.33333 14V11.3333M8.66667 4.66667V4.67333M11.3333 4.66667V4.67333M11.3333 7.33333V7.34M11.3333 10V10.0067"
-                stroke="#404164"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-              {{ property.units.length }} Units
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M8.66667 14V9.33333L5.33333 6L2 9.33333V14H5.33333M8.66667 14H5.33333M8.66667 14H14V2.66667C14 2.48986 13.9298 2.32029 13.8047 2.19526C13.6797 2.07024 13.5101 2 13.3333 2H6.66667C6.48986 2 6.32029 2.07024 6.19526 2.19526C6.07024 2.32029 6 2.48986 6 2.66667V6.66667M5.33333 14V11.3333M8.66667 4.66667V4.67333M11.3333 4.66667V4.67333M11.3333 7.33333V7.34M11.3333 10V10.0067"
+                        stroke="#404164"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                    {{ property.units.length }} Units
                   </span>
                 </div>
                 <!-- View Details Button -->
-                <div class="mt-4 pt-4 border-t border-gray-100">
-                  <a-button
+                <div class="mt-2 p-2 text-base">
+                  <button
                     type="primary"
                     block
                     size="default"
-                    class="btn-primary-custom"
+                    class="btn-primary-custom w-full py-[9px] rounded-[4px]"
                     @click.stop.prevent="handleRedirect(property)"
                   >
                     View Details
-                  </a-button>
+                  </button>
                 </div>
               </div>
             </a>
           </template>
-          </div>
+        </div>
         <!-- Pagination -->
         <div
           v-if="!loading && !error && propertyList.length > 0"
@@ -168,7 +167,7 @@ import handleError from "@/utils/handleError";
 import { handleToast } from "@/utils/helper";
 import dayjs from "dayjs";
 import { Pagination } from "ant-design-vue";
-import { openDB } from 'idb';
+import { openDB } from "idb";
 
 export default {
   components: {
@@ -248,18 +247,18 @@ export default {
     },
     async handleRedirect(property) {
       // IndexedDB logic
-      const db = await openDB('properties-db', 1, {
+      const db = await openDB("properties-db", 1, {
         upgrade(db) {
-          if (!db.objectStoreNames.contains('properties')) {
-            db.createObjectStore('properties', { keyPath: 'accommodationId' });
+          if (!db.objectStoreNames.contains("properties")) {
+            db.createObjectStore("properties", { keyPath: "accommodationId" });
           }
         },
       });
       // Store a plain object to avoid DataCloneError
       const plainProperty = JSON.parse(JSON.stringify(property));
-      await db.put('properties', plainProperty); // put will add or replace by key
+      await db.put("properties", plainProperty); // put will add or replace by key
       this.$router.push({
-        path: `/properties/${property.accommodationId}`
+        path: `/properties/${property.accommodationId}`,
       });
     },
     onImgLoad(id) {

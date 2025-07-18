@@ -250,7 +250,7 @@
       <div>
         <!-- Table header -->
         <div
-          class="grid grid-cols-6 font-normal text-[#98A2B3] text-[18px] font-[initial]"
+          class="grid grid-cols-6 font-normal text-[#98A2B3] text-[16px] md:text-[17px] lg:text-[18px] font-[initial]"
         >
           <span> # </span>
           <span> Name </span>
