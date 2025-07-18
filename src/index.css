@@ -24,26 +24,26 @@
     @apply list-none;
   }
   .data_card {
-    @apply w-full h-48 max-w-90 py-4 rounded-[5px] bg-white;
+    @apply w-full min-h-[191px] h-full  py-4 rounded-[5px] bg-white;
   }
   .data_card .header {
-    @apply flex px-2.5 justify-between;
+    @apply flex  justify-between items-center;
   }
   .data_card a {
-    @apply font-medium text-black text-xs leading-3.5 flex mb-4;
+    @apply font-medium text-black text-xs  flex ;
   }
   .card_title {
-    @apply text-black text-sm leading-4;
+    @apply text-[#252628] text-sm  font-sf 
   }
   .card_bottom {
-    @apply px-5 pt-[15px] border-t border-t-br2 w-full;
+    @apply  border-t border-t-br2 w-full;
   }
   .card_bottom p,
   .card_bottom li {
-    @apply font-medium leading-4.5 text-light_dark mb-2.5;
+    @apply font-medium  text-light_dark ;
   }
   .card_bottom li {
-    @apply text-xs leading-3.5;
+    @apply text-xs ;
   }
   .card_bottom p span,
   .card_bottom li span {
@@ -51,11 +51,11 @@
   }
   .debit_txt,
   span.debit_txt {
-    @apply bg-debit_light text-debit rounded-[15px] px-1.5 py-0.5;
+    @apply bg-debit_light text-debit rounded-[15px] ;
   }
   .credit_txt,
   span.credit_txt {
-    @apply bg-credit_light rounded-[15px] px-1.5 py-0.5;
+    @apply bg-credit_light rounded-[15px] ;
   }
   .status {
     @apply px-2 py-0.5 rounded-[155px] w-[102px] font-medium text-center;

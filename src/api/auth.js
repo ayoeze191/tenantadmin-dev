@@ -10,6 +10,15 @@ export const LoginUser = async (payload) => {
   }
 };
 
+export const CreateUser = async (payload) => {
+  try {
+    const response = await postApi("Account/CreateUser", payload);
+    return response.data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+
 export const AddAdminUser = async (payload) => {
   try {
     const response = await postApi(`AdminUser/AddAdminUser`, payload);
