@@ -189,7 +189,7 @@
                   >+</a-button
                 >
                 <span class="text-gray-700">{{
-                   form.unitTypeCounts.find((unit) => unit.unitype == type.value) ? form.unitTypeCounts.find((unit) => unit.unitype == type.value).numberofrooms : 0
+                   form.unitTypeCounts.find((unit) => unit.unitType == type.value) ? form.unitTypeCounts.find((unit) => unit.unitType == type.value).quantity : 0
                 }}</span>
                 <a-button
                   size="small"
@@ -274,7 +274,7 @@
                       <a-form-item
                         :label="`Rent (per month)`"
                         :name="[
-                          'unitTypeDetails',
+                          'unitTypeCounts',
                           currentUnitTypeIndex,
                           'rentPerMonth',
                         ]"
@@ -296,7 +296,7 @@
                       <a-form-item
                         :label="`Security Deposit`"
                         :name="[
-                          'unitTypeDetails',
+                          'unitTypeCounts',
                           currentUnitTypeIndex,
                           'securityDeposit',
                         ]"
@@ -330,7 +330,7 @@
                     }"
                   >
                     <a-checkbox-group
-                      v-model:value="form.amenities"
+                      v-model:value="form.unitTypeCounts[currentUnitTypeIndex].propertyAmenities"
                       class="flex flex-col gap-2"
                     >
                       <a-checkbox
@@ -494,7 +494,7 @@
                   <a-form-item
                     :label="``"
                     :name="[
-                      'unitTypeDetails',
+                      'unitTypeCounts',
                       currentUnitTypeIndex,
                       'unitImages',
                     ]"
@@ -634,7 +634,7 @@
               class="flex justify-between items-center px-[10px] text-[12px] text-[#808097] font-medium"
             >
               <span class="flex gap-2.5 leading-[25px] font-medium"
-                ><CheckOutlined v-if="form.unitTypeDetails.length > 0" />
+                ><CheckOutlined v-if="form.unitTypeCounts.length > 0" />
                 <CloseOutlined v-else />Unit Type (s)</span
               >
               <p class="text-[#808097] m-0">
@@ -644,6 +644,7 @@
                     .join(", ") || "Not Set"
                 }}
               </p>
+              {{ console.log(store.userProfile) }}
             </div>
             <div class="px-[8px]">
               <a-button
@@ -656,7 +657,7 @@
                   !form.province ||
                   !form.propertyType ||
                   !form.units ||
-                  form.unitTypeDetails.length === 0
+                  form.unitTypeCounts.length === 0
                 "
                 shape=""
                 :class="[
@@ -910,7 +911,7 @@ const onLandlordScroll = (e) => {
 
 // Update initializeUnitTypeDetails
 const initializeUnitTypeDetails = () => {
-  form.unitTypeDetails = unitTypeOptions.value
+  form.unitTypeCounts = unitTypeOptions.value
     .map((type, idx) => {
       const count = form.unitTypeCounts[idx] || 0;
       if (count > 0) {
@@ -1203,17 +1204,26 @@ watch(fileList, (newVal) => {
 
 // Update getPreviewImageFromUnitTypes to find the first available image from any unit type
 function getPreviewImageFromUnitTypes() {
-  for (const unit of form.unitTypeCounts) {
-    if (unit.unitImages && unit.unitImages.length > 0) {
-      const img = unit.unitImages[0];
-      return (
-        img.url ||
-        img.image ||
-        img.thumbUrl ||
-        (img instanceof File ? URL.createObjectURL(img) : null)
-      );
-    }
+  const currentImage = form.unitTypeCounts[currentUnitTypeIndex.value] ? form.unitTypeCounts[currentUnitTypeIndex.value].unitImages[0] : null
+  if(currentImage !== null){
+    console.log(currentImage)
+ return (
+    currentImage instanceof File ? URL.createObjectURL(currentImage): null
+  )
   }
+ 
+  // for (const unit of form.unitTypeCounts) {
+  //   if (unit.unitImages && unit.unitImages.length > 0) {
+  //     const img = unit.unitImages[currentUnitTypeIndex.value] || ""
+  //     console.log(img)
+  //     return (
+  //       img.url ||
+  //       img.image ||
+  //       img.thumbUrl ||
+  //       (img instanceof File ? URL.createObjectURL(img) : null)
+  //     );
+  //   }
+  // }
   return null;
 }
 
@@ -1260,7 +1270,7 @@ const nextOrSubmit = async () => {
     loading.value = true;
     try {
       // Upload images for each unit type
-      for (const unitDetail of form.unitTypeDetails) {
+      for (const unitDetail of form.unitTypeCounts) {
         // Only upload if not already uploaded (no .url or .image string)
         const filesToUpload = unitDetail.unitImages.filter(
           (img) => img instanceof File || img.originFileObj
@@ -1270,8 +1280,8 @@ const nextOrSubmit = async () => {
           let uploadIdx = 0;
           unitDetail.unitImages = unitDetail.unitImages.map((img) => {
             if (img instanceof File || img.originFileObj) {
-              const url = uploadedUrls[uploadIdx++];
-              return { url, imageTitle: img.name || "Image", isMain: false };
+              const image = uploadedUrls[uploadIdx++];
+              return { image, imageTitle: img.name || "Image", isMain: false };
             }
             // Already uploaded
             return img;
@@ -1284,47 +1294,36 @@ const nextOrSubmit = async () => {
       }
       // Build payload according to new API specification
       const payload = {
-        landLordId: form.landlordId,
+        landlordId: store.userProfile.adminUserID,
+        // landLordId: form.landlordId,
         name: form.name,
         description: form.description,
         address: form.address,
         zipCode: form.zipCode,
         province: form.province,
         totalUnits: form.units,
-        propertyType: form.propertyType, // Note: API has typo 'propertyTypee'
-        unitTypes: form.unitTypeDetails.map((unitDetail) => {
-          const unitImageObjs = unitDetail.unitImages.map((img, imgIdx) => ({
-            imageTitle: img.imageTitle || `Image ${imgIdx + 1}`,
-            image: img.url || img.image || img.thumbUrl,
-            isMain: !!img.isMain,
-          }));
-          return {
-            quantity: unitDetail.quantity,
-            unitType: unitDetail.value, // Use the enum value for unitType
-            rentPerMonth: unitDetail.rentPerMonth,
-            securityDeposit: unitDetail.securityDeposit,
-            unitImages: unitImageObjs,
-          };
-        }),
+        propertyTypee: PROPERTY_TYPE_ENUM.find((prop) => form.propertyType == prop.value).label, // Note: API has typo 'propertyTypee'
+        unitTypes: [...form.unitTypeCounts]
       };
-      console.log("Payload to CreateNewProperty:", payload);
-      if (!payload.landLordId) {
-        message.error("Please select a landlord.");
-        loading.value = false;
-        return;
-      }
-      const res = await CreateNewProperty(payload);
-      console.log("CreateNewProperty API response:", res);
-      if (res) {
-        message.success("Property Added Successfully!");
-        router.push("/properties");
-      } else if (res && (res.success || res.status === 200)) {
-        // Fallback: if API returns a different success indicator
-        message.success("Property Added Successfully!");
-        router.push("/properties");
-      } else {
-        message.error(res?.responseMessage || "Failed to add property");
-      }
+      // console.log("Payload to CreateNewProperty:", payload);
+      console.log(payload)
+      // if (!payload.landLordId) {
+      //   message.error("Please select a landlord.");
+      //   loading.value = false;
+      //   return;
+      // }
+      // const res = await CreateNewProperty(payload);
+      // console.log("CreateNewProperty API response:", res);
+      // if (res) {
+      //   message.success("Property Added Successfully!");
+      //   router.push("/properties");
+      // } else if (res && (res.success || res.status === 200)) {
+      //   // Fallback: if API returns a different success indicator
+      //   message.success("Property Added Successfully!");
+      //   router.push("/properties");
+      // } else {
+      //   message.error(res?.responseMessage || "Failed to add property");
+      // }
     } catch (err) {
       message.error("An error occurred while saving the property.");
     } finally {
@@ -1353,7 +1352,7 @@ const getPreviewImage = (file) => {
   return file.url || file.image || file.thumbUrl;
 };
 function disableIncrementButton() {
-  const totalnumberofrooms = form.unitTypeCounts.reduce((acc, curr) => acc + curr.numberofrooms,0)
+  const totalnumberofrooms = form.unitTypeCounts.reduce((acc, curr) => acc + curr.quantity,0)
   console.log(totalnumberofrooms, 'totalnumberofrooms')
   if(totalnumberofrooms == form.units){
     return true
@@ -1362,33 +1361,23 @@ function disableIncrementButton() {
     return false
   }
 }
-function disableDecrementButton(idx){
-  const check = form.unitTypeCounts.find((unit) => unit.unittype == idx)
-  console.log(check)
-  if(check){
-    return false
-  }
-  else{
-    return true
-  }
-}
 function incrementUnitType(idx, label='') {
   // check if it exist before
-  const check = form.unitTypeCounts.find((unit) => unit.unitype == idx)
+  const check = form.unitTypeCounts.find((unit) => unit.unitType == idx)
   if(check !== undefined){
-    form.unitTypeCounts = form.unitTypeCounts.map((unit) => unit.unitype == idx ? {...unit, numberofrooms:unit.numberofrooms + 1 }: {...unit} )
+    form.unitTypeCounts = form.unitTypeCounts.map((unit) => unit.unitType == idx ? {...unit, quantity:unit.quantity + 1 }: {...unit} )
   }
   else{
-    form.unitTypeCounts.push({unitype: idx, numberofrooms:1, label, securityDeposit: 0, rentPerMonth: 0, unitImages:[]})
+    form.unitTypeCounts.push({unitType: idx, quantity:1, label, securityDeposit: 0, rentPerMonth: 0, unitImages:[], propertyAmenities:[]})
   }
 }
 function decrementUnitType(idx) {
-  const unitIndex = form.unitTypeCounts.findIndex((unit) => unit.unitype == idx);
+  const unitIndex = form.unitTypeCounts.findIndex((unit) => unit.unitType == idx);
   if (unitIndex !== -1) {
-    if (form.unitTypeCounts[unitIndex].numberofrooms > 1) {
+    if (form.unitTypeCounts[unitIndex].quantity > 1) {
       form.unitTypeCounts = form.unitTypeCounts.map((unit, i) =>
         i === unitIndex
-          ? { ...unit, numberofrooms: unit.numberofrooms - 1 }
+          ? { ...unit, quantity: unit.quantity - 1 }
           : { ...unit }
       );
     } else {
@@ -1538,3 +1527,4 @@ function decrementUnitType(idx) {
             ></p>
                 </div>
           -->
+<!-- passs string for prperty types -->
