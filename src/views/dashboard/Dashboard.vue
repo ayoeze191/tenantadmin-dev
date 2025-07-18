@@ -200,7 +200,7 @@
       </div>
       <!--Rent inflow graph -->
       <aside class="data_card h-auto">
-        <section class="header flex items-center px-[14px]">
+        <section class="header flex items-center px-[16px]">
           <p class="text-[#252628] m-0 font-sf text-sm leading-[100%]">
             Rent Inflow
           </p>
@@ -215,23 +215,142 @@
         <div class="h-72 flex w-full justify-center tablet:h-auto">
           <chart :data="chartData" :options="chartOptions" />
         </div>
-        <section class="card_bottom">
-          <p>Expected Rent: <span>$10,000</span></p>
+        <section
+          class="py-[16px] px-5 border-solid border-t-[#E3E4E4] border-t mt-[20px]"
+        >
+          <p class="text-[#25262880] font-semibold text-base leading-[100%]">
+            Expected Rent : <span class="text-[#252628]">$10,000</span>
+          </p>
           <ul class="flex justify-between">
-            <li>
-              Collected Rent: <span class="credit_txt text-debit">$7,500</span>
+            <li class="text-light_dark text-[12px] leading-[100%]">
+              Collected Rent:
+              <span
+                class="text-[#0E3221] font-semibold bg-[#E0F5EB] rounded-[15px] px-[6px] py-[2px] leading-[100%]"
+                >$7,500</span
+              >
             </li>
-            <li>Pending Rent: <span class="debit_txt">$2,500</span></li>
+            <li class="text-[#25262880] text-[12px] leading-[100%]">
+              Pending Rent:
+              <span
+                class="debit_txt px-[6px] py-[2px] text-[12px] font-semibold"
+                >$2,500</span
+              >
+            </li>
           </ul>
         </section>
       </aside>
     </section>
     <!-- Table -->
     <div class="py-4 px-8 bg-white rounded-lg w-full overflow-x-scroll">
-      <p class="font-medium text-lg leading-[22px] text-black mb-5">
+      <p class="text-lg leading-[100%] text-[#000000] mb-5 font-[500]">
         Pending Rent Payment
       </p>
-      <table-component :headers="headers" :data="tableData" type="dashboard">
+      <div>
+        <!-- Table header -->
+        <div
+          class="grid grid-cols-6 font-normal text-[#98A2B3] text-[18px] font-[initial]"
+        >
+          <span> # </span>
+          <span> Name </span>
+          <span> Status </span>
+          <span> Property </span>
+          <span> Unit Number </span>
+          <span> Due Date </span>
+        </div>
+        <!-- End Table Header -->
+        <!-- Table body -->
+        <div
+          class="grid grid-cols-6 font-normal mb-[29px] text-[#404164] mt-4 text-[18px] font-[initial]"
+        >
+          <span> 1 </span>
+          <span> Steph Sobim </span>
+          <span
+            class="text-[#E41919] px-[18px] py-[2.5px] rounded-[155px] bg-[#E4191940] w-fit"
+          >
+            Overdue
+          </span>
+          <span> Wellington House </span>
+          <span> 1243 </span>
+          <span> 23/09/22 </span>
+        </div>
+
+        <div
+          class="grid grid-cols-6 font-normal mb-[29px] text-[#404164] mt-4 text-[18px] font-[initial]"
+        >
+          <span> 2 </span>
+          <span> Steph Sobim </span>
+          <span
+            class="text-[#D68F02] px-[18px] py-[2.5px] rounded-[155px] bg-[#D68F0240] w-fit"
+          >
+            Pending
+          </span>
+          <span> Wellington House </span>
+          <span> 1243 </span>
+          <span> 23/09/22 </span>
+        </div>
+
+        <div
+          class="grid grid-cols-6 font-normal mb-[29px] text-[#404164] mt-4 text-[18px] font-[initial]"
+        >
+          <span> 3 </span>
+          <span> Steph Sobim </span>
+          <span
+            class="text-[#D68F02] px-[18px] py-[2.5px] rounded-[155px] bg-[#D68F0240] w-fit"
+          >
+            Pending
+          </span>
+          <span> Wellington House </span>
+          <span> 1243 </span>
+          <span> 23/09/22 </span>
+        </div>
+
+        <div
+          class="grid grid-cols-6 font-normal mb-[29px] text-[#404164] mt-4 text-[18px] font-[initial]"
+        >
+          <span> 4 </span>
+          <span> Steph Sobim </span>
+          <span
+            class="text-[#31A057] px-[18px] py-[2.5px] rounded-[155px] bg-[#31A05740] w-fit"
+          >
+            Due
+          </span>
+          <span> Wellington House </span>
+          <span> 1243 </span>
+          <span> 23/09/22 </span>
+        </div>
+
+        <div
+          class="grid grid-cols-6 font-normal mb-[29px] text-[#404164] mt-4 text-[18px] font-[initial]"
+        >
+          <span> 5 </span>
+          <span> Steph Sobim </span>
+          <span
+            class="text-[#E41919] px-[18px] py-[2.5px] rounded-[155px] bg-[#E4191940] w-fit"
+          >
+            Overdue
+          </span>
+          <span> Wellington House </span>
+          <span> 1243 </span>
+          <span> 23/09/22 </span>
+        </div>
+
+        <div
+          class="grid grid-cols-6 font-normal mb-[29px] text-[#404164] mt-4 text-[18px] font-[initial]"
+        >
+          <span> 6 </span>
+          <span> Steph Sobim </span>
+          <span
+            class="text-[#E41919] px-[18px] py-[2.5px] rounded-[155px] bg-[#E4191940] w-fit"
+          >
+            Overdue
+          </span>
+          <span> Wellington House </span>
+          <span> 1243 </span>
+          <span> 23/09/22 </span>
+        </div>
+        <!-- End Table Body -->
+      </div>
+      <!-- <table-component :headers="headers" :data="tableData" type="dashboard">
         <template #column0="{ entity }">
           {{ entity.id }}
         </template>
@@ -259,7 +378,7 @@
         <template #column5="{ entity }">
           {{ entity.date }}
         </template>
-      </table-component>
+      </table-component> -->
     </div>
   </div>
 </template>
