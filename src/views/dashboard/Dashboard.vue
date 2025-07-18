@@ -20,11 +20,13 @@
             </a>
           </section>
           <section class="px-[14px]">
-            <p class="font-medium text-dark text-sm h-fit">
-              <span class="text-lrge font-[600] font-sf m-0 p-0 leading-[100%]"
+            <p
+              class="flex gap-[4px] items-end font-medium text-dark text-sm h-fit"
+            >
+              <span class="text-lrge h-full font-[600] font-sf leading-[100%]"
                 >15</span
               >
-              <span class="mb-8 text-[14px] leading-[100%] h-[16px]">
+              <span class="text-[14px] mb-[6px] leading-[100%]">
                 Completed
               </span>
             </p>
@@ -107,11 +109,11 @@
             </a>
           </section>
           <section class="px-[14px]">
-            <p class="font-medium text-dark text-sm h-fit">
+            <p class="font-medium flex gap-1 items-end text-dark text-sm h-fit">
               <span class="text-lrge font-[600] font-sf m-0 p-0 leading-[100%]"
                 >8</span
               >
-              <span class="mb-8 text-[14px] leading-[100%] h-[16px]">
+              <span class="mb-[6px] text-[14px] leading-[100%]">
                 Completed
               </span>
             </p>
