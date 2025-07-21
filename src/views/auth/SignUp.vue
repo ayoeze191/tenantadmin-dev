@@ -156,8 +156,8 @@
 </template>
 
 <script>
+// import { AddAdminUser } from "@/api/auth";
 import { AddAdminUser } from "@/api/auth";
-import { CreateUser } from "@/api/auth";
 import { useUserStore } from "@/store";
 import Button from "@/components/Button.vue";
 import { useToast } from "vue-toast-notification";
@@ -223,7 +223,7 @@ export default {
         phoneNumber: this.phoneNumber,
         accountType: 1,
       };
-      CreateUser(payload).then((response) => {
+      AddAdminUser(payload).then((response) => {
         this.isLoading = false;
         $toast.success("Successfully Signuped, please log in");
         router.push("/login");

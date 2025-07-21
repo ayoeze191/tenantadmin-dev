@@ -1,9 +1,130 @@
 <template>
-    <div class="bg-neutral py-5 px-10 w-full overflow-y-scroll h-screen pb-40">
-        <p class="text-txt_dark font-semibold text-2xl leading-7 uppercase mb-10">Admin</p>
-        <!-- Table -->
-        <div class="rounded-lg w-full relative">
-            <table-component :headers="headers" :data="adminsList">
+  <div class="bg-neutral py-5 px-10 w-full overflow-y-scroll h-screen pb-40">
+    <p class="text-txt_dark font-semibold text-2xl leading-7 uppercase mb-10">
+      Admin
+    </p>
+    <!-- Table -->
+    <div class="bg-white w-full">
+      <div class="grid grid-cols-6 bg-[#F8F8F8] w-full">
+        <span
+          v-for="header in headers"
+          class="text-[#808097] uppercase py-[14px] px-[24px]"
+        >
+          {{ header }}
+        </span>
+      </div>
+      <div>
+        <!-- Start Table Body -->
+
+        <div>
+          <div
+            class="grid grid-cols-6 p-6 border-b border-[#E2EAEB]"
+            v-for="admin in adminsList"
+          >
+            <div class="flex items-center text-[#585858] text-[14px] font-sf">
+              {{ admin.firstname }} {{ admin.lastname }}
+            </div>
+            <div class="flex items-center text-[#585858] text-[14px] font-sf">
+              {{ admin.email }}
+            </div>
+            <div
+              class="status_mini"
+              :class="{
+                status_pending: admin.adminUserStatus === 'Pending',
+                status_overdue: admin.adminUserStatus === 'Inactive',
+                status_due: admin.adminUserStatus === 'Active',
+              }"
+            >
+              {{ admin.adminUserStatus }}
+            </div>
+            <div
+              class="flex items-center text-[#585858] text-[14px] font-sf pl-7"
+            >
+              {{ formatDate(admin.lastLoginDate) }}
+            </div>
+            <div
+              class="status_mini"
+              :class="{
+                status_overdue: !admin.isVerified,
+                status_due: admin.isVerified,
+              }"
+            >
+              {{ admin.isVerified ? "Verified" : "Not Verified" }}
+            </div>
+            <div>
+              <a-dropdown :trigger="['click']">
+                <a
+                  class="ant-dropdown-link cursor-pointer text-[#808097] flex items-center gap-[4px] pl-7"
+                  @click.prevent
+                >
+                  <svg
+                    class="my-auto"
+                    width="17"
+                    height="17"
+                    viewBox="0 0 17 17"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M6.83073 8.5C6.83073 8.85362 6.97121 9.19276 7.22125 9.44281C7.4713 9.69286 7.81044 9.83333 8.16406 9.83333C8.51768 9.83333 8.85682 9.69286 9.10687 9.44281C9.35692 9.19276 9.4974 8.85362 9.4974 8.5C9.4974 8.14638 9.35692 7.80724 9.10687 7.55719C8.85682 7.30714 8.51768 7.16667 8.16406 7.16667C7.81044 7.16667 7.4713 7.30714 7.22125 7.55719C6.97121 7.80724 6.83073 8.14638 6.83073 8.5Z"
+                      stroke="#808097"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M14.1641 8.5C12.5641 11.1667 10.5641 12.5 8.16406 12.5C5.76406 12.5 3.76406 11.1667 2.16406 8.5C3.76406 5.83333 5.76406 4.5 8.16406 4.5C10.5641 4.5 12.5641 5.83333 14.1641 8.5Z"
+                      stroke="#808097"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                  View
+                  <DownOutlined />
+                </a>
+                <template #overlay>
+                  <a-menu>
+                    <a-menu-item>
+                      <li
+                        class="py-4 px-2 border-b border-b-br3 font-medium text-secondary cursor-pointer text-base leading-5"
+                        @click="updateAdminStatus(admin)"
+                      >
+                        {{
+                          admin.adminUserStatus == "Inactive"
+                            ? "Activate"
+                            : "Deactivate"
+                        }}
+                        Admin
+                      </li>
+                    </a-menu-item>
+                    <a-menu-item key="0">
+                      <li
+                        class="font-medium text-[#808097] cursor-pointer text-base leading-5 py-[16px] px-[8px]"
+                        @click="editAdmin(admin)"
+                      >
+                        Edit Admin
+                      </li>
+                    </a-menu-item>
+                    <a-menu-divider />
+                    <a-menu-item key="1">
+                      <li
+                        class="cursor-pointer font-medium text-[#808097] text-base leading-5 py-[16px] px-[8px]"
+                        @click="openModal('reset', admin)"
+                      >
+                        Reset Password
+                      </li>
+                    </a-menu-item>
+                  </a-menu>
+                </template>
+              </a-dropdown>
+            </div>
+          </div>
+        </div>
+
+        <!-- End Table Body -->
+      </div>
+      <!-- <table-component :headers="headers" :data="adminsList">
                 <template #column0="{ entity }">
                     <p class="text-txt_dark2 text-sm">{{ entity.firstname }} {{ entity.lastname }}</p>
                 </template>
@@ -46,117 +167,135 @@
                         </ul>
                     </div>
                 </template>
-            </table-component>
-        </div>
-
+            </table-component> -->
     </div>
-    <modal-component ref="resetPassword" :plain="true" @close="handleCloseModal('reset')" :style="{'max-w-128': true}">
-        <div class="px-8 pt-8 w-[510px] mx-auto">
-            <p class="text-txt_dark font-semibold text-center text-2xl mb-9">Reset Password</p>
-            <p class="text-secondary font-semibold text-center text-base mb-20">Are you sure you want to reset the password of {{ this.selected_Admin.firstname + ' ' + this.selected_Admin.lastname }}? This action cannot be undone.</p>
-            <div class="flex w-full">
-                <button class="btn btn_danger" @click="handleReset()">
-                    Reset Password
-                </button>
-                <button class="btn btn_alternate" @click="this.$refs.deleteRoleModal.closeModal()">
-                    Cancel
-                </button>
-            </div>
-        </div>
-    </modal-component>
-  
+  </div>
+  <modal-component
+    ref="resetPassword"
+    :plain="true"
+    @close="handleCloseModal('reset')"
+    :style="{ 'max-w-128': true }"
+  >
+    <div class="px-8 pt-8 w-[510px] mx-auto">
+      <p class="text-txt_dark font-semibold text-center text-2xl mb-9">
+        Reset Password
+      </p>
+      <p class="text-secondary font-semibold text-center text-base mb-20">
+        Are you sure you want to reset the password of
+        {{
+          this.selected_Admin.firstname + " " + this.selected_Admin.lastname
+        }}? This action cannot be undone.
+      </p>
+      <div class="flex w-full">
+        <button class="btn btn_danger" @click="handleReset()">
+          Reset Password
+        </button>
+        <button
+          class="btn btn_alternate"
+          @click="this.$refs.deleteRoleModal.closeModal()"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </modal-component>
 </template>
 
 <script>
-import { FetchAdmins, ResetAdminPassword, UpdateAdminStatus } from '@/api/auth';
-import IconEdit from '@/components/icons/IconEdit.vue';
-import Modal from '@/components/Modal.vue';
-import Table from '@/components/Table.vue';
-import handleError from '@/utils/handleError';
-import { handleToast } from '@/utils/helper';
-import dayjs from 'dayjs';
+import { FetchAdmins, ResetAdminPassword, UpdateAdminStatus } from "@/api/auth";
+import IconEdit from "@/components/icons/IconEdit.vue";
+import Modal from "@/components/Modal.vue";
+import Table from "@/components/Table.vue";
+import handleError from "@/utils/handleError";
+import { handleToast } from "@/utils/helper";
+import dayjs from "dayjs";
 
 export default {
-  components:{
+  components: {
     "table-component": Table,
     "edit-icon": IconEdit,
-    "modal-component": Modal
+    "modal-component": Modal,
   },
-  created(){
+  created() {
     this.handleFetchAdmins();
   },
-  data(){
+  data() {
     return {
-        headers: ['name','email','status','last login','verification', 'action'],
-        adminsList: [],
-        tableDropdown: '',
-        selected_Admin: ''
-    }
+      headers: [
+        "name",
+        "email",
+        "status",
+        "last login",
+        "verification",
+        "action",
+      ],
+      adminsList: [],
+      tableDropdown: "",
+      selected_Admin: "",
+    };
   },
   methods: {
-    isActive(data){
-        if(this.tableDropdown == data){
-            return true;
-        } else return false
+    isActive(data) {
+      if (this.tableDropdown == data) {
+        return true;
+      } else return false;
     },
-    openModal(key,request) {
-        this.selected_Admin = request;
+    openModal(key, request) {
+      this.selected_Admin = request;
 
-        if(key == 'reset'){
-            this.$refs.resetPassword.openModal();
-        }
+      if (key == "reset") {
+        this.$refs.resetPassword.openModal();
+      }
     },
     handleCloseModal(key) {
-        if(key == 'reset'){
-            this.$refs.resetPassword.closeModal();
-        }
-        this.selected_Admin = {};
+      if (key == "reset") {
+        this.$refs.resetPassword.closeModal();
+      }
+      this.selected_Admin = {};
     },
-    toggleTableDropdown(data){
-        if(this.isActive(data)){
-            this.tableDropdown = ''
-        } else this.tableDropdown = data
+    toggleTableDropdown(data) {
+      if (this.isActive(data)) {
+        this.tableDropdown = "";
+      } else this.tableDropdown = data;
     },
-    handleFetchAdmins(){
-        FetchAdmins().then(response => {
-            if(response.result.responseCode == '00'){
-                this.adminsList = response.result.adminUsers.items
-            }else handleError(response)
-        })
-
+    handleFetchAdmins() {
+      FetchAdmins().then((response) => {
+        if (response.result.responseCode == "00") {
+          this.adminsList = response.result.adminUsers.items;
+        } else handleError(response);
+      });
     },
-    formatDate(date){
-        return dayjs(date).format('DD MMM,YYYY')
+    formatDate(date) {
+      return dayjs(date).format("DD MMM,YYYY");
     },
-    updateAdminStatus(item){
-        const payload = {
-            id: item.adminUserID,
-            status: item.adminUserStatus == 'Inactive' ? 1 : 0
-        }
-        UpdateAdminStatus(payload).then(response => {
-            if(response.result.responseCode == '00'){
-                handleToast('Admin Status Update Successful','success')
-                this.handleFetchAdmins();
-            }else handleError(response)
-        })
+    updateAdminStatus(item) {
+      const payload = {
+        id: item.adminUserID,
+        status: item.adminUserStatus == "Inactive" ? 1 : 0,
+      };
+      UpdateAdminStatus(payload).then((response) => {
+        if (response.result.responseCode == "00") {
+          handleToast("Admin Status Update Successful", "success");
+          this.handleFetchAdmins();
+        } else handleError(response);
+      });
     },
-    editAdmin(item){
-        this.$router.push({name: 'edit-users-admin', query: item })
-        localStorage.setItem("selected_role", JSON.stringify(item.role) );
+    editAdmin(item) {
+      this.$router.push({ name: "edit-users-admin", query: item });
+      localStorage.setItem("selected_role", JSON.stringify(item.role));
     },
-    handleReset(){
-        const payload = {
-            adminID: this.selected_Admin.adminUserID,
-            email: this.selected_Admin.email
-        }
-        ResetAdminPassword(payload).then(response => {
-            if(response.result.responseCode == '00'){
-                handleToast('Admin Password Reset Successful','success');
-                this.handleCloseModal('reset')
-            }else handleError(response)
-        })
-    }
-  }
-
-}
+    handleReset() {
+      const payload = {
+        adminID: this.selected_Admin.adminUserID,
+        email: this.selected_Admin.email,
+      };
+      ResetAdminPassword(payload).then((response) => {
+        if (response.result.responseCode == "00") {
+          handleToast("Admin Password Reset Successful", "success");
+          this.handleCloseModal("reset");
+        } else handleError(response);
+      });
+    },
+  },
+};
 </script>

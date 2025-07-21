@@ -1,9 +1,11 @@
 <template>
-  <div class="bg-neutral py-5 px-2 w-full min-h-screen">
-    <div class="max-w-5xl mx-auto">
+  <div
+    class="bg-neutral py-[40px] px-4 sm:px-6 md:px-8 lg:px-[24px] w-full min-h-screen"
+  >
+    <div class="mx-auto">
       <PaymentStatsCard :stats="paymentStats" />
       <div class="flex justify-between items-center mb-5">
-        <h2 class="text-2xl font-semibold text-gray-800">PAYMENT DUE</h2>
+        <h2 class="text-2xl font-semibold text-gray-800 m-0">PAYMENT DUE</h2>
         <div class="flex items-center gap-4">
           <a-select
             v-model:value="filterType"
@@ -22,14 +24,14 @@
           </a-select>
         </div>
       </div>
-      <a-card class="rounded-xl border-none">
+      <div class="rounded-xl border-none py-[14px] px-[28px] bg-[#FFFFFF]">
         <PaymentList
           :payments="filteredPayments"
           :showInvoiceLink="true"
           @notify="openNotifyModal"
           @confirm="openConfirmModal"
         />
-      </a-card>
+      </div>
       <PaymentModal
         :visible="notifyModalVisible"
         modalType="notify"
@@ -107,19 +109,19 @@
             <div class="text-xs text-gray-400 mb-1">Tenant</div>
             <div class="font-semibold text-lg text-gray-900 mb-1">
               {{ selectedPayment?.tenantName }}
-                  </div>
+            </div>
           </div>
           <div>
             <div class="text-xs text-gray-400 mb-1">Amount</div>
             <div class="font-bold text-2xl" style="color: rgba(160, 0, 0, 1)">
               ${{ selectedPayment?.amount }}
             </div>
-    </div>
+          </div>
           <div class="text-xs text-gray-400 mt-1">
             Once confirmed, this payment will be marked as received and updated
             in the tenant's account.
-                  </div>
-                  </div>
+          </div>
+        </div>
         <template #footer>
           <div class="flex gap-2 justify-end items-center">
             <a-button
@@ -133,21 +135,21 @@
               class="rounded-md px-3 py-1.5 flex items-center"
               >Cancel</a-button
             >
-                  </div>
+          </div>
         </template>
       </PaymentModal>
-                      </div>
-                  </div>
-  </template>
-  
-  <script>
+    </div>
+  </div>
+</template>
+
+<script>
 import PaymentList from "@/components/payments/PaymentList.vue";
 import PaymentModal from "@/components/payments/PaymentModal.vue";
 import PaymentStatsCard from "@/components/payments/PaymentStatsCard.vue";
-  export default {
+export default {
   components: { PaymentList, PaymentModal, PaymentStatsCard },
-      data() {
-          return {
+  data() {
+    return {
       payments: [
         // Example data, replace with API/store
         {
@@ -248,8 +250,8 @@ import PaymentStatsCard from "@/components/payments/PaymentStatsCard.vue";
         rent: this.payments.filter((p) => p.type === "Rent").length,
       };
     },
-      },
-      methods: {
+  },
+  methods: {
     openNotifyModal(payment) {
       this.selectedPayment = payment;
       this.notifyModalVisible = true;
@@ -293,7 +295,6 @@ import PaymentStatsCard from "@/components/payments/PaymentStatsCard.vue";
     },
   },
 };
-  </script>
-  
+</script>
+
 <style></style>
-  

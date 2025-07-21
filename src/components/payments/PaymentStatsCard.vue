@@ -1,20 +1,19 @@
 <template>
-  <div class="flex flex-wrap gap-3 mb-6">
+  <div class="mb-6 font-sf">
     <div
-      v-for="stat in statsList"
-      :key="stat.label"
-      class="flex-1 min-w-[160px]"
+      class="flex flex-wrap bg-white p-6 rounded-[4px] justify-between shadow-sm"
     >
-      <a-card :body-style="{ padding: '18px 20px' }" class="shadow-sm">
-        <div class="flex flex-col gap-1">
-          <span class="text-primary font-semibold text-lg">{{
-            stat.count
-          }}</span>
-          <span :class="stat.color + ' text-xs font-medium uppercase'">{{
-            stat.label
-          }}</span>
+      <div v-for="stat in statsList" :key="stat.label" class="">
+        <div class="">
+          <div class="flex flex-col gap-1">
+            <span
+              class="text-[#404164] font-semibold text-[24px] font-sf leading-[25px]"
+              >{{ stat.count }}</span
+            >
+            <span :class="stat.color + ' text-[16px] '">{{ stat.label }}</span>
+          </div>
         </div>
-      </a-card>
+      </div>
     </div>
   </div>
 </template>

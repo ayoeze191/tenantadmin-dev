@@ -1,6 +1,8 @@
 <template>
-  <div class="bg-neutral py-5 px-2 w-full min-h-screen">
-    <div class="max-w-5xl mx-auto">
+  <div
+    class="bg-neutral py-[40px] px-4 sm:px-6 md:px-8 lg:px-[24px] w-full min-h-screen"
+  >
+    <div class="mx-auto">
       <PaymentStatsCard :stats="paymentStats" />
       <h2 class="text-2xl font-semibold text-gray-800 mb-4">UTILITY</h2>
       <a-card class="border-none rounded-xl">
@@ -113,4 +115,3 @@ export default {
   },
 };
 </script>
- 

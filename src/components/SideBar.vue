@@ -16,7 +16,7 @@
       <a-menu-item key="dashboard">
         <router-link :to="{ name: 'admin-dashboard' }">
           <template #icon><overview-icon /></template>
-            Overview
+          Overview
         </router-link>
       </a-menu-item>
       <a-sub-menu key="service-requests" title="Service Requests">
@@ -40,7 +40,7 @@
       <a-menu-item key="admin-applications">
         <router-link :to="{ name: 'admin-applications' }">
           <template #icon><application-icon /></template>
-            Tenancy Applications
+          Tenancy Applications
         </router-link>
       </a-menu-item>
       <a-sub-menu key="properties" title="My Properties">
@@ -126,16 +126,16 @@
           >
         </a-menu-item>
       </a-sub-menu>
-      <a-menu-item key="amenities">
+      <!-- <a-menu-item key="amenities">
         <router-link :to="{ name: 'amenities' }">
           <template #icon><amenities-icon /></template>
           Amenities
-            </router-link>
-      </a-menu-item>
+        </router-link>
+      </a-menu-item> -->
       <a-menu-item key="admin-users-notification">
         <router-link :to="{ name: 'admin-users-notification' }">
           <template #icon><notification-icon /></template>
-            User Notification
+          User Notification
         </router-link>
       </a-menu-item>
     </a-menu>

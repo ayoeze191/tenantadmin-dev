@@ -1,7 +1,14 @@
 <template>
-  <div>
+  <div class="">
+    <div
+      class="text-[#808097] text-[18px] border-b mb-4 border-solid border-[#C7C7C7] pb-[12px]"
+    >
+      All Payment Due
+    </div>
     <div v-for="(group, month) in groupedPayments" :key="month" class="mb-4">
-      <h3 class="text-base font-semibold text-gray-700 mb-2 uppercase">
+      <h3
+        class="text-[14px] font-[500] text-[#808097] font-sf mb-5 uppercase px-[25px]"
+      >
         {{ month }}
       </h3>
       <div
@@ -11,11 +18,16 @@
         style="background: rgba(248, 248, 248, 1)"
       >
         <div>
-          <div class="font-bold text-gray-900">
+          <div class="font-bold text-[18px] flex gap-3 mb-2 text-[#404164]">
             {{ payment.tenantName }}
-            <span class="text-gray-500 font-normal ml-3">{{ payment.unit }}</span>
+            <span class="text-gray-500 font-normal">{{ payment.unit }}</span>
           </div>
-          <div class="text-xs text-gray-400">Due: {{ payment.dueDate }}</div>
+          <div class="text-gray-400 text-[16px] leading-[100%]">
+            Due:
+            <span class="text-[#404164] text-[16px] leading-[100%] font-sf">{{
+              payment.dueDate
+            }}</span>
+          </div>
         </div>
         <div class="flex items-center gap-2">
           <div class="flex flex-col items-end">
