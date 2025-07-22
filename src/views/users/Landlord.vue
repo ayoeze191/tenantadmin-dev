@@ -31,11 +31,11 @@
           <div
             class="flex items-center text-[#585858] justify-center text-[14px] font-sf w-fit px-[6px] py-[2px] rounded-[5px]"
             :class="{
-              status_overdue: landlord.status === 0,
-              status_due: landlord.status === 1,
+              status_overdue: !landlord.isVerified,
+              status_due: landlord.isVerified,
             }"
           >
-            {{ landlord.status ? "Active" : "Inactive" }}
+            {{ landlord.isVerified ? "Yes" : "No" }}
           </div>
           <div
             class="flex items-center text-[#585858] text-[14px] font-sf pl-7"
@@ -153,7 +153,7 @@ export default {
   },
   data() {
     return {
-      headers: ["name", "email", "status", "last login", "action"],
+      headers: ["name", "email", "verified", "last login", "action"],
       landlordList: [],
       tableDropdown: "",
     };

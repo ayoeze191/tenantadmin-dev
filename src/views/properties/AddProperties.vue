@@ -37,7 +37,7 @@
               ref="propertyFormRef"
               layout="vertical"
             >
-              <!-- <a-form-item label="Select Landlord" name="landlordId" required class="form-labels">
+              <a-form-item label="Select Landlord" name="landlordId" required class="form-labels" v-if="store.userProfile.role.name !== 'LandLord'">
                 <a-select
                   v-model:value="form.landlordId"
                   placeholder="Search and select a landlord"
@@ -70,7 +70,7 @@
                     <a-spin v-if="landlordLoading" size="small" />
                   </template>
                 </a-select>
-              </a-form-item> -->
+              </a-form-item>
 
               <a-form-item
                 label="Property Name"
@@ -257,6 +257,7 @@
             </div>
             <div class="bg-white px-8 py-[16px] rounded-xl">
               <a-form :model="form" ref="unitInfoFormRef" layout="vertical">
+                {{ console.log(form.unitTypeCounts) }}
                 <div
                   v-if="form.unitTypeCounts.length === 0"
                   class="text-center py-8"
@@ -388,7 +389,7 @@
           <!-- Amenity Name -->
           <a-form-item label="Name" name="name" required class="mb-[32px]">
             <a-input
-              v-model:value="form.name"
+              v-model:value="form.amenityname"
               placeholder="Amenity"
               size="large"
               class="!rounded-lg "
@@ -398,10 +399,10 @@
         
 
           <!-- Image Upload -->
-          <a-form-item label="Image Upload" name="image" required>
+          <!-- <a-form-item label="Image Upload" name="image" required>
             <div class="space-y-4">
-              <!-- Image Preview -->
-              <!-- <div v-if="imagePreview" class="relative">
+              Image Preview
+               <div v-if="imagePreview" class="relative">
                 <img
                   :src="imagePreview"
                   alt="Preview"
@@ -430,9 +431,7 @@
                     </svg>
                   </template>
                 </a-button>
-              </div> -->
-
-              <!-- Upload Area -->
+              </div> 
               <div
                 v-if="!imagePreview"
                 class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors cursor-pointer"
@@ -460,7 +459,7 @@
                 </div>
               </div>
             </div>
-          </a-form-item>
+          </a-form-item> -->
   <!-- Keywords -->
           <a-form-item label="Keywords"  class="form-label text-[#404164] leading-[100%] font-sf mb-8" name="amenitiesKeyWords" required>
             <a-input
@@ -480,11 +479,12 @@
             <button
               html-type="submit"
               :loading="submitting"
+              @click="HandleCreateAmenities"
               class="!bg-primary text-white !border-primary flex items-center w-full justify-center py-3"
             >
               <span v-if="submitting">Saving...</span>
               <span v-else>{{
-                isEditing ? "Update Amenity" : "Add Amenity"
+             "Add Amenity"
               }}</span>
             </button>
           </div>
@@ -613,7 +613,6 @@
                 ><CheckOutlined v-if="form.propertyType !== null" />
                 <CloseOutlined v-else />Property Type</span
               >
-              {{ console.log(form.propertyType) }}
               <p class="text-[#808097] m-0">
                 {{ form.propertyType !== null ? PROPERTY_TYPE_ENUM.find((prop) => prop.value == form.propertyType).label:  "Not Set" }}
               </p>
@@ -644,7 +643,6 @@
                     .join(", ") || "Not Set"
                 }}
               </p>
-              {{ console.log(store.userProfile) }}
             </div>
             <div class="px-[8px]">
               <a-button
@@ -709,6 +707,8 @@ import { CreateNewProperty, FetchLandlords } from "@/api/properties";
 import { useUserStore } from "@/store";
 import { useOptionsStore } from "@/stores/options";
 import { uploadImages } from "@/utils/helper";
+import { createAmenity, getAmenities } from "@/api/amenity";
+
 import {
   CheckOutlined,
   LeftOutlined,
@@ -776,6 +776,8 @@ const form = reactive({
   unitTypeDetails: [], // New array to store details for each unit type
   images: [],
   amenities: [],
+  amenityname: '',
+  amenitiesKeyWords: ''
 });
 
 const router = useRouter();
@@ -910,25 +912,25 @@ const onLandlordScroll = (e) => {
 };
 
 // Update initializeUnitTypeDetails
-const initializeUnitTypeDetails = () => {
-  form.unitTypeCounts = unitTypeOptions.value
-    .map((type, idx) => {
-      const count = form.unitTypeCounts[idx] || 0;
-      if (count > 0) {
-        return {
-          unitType: type.value, // enum id
-          value: type.value, // enum id (for clarity)
-          label: type.label,
-          quantity: count,
-          rentPerMonth: null,
-          securityDeposit: null,
-          unitImages: [],
-        };
-      }
-      return null;
-    })
-    .filter(Boolean);
-};
+// const initializeUnitTypeDetails = () => {
+//   form.unitTypeCounts = unitTypeOptions.value
+//     .map((type, idx) => {
+//       const count = form.unitTypeCounts[idx] || 0;
+//       if (count > 0) {
+//         return {
+//           unitType: type.value, // enum id
+//           value: type.value, // enum id (for clarity)
+//           label: type.label,
+//           quantity: count,
+//           rentPerMonth: null,
+//           securityDeposit: null,
+//           unitImages: [],
+//         };
+//       }
+//       return null;
+//     })
+//     .filter(Boolean);
+// };
 
 const CustomImageUpload = defineComponent({
   name: "CustomImageUpload",
@@ -1206,7 +1208,6 @@ watch(fileList, (newVal) => {
 function getPreviewImageFromUnitTypes() {
   const currentImage = form.unitTypeCounts[currentUnitTypeIndex.value] ? form.unitTypeCounts[currentUnitTypeIndex.value].unitImages[0] : null
   if(currentImage !== null){
-    console.log(currentImage)
  return (
     currentImage instanceof File ? URL.createObjectURL(currentImage): null
   )
@@ -1239,7 +1240,7 @@ const nextOrSubmit = async () => {
     }
   } else if (currentStep.value === 1) {
     // Initialize unit type details for Step 3
-    initializeUnitTypeDetails();
+    // initializeUnitTypeDetails();
     currentStep.value++;
   } else if (currentStep.value === 2) {
     // EDIT MODE: If editing, show loader for 1.5s then show message
@@ -1294,8 +1295,8 @@ const nextOrSubmit = async () => {
       }
       // Build payload according to new API specification
       const payload = {
-        landlordId: store.userProfile.adminUserID,
-        // landLordId: form.landlordId,
+        // landlordId: store.userProfile.adminUserID,
+        landLordId: store.userProfile.role.name == "LandLord"? store.userProfile.referenceID :form.landlordId,
         name: form.name,
         description: form.description,
         address: form.address,
@@ -1312,18 +1313,18 @@ const nextOrSubmit = async () => {
       //   loading.value = false;
       //   return;
       // }
-      // const res = await CreateNewProperty(payload);
-      // console.log("CreateNewProperty API response:", res);
-      // if (res) {
-      //   message.success("Property Added Successfully!");
-      //   router.push("/properties");
-      // } else if (res && (res.success || res.status === 200)) {
-      //   // Fallback: if API returns a different success indicator
-      //   message.success("Property Added Successfully!");
-      //   router.push("/properties");
-      // } else {
-      //   message.error(res?.responseMessage || "Failed to add property");
-      // }
+      const res = await CreateNewProperty(payload);
+      console.log("CreateNewProperty API response:", res);
+      if (res) {
+        message.success("Property Added Successfully!");
+        router.push("/properties");
+      } else if (res && (res.success || res.status === 200)) {
+        // Fallback: if API returns a different success indicator
+        message.success("Property Added Successfully!");
+        router.push("/properties");
+      } else {
+        message.error(res?.responseMessage || "Failed to add property");
+      }
     } catch (err) {
       message.error("An error occurred while saving the property.");
     } finally {
@@ -1331,7 +1332,20 @@ const nextOrSubmit = async () => {
     }
   }
 };
+const HandleCreateAmenities = async() => {
+  const payload = {name: form.amenityname, amenitiesKeyWords: form.amenitiesKeyWords}
+  const response = await createAmenity(payload)
+   await optionsStore.fetchAmenities();
+  // await optionsStore.fetchUnitTypes(); // Removed as per edit hint
+  await fetchLandlords();
 
+  amenityOptions.value = optionsStore.amenities.map((a) => ({
+    label: a.name,
+    value: a.amenityId,
+    image: a.image || a.icon || null,
+  }));
+    showAmenitiesModal.value = false
+}
 const prevStep = () => {
   if (currentStep.value > 0) currentStep.value--;
 };
@@ -1353,7 +1367,6 @@ const getPreviewImage = (file) => {
 };
 function disableIncrementButton() {
   const totalnumberofrooms = form.unitTypeCounts.reduce((acc, curr) => acc + curr.quantity,0)
-  console.log(totalnumberofrooms, 'totalnumberofrooms')
   if(totalnumberofrooms == form.units){
     return true
   }
@@ -1370,6 +1383,7 @@ function incrementUnitType(idx, label='') {
   else{
     form.unitTypeCounts.push({unitType: idx, quantity:1, label, securityDeposit: 0, rentPerMonth: 0, unitImages:[], propertyAmenities:[]})
   }
+  console.log(form.unitTypeCounts)
 }
 function decrementUnitType(idx) {
   const unitIndex = form.unitTypeCounts.findIndex((unit) => unit.unitType == idx);

@@ -18,9 +18,9 @@
         <template #column4="{ entity }">
           <div class="absolute">
             <div class="flex gap-20">
-              <div class="flex gap-1 cursor-pointer">
-                <edit-icon class="my-auto"></edit-icon>
-                <p class="text-secondary text-sm">Edit</p>
+              <div class="flex gap-1 items-center cursor-pointer">
+                <edit-icon class="m-0"></edit-icon>
+                <p class="text-secondary m-0 text-sm">Edit</p>
               </div>
               <div
                 class="cursor-pointer w-4"
@@ -48,7 +48,7 @@
               v-if="tableDropdown == entity"
             >
               <li
-                class="py-4 px-2 border-b border-b-br3 font-medium text-secondary cursor-pointer text-base leading-5 flex gap-2.5"
+                class="py-4 px-2 border-b border-b-br3 font-medium text-secondary cursor-pointer text-base leading-5 flex gap-2.5 items-center"
                 @click="openModal('edit', entity), filterPermissions(entity)"
               >
                 <svg

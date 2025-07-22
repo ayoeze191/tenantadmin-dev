@@ -79,59 +79,6 @@
             v-model="phoneNumber"
           />
         </div>
-        <div v-if="step == 2">
-          <section class="w-full flex flex-row justify-between gap-2">
-            <label
-              for="password"
-              class="input_label text-sm sm:text-base md:text-xl"
-              >Password</label
-            >
-          </section>
-
-          <div class="input flex mt-4 mb-10 items-center">
-            <input
-              class="w-full outline-none border-0"
-              :type="viewPassword ? 'text' : 'password'"
-              v-model="password"
-            />
-            <view-password-icon
-              class="cursor-pointer"
-              @click="togglePassword"
-              v-if="!viewPassword"
-            />
-            <hide-password-icon
-              v-else
-              class="cursor-pointer"
-              @click="togglePassword"
-            />
-          </div>
-
-          <section class="w-full flex flex-row justify-between gap-2">
-            <label
-              for="password"
-              class="input_label text-sm sm:text-base md:text-xl"
-              >Confirm Password</label
-            >
-          </section>
-
-          <div class="input flex mt-4 mb-10 items-center">
-            <input
-              class="w-full outline-none border-0"
-              :type="viewConfirmPassword ? 'text' : 'password'"
-              v-model="confirmpassword"
-            />
-            <view-password-icon
-              class="cursor-pointer"
-              @click="toggleConfirmPassword"
-              v-if="!viewConfirmPassword"
-            />
-            <hide-password-icon
-              v-else
-              class="cursor-pointer"
-              @click="toggleConfirmPassword"
-            />
-          </div>
-        </div>
 
         <button
           class="btn btn_primary text-base sm:text-lg"
@@ -157,7 +104,7 @@
 
 <script>
 // import { AddAdminUser } from "@/api/auth";
-import { AddAdminUser } from "@/api/auth";
+import { CreateUser } from "@/api/auth";
 import { useUserStore } from "@/store";
 import Button from "@/components/Button.vue";
 import { useToast } from "vue-toast-notification";
@@ -197,19 +144,13 @@ export default {
       this.viewConfirmPassword = !this.viewConfirmPassword;
     },
     isDisabled() {
-      if (this.step == 1) {
-        if (
-          !this.emailAddress ||
-          !this.firstname ||
-          !this.lastname ||
-          !this.phoneNumber
-        ) {
-          return true;
-        }
-      } else if (this.step == 2) {
-        if (!this.password || this.password !== this.confirmpassword) {
-          return true;
-        }
+      if (
+        !this.emailAddress ||
+        !this.firstname ||
+        !this.lastname ||
+        !this.phoneNumber
+      ) {
+        return true;
       }
       return false;
     },
@@ -222,20 +163,16 @@ export default {
         lastname: this.lastname,
         phoneNumber: this.phoneNumber,
         accountType: 1,
+        accountRefNumber: "",
       };
-      AddAdminUser(payload).then((response) => {
+      CreateUser(payload).then((response) => {
         this.isLoading = false;
-        $toast.success("Successfully Signuped, please log in");
-        router.push("/login");
+        router.push("/create-password");
       });
     },
     handleSubmit(e) {
       e.preventDefault();
-      if (this.step == 2) {
-        this.handleSignup();
-      } else {
-        this.step += 1;
-      }
+      this.handleSignup();
     },
   },
 };

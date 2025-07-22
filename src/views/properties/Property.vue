@@ -2,6 +2,7 @@
   <div class="bg-neutral w-full px-8 py-10">
     <!-- Header -->
     <div>
+      {{ console.log(property, "property valyue") }}
       <section class="w-full mx-auto flex justify-between items-center mb-4">
         <router-link to="/properties" class="pt-3">
           <a-button
@@ -162,6 +163,7 @@
                   v-model:activeKey="activeKey"
                   :destroyInactiveTabPane="true"
                 >
+                  {{ console.log(property) }}
                   <a-tab-pane key="1" tab="Property Info">
                     <propertyheader :property="property" />
                     <div class="mt-4 text-[#808097]">
@@ -390,6 +392,19 @@ const property = ref(null);
 const loading = ref(true);
 const error = ref(null);
 const showAddTenantModal = ref(false);
+const UNIT_TYPE_ENUM = [
+  { label: "Two Bedroom", value: 2 },
+  { label: "Three Bedroom", value: 3 },
+  { label: "PentHouse", value: 4 },
+  { label: "Loft", value: 5 },
+  { label: "TownHouse", value: 6 },
+  { label: "Duplex", value: 7 },
+  { label: "Villa", value: 8 },
+  { label: "Serviced Apartment", value: 9 },
+  { label: "Shared Accommodation", value: 10 },
+  { label: "Hostel/Dormitory", value: 11 },
+];
+
 const tenantTab = ref("single");
 const tenantLoading = ref(false);
 const tenantForm = reactive({

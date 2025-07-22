@@ -13,6 +13,10 @@ export const LoginUser = async (payload) => {
 export const CreateUser = async (payload) => {
   try {
     const response = await postApi("Account/CreateUser", payload);
+    if (response.status) {
+      return await SignUpLandlord(response.data.onboardedAccount.accountId)
+        .data;
+    }
     return response.data;
   } catch (error) {
     handleError(error);
@@ -88,7 +92,7 @@ export const UpdateAdminStatus = async (payload) => {
 
 export const ResetAdminPassword = async (payload) => {
   try {
-    const response = await postApi(`AdminUser/ForgotPassword`, payload);
+    const response = await postApi(`AdminUser/ResetPassword`, payload);
     return response.data;
   } catch (error) {
     handleError(error);
