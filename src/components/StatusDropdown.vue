@@ -1,5 +1,10 @@
 <template>
-  <v-menu v-model="menu" transition="scale-transition" offset-y>
+  <v-menu
+    v-model="menu"
+    transition="scale-transition"
+    offset-y
+    :disabled="modelValue === 'Terminate'"
+  >
     <template #activator="{ props }">
       <v-btn
         v-bind="props"
@@ -10,6 +15,7 @@
           ss3: modelValue == 'Terminate',
           ss4: modelValue == 'Requested',
           ss5: modelValue == 'Ongoing',
+          'cursor-not-allowed opacity-50': modelValue === 'Terminate',
         }"
         class="status_select"
       >

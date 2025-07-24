@@ -176,7 +176,7 @@
                         class="text-[#808097]"
                         style="color: #808097 !important"
                       >
-                        {{ property.description }}
+                        {{ property.accommodationDesc }}
                       </p>
                     </div>
                     <div class="mt-[16px]">
@@ -185,7 +185,13 @@
                       >
                         Key Features
                       </li>
+                      <li></li>
                     </div>
+                  </a-tab-pane>
+                  <a-tab-pane
+                    v-for="unit in property.units"
+                    :tab="unit.unitName"
+                  >
                   </a-tab-pane>
                 </a-tabs>
               </div>
@@ -592,11 +598,11 @@ function resetTenantModal() {
 async function submitSingleTenant() {
   await tenantFormRef.value.validate().catch(() => {});
   tenantLoading.value = true;
-  setTimeout(() => {
-    tenantLoading.value = false;
-    message.success("Tenant added (demo only)");
-    resetTenantModal();
-  }, 1200);
+  // setTimeout(() => {
+  //   tenantLoading.value = false;
+  //   message.success("Tenant added (demo only)");
+  //   resetTenantModal();
+  // }, 1200);
 }
 // Bulk upload logic
 const bulkFileList = ref([]);

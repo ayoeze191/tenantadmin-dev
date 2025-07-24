@@ -220,10 +220,54 @@ export default {
         page: page,
         query: "",
       };
-      FetchProperties(this.store.userProfile.adminUserID, query)
+      FetchProperties(this.store.userProfile.referenceID, query)
         .then((response) => {
           if (response.responseCode == "00") {
-            this.propertyList = response.properties.items;
+            const data = response.data.items;
+            console.log(response);
+            const grouped = data.reduce((acc, curr) => {
+              const {
+                accommodationId,
+                accommodationName,
+                accommodationDesc,
+                address,
+                zipCode,
+                province,
+                landLordId,
+                landLordName,
+                unitId,
+                unitName,
+                price,
+                images,
+              } = curr;
+
+              if (!acc[accommodationId]) {
+                acc[accommodationId] = {
+                  accommodationId,
+                  accommodationName,
+                  accommodationDesc,
+                  address,
+                  zipCode,
+                  province,
+                  landLordId,
+                  landLordName,
+                  units: [],
+                };
+              }
+              acc[accommodationId].units.push({
+                unitId,
+                unitName,
+                price: price,
+                images,
+              });
+
+              return acc;
+            }, {});
+
+            const result = Object.values(grouped);
+            console.log(result);
+
+            this.propertyList = result;
             this.total = response.properties.totalItemCount || 0;
             this.pageSize = response.properties.pageSize || this.pageSize;
             this.currentPage = response.properties.page || page;
@@ -232,7 +276,7 @@ export default {
           }
         })
         .catch((e) => {
-          this.error = "Failed to load properties.";
+          // this.error = "Failed to load properties.";
         })
         .finally(() => {
           this.loading = false;

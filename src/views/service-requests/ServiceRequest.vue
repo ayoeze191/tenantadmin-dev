@@ -253,6 +253,8 @@ import {
 import StatusDropdown from "@/components/StatusDropdown.vue";
 import IconSearch from "../../components/icons/IconSearch.vue";
 import Modal from "@/components/Modal.vue";
+import { useToast } from "vue-toast-notification";
+
 export default {
   data() {
     return {
@@ -317,23 +319,36 @@ export default {
       };
     },
     handleSubmit() {
+      const toast = useToast({ position: "top-right" });
       console.log(this.selected_Request);
       updateServiceRequest({
         serviceRequestId: this.selected_Request.serviceRequestId,
         status: this.selected_Request.serviceStatus,
       }).then((response) => {
-        console.log(response);
+        console.log(response, "reciprocal");
+        if (response.responseCode == "00") {
+          console.log("successfull");
+          toast.success("Successfull");
+        }
       });
     },
     onStatusChange(service, newStatus) {
       const index = this.serviceLiterals.indexOf(newStatus);
       console.log(index);
+      const toast = useToast({ position: "top-right" });
       service.serviceStatus = index;
       console.log(service);
       updateServiceRequest({
         serviceRequestId: service.serviceRequestId,
         status: index,
       }).then((response) => {
+        console.log(response, "reciprocal");
+        if (response.responseCode == "00") {
+          console.log("successfull");
+          toast.success("Successfull");
+        } else {
+          toast.error(response.responseDescription);
+        }
         console.log(response);
       });
     },

@@ -3,13 +3,13 @@ import { getApi, postApi, putApi } from "@/utils/reqClient";
 
 export const FetchLandlords = async (params = {}) => {
   try {
-    const { name = '', pageSize = 10, currentPage = 1 } = params;
+    const { name = "", pageSize = 10, currentPage = 1 } = params;
     const queryParams = new URLSearchParams({
       Name: name,
       PageSize: pageSize,
-      CurrentPage: currentPage
+      CurrentPage: currentPage,
     });
-    
+
     const response = await getApi(`Account/Get-All-LandLords?${queryParams}`);
     return response.data;
   } catch (error) {
@@ -20,7 +20,7 @@ export const FetchLandlords = async (params = {}) => {
 export const FetchProperties = async (landlordId, query) => {
   try {
     const response = await getApi(
-      `Accommodation/GetAllProperties?pageNumber=${query.page}&pageSize=${query.size}`
+      `Accommodation/get-my-properties?LandLordId=${landlordId}&pageNumber=${query.page}&pageSize=${query.size}`
     );
     return response.data;
   } catch (error) {
@@ -48,7 +48,10 @@ export const FetchAmenities = async () => {
 
 export const CreateNewProperty = async (payload) => {
   try {
-    const response = await postApi(`Accommodation/Create-New-Property`, payload);
+    const response = await postApi(
+      `Accommodation/Create-New-Property`,
+      payload
+    );
     return response.data;
   } catch (error) {
     handleError(error);
@@ -62,4 +65,10 @@ export const AddAmenities = async (payload) => {
   } catch (error) {
     handleError(error);
   }
+};
+
+export const AddTenants = async (payload) => {
+  try {
+    const response = await postApi("");
+  } catch (error) {}
 };

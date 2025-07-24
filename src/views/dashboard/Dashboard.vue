@@ -14,14 +14,15 @@
             >
               Application
             </p>
-            <a
+            <router-link
+              to="/applications"
               class="flex items-center gap-[2px] font-sf font-medium text-[#252628] text-[14px] md:text-[13px] sm:text-[12px]"
             >
               See all
               <span class="">
                 <right-arrow-icon />
               </span>
-            </a>
+            </router-link>
           </section>
           <section class="px-[14px] md:px-[10px] sm:px-[6px]">
             <p
@@ -58,7 +59,7 @@
               Ongoing
               <span
                 class="text-[#A31616] text-[12px] bg-[#FFE8EC] px-[5px] py-[2px] rounded-[15px] flex md:text-[11px] sm:text-[10px] md:px-[4px] md:py-[1.5px] sm:px-[3px] sm:py-[1px]"
-                >8</span
+                >9</span
               >
             </li>
           </section>
@@ -70,14 +71,15 @@
             >
               My Tenants
             </p>
-            <a
+            <router-link
+              to="/tenants"
               class="flex items-center gap-[2px] font-sf font-medium text-[#252628] text-[14px] md:text-[13px] sm:text-[12px]"
             >
               See all
               <span class="">
                 <right-arrow-icon />
               </span>
-            </a>
+            </router-link>
           </section>
           <section class="px-[14px] md:px-[10px] sm:px-[6px]">
             <p
@@ -121,23 +123,32 @@
             >
               Service Requests
             </p>
-            <a
+            <router-link
+              to="/service-requests/all"
               class="flex items-center gap-[2px] font-sf font-medium text-[#252628] text-[14px] md:text-[13px] sm:text-[12px]"
             >
               See all
               <span class="">
                 <right-arrow-icon />
               </span>
-            </a>
+            </router-link>
           </section>
           <section class="px-[14px] md:px-[10px] sm:px-[6px]">
             <p
               class="font-medium flex gap-1 items-end text-dark text-sm h-fit text-[16px] md:text-[15px] sm:text-[14px]"
             >
               <span
-                class="text-lrge font-[600] font-sf m-0 p-0 leading-[100%] text-[24px] md:text-[20px] sm:text-[18px]"
-                >8</span
+                class="font-[600] font-sf m-0 p-0 leading-[100%] text-[24px] md:text-[20px] sm:text-[18px]"
               >
+                <a-spin
+                  :spinning="loading.serviceRequestCompleted"
+                  :indicator="customIcon"
+                />
+
+                <span v-if="!loading.serviceRequestCompleted">
+                  {{ serviceRequests.length }}</span
+                >
+              </span>
               <span
                 class="mb-[2px] text-[14px] leading-[100%] md:text-[13px] sm:text-[12px]"
               >
@@ -163,9 +174,16 @@
               class="text-[#25262880] font-[600] flex gap-[2px] items-center text-[14px] md:text-[13px] sm:text-[12px]"
             >
               Ongoing
+              <span>
+                <a-spin
+                  :spinning="loading.serviceOngoingCompleted"
+                  :indicator="customIcon"
+                />
+              </span>
               <span
+                v-if="!this.loading.serviceOngoingCompleted"
                 class="text-[#A31616] text-[12px] bg-[#FFE8EC] px-[5px] py-[2px] rounded-[15px] flex md:text-[11px] sm:text-[10px] md:px-[4px] md:py-[1.5px] sm:px-[3px] sm:py-[1px]"
-                >8</span
+                >{{ ongoingRequests.length }}</span
               >
             </li>
             <li
@@ -186,14 +204,15 @@
             >
               Maintenance Fee
             </p>
-            <a
+            <router-link
+              to="/payments/maintenance"
               class="flex items-center gap-[2px] font-sf font-medium text-[#252628] text-[14px] md:text-[13px] sm:text-[12px]"
             >
               See all
               <span class="">
                 <right-arrow-icon />
               </span>
-            </a>
+            </router-link>
           </section>
           <section class="px-[14px] md:px-[10px] sm:px-[6px]">
             <p
@@ -448,7 +467,9 @@ import IconRightArrow from "../../components/icons/IconRightArrow.vue";
 import IconUpArrow from "../../components/icons/IconUpArrow.vue";
 import IconDownArrow from "../../components/icons/IconDownArrow.vue";
 import Table from "@/components/Table.vue";
-
+import { h } from "vue";
+import { LoadingOutlined } from "@ant-design/icons-vue";
+import { FetchServiceRequests } from "@/api/serviceRequest";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default {
@@ -462,6 +483,18 @@ export default {
   data() {
     return {
       progress: 50,
+      customIcon: h(LoadingOutlined, {
+        style: {
+          fontSize: "15px",
+          color: "#1890ff",
+        },
+      }),
+      loading: {
+        serviceRequestCompleted: false,
+        serviceOngoingCompleted: false,
+      },
+      serviceRequests: [],
+      ongoingRequests: [],
       chartData: {
         labels: ["Collected", "Pending"],
         datasets: [
@@ -510,6 +543,27 @@ export default {
         },
       ],
     };
+  },
+  created() {
+    this.handleFetchServiceRequest();
+  },
+  methods: {
+    handleFetchServiceRequest() {
+      this.loading.serviceRequestCompleted = true;
+      this.loading.serviceOngoingCompleted = true;
+      FetchServiceRequests().then((response) => {
+        this.loading.serviceRequestCompleted = false;
+        this.loading.serviceOngoingCompleted = false;
+        if (response.responseCode == "00") {
+          this.serviceRequests = response.serviceRequests.filter(
+            (req) => req.service.serviceStatus == 3
+          );
+          this.ongoingRequests = response.serviceRequests.filter(
+            (req) => req.service.serviceStatus == 2
+          );
+        } else handleError(response);
+      });
+    },
   },
 };
 </script>

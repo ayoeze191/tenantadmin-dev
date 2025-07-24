@@ -111,13 +111,12 @@ import { useToast } from "vue-toast-notification";
 import { useRouter } from "vue-router";
 import IconViewPassword from "@/components/icons/iconViewPassword.vue";
 import IconHidePassword from "@/components/icons/IconHidePassword.vue";
-
 export default {
   data() {
     return {
       viewPassword: false,
       viewConfirmPassword: false,
-
+      router: useRouter(),
       isLoading: false,
       emailAddress: "",
       firstname: "",
@@ -167,7 +166,7 @@ export default {
       };
       CreateUser(payload).then((response) => {
         this.isLoading = false;
-        router.push("/create-password");
+        this.router.push("/create-password/");
       });
     },
     handleSubmit(e) {
