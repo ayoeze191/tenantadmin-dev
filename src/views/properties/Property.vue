@@ -41,7 +41,12 @@
               Edit Property
             </button>
             <button
-              @click="showAddTenantModal = true"
+              @click="
+                () => {
+                  showAddTenantModal = true;
+                  tenantForm.unitId = activeKey;
+                }
+              "
               :disabled="activeKey == 1"
               :class="[
                 'h-fit flex items-center gap-[12px] font-medium rounded-[4px] border-[1px] px-[33px] py-2 w-fit leading-[28px] min-w-[120px] transition-all sm:px-6 sm:py-2 sm:text-base xs:px-3 xs:py-2 xs:text-sm xs:min-w-[90px]',
@@ -299,23 +304,23 @@
               ref="tenantFormRef"
               layout="vertical"
             >
-              <a-form-item label="Full Name" name="name" required>
+              <a-form-item label="Full Name" name="FullName" required>
                 <a-input
-                  v-model:value="tenantForm.name"
+                  v-model:value="tenantForm.FullName"
                   placeholder="Enter full name"
                   size="large"
                 />
               </a-form-item>
-              <a-form-item label="Email" name="email" required>
+              <a-form-item label="Email" name="emailAddress" required>
                 <a-input
-                  v-model:value="tenantForm.email"
+                  v-model:value="tenantForm.emailAddress"
                   placeholder="Enter email"
                   size="large"
                 />
               </a-form-item>
-              <a-form-item label="Phone Number" name="phone" required>
+              <a-form-item label="Phone Number" name="phoneNumber" required>
                 <a-input
-                  v-model:value="tenantForm.phone"
+                  v-model:value="tenantForm.phoneNumber"
                   placeholder="Enter phone number"
                   size="large"
                 />
@@ -323,31 +328,31 @@
               <div class="font-semibold text-gray-700 text-base mt-6 mb-2">
                 Lease Information
               </div>
-              <a-form-item label="Property" name="property" required>
+              <a-form-item label="Property" name="unitId" required>
                 <a-select
-                  v-model:value="tenantForm.property"
+                  v-model:value="tenantForm.unitId"
                   :options="propertyOptions"
                   placeholder="Select property"
                   size="large"
                 />
               </a-form-item>
-              <a-form-item label="Lease Start Date" name="leaseStart" required>
+              <a-form-item label="Lease Start Date" name="startDate" required>
                 <a-date-picker
-                  v-model:value="tenantForm.leaseStart"
+                  v-model:value="tenantForm.startDate"
                   style="width: 100%"
                   size="large"
                 />
               </a-form-item>
-              <a-form-item label="Lease End Date" name="leaseEnd" required>
+              <a-form-item label="Lease End Date" name="endDate" required>
                 <a-date-picker
-                  v-model:value="tenantForm.leaseEnd"
+                  v-model:value="tenantForm.endDate"
                   style="width: 100%"
                   size="large"
                 />
               </a-form-item>
-              <a-form-item label="Monthly Rent" name="monthlyRent" required>
+              <a-form-item label="Rent Rate" name="rentRate" required>
                 <a-input-number
-                  v-model:value="tenantForm.monthlyRent"
+                  v-model:value="tenantForm.rentRate"
                   style="width: 100%"
                   min="0"
                   size="large"
@@ -360,7 +365,7 @@
                 <a-button
                   type="primary"
                   :loading="tenantLoading"
-                  @click="submitSingleTenant"
+                  @click="AddTenants"
                   size="large"
                   class="px-8"
                   >Add Tenants</a-button
@@ -444,13 +449,14 @@ import { openDB } from "idb";
 import { computed, h, onMounted, reactive, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Propertyheader from "@/components/Propertyheader.vue";
-import { GetAccomodationById } from "@/api/properties";
+import { GetAccomodationById, AddTenants } from "@/api/properties";
 const route = useRoute();
 const activeKey = ref(1);
 const router = useRouter();
 const property = ref(null);
 const loading = ref(true);
 const error = ref(null);
+
 const showAddTenantModal = ref(false);
 const UNIT_TYPE_ENUM = [
   { label: "Two Bedroom", value: 2 },
@@ -468,34 +474,62 @@ const UNIT_TYPE_ENUM = [
 const tenantTab = ref("single");
 const tenantLoading = ref(false);
 const tenantForm = reactive({
-  name: "",
-  email: "",
-  phone: "",
-  property: null,
-  leaseStart: null,
-  leaseEnd: null,
-  monthlyRent: null,
+  emailAddress: "",
+  FullName: "",
+  dob: "",
+  phoneNumber: "",
+  accountType: 0,
+  accountRefNumber: "",
+  unitId: 0,
+  startDate: "",
+  endDate: "",
+  rentRate: 0,
 });
 const tenantFormRef = ref();
 const tenantRules = {
-  name: [{ required: true, message: "Full name is required" }],
-  email: [
+  FullName: [{ required: true, message: "Full name is required" }],
+  emailAddress: [
     { required: true, message: "Email is required" },
     { type: "email", message: "Invalid email" },
   ],
-  phone: [
+  phoneNumber: [
     { required: true, message: "Phone number is required" },
     { pattern: /^\d{7,15}$/, message: "Invalid phone number" },
   ],
-  property: [{ required: true, message: "Property is required" }],
-  leaseStart: [{ required: true, message: "Lease start date is required" }],
-  leaseEnd: [{ required: true, message: "Lease end date is required" }],
-  monthlyRent: [{ required: true, message: "Monthly rent is required" }],
+  unitId: [{ required: true, message: "Property is required" }],
+  startDate: [{ required: true, message: "Lease start date is required" }],
+  endDate: [{ required: true, message: "Lease end date is required" }],
+  rentRate: [{ required: true, message: "Monthly rent is required" }],
+};
+const createProperties = async () => {
+  let firstname, lastname;
+  const [splittedfirstname, splittedlastname] = tenantForm.FullName.split(" ");
+  firstname = splittedfirstname;
+  lastname = splittedlastname;
+  const payload = {
+    firstname,
+    lastname,
+    dob: "",
+    phoneNumber: tenantForm.phoneNumber,
+    accountType: 0,
+    accountRefNumber: "",
+    contractRequest: {
+      unitId: tenantForm.unitId,
+      isActive: true,
+      startDate: tenantForm.startDate,
+      endDate: tenantForm.endDate,
+      rentRate: tenantForm.rentRate,
+    },
+  };
+  console.log(payload, "payload");
+  // const response = await AddTenants();
 };
 const propertyOptions = computed(() => {
   // You can fetch or map your properties here. For demo, use current property only.
-  return property.value
-    ? [{ label: property.value.name, value: property.value.accommodationId }]
+  return property.value.units
+    ? property.value.units.map(
+        (uni) => uni && { label: uni.unitId, value: uni.unitId }
+      )
     : [];
 });
 

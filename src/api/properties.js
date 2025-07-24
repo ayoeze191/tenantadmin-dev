@@ -69,8 +69,11 @@ export const AddAmenities = async (payload) => {
 
 export const AddTenants = async (payload) => {
   try {
-    const response = await postApi("");
-  } catch (error) {}
+    const response = await postApi("Account/AddTenant", payload);
+    return response.data;
+  } catch (error) {
+    handleError(error);
+  }
 };
 
 export const GetAccomodationById = async (id) => {
