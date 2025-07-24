@@ -132,6 +132,7 @@
                 class="form-labels"
               >
                 <a-select
+               @change="handlePropertyTypeChange"
                   v-model:value="form.propertyType"
                   placeholder="Select property type"
                   :options="propertyTypeOptions"
@@ -159,6 +160,7 @@
                 class="form-labels"
               >
                 <a-input-number
+                  :disabled="form.propertyType == 0"
                   v-model:value="form.units"
                   style="width: 100%"
                   min="1"
@@ -1374,6 +1376,11 @@ function disableIncrementButton() {
     return false
   }
 }
+const handlePropertyTypeChange = (value) => {
+  if (value === 0) {
+    form.units = 1;
+  }
+};
 function incrementUnitType(idx, label='') {
   // check if it exist before
   const check = form.unitTypeCounts.find((unit) => unit.unitType == idx)
