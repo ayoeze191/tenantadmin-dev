@@ -1,57 +1,57 @@
 <template>
-  <div class="mx-auto bg-neutral px-8 w-full pb-4 font-sf">
-    <div class="max-w-[95rem] mx-auto">
+  <div class="mx-auto bg-neutral px-[50px] w-full h-full pb-4 font-sf">
+    <div class="mx-auto">
       <p
         class="text-txt_dark font-semibold text-[24px] pt-[50px] leading-7 uppercase"
       >
         View Properties
       </p>
       <div class="w-full">
-        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="w-full">
           <!-- Loading State -->
-          <template v-if="loading">
+
+          <div
+            v-if="loading"
+            v-for="n in 8"
+            :key="n"
+            class="group flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl"
+          >
             <div
-              v-for="n in 8"
-              :key="n"
-              class="group flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl"
-            >
-              <div
-                class="aspect-[16/10] bg-gray-100 rounded-t-xl animate-pulse"
-              ></div>
-              <div class="p-4 md:p-5">
-                <div class="h-4 bg-gray-200 rounded w-2/3 mb-2"></div>
-                <div class="h-3 bg-gray-100 rounded w-1/2 mb-1"></div>
-                <div class="h-3 bg-gray-100 rounded w-1/3"></div>
-              </div>
+              class="aspect-[16/10] bg-gray-100 rounded-t-xl animate-pulse"
+            ></div>
+            <div class="p-4 md:p-5">
+              <div class="h-4 bg-gray-200 rounded w-2/3 mb-2"></div>
+              <div class="h-3 bg-gray-100 rounded w-1/2 mb-1"></div>
+              <div class="h-3 bg-gray-100 rounded w-1/3"></div>
             </div>
-          </template>
+          </div>
           <!-- Error State -->
-          <template v-else-if="error">
-            <div
-              class="col-span-full flex flex-col items-center justify-center min-h-[363px]"
-            >
-              <p class="text-dng text-lg mb-4">{{ error }}</p>
-              <Button :label="'Reload'" :onClick="reload" type="primary" />
-            </div>
-          </template>
+
+          <div
+            v-else-if="error"
+            class="col-span-full flex flex-col items-center justify-center min-h-[363px]"
+          >
+            <p class="text-dng text-lg mb-4">{{ error }}</p>
+            <Button :label="'Reload'" :onClick="reload" type="primary" />
+          </div>
           <!-- Empty State -->
-          <template v-else-if="propertyList.length === 0">
-            <div
-              class="col-span-full flex flex-col items-center justify-center min-h-[363px]"
-            >
-              <p class="text-secondary text-lg mb-4">No Apartments Found</p>
-              <Button :label="'Reload'" :onClick="reload" type="primary" />
-            </div>
-          </template>
+
+          <div
+            v-else-if="propertyList.length === 0"
+            class="col-span-full flex flex-col items-center justify-center min-h-[363px]"
+          >
+            <p class="text-secondary text-lg mb-4">No Apartments Found</p>
+            <Button :label="'Reload'" :onClick="reload" type="primary" />
+          </div>
           <!-- Data State -->
-          <template v-else>
+          <div v-else class="grid grid-cols-3 gap-[30px] w-fit">
             <a
               v-for="property in propertyList"
-              class="group flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl hover:shadow-md transition cursor-pointer"
+              class="group flex flex-col bg-white border max-w-[334px] border-gray-200 shadow-2xs rounded-xl hover:shadow-md transition cursor-pointer"
               :key="property.accommodationId"
               @click.prevent="handleRedirect(property)"
             >
-              <div class="aspect-[16/12] relative">
+              <div class="">
                 <!-- Placeholder: show if no images -->
                 <img
                   v-if="!property.images || property.images.length === 0"
@@ -64,7 +64,7 @@
                 <img
                   v-if="property.images && property.images.length > 0"
                   :src="property.images[0].image"
-                  class="w-full object-cover rounded-t-xl h-full absolute top-0 left-0 z-10"
+                  class="w-full object-cover rounded-t-xl h-[216px] top-0 left-0 z-10"
                   :alt="property.name + ' ' + property.images[0].imageTitle"
                   loading="lazy"
                   @load="onImgLoad(property.accommodationId)"
@@ -73,7 +73,7 @@
               </div>
               <div class="flex-1 flex flex-col">
                 <h3
-                  class="text-[24px] mt-[10px] px-[8px] font-[600] text-gray-800 group-hover:text-blue-600 overflow-hidden whitespace-nowrap truncate"
+                  class="text-[15px] sm:text-[20px] lg:text-[24px] mt-[10px] font-sf px-[8px] font-[600] text-gray-800 group-hover:text-blue-600 overflow-hidden whitespace-nowrap truncate"
                 >
                   {{ property.name }}
                 </h3>
@@ -138,7 +138,7 @@
                 </div>
               </div>
             </a>
-          </template>
+          </div>
         </div>
         <!-- Pagination -->
         <div
@@ -223,51 +223,7 @@ export default {
       FetchProperties(this.store.userProfile.referenceID, query)
         .then((response) => {
           if (response.responseCode == "00") {
-            const data = response.data.items;
-            console.log(response);
-            const grouped = data.reduce((acc, curr) => {
-              const {
-                accommodationId,
-                accommodationName,
-                accommodationDesc,
-                address,
-                zipCode,
-                province,
-                landLordId,
-                landLordName,
-                unitId,
-                unitName,
-                price,
-                images,
-              } = curr;
-
-              if (!acc[accommodationId]) {
-                acc[accommodationId] = {
-                  accommodationId,
-                  accommodationName,
-                  accommodationDesc,
-                  address,
-                  zipCode,
-                  province,
-                  landLordId,
-                  landLordName,
-                  units: [],
-                };
-              }
-              acc[accommodationId].units.push({
-                unitId,
-                unitName,
-                price: price,
-                images,
-              });
-
-              return acc;
-            }, {});
-
-            const result = Object.values(grouped);
-            console.log(result);
-
-            this.propertyList = result;
+            this.propertyList = response.properties.items;
             this.total = response.properties.totalItemCount || 0;
             this.pageSize = response.properties.pageSize || this.pageSize;
             this.currentPage = response.properties.page || page;

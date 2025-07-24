@@ -20,7 +20,7 @@ export const FetchLandlords = async (params = {}) => {
 export const FetchProperties = async (landlordId, query) => {
   try {
     const response = await getApi(
-      `Accommodation/get-my-properties?LandLordId=${landlordId}&pageNumber=${query.page}&pageSize=${query.size}`
+      `/Accommodation/GetAllProperties?LandLordId=${landlordId}&pageNumber=${query.page}&pageSize=${query.size}`
     );
     return response.data;
   } catch (error) {
