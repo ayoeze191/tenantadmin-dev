@@ -72,3 +72,12 @@ export const AddTenants = async (payload) => {
     const response = await postApi("");
   } catch (error) {}
 };
+
+export const GetAccomodationById = async (id) => {
+  try {
+    const response = await getApi(
+      `Accommodation/AccommodationById?ApplicationId=${id}`
+    );
+    return response.data;
+  } catch (error) {}
+};

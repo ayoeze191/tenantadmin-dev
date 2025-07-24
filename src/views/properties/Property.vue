@@ -29,14 +29,26 @@
         <div class="flex gap-3 items-center">
           <div class="flex gap-3 items-center flex-wrap">
             <button
-              class="text-txt_dark px-[33px] py-2 h-fit rounded-[4px] hover:bg-primary hover:text-white bg-inherit border-[#000130] border-[1px] w-fit font-semibold font-sf leading-[28px] min-w-[120px] transition-all sm:px-6 sm:py-2 sm:text-base xs:px-3 xs:py-2 xs:text-sm xs:min-w-[90px]"
+              :disabled="true"
+              :class="[
+                'text-txt_dark px-[33px] py-2 h-fit rounded-[4px] border-[#000130] border-[1px] w-fit font-semibold font-sf leading-[28px] min-w-[120px] transition-all sm:px-6 sm:py-2 sm:text-base xs:px-3 xs:py-2 xs:text-sm xs:min-w-[90px]',
+                true
+                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  : 'hover:bg-primary hover:text-white bg-inherit',
+              ]"
               @click="onEdit"
             >
               Edit Property
             </button>
             <button
-              class="h-fit flex bg-[#000130] text-white items-center gap-[12px] font-medium rounded-[4px] border-[1px] px-[33px] py-2 w-fit leading-[28px] min-w-[120px] transition-all sm:px-6 sm:py-2 sm:text-base xs:px-3 xs:py-2 xs:text-sm xs:min-w-[90px]"
               @click="showAddTenantModal = true"
+              :disabled="activeKey == 1"
+              :class="[
+                'h-fit flex items-center gap-[12px] font-medium rounded-[4px] border-[1px] px-[33px] py-2 w-fit leading-[28px] min-w-[120px] transition-all sm:px-6 sm:py-2 sm:text-base xs:px-3 xs:py-2 xs:text-sm xs:min-w-[90px]',
+                activeKey == 1
+                  ? 'bg-gray-300  cursor-not-allowed text-txt_dark font-sf font-semibold border-[#000130] border-[1px] w-fit leading-[28px]'
+                  : 'bg-[#000130] text-white hover:bg-[#1a1a40]',
+              ]"
             >
               <div>
                 <svg
@@ -67,6 +79,7 @@
             <a-result status="404" :title="'Not Found'" :sub-title="error" />
           </template>
           <template v-else-if="property">
+            {{ console.log(property, "") }}
             <div>
               <div class="flex h-[300px]">
                 <!-- Images Carousel with Ant Design Preview -->
@@ -137,7 +150,7 @@
                     <!-- +N Remaining Images Indicator -->
                     <div
                       v-if="images.length > 1"
-                      class="absolute top-2 right-2 bg-black/60 text-white text-xs font-semibold px-3 py-1 rounded-full z-10"
+                      class="absolute top-2 bg-black/60 text-white text-xs font-semibold px-3 py-1 rounded-full z-10"
                     >
                       +{{ images.length - 1 }}
                     </div>
@@ -150,7 +163,7 @@
                     />
                   </template>
                 </div>
-                <div class="flex flex-col gap-[8px] overflow-y-scroll">
+                <div class="flex ml-2 flex-col gap-[8px] overflow-y-scroll">
                   <img
                     :src="img"
                     v-for="img in images"
@@ -163,8 +176,7 @@
                   v-model:activeKey="activeKey"
                   :destroyInactiveTabPane="true"
                 >
-                  {{ console.log(property) }}
-                  <a-tab-pane key="1" tab="Property Info">
+                  <a-tab-pane :key="1" tab="Property Info">
                     <propertyheader :property="property" />
                     <div class="mt-4 text-[#808097]">
                       <h1
@@ -176,7 +188,7 @@
                         class="text-[#808097]"
                         style="color: #808097 !important"
                       >
-                        {{ property.accommodationDesc }}
+                        {{ property.description }}
                       </p>
                     </div>
                     <div class="mt-[16px]">
@@ -190,8 +202,49 @@
                   </a-tab-pane>
                   <a-tab-pane
                     v-for="unit in property.units"
-                    :tab="unit.unitName"
+                    :key="unit.unitId"
+                    :tab="unit.unitId"
                   >
+                    <propertyheader :property="property" />
+
+                    <div class="mt-4 text-[#808097]">
+                      <div class="flex gap-[24px]">
+                        <span class="">
+                          <h1
+                            class="font-medium text-base text-txt_dark leading-[100%]"
+                          >
+                            Rent
+                          </h1>
+                          <p
+                            class="text-[#808097]"
+                            style="color: #808097 !important"
+                          >
+                            ${{ unit.price }}
+                          </p>
+                        </span>
+                        <span>
+                          <h1
+                            class="font-medium text-base text-txt_dark leading-[100%]"
+                          >
+                            Security Deposit
+                          </h1>
+                          <p
+                            class="text-[#808097]"
+                            style="color: #808097 !important"
+                          >
+                            ${{ unit.price }}
+                          </p>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="mt-[16px]">
+                      <li
+                        class="font-medium text-base text-txt_dark leading-[100%]"
+                      >
+                        Key Features
+                      </li>
+                      <li></li>
+                    </div>
                   </a-tab-pane>
                 </a-tabs>
               </div>
@@ -391,8 +444,9 @@ import { openDB } from "idb";
 import { computed, h, onMounted, reactive, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Propertyheader from "@/components/Propertyheader.vue";
+import { GetAccomodationById } from "@/api/properties";
 const route = useRoute();
-const activeKey = ref("1");
+const activeKey = ref(1);
 const router = useRouter();
 const property = ref(null);
 const loading = ref(true);
@@ -447,6 +501,7 @@ const propertyOptions = computed(() => {
 
 onMounted(async () => {
   const id = route.params.id || route.params.accommodationId;
+  getAccomodationDetails(id);
   if (!id) {
     error.value = "No property ID provided.";
     loading.value = false;
@@ -675,6 +730,10 @@ function downloadSampleFile() {
   a.download = "tenant_sample.csv";
   a.click();
   URL.revokeObjectURL(url);
+}
+async function getAccomodationDetails(id) {
+  const response = await GetAccomodationById(id);
+  console.log(response);
 }
 </script>
 
