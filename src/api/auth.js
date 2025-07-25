@@ -14,8 +14,10 @@ export const CreateUser = async (payload) => {
   try {
     const response = await postApi("Account/CreateUser", payload);
     if (response.status) {
-      return await SignUpLandlord(response.data.onboardedAccount.accountId)
-        .data;
+      const createlandlord = await SignUpLandlord(
+        response.data.onboardedAccount.accountId
+      );
+      return createlandlord;
     }
     return response.data;
   } catch (error) {

@@ -78,6 +78,7 @@ import IconViewPassword from "@/components/icons/iconViewPassword.vue";
 import IconHidePassword from "@/components/icons/IconHidePassword.vue";
 import Button from "@/components/Button.vue";
 import { useRoute, useRouter } from "vue-router";
+import { useToast } from "vue-toast-notification";
 
 export default {
   data() {
@@ -111,6 +112,7 @@ export default {
     },
     handleCreation(e) {
       e.preventDefault();
+      const toast = useToast();
       this.isLoading = true;
       const userId = this.route.params.userId;
       const token = this.route.params.token;
@@ -122,8 +124,10 @@ export default {
       console.log(payload);
       ResetAdminPassword(payload).then((response) => {
         this.isLoading = false;
-
-        // this.router.push("/login");
+        if (response.responseCode == "00") {
+          toast.success("Successfully reset password");
+          this.router.push("/login");
+        }
       });
     },
   },

@@ -365,7 +365,7 @@
                 <a-button
                   type="primary"
                   :loading="tenantLoading"
-                  @click="AddTenants"
+                  @click="createProperties"
                   size="large"
                   class="px-8"
                   >Add Tenants</a-button

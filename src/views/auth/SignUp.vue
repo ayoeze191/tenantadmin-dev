@@ -166,7 +166,10 @@ export default {
       };
       CreateUser(payload).then((response) => {
         this.isLoading = false;
-        this.router.push("/create-password/");
+        console.log(response);
+        const link = response.result.resetPasswordLink;
+        window.location.href = link;
+        // this.router.push(`/create-password/${}`);
       });
     },
     handleSubmit(e) {
