@@ -290,7 +290,20 @@
       </li>
       <li>
         <div class="flex gap-2">
-          <p class="text-secondary font-medium leading-7">Image:</p>
+          <p class="text-secondary font-medium leading-7">Email Address</p>
+          <p class="text-txt_dark leading-7">stefnyorkuma@gmail.com</p>
+        </div>
+
+        <div class="flex gap-2">
+          <p class="text-secondary font-medium leading-7">
+            Name of other Applicant
+          </p>
+          <p class="text-txt_dark leading-7">stefnyorkuma@gmail.com</p>
+        </div>
+      </li>
+      <li>
+        <div class="flex gap-2 items-center">
+          <p class="text-secondary font-medium leading-7">Document</p>
           <div class="rounded-md py-1.5 px-5 bg-bg1 flex gap-2 justify-center">
             <svg
               width="21"
@@ -323,8 +336,42 @@
         </div>
       </li>
       <li>
-        <status-select :label="'Service Request Status:'" />
+        <div class="flex gap-2 items-center">
+          <p class="text-secondary font-medium leading-7">Valid ID</p>
+          <div class="rounded-md py-1.5 px-5 bg-bg1 flex gap-2 justify-center">
+            <svg
+              width="21"
+              height="21"
+              viewBox="0 0 21 21"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g clip-path="url(#clip0_4249_15161)">
+                <path
+                  d="M16.3333 4.66667V16.3333H4.66667V4.66667H16.3333ZM16.3333 3H4.66667C3.75 3 3 3.75 3 4.66667V16.3333C3 17.25 3.75 18 4.66667 18H16.3333C17.25 18 18 17.25 18 16.3333V4.66667C18 3.75 17.25 3 16.3333 3ZM12.2833 10.3833L9.78333 13.6083L8 11.45L5.5 14.6667H15.5L12.2833 10.3833Z"
+                  fill="#323232"
+                />
+              </g>
+              <defs>
+                <clipPath id="clip0_4249_15161">
+                  <rect
+                    width="20"
+                    height="20"
+                    fill="white"
+                    transform="translate(0.5 0.5)"
+                  />
+                </clipPath>
+              </defs>
+            </svg>
+            <p class="font-medium text-sm leading-6 text-txt_dark">
+              IMG.9876.JPG
+            </p>
+          </div>
+        </div>
       </li>
+      <div class="flex">
+        <status-select :label="'Service Request Status:'" />
+      </div>
     </ul>
   </modal-component>
 </template>
