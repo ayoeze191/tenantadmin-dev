@@ -5,7 +5,9 @@
     <div class="mx-auto">
       <PaymentStatsCard :stats="paymentStats" />
       <div class="flex justify-between items-center mb-5">
-        <h2 class="text-2xl font-semibold text-gray-800 m-0">PAYMENT DUE</h2>
+        <h2 class="text-2xl font-semibold text-gray-800 m-0">
+          MAINTENANCE DUE
+        </h2>
         <div class="flex items-center gap-4">
           <a-select
             v-model:value="filterType"

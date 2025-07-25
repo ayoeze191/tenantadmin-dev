@@ -1,7 +1,7 @@
 <template>
   <div class="bg-neutral py-5 px-10 w-full min-h-screen pb-40">
     <PaymentStatsCard :stats="paymentStats" />
-    <h2 class="text-2xl font-semibold text-gray-800 mb-8">SECURITY DEPOSIT</h2>
+    <!-- <h2 class="text-2xl font-semibold text-gray-800 mb-8">SECURITY DEPOSIT</h2> -->
     <div>
       <div v-for="(group, month) in groupedPayments" :key="month" class="mb-8">
         <h3 class="text-base font-semibold text-gray-500 mb-2 uppercase">
@@ -22,9 +22,9 @@
             <span class="font-semibold text-lg text-primary"
               >${{ payment.amount }}</span
             >
-            <span class="text-gray-400 text-xs">{{
+            <!-- <span class="text-gray-400 text-xs">{{
               formatDate(payment.dueDate)
-            }}</span>
+            }}</span> -->
             <a
               :href="payment.invoiceUrl"
               class="text-blue-600 underline text-xs flex items-center gap-1"

@@ -39,12 +39,13 @@
             <PaymentBadge :type="payment.type" class="mb-1" />
           </div>
           <a-dropdown placement="bottomRight" :trigger="['click']">
-            <a
+            <span
               class="ant-dropdown-link cursor-pointer text-xl px-2 flex items-center justify-center"
               @click.prevent
             >
               <IconMoreVertical style="width: 22px; height: 22px" />
-            </a>
+            </span>
+
             <template #overlay>
               <a-menu>
                 <a-menu-item @click="$emit('notify', payment)"

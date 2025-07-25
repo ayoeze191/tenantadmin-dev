@@ -171,7 +171,7 @@
     ref="viewRequestModal"
     title="B-29 Brina Apartments"
     @close="onModalClose"
-    :button_label="'Save Changes'"
+    :button_label="'Send Notifications to tenant'"
   >
     <ul class="grid gap-11 w-full max-w-[691px] mx-auto">
       <li>
