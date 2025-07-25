@@ -84,7 +84,6 @@
             <a-result status="404" :title="'Not Found'" :sub-title="error" />
           </template>
           <template v-else-if="property">
-            {{ console.log(property, "") }}
             <div>
               <div class="flex h-[300px]">
                 <!-- Images Carousel with Ant Design Preview -->
@@ -180,6 +179,7 @@
                 <a-tabs
                   v-model:activeKey="activeKey"
                   :destroyInactiveTabPane="true"
+                  @change="fetchCurrentAmenities(activeKey)"
                 >
                   <a-tab-pane :key="1" tab="Property Info">
                     <propertyheader :property="property" />
@@ -208,7 +208,7 @@
                   <a-tab-pane
                     v-for="unit in property.units"
                     :key="unit.unitId"
-                    :tab="unit.unitId"
+                    :tab="unit.unitName"
                   >
                     <propertyheader :property="property" />
 
@@ -224,7 +224,7 @@
                             class="text-[#808097]"
                             style="color: #808097 !important"
                           >
-                            ${{ unit.price }}
+                            ${{ unit.securityDeposit }}
                           </p>
                         </span>
                         <span>
@@ -242,13 +242,21 @@
                         </span>
                       </div>
                     </div>
-                    <div class="mt-[16px]">
+                    <div
+                      class="mt-[16px] text-[#808097] flex flex-col gap-[4px] font-sf font-semibold list-disc"
+                    >
                       <li
-                        class="font-medium text-base text-txt_dark leading-[100%]"
+                        class="font-medium text-base text-txt_dark leading-[100%] list-none"
                       >
                         Key Features
                       </li>
-                      <li></li>
+                      <li
+                        v-for="amenity in currentAmenities"
+                        class="mt-[4px] font-sf text-sm font-semibold text-[#808097] list-disc"
+                        style="color: #808097 !important"
+                      >
+                        {{ amenity.amenity }}
+                      </li>
                     </div>
                   </a-tab-pane>
                 </a-tabs>
@@ -449,7 +457,12 @@ import { openDB } from "idb";
 import { computed, h, onMounted, reactive, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Propertyheader from "@/components/Propertyheader.vue";
-import { GetAccomodationById, AddTenants } from "@/api/properties";
+import { useToast } from "vue-toast-notification";
+import {
+  GetAccomodationById,
+  AddTenants,
+  getunitDetails,
+} from "@/api/properties";
 const route = useRoute();
 const activeKey = ref(1);
 const router = useRouter();
@@ -502,11 +515,14 @@ const tenantRules = {
   rentRate: [{ required: true, message: "Monthly rent is required" }],
 };
 const createProperties = async () => {
+  tenantLoading.value = true;
   let firstname, lastname;
   const [splittedfirstname, splittedlastname] = tenantForm.FullName.split(" ");
   firstname = splittedfirstname;
   lastname = splittedlastname;
+  const toast = useToast();
   const payload = {
+    emailAddress: tenantForm.emailAddress,
     firstname,
     lastname,
     dob: "",
@@ -522,13 +538,23 @@ const createProperties = async () => {
     },
   };
   console.log(payload, "payload");
-  // const response = await AddTenants();
+  const response = await AddTenants(payload);
+  console.log(response.result);
+  if (response.result.responseCode == "00") {
+    toast.success("Successfully created");
+    tenantLoading.value = false;
+  } else {
+    toast.error(response.result.responseDescription);
+    tenantLoading.value = false;
+  }
+  tenantLoading.value == false;
+  showAddTenantModal.value = false;
 };
 const propertyOptions = computed(() => {
   // You can fetch or map your properties here. For demo, use current property only.
   return property.value.units
     ? property.value.units.map(
-        (uni) => uni && { label: uni.unitId, value: uni.unitId }
+        (uni) => uni && { label: uni.unitName, value: uni.unitId }
       )
     : [];
 });
@@ -768,6 +794,19 @@ function downloadSampleFile() {
 async function getAccomodationDetails(id) {
   const response = await GetAccomodationById(id);
   console.log(response);
+}
+
+const currentAmenities = ref();
+
+async function fetchCurrentAmenities(id) {
+  if (activeKey.value !== 1) {
+    const response = await getunitDetails(id);
+    console.log(response.data);
+    currentAmenities.value = response.data.amenities.map(
+      (amen) => amen && { amenity: amen.amenity.name }
+    );
+    console.log(currentAmenities.value);
+  }
 }
 </script>
 

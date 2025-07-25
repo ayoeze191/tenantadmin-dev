@@ -10,7 +10,7 @@ export const FetchLandlords = async (params = {}) => {
       CurrentPage: currentPage,
     });
 
-    const response = await getApi(`Account/Get-All-LandLords?${queryParams}`);
+    const response = await getApi(`Account/GetAllLandLords?${queryParams}`);
     return response.data;
   } catch (error) {
     handleError(error);
@@ -48,10 +48,7 @@ export const FetchAmenities = async () => {
 
 export const CreateNewProperty = async (payload) => {
   try {
-    const response = await postApi(
-      `Accommodation/Create-New-Property`,
-      payload
-    );
+    const response = await postApi(`Accommodation/CreateNewProperty`, payload);
     return response.data;
   } catch (error) {
     handleError(error);
@@ -83,4 +80,13 @@ export const GetAccomodationById = async (id) => {
     );
     return response.data;
   } catch (error) {}
+};
+
+export const getunitDetails = async (id) => {
+  try {
+    const response = await getApi(`Accommodation/ViewUnitById?UnitId=${id}`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
 };
