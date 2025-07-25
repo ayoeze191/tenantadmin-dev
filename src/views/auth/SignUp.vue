@@ -75,6 +75,7 @@
           <input
             id="phoneNumber"
             name="phoneNumber"
+            type="number"
             class="input mt-4 mb-10"
             v-model="phoneNumber"
           />
@@ -147,7 +148,8 @@ export default {
         !this.emailAddress ||
         !this.firstname ||
         !this.lastname ||
-        !this.phoneNumber
+        !this.phoneNumber ||
+        typeof this.phoneNumber !== "number"
       ) {
         return true;
       }
@@ -164,13 +166,18 @@ export default {
         accountType: 1,
         accountRefNumber: "",
       };
-      CreateUser(payload).then((response) => {
-        this.isLoading = false;
-        console.log(response);
-        const link = response.result.resetPasswordLink;
-        window.location.href = link;
-        // this.router.push(`/create-password/${}`);
-      });
+      CreateUser(payload)
+        .then((response) => {
+          this.isLoading = false;
+          console.log(response.result);
+          console.log(response);
+          const link = response.result.resetPasswordLink;
+          window.location.href = link;
+          // this.router.push(`/create-password/${}`);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     handleSubmit(e) {
       e.preventDefault();
