@@ -9,3 +9,11 @@ export const dashboard = async (payload) => {
     handleError(error);
   }
 };
+
+export const AccomodationApplications = async () => {
+  try {
+    const response = await postApigetApi("Dashboard/AccommodationApplications");
+  } catch (error) {
+    console.log(error);
+  }
+};

@@ -134,11 +134,11 @@
       <div class="flex w-full justify-between border-b border-br1 pb-3 mb-4">
         <p class="font-medium text-base text-secondary mr-0.5">All Leases</p>
 
-        <status-select
+        <!-- <status-select
           :label="'Filter By:'"
           :mode="'filter'"
           :filterOptions="filterOptions"
-        ></status-select>
+        ></status-select> -->
       </div>
       <ul>
         <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
@@ -151,11 +151,33 @@
             </p>
 
             <div class="flex gap-2">
-              <p class="text-secondary font-semibold leading-7">
-                Lease Expires:
-              </p>
-              <div class="status_select bg-bg1">
-                <p class="text-txt_dark">21/12/21</p>
+              <div
+                class="bg-[#FDEECE] text-[#8E6306] px-[9px] flex items-center rounded-[17px]"
+              >
+                Renewal
+              </div>
+            </div>
+          </section>
+          <a
+            class="text-sm leading-6 text-txt_dark flex items-center cursor-pointer underline"
+            @click="openModal({})"
+            >View tenant information
+          </a>
+        </li>
+        <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
+          <section class="flex w-full justify-between mb-4">
+            <p class="font-medium text-lg leading-6 text-txt_dark">
+              Steph Orkuma
+              <span class="text-secondary ml-1"
+                >Apt T-69, Sean Apartments
+              </span>
+            </p>
+
+            <div class="flex gap-2">
+              <div
+                class="bg-[#FDEECE] text-[#8E6306] px-[9px] flex items-center rounded-[17px]"
+              >
+                Renewal
               </div>
             </div>
           </section>
@@ -173,12 +195,12 @@
                 >Apt T-69, Sean Apartments
               </span>
             </p>
+
             <div class="flex gap-2">
-              <p class="text-secondary font-semibold leading-7">
-                Lease Expires:
-              </p>
-              <div class="status_select bg-bg1">
-                <p class="text-txt_dark">21/12/21</p>
+              <div
+                class="bg-[#FDEECE] text-[#8E6306] px-[9px] flex items-center rounded-[17px]"
+              >
+                Renewal
               </div>
             </div>
           </section>
@@ -196,12 +218,12 @@
                 >Apt T-69, Sean Apartments
               </span>
             </p>
+
             <div class="flex gap-2">
-              <p class="text-secondary font-semibold leading-7">
-                Lease Expires:
-              </p>
-              <div class="status_select bg-bg1">
-                <p class="text-txt_dark">21/12/21</p>
+              <div
+                class="bg-[#FDEECE] text-[#8E6306] px-[9px] flex items-center rounded-[17px]"
+              >
+                Renewal
               </div>
             </div>
           </section>
@@ -219,35 +241,12 @@
                 >Apt T-69, Sean Apartments
               </span>
             </p>
+
             <div class="flex gap-2">
-              <p class="text-secondary font-semibold leading-7">
-                Lease Expires:
-              </p>
-              <div class="status_select bg-bg1">
-                <p class="text-txt_dark">21/12/21</p>
-              </div>
-            </div>
-          </section>
-          <a
-            class="text-sm leading-6 text-txt_dark cursor-pointer underline"
-            @click="openModal({})"
-            >View tenant information</a
-          >
-        </li>
-        <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
-          <section class="flex w-full justify-between mb-4">
-            <p class="font-medium text-lg leading-6 text-txt_dark">
-              Steph Orkuma
-              <span class="text-secondary ml-1"
-                >Apt T-69, Sean Apartments
-              </span>
-            </p>
-            <div class="flex gap-2">
-              <p class="text-secondary font-semibold leading-7">
-                Lease Expires:
-              </p>
-              <div class="status_select bg-bg1">
-                <p class="text-txt_dark">21/12/21</p>
+              <div
+                class="bg-[#FDEECE] text-[#8E6306] px-[9px] flex items-center rounded-[17px]"
+              >
+                Renewal
               </div>
             </div>
           </section>

@@ -470,6 +470,7 @@ import Table from "@/components/Table.vue";
 import { h } from "vue";
 import { LoadingOutlined } from "@ant-design/icons-vue";
 import { FetchServiceRequests } from "@/api/serviceRequest";
+import { AccomodationApplications } from "@/api/dashboard";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default {
@@ -483,6 +484,7 @@ export default {
   data() {
     return {
       progress: 50,
+      AccomodationApplications: [],
       customIcon: h(LoadingOutlined, {
         style: {
           fontSize: "15px",
@@ -570,6 +572,9 @@ export default {
     },
   },
 };
+// const AccomodationApplications = () => {
+//   this.AccomodationApplications
+// }
 </script>
 
 <style>
