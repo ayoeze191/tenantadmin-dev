@@ -53,16 +53,10 @@
                     landlordLoading ? 'Loading...' : 'No landlords found'
                   "
                 >
-                  <template #option="{ label, value, data }">
+                  <template #option="{ label, value }">
                     <div class="flex flex-col">
                       <span class="font-medium"
-                        >{{ data.firstname }} {{ data.lastname }}</span
-                      >
-                      <span class="text-sm text-gray-500">{{
-                        data.emailAddress
-                      }}</span>
-                      <span class="text-xs text-gray-400"
-                        >ID: {{ data.accountRefNumber }}</span
+                        >{{ label }}</span
                       >
                     </div>
                   </template>
@@ -789,6 +783,7 @@ const optionsStore = useOptionsStore();
 
 onMounted(async () => {
   await optionsStore.fetchAmenities();
+  console.log('restaurantely')
   // await optionsStore.fetchUnitTypes(); // Removed as per edit hint
   await fetchLandlords();
 
@@ -865,27 +860,19 @@ const uploadedImageUrls = ref([]); // Cache for uploaded image URLs
 const fetchLandlords = async (searchName = "", page = 1) => {
   landlordLoading.value = true;
   try {
-    const response = await FetchLandlords({
-      name: searchName,
-      currentPage: page,
-      pageSize: 10,
-    });
-
-    if (response && response.accountList) {
-      const landlords = response.accountList.items.map((landlord) => ({
-        label: `${landlord.firstname} ${landlord.lastname} (${landlord.emailAddress})`,
-        value: landlord.accountId,
-        data: landlord,
+    const response = await FetchLandlords();
+  console.log('fetching', response)
+    if (response && response.data) {
+      const landlords = response.data.map((landlord) => ({
+        label: `${landlord.text}`,
+        value: landlord.value,
+        // data: landlord,
       }));
-
-      if (page === 1) {
+      console.log(landlords)
         landlordOptions.value = landlords;
-      } else {
-        landlordOptions.value = [...landlordOptions.value, ...landlords];
-      }
-
-      landlordTotalItems.value = response.accountList.totalItemCount;
-      landlordCurrentPage.value = page;
+        // landlordOptions.value = [...landlordOptions.value, ...landlords];
+      // landlordTotalItems.value = response.accountList.totalItemCount;
+      // landlordCurrentPage.value = page;
     }
   } catch (error) {
     console.error("Error fetching landlords:", error);

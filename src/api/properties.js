@@ -9,10 +9,13 @@ export const FetchLandlords = async (params = {}) => {
       PageSize: pageSize,
       CurrentPage: currentPage,
     });
+    console.log("here");
+    const response = await getApi(`Account/FetchLandLords`);
+    console.log(response);
 
-    const response = await getApi(`Account/GetAllLandLords?${queryParams}`);
     return response.data;
   } catch (error) {
+    console.log("here failed", error);
     handleError(error);
   }
 };
@@ -85,6 +88,7 @@ export const GetAccomodationById = async (id) => {
 export const getunitDetails = async (id) => {
   try {
     const response = await getApi(`Accommodation/ViewUnitById?UnitId=${id}`);
+
     return response.data;
   } catch (error) {
     console.log(error);
