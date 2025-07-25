@@ -330,6 +330,9 @@ export default {
         console.log(response, "reciprocal");
         if (response.responseCode == "00") {
           console.log("successfull");
+          this.serviceRequests = response.serviceRequests.filter(
+            (req) => req.serviceRequestId == serviceRequestId
+          );
           toast.success("Successfull");
         }
       });
@@ -345,6 +348,9 @@ export default {
         status: index,
       }).then((response) => {
         console.log(response, "reciprocal");
+        this.serviceRequests = response.serviceRequests.filter(
+          (req) => req.serviceRequestId !== service.serviceRequestId
+        );
         if (response.responseCode == "00") {
           console.log("successfull");
           toast.success("Successfull");
