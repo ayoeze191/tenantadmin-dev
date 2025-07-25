@@ -121,11 +121,11 @@ export default {
         userId,
         token,
       };
-      console.log(payload);
       ResetAdminPassword(payload).then((response) => {
+        console.log(response.result);
         this.isLoading = false;
-        if (response.responseCode == "00") {
-          toast.success("Successfully reset password");
+        if (response.result.responseCode == "00") {
+          toast.success("Successfully created a password, please login");
           this.router.push("/login");
         }
       });

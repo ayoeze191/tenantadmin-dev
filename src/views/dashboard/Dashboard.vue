@@ -146,13 +146,13 @@
                 />
 
                 <span v-if="!loading.serviceRequestCompleted">
-                  {{ serviceRequests.length }}</span
+                  {{ pendingRequests.length }}</span
                 >
               </span>
               <span
                 class="mb-[2px] text-[14px] leading-[100%] md:text-[13px] sm:text-[12px]"
               >
-                Completed
+                Pending
               </span>
             </p>
             <p
@@ -192,7 +192,7 @@
               Completed
               <span
                 class="text-[#A31616] text-[12px] bg-[#E0F5EB] px-[5px] py-[2px] rounded-[15px] flex md:text-[11px] sm:text-[10px] md:px-[4px] md:py-[1.5px] sm:px-[3px] sm:py-[1px]"
-                >5</span
+                >{{ serviceRequests.length }}</span
               >
             </li>
           </section>
@@ -495,6 +495,7 @@ export default {
       },
       serviceRequests: [],
       ongoingRequests: [],
+      pendingRequests: [],
       chartData: {
         labels: ["Collected", "Pending"],
         datasets: [
@@ -556,10 +557,13 @@ export default {
         this.loading.serviceOngoingCompleted = false;
         if (response.responseCode == "00") {
           this.serviceRequests = response.serviceRequests.filter(
-            (req) => req.service.serviceStatus == 3
+            (req) => req.serviceStatus == 3
           );
           this.ongoingRequests = response.serviceRequests.filter(
-            (req) => req.service.serviceStatus == 2
+            (req) => req.serviceStatus == 2
+          );
+          this.pendingRequests = response.serviceRequests.filter(
+            (req) => req.serviceStatus == 1
           );
         } else handleError(response);
       });
