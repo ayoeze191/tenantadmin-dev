@@ -44,7 +44,7 @@
             <Button :label="'Reload'" :onClick="reload" type="primary" />
           </div>
           <!-- Data State -->
-          <div v-else class="grid grid-cols-3 gap-[30px] w-fit">
+          <div v-else class="grid grid-cols-3 gap-[30px] w-fit h-full">
             <a
               v-for="property in propertyList"
               class="group flex flex-col bg-white border max-w-[334px] border-gray-200 shadow-2xs rounded-xl hover:shadow-md transition cursor-pointer"
@@ -56,7 +56,7 @@
                 <img
                   v-if="!property.images || property.images.length === 0"
                   src="/placeholder.png"
-                  class="w-full object-cover rounded-t-xl h-full absolute top-0 left-0 z-0 blur-sm transition-opacity duration-300"
+                  class="w-full object-cover rounded-t-xl h-full top-0 left-0 z-0 blur-sm transition-opacity duration-300"
                   alt="No image available"
                   loading="lazy"
                 />
