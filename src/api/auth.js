@@ -13,13 +13,14 @@ export const LoginUser = async (payload) => {
 export const CreateUser = async (payload) => {
   try {
     const response = await postApi("Account/CreateUser", payload);
-    if (response.status) {
+    if (response.data.responseCode == "00") {
       const createlandlord = await SignUpLandlord(
         response.data.onboardedAccount.accountId
       );
       return createlandlord;
+    } else {
+      return response.data;
     }
-    return response.data;
   } catch (error) {
     handleError(error);
   }

@@ -5,9 +5,39 @@
       <p class="auth_header_text">Create Password</p>
       <p class="auth_subheader_text">Access your administrative account</p>
 
-      <form class="auth_form">
+      <a-form class="auth_form" :model="modelForm" :rules="rules">
+        <a-form-item name="password" class="w-full flex flex-col form-labels">
+          <span class="text-sm md:text-base font-medium text-[#404164]"
+            >Password</span
+          >
+          <a-input-password
+            :type="viewPassword ? 'text' : 'password'"
+            class="input w-full mt-4"
+            v-model:value="modelForm.password"
+            size="large"
+          />
+          <!-- <template #prefix>
+            <IconLock class="text-gray-400" />
+          </template> -->
+        </a-form-item>
+
+        <a-form-item
+          name="confirmpassword"
+          class="w-full flex flex-col form-labels"
+        >
+          <span class="text-sm md:text-base font-medium text-[#404164]"
+            >Confirm Password</span
+          >
+          <a-input-password
+            class="input w-full mt-4"
+            :type="viewConfirmPassword ? 'text' : 'password'"
+            v-model:value="modelForm.confirmpassword"
+            size="large"
+          />
+        </a-form-item>
+
         <!-- form block  -->
-        <section class="w-full flex flex-row justify-between gap-2">
+        <!-- <section class="w-full flex flex-row justify-between gap-2">
           <label
             for="password"
             class="input_label text-sm sm:text-base md:text-xl"
@@ -16,7 +46,7 @@
         </section>
 
         <div class="input flex mt-4 mb-10 items-center">
-          <input
+          <a-input
             class="w-full outline-none border-0"
             :type="viewPassword ? 'text' : 'password'"
             v-model="password"
@@ -39,25 +69,25 @@
             class="input_label text-sm sm:text-base md:text-xl"
             >Confirm Password</label
           >
-        </section>
+        </section> -->
 
-        <div class="input flex mt-4 mb-10 items-center">
-          <input
+        <!-- <div class="input flex mt-4 mb-10 items-center"> -->
+        <!-- <a-input
             class="w-full outline-none border-0"
             :type="viewConfirmPassword ? 'text' : 'password'"
             v-model="confirmpassword"
-          />
-          <view-password-icon
+          /> -->
+        <!-- <view-password-icon
             class="cursor-pointer"
             @click="toggleConfirmPassword"
-            v-if="!viewConfirmPassword"
+            v-if="viewConfirmPassword"
           />
           <hide-password-icon
             v-else
             class="cursor-pointer"
             @click="toggleConfirmPassword"
-          />
-        </div>
+          /> -->
+        <!-- </div> -->
 
         <button
           class="btn btn_primary"
@@ -66,7 +96,7 @@
         >
           Submit
         </button>
-      </form>
+      </a-form>
     </div>
   </main>
 </template>
@@ -79,14 +109,38 @@ import IconHidePassword from "@/components/icons/IconHidePassword.vue";
 import Button from "@/components/Button.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useToast } from "vue-toast-notification";
+import { rule } from "postcss";
 
 export default {
   data() {
     return {
       viewPassword: false,
       viewConfirmPassword: false,
-      password: "",
-      confirmpassword: "",
+      modelForm: {
+        password: "",
+        confirmpassword: "",
+      },
+      rules: {
+        password: [
+          { required: true, message: "Password is required", trigger: "blur" },
+        ],
+        confirmpassword: [
+          {
+            required: true,
+            message: "Please confirm your password",
+            trigger: "blur",
+          },
+          {
+            validator: (rule, value) => {
+              if (value !== this.modelForm.password) {
+                return Promise.reject("Passwords do not match");
+              }
+              return Promise.resolve();
+            },
+            trigger: "blur",
+          },
+        ],
+      },
       store: useUserStore(),
       route: useRoute(),
       router: useRouter(),
@@ -105,7 +159,10 @@ export default {
       this.viewConfirmPassword = !this.viewConfirmPassword;
     },
     disabled() {
-      if (this.password != this.confirmpassword || this.password.length == 0) {
+      if (
+        this.modelForm.password != this.modelForm.confirmpassword ||
+        this.modelForm.password.length == 0
+      ) {
         return true;
       }
       return false;
@@ -117,7 +174,7 @@ export default {
       const userId = this.route.params.userId;
       const token = this.route.params.token;
       const payload = {
-        newPassword: this.password,
+        newPassword: this.modelForm.password,
         userId,
         token,
       };
@@ -127,6 +184,8 @@ export default {
         if (response.result.responseCode == "00") {
           toast.success("Successfully created a password, please login");
           this.router.push("/login");
+        } else {
+          toast.error(response.result.responseMessage);
         }
       });
     },

@@ -1,84 +1,87 @@
 <template>
-  <main class="py-6 bg-white w-full h-screen overflow-y-scroll">
+  <main class="py-6 bg-[#FAFCFF] w-full h-screen overflow-y-scroll">
     <div class="w-4/6 mx-auto py-4 smallTablet:w-5/6">
-      <img class="mx-auto w-21 mb-5" src="../../assets/logo.svg" alt="logo" />
+      <img
+        class="mx-auto w-21 mb-[46px]"
+        src="../../assets/logo.svg"
+        alt="logo"
+      />
 
       <!-- Responsive Header Text -->
       <p
-        class="auth_header_text text-2xl sm:text-3xl md:text-4xl font-semibold text-center"
+        class="auth_header_text text-2xl sm:text-3xl text-[#404164] md:text-4xl font-semibold text-center"
       >
         Sign Up
       </p>
 
       <!-- Responsive Subheader Text -->
       <p
-        class="auth_subheader_text text-base sm:text-lg md:text-xl text-center text-txt_dark2 mt-2 mb-6"
+        class="auth_subheader_text text-base sm:text-lg md:text-xl lg:text-[24px] text-center text-[#404164] mt-2 mb-6"
       >
         Access your administrative account
       </p>
 
-      <form class="auth_form">
-        <div v-if="step == 1">
+      <a-form class="auth_form bg-[#FFFFFF]" :rules="rule" :model="modelForm">
+        <div>
           <section class="flex gap-4 phone:flex-col">
-            <!-- Form block -->
-            <div class="w-full">
-              <label
-                for="firstName"
-                class="input_label text-sm sm:text-base md:text-xl"
+            <a-form-item
+              name="firstname"
+              class="w-full flex flex-col form-labels"
+            >
+              <span class="text-sm md:text-base font-medium text-[#404164]"
+                >First Name</span
               >
-                First Name
-              </label>
-              <input
-                id="firstName"
-                name="firstName"
-                class="input mt-4 mb-10"
-                v-model="firstname"
+              <a-input
+                class="input w-full mt-4"
+                v-model:value="modelForm.firstname"
+                size="large"
               />
-            </div>
+            </a-form-item>
 
-            <!-- Form block -->
-            <div class="w-full">
-              <label
-                for="lastName"
-                class="input_label text-sm sm:text-base md:text-xl"
+            <a-form-item
+              name="lastname"
+              class="w-full flex flex-col form-labels"
+            >
+              <span class="text-sm mb-4 md:text-base font-medium text-[#404164]"
+                >Last Name</span
               >
-                Last Name
-              </label>
-              <input
-                id="lastName"
-                name="lastName"
-                class="input mt-4 mb-10"
-                v-model="lastname"
+              <a-input
+                class="input w-full mt-4"
+                v-model:value="modelForm.lastname"
+                size="large"
               />
-            </div>
+            </a-form-item>
           </section>
-          <label
-            for="emailAddress"
-            class="input_label text-sm sm:text-base md:text-xl"
-          >
-            Email Address
-          </label>
-          <input
-            id="email"
-            name="emailAddress"
-            class="input mt-4 mb-10"
-            v-model="emailAddress"
-          />
 
-          <!-- Form block -->
-          <label
-            for="phoneNumber"
-            class="input_label text-sm sm:text-base md:text-xl"
+          <a-form-item
+            name="emailAddress"
+            class="w-full form-labels flex flex-col"
           >
-            Phone Number
-          </label>
-          <input
-            id="phoneNumber"
+            <span class="text-sm md:text-base font-medium text-[#404164]"
+              >Email Address</span
+            >
+            <a-input
+              class="input w-full mt-4"
+              v-model:value="modelForm.emailAddress"
+              size="large"
+              type="email"
+            />
+          </a-form-item>
+
+          <a-form-item
             name="phoneNumber"
-            type="number"
-            class="input mt-4 mb-10"
-            v-model="phoneNumber"
-          />
+            class="w-full flex flex-col form-labels"
+          >
+            <span class="text-sm md:text-base font-medium text-[#404164]"
+              >Phone Number</span
+            >
+            <a-input
+              class="input w-full mt-4"
+              v-model:value="modelForm.phoneNumber"
+              size="large"
+              type="number"
+            />
+          </a-form-item>
         </div>
 
         <button
@@ -88,7 +91,8 @@
         >
           Sign Up
         </button>
-      </form>
+      </a-form>
+
       <!-- :disabled="isDisabled()" -->
       <!-- Responsive Footer Text -->
       <p
@@ -96,7 +100,7 @@
       >
         Already have an account?
         <router-link to="/login">
-          <span class="text-primary font-bold">Login</span>
+          <span class="text-[#404164] font-bold">Login</span>
         </router-link>
       </p>
     </div>
@@ -119,15 +123,28 @@ export default {
       viewConfirmPassword: false,
       router: useRouter(),
       isLoading: false,
-      emailAddress: "",
-      firstname: "",
-      lastname: "",
-      phoneNumber: "",
+      modelForm: {
+        emailAddress: "",
+        firstname: "",
+        lastname: "",
+        phoneNumber: "",
+      },
       accountType: "",
       password: "",
       confirmpassword: "",
       store: useUserStore(),
-      step: 1,
+      rule: {
+        firstname: [{ required: true, message: "First Name is Required" }],
+        lastname: [{ required: true, message: "Last Name is Required" }],
+        phoneNumber: [
+          { required: true, message: "Phone Number is Required" },
+          { pattern: /^\d{7,15}$/, message: "Invalid phone number" },
+        ],
+        emailAddress: [
+          { required: true, message: "Email is Required" },
+          { type: "email", message: "Invalid email" },
+        ],
+      },
     };
   },
   created() {},
@@ -144,36 +161,36 @@ export default {
       this.viewConfirmPassword = !this.viewConfirmPassword;
     },
     isDisabled() {
-      if (
-        !this.emailAddress ||
-        !this.firstname ||
-        !this.lastname ||
-        !this.phoneNumber ||
-        typeof this.phoneNumber !== "number"
-      ) {
-        return true;
-      }
-      return false;
+      const { emailAddress, firstname, lastname, phoneNumber } = this.modelForm;
+
+      return (
+        !emailAddress?.trim() ||
+        !firstname?.trim() ||
+        !lastname?.trim() ||
+        !phoneNumber?.trim() ||
+        !/^\d{7,15}$/.test(phoneNumber) // optional: validate phone format
+      );
     },
     handleSignup() {
-      const $toast = useToast({ position: "top-right" });
+      const toast = useToast({ position: "top-right" });
       this.isLoading = true;
       const payload = {
-        emailAddress: this.emailAddress,
-        firstname: this.firstname,
-        lastname: this.lastname,
-        phoneNumber: this.phoneNumber,
+        emailAddress: this.modelForm.emailAddress,
+        firstname: this.modelForm.firstname,
+        lastname: this.modelForm.lastname,
+        phoneNumber: this.modelForm.phoneNumber,
         accountType: 1,
         accountRefNumber: "",
       };
       CreateUser(payload)
         .then((response) => {
           this.isLoading = false;
-          console.log(response.result);
-          console.log(response);
-          const link = response.result.resetPasswordLink;
-          window.location.href = link;
-          // this.router.push(`/create-password/${}`);
+          if (response.responseCode == "06") {
+            toast.error(response.responseDescription);
+          } else {
+            const link = response.result.resetPasswordLink;
+            window.location.href = link;
+          }
         })
         .catch((error) => {
           console.log(error);
@@ -187,4 +204,17 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+:deep(.form-labels .ant-form-item-label > label) {
+  color: #404164;
+  font-weight: 350;
+  line-height: 100%;
+  font-size: 16px;
+  font-family: "SF Compact Text";
+}
+:deep(.form-labels .ant-form-item-label) {
+  display: flex !important;
+  flex-direction: column !important;
+  background-color: red !important;
+}
+</style>
