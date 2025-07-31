@@ -9,7 +9,7 @@
       <p
         class="mb-5 text-[#808097] text-[18px] font-[600] text-lg leading-[25px] uppercase font-sf"
       >
-        Approval Requests (4)
+        Approval Requests ({{ waitingLeases.length }})
       </p>
       <router-link to="/tenants/lease/pending">
         <p class="text-txt_dark flex gap-1 font-medium text-sm cursor-pointer">
@@ -36,19 +36,20 @@
     </div>
     <ul class="flex w-full gap-3 largeTablet:flex-wrap">
       <li
+        v-for="lease in waitingLeases"
         class="bg-white py-2.5 px-4 rounded-lg w-[350px] min-h-[108px] flex flex-col justify-between"
       >
         <div class="flex justify-between">
           <div>
             <p class="font-medium text-txt_dark">B-29, Brina Apartments</p>
             <p class="font-medium text-secondary text-xs leading-5">
-              Tenant: Steph Orkuma, Derek Jones
+              Tenant: {{ lease.tenant.firstname + " " + lease.tenant.lastname }}
             </p>
           </div>
           <p
-            class="py-1 px-2.5 font-medium text-xs leading-3 text-scs bg-scs_bg h-5 my-auto rounded-2xl"
+            class="py-1 px-2.5 font-medium text-xs leading-3 text-pnd bg-pending h-5 rounded-2xl"
           >
-            Recieved
+            {{ lease.requestTypeName }}
           </p>
         </div>
         <a
@@ -57,50 +58,7 @@
           >View full details</a
         >
       </li>
-      <li
-        class="bg-white py-2.5 px-4 rounded-lg w-[350px] min-h-[108px] flex flex-col justify-between"
-      >
-        <div class="flex justify-between">
-          <div>
-            <p class="font-medium text-txt_dark">B-29, Brina Apartments</p>
-            <p class="font-medium text-secondary text-xs leading-5">
-              Tenant: Steph Orkuma, Derek Jones
-            </p>
-          </div>
-          <p
-            class="py-1 px-2.5 font-medium text-xs leading-3 text-pnd bg-pending h-5 my-auto rounded-2xl"
-          >
-            Sublease
-          </p>
-        </div>
-        <a
-          class="text-sm leading-6 text-txt_dark cursor-pointer underline"
-          @click="openModal({})"
-          >View full details</a
-        >
-      </li>
-      <li
-        class="bg-white py-2.5 px-4 rounded-lg w-[350px] min-h-[108px] flex flex-col justify-between"
-      >
-        <div class="flex justify-between">
-          <div>
-            <p class="font-medium text-txt_dark">B-29, Brina Apartments</p>
-            <p class="font-medium text-secondary text-xs leading-5">
-              Tenant: Steph Orkuma, Derek Jones
-            </p>
-          </div>
-          <p
-            class="py-1 px-2.5 font-medium text-xs leading-3 text-pnd bg-pending h-5 my-auto rounded-2xl"
-          >
-            Sublease
-          </p>
-        </div>
-        <a
-          class="text-sm leading-6 text-txt_dark cursor-pointer underline"
-          @click="openModal({})"
-          >View full details</a
-        >
-      </li>
+
       <li class="my-auto cursor-pointer">
         <svg
           width="33"
@@ -141,238 +99,122 @@
         ></status-select> -->
       </div>
       <ul>
-        <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
-          <section class="flex w-full justify-between mb-4">
-            <p class="font-medium text-lg leading-6 text-txt_dark">
-              Steph Orkuma
-              <span class="text-secondary ml-1"
-                >Apt T-69, Sean Apartments
-              </span>
+        <li
+          v-if="leaseList.length > 0"
+          v-for="req in leaseList"
+          class="w-full rounded-md px-4 py-2 bg-grey mb-4"
+        >
+          <section class="flex w-full justify-between">
+            <p class="font-medium text-lg leading-6 text-[#404164]">
+              {{ req.tenantName }}
+              <span class="text-secondary">Apt T-69, Sean Apartments </span>
             </p>
 
-            <div class="flex gap-2">
-              <div
-                class="bg-[#FDEECE] text-[#8E6306] px-[9px] flex items-center rounded-[17px]"
+            <div class="flex gap-2 items-center">
+              <span
+                class="font-sf font-semibold text-[18px] text-[#808097] leading-[17px] tracking-[0.5px] capitalize"
               >
-                Renewal
-              </div>
-            </div>
-          </section>
-          <a
-            class="text-sm leading-6 text-txt_dark flex items-center cursor-pointer underline"
-            @click="openModal({})"
-            >View tenant information
-          </a>
-        </li>
-        <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
-          <section class="flex w-full justify-between mb-4">
-            <p class="font-medium text-lg leading-6 text-txt_dark">
-              Steph Orkuma
-              <span class="text-secondary ml-1"
-                >Apt T-69, Sean Apartments
+                Lease Expires
+                <span
+                  class="text-[#404164] leading-[17px] tracking-[0.5px] text-base bg-[#EDEDED] rounded-[26px] px-[8px] py-[2px]"
+                >
+                  {{
+                    new Date(req.endDate).getDate() +
+                    "/" +
+                    new Date(req.endDate).getMonth() +
+                    "/" +
+                    new Date(req.endDate).getFullYear()
+                  }}
+                </span>
               </span>
-            </p>
-
-            <div class="flex gap-2">
-              <div
-                class="bg-[#FDEECE] text-[#8E6306] px-[9px] flex items-center rounded-[17px]"
-              >
-                Renewal
-              </div>
             </div>
           </section>
           <a
             class="text-sm leading-6 text-txt_dark cursor-pointer underline"
-            @click="openModal({})"
-            >View tenant information</a
+            @click="openModal(req)"
+            >View lease</a
           >
         </li>
-        <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
-          <section class="flex w-full justify-between mb-4">
-            <p class="font-medium text-lg leading-6 text-txt_dark">
-              Steph Orkuma
-              <span class="text-secondary ml-1"
-                >Apt T-69, Sean Apartments
-              </span>
-            </p>
-
-            <div class="flex gap-2">
-              <div
-                class="bg-[#FDEECE] text-[#8E6306] px-[9px] flex items-center rounded-[17px]"
-              >
-                Renewal
-              </div>
-            </div>
-          </section>
-          <a
-            class="text-sm leading-6 text-txt_dark cursor-pointer underline"
-            @click="openModal({})"
-            >View tenant information</a
-          >
-        </li>
-        <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
-          <section class="flex w-full justify-between mb-4">
-            <p class="font-medium text-lg leading-6 text-txt_dark">
-              Steph Orkuma
-              <span class="text-secondary ml-1"
-                >Apt T-69, Sean Apartments
-              </span>
-            </p>
-
-            <div class="flex gap-2">
-              <div
-                class="bg-[#FDEECE] text-[#8E6306] px-[9px] flex items-center rounded-[17px]"
-              >
-                Renewal
-              </div>
-            </div>
-          </section>
-          <a
-            class="text-sm leading-6 text-txt_dark cursor-pointer underline"
-            @click="openModal({})"
-            >View tenant information</a
-          >
-        </li>
-        <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
-          <section class="flex w-full justify-between mb-4">
-            <p class="font-medium text-lg leading-6 text-txt_dark">
-              Steph Orkuma
-              <span class="text-secondary ml-1"
-                >Apt T-69, Sean Apartments
-              </span>
-            </p>
-
-            <div class="flex gap-2">
-              <div
-                class="bg-[#FDEECE] text-[#8E6306] px-[9px] flex items-center rounded-[17px]"
-              >
-                Renewal
-              </div>
-            </div>
-          </section>
-          <a
-            class="text-sm leading-6 text-txt_dark cursor-pointer underline"
-            @click="openModal({})"
-            >View tenant information</a
-          >
-        </li>
+        <div v-else>Lease is empty</div>
       </ul>
     </section>
   </div>
 
+  <a-modal
+    title=""
+    :bodyStyle="{ padding: '0' }"
+    :footer="null"
+    :visible="true"
+    :closable="false"
+    :width="768"
+  >
+    <template #title>
+      <div>Header</div>
+    </template>
+    <div class="grid grid-cols-2 gap-y-12">
+      <div class="flex gap-[2px]">
+        <span class="text-[#808097] font-sf font-semibold">Tenant: </span
+        ><span class="text-[#404164] font-sf font-semibold">Steph Orkuma</span>
+      </div>
+      <div class="flex gap-[2px]">
+        <span class="text-[#808097] font-sf font-semibold">Current Rent: </span
+        ><span class="text-[#404164] font-sf font-semibold">$1200</span>
+      </div>
+      <div class="flex gap-[2px]">
+        <span class="text-[#808097] font-sf font-semibold">Email Address: </span
+        ><span class="text-[#404164] font-sf font-semibold"
+          >stefnyorkuma@gmail.com</span
+        >
+      </div>
+      <div class="flex gap-[2px]">
+        <span class="text-[#808097] font-sf font-semibold">Number: </span
+        ><span class="text-[#404164] font-sf font-semibold">1-22-333-4444</span>
+      </div>
+      <div class="flex gap-[2px]">
+        <span class="text-[#808097] font-sf font-semibold"
+          >Name of Other Applicant: </span
+        ><span class="text-[#404164] font-sf font-semibold">Derek Jones</span>
+      </div>
+      <div class="flex gap-[2px]">
+        <span class="text-[#808097] font-sf font-semibold"
+          >Email of applicant: </span
+        ><span class="text-[#404164] font-sf font-semibold"
+          >Derek@Jones.com</span
+        >
+      </div>
+    </div>
+    <div class="mt-[80px]">
+      <p class="text-[#808097] font-sf font-semibold uppercase">DOCUMENTS</p>
+      <div class="flex justify-between">
+        <div class="text-[#808097] font-sf font-semibold">
+          <span>Bank Statement</span>
+        </div>
+        <div class="text-[#808097] font-sf font-semibold">
+          <span>Valid ID</span>
+        </div>
+      </div>
+    </div>
+  </a-modal>
   <modal-component
     ref="viewRequestModal"
-    title="B-29 Brina Apartments"
+    :title="selected_lease.tenantName"
     @close="onModalClose"
     :button_label="'Save Changes'"
   >
-    <ul class="grid grid-cols-2 gap-11 w-full max-w-[691px] mx-auto">
-      <li>
-        <div class="flex gap-2">
-          <p class="text-secondary font-medium leading-7">Tenant(s):</p>
-          <p class="text-txt_dark leading-7">Steph Orkuma, Derek Jones</p>
-        </div>
-      </li>
-      <li class="w-full">
-        <div class="flex gap-2">
-          <p class="text-secondary font-medium leading-7">Description(s):</p>
-          <p class="text-txt_dark leading-7">
-            Last night my roof began to leak right above my bed. Second room on
-            your left.
-          </p>
-        </div>
-      </li>
-      <li>
-        <div class="flex gap-2">
-          <p class="text-secondary font-medium leading-7">Issue:</p>
-          <p class="text-txt_dark leading-7">Leaking Roof</p>
-        </div>
-      </li>
-      <li>
-        <div class="flex gap-2">
-          <p class="text-secondary font-medium leading-7">Email Address</p>
-          <p class="text-txt_dark leading-7">stefnyorkuma@gmail.com</p>
-        </div>
-
-        <div class="flex gap-2">
-          <p class="text-secondary font-medium leading-7">
-            Name of other Applicant
-          </p>
-          <p class="text-txt_dark leading-7">stefnyorkuma@gmail.com</p>
-        </div>
-      </li>
-      <li>
-        <div class="flex gap-2 items-center">
-          <p class="text-secondary font-medium leading-7">Document</p>
-          <div class="rounded-md py-1.5 px-5 bg-bg1 flex gap-2 justify-center">
-            <svg
-              width="21"
-              height="21"
-              viewBox="0 0 21 21"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g clip-path="url(#clip0_4249_15161)">
-                <path
-                  d="M16.3333 4.66667V16.3333H4.66667V4.66667H16.3333ZM16.3333 3H4.66667C3.75 3 3 3.75 3 4.66667V16.3333C3 17.25 3.75 18 4.66667 18H16.3333C17.25 18 18 17.25 18 16.3333V4.66667C18 3.75 17.25 3 16.3333 3ZM12.2833 10.3833L9.78333 13.6083L8 11.45L5.5 14.6667H15.5L12.2833 10.3833Z"
-                  fill="#323232"
-                />
-              </g>
-              <defs>
-                <clipPath id="clip0_4249_15161">
-                  <rect
-                    width="20"
-                    height="20"
-                    fill="white"
-                    transform="translate(0.5 0.5)"
-                  />
-                </clipPath>
-              </defs>
-            </svg>
-            <p class="font-medium text-sm leading-6 text-txt_dark">
-              IMG.9876.JPG
-            </p>
-          </div>
-        </div>
-      </li>
-      <li>
-        <div class="flex gap-2 items-center">
-          <p class="text-secondary font-medium leading-7">Valid ID</p>
-          <div class="rounded-md py-1.5 px-5 bg-bg1 flex gap-2 justify-center">
-            <svg
-              width="21"
-              height="21"
-              viewBox="0 0 21 21"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g clip-path="url(#clip0_4249_15161)">
-                <path
-                  d="M16.3333 4.66667V16.3333H4.66667V4.66667H16.3333ZM16.3333 3H4.66667C3.75 3 3 3.75 3 4.66667V16.3333C3 17.25 3.75 18 4.66667 18H16.3333C17.25 18 18 17.25 18 16.3333V4.66667C18 3.75 17.25 3 16.3333 3ZM12.2833 10.3833L9.78333 13.6083L8 11.45L5.5 14.6667H15.5L12.2833 10.3833Z"
-                  fill="#323232"
-                />
-              </g>
-              <defs>
-                <clipPath id="clip0_4249_15161">
-                  <rect
-                    width="20"
-                    height="20"
-                    fill="white"
-                    transform="translate(0.5 0.5)"
-                  />
-                </clipPath>
-              </defs>
-            </svg>
-            <p class="font-medium text-sm leading-6 text-txt_dark">
-              IMG.9876.JPG
-            </p>
-          </div>
-        </div>
-      </li>
-      <div class="flex">
-        <status-select :label="'Service Request Status:'" />
+    <div>
+      <div class="flex justify-between">
+        <p
+          class="font-sf font-medium text-[20px] leading-[25px] tracking-[0.5px] font-variant-small-caps text-[#808097]"
+        >
+          LEASE DETAILS
+        </p>
+        <p
+          class="font-sf font-normal text-base leading-7 underline text-[#A00000]"
+        >
+          Terminate Lease
+        </p>
       </div>
-    </ul>
+    </div>
   </modal-component>
 </template>
 
@@ -381,18 +223,28 @@ import StatusSelect from "@/components/StatusSelect.vue";
 import IconSearch from "../../components/icons/IconSearch.vue";
 import Modal from "@/components/Modal.vue";
 import { useUserStore } from "@/store";
-import { FetchLeases } from "@/api/landlord";
+import { FetchLeases, fetchWaitingLeases } from "@/api/landlord";
 export default {
   data() {
     return {
       selected_tab: "tenants",
-      selected_Request: {},
+      selected_lease: {},
       filterOptions: ["Show All"],
       store: useUserStore(),
+      leaseList: [],
+      waitingLeases: [],
+      ContractRequestType: ["Renewal", "Termination", "Sublease"],
+      ContractRequestStatus: {
+        Pending: 1,
+        Approved: 2,
+        Rejected: 3,
+        Terminated: 4,
+      },
     };
   },
   created() {
     this.handleFetchLeases();
+    this.handleFetchWailtingLeases();
   },
   components: {
     "search-icon": IconSearch,
@@ -405,7 +257,7 @@ export default {
     },
     openModal(request) {
       this.$refs.viewRequestModal.openModal();
-      this.selected_Request = request;
+      this.selected_lease = request;
     },
     onModalClose() {
       console.log("Modal was closed");
@@ -416,11 +268,28 @@ export default {
         page: 1,
         query: "",
       };
-      FetchLeases(this.store.userProfile.adminUserID, query).then(
+
+      FetchLeases(this.store.userProfile.referenceID, query).then(
         (response) => {
           console.log(response, "resposne");
-          if (response.properties) {
-            this.propertyList = response.properties.items;
+          if (response.responseCode == "00") {
+            this.leaseList = response.agreements;
+          } else handleError(response);
+        }
+      );
+    },
+
+    handleFetchWailtingLeases() {
+      const query = {
+        size: 50,
+        page: 1,
+        query: "",
+      };
+
+      fetchWaitingLeases(this.store.userProfile.referenceID, query).then(
+        (response) => {
+          if (response.responseCode == "00") {
+            this.waitingLeases = response.serviceRequests.items;
           } else handleError(response);
         }
       );

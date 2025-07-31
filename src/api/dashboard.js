@@ -12,7 +12,17 @@ export const dashboard = async (payload) => {
 
 export const AccomodationApplications = async () => {
   try {
-    const response = await postApigetApi("Dashboard/AccommodationApplications");
+    const response = await getApi("Dashboard/AccommodationApplications");
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const MyTenants = async () => {
+  try {
+    const response = await getApi("Dashboard/MyTenants");
+    return response.data;
   } catch (error) {
     console.log(error);
   }

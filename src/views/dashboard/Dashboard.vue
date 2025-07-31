@@ -470,7 +470,8 @@ import Table from "@/components/Table.vue";
 import { h } from "vue";
 import { LoadingOutlined } from "@ant-design/icons-vue";
 import { FetchServiceRequests } from "@/api/serviceRequest";
-import { AccomodationApplications } from "@/api/dashboard";
+import { AccomodationApplications, MyTenants } from "@/api/dashboard";
+
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default {
@@ -494,6 +495,8 @@ export default {
       loading: {
         serviceRequestCompleted: false,
         serviceOngoingCompleted: false,
+        completedaccomodationApplication: false,
+        tenants: false,
       },
       serviceRequests: [],
       ongoingRequests: [],
@@ -549,6 +552,8 @@ export default {
   },
   created() {
     this.handleFetchServiceRequest();
+    AccomodationApplications();
+    MyTenants();
   },
   methods: {
     handleFetchServiceRequest() {
@@ -569,6 +574,26 @@ export default {
           );
         } else handleError(response);
       });
+    },
+
+    handleAccomodationApplication() {
+      AccomodationApplications()
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+
+    handleTenants() {
+      MyTenants()
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };

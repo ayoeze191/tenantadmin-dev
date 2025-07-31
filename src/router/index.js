@@ -28,6 +28,7 @@ import Property from "@/views/properties/Property.vue";
 import Amenities from "@/views/amenities/Amenities.vue";
 import RentPayment from "../views/payments/RentPayment.vue";
 import UtilityPayment from "../views/payments/UtilityPayment.vue";
+import Details from "../views/tenancy-applications/Details.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -92,6 +93,11 @@ const router = createRouter({
           path: "/applications",
           name: "admin-applications",
           component: Applications,
+        },
+        {
+          path: "/applications/:id",
+          name: "details",
+          component: Details,
         },
         {
           path: "/properties",

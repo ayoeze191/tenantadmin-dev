@@ -1,28 +1,5 @@
 <template>
   <div class="bg-neutral py-5 px-10 w-full overflow-y-scroll h-screen pb-40">
-    <!-- <ul class="tab">
-      <li
-        class="tab_item"
-        :class="{ selected_tab: selected_tab === 'Pending' }"
-        @click="toggleTabs('Pending')"
-      >
-        Pending Requests
-      </li>
-      <li
-        class="tab_item"
-        :class="{ selected_tab: selected_tab === 'Completed' }"
-        @click="toggleTabs('Completed')"
-      >
-        Completed Requests
-      </li>
-      <li
-        class="tab_item"
-        :class="{ selected_tab: selected_tab === 'all' }"
-        @click="toggleTabs('all')"
-      >
-        All Requests
-      </li>
-    </ul> -->
     <h1 class="text-[24px] font-semibold text-txt_dark font-sf">ALL REQUEST</h1>
     <section class="list_container mt-[20px] text-secondary" style="color: red">
       <div

@@ -14,7 +14,7 @@
     </section>
     <ul class="w-full flex flex-wrap gap-4 py-10">
       <li
-        v-for="items in dummyList"
+        v-for="(items, index) in dummyList"
         :key="items"
         class="py-3.5 px-2.5 border border-br1 bg-neutral_light rounded-[5px] w-full max-w-64 flex flex-col gap-[25px] text-center"
       >
@@ -45,7 +45,10 @@
             <p class="text-txt_dark text-xs leading-3.5">Nigerian</p>
           </li>
         </ul>
-        <button class="btn btn_primary text-base py-[9px] rounded-md">
+        <button
+          class="btn btn_primary text-base py-[9px] rounded-md"
+          @click="() => goto(index)"
+        >
           View Full Details
         </button>
       </li>
@@ -57,12 +60,14 @@
 import StatusSelect from "@/components/StatusSelect.vue";
 import IconSearch from "../../components/icons/IconSearch.vue";
 import Modal from "@/components/Modal.vue";
+import { useRouter } from "vue-router";
 export default {
   name: "Applications",
   data() {
     return {
       selected_tab: "pending",
       selected_Request: {},
+      router: useRouter(),
       dummyList: [
         "https://plus.unsplash.com/premium_photo-1688572454849-4348982edf7d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8fDA%3D",
         "https://images.unsplash.com/photo-1667053508464-eb11b394df83?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fHByb2ZpbGUlMjBwaWN0dXJlfGVufDB8fDB8fHww",
@@ -81,6 +86,9 @@ export default {
     "modal-component": Modal,
   },
   methods: {
+    goto(id) {
+      this.router.push(`/applications/${id}`);
+    },
     toggleTabs(value) {
       this.selected_tab = value;
     },
