@@ -30,7 +30,7 @@
             >
               <span
                 class="text-lrge h-full font-[600] font-sf leading-[100%] text-[24px] md:text-[20px] sm:text-[18px]"
-                >15</span
+                >{{ AccomodationApplicationsCount }}</span
               >
               <span
                 class="text-[14px] mb-[2px] leading-[100%] md:text-[13px] sm:text-[12px]"
@@ -87,7 +87,7 @@
             >
               <span
                 class="text-lrge font-[600] font-sf m-0 p-0 leading-[100%] text-[24px] md:text-[20px] sm:text-[18px]"
-                >1045</span
+                >{{ tenantsCounts }}</span
               >
             </p>
           </section>
@@ -485,7 +485,8 @@ export default {
   data() {
     return {
       progress: 50,
-      AccomodationApplications: [],
+      AccomodationApplicationsCount: 0,
+      tenantsCounts: 0,
       customIcon: h(LoadingOutlined, {
         style: {
           fontSize: "15px",
@@ -552,8 +553,8 @@ export default {
   },
   created() {
     this.handleFetchServiceRequest();
-    AccomodationApplications();
-    MyTenants();
+    this.handleAccomodationApplication();
+    this.handleTenants();
   },
   methods: {
     handleFetchServiceRequest() {
@@ -579,7 +580,7 @@ export default {
     handleAccomodationApplication() {
       AccomodationApplications()
         .then((response) => {
-          console.log(response);
+          this.AccomodationApplicationsCount = response.count;
         })
         .catch((err) => {
           console.log(err);
@@ -589,7 +590,7 @@ export default {
     handleTenants() {
       MyTenants()
         .then((response) => {
-          console.log(response);
+          this.tenantsCounts = response.count;
         })
         .catch((err) => {
           console.log(err);
