@@ -5,13 +5,39 @@
 @tailwind utilities;
 
 @layer base {
+
+ @layer base {
   @font-face {
-    font-family: "SF Compact Text";
-    src: url("./assets/fonts/SFCompactText-Regular.woff") format("woff2"),
-      url("./assets/fonts/SFCompactText-Regular.woff") format("woff");
+    font-family: 'SF Compact Text';
+    src: url('./assets/fonts/fonnts.com-SF_Compact_Rounded_Regular.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
   }
+
+  @font-face {
+    font-family: 'SF Compact Text';
+    src: url('./assets/fonts/fonnts.com-SF_Compact_Text_Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'SF Compact Text';
+    src: url('./assets/fonts/fonnts.com-SF_Compact_Text_Semibold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'SF Compact Text';
+    src: url('./assets/fonts/SFCompactText-Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+  }
+}
+
+
+
   * {
     font-family: "SF Compact Text";
   }

@@ -1,0 +1,539 @@
+          <div v-if="currentStep === 2">
+            <div
+              v-if="form.unitTypeCounts.length !== 0"
+              class="flex items-center justify-between"
+            >
+              <div class="flex items-center justify-between">
+                <h4 class="text-base font-bold text-gray-900">
+                  
+                  {{ form.unitTypeCounts[currentUnitTypeIndex].label }}
+                </h4>
+                <!-- <span class="text-sm text-gray-600">
+                  Quantity: {{ form.unitTypeDetails[currentUnitTypeIndex].quantity }}
+                </span> -->
+              </div>
+              <div class="flex items-center gap-2 mb-2">
+                <a-button
+                  type="text"
+                  :disabled="currentUnitTypeIndex === 0"
+                  @click="
+                    () => currentUnitTypeIndex > 0 && currentUnitTypeIndex--
+                  "
+                  class="flex items-center gap-1"
+                  style="color: #404164"
+                >
+                  <LeftOutlined style="font-size: 16px" />
+                  Previous
+                </a-button>
+                <span class="text-base text-txt_dark leading-[28px]">
+                  <span class="font-semibold underline text-txt_dark">{{
+                    currentUnitTypeIndex + 1
+                  }}</span>
+                  of {{ form.unitTypeCounts.length }}
+                </span>
+                <a-button
+                  type="text"
+                  :disabled="
+                    currentUnitTypeIndex === form.unitTypeCounts.length - 1
+                  "
+                  @click="
+                    () =>
+                      currentUnitTypeIndex < form.unitTypeCounts.length - 1 &&
+                      currentUnitTypeIndex++
+                  "
+                  class="flex items-center gap-1"
+                  style="color: #404164"
+                >
+                  Next
+                  <RightOutlined style="font-size: 16px" />
+                </a-button>
+              </div>
+            </div>
+            <div class="bg-white px-8 py-[16px] rounded-xl">
+              <a-form :model="form" ref="unitInfoFormRef" layout="vertical">
+                {{ console.log(form.unitTypeCounts) }}
+                <div
+                  v-if="form.unitTypeCounts.length === 0"
+                  class="text-center py-8"
+                >
+                  <p class="text-gray-500">
+                    No unit types selected. Please go back to Step 2 and select
+                    unit types.
+                  </p>
+                </div>
+
+                <div v-else>
+                  <!-- Current Unit Type Form -->
+                  <div>
+                    <div class="flex gap-4">
+                      <a-form-item
+                        :label="`Rent (per month)`"
+                        :name="[
+                          'unitTypeCounts',
+                          currentUnitTypeIndex,
+                          'rentPerMonth',
+                        ]"
+                        required
+                        class="w-full form-labels"
+                      >
+                        <a-input-number
+                          v-model:value="
+                            form.unitTypeCounts[currentUnitTypeIndex]
+                              .rentPerMonth
+                          "
+                          style="width: 100%"
+                          min="0"
+                          size="large"
+                          placeholder=""
+                        />
+                      </a-form-item>
+
+                      <a-form-item
+                        :label="`Security Deposit`"
+                        :name="[
+                          'unitTypeCounts',
+                          currentUnitTypeIndex,
+                          'securityDeposit',
+                        ]"
+                        required
+                        class="w-full form-labels"
+                      >
+                        <a-input-number
+                          v-model:value="
+                            form.unitTypeCounts[currentUnitTypeIndex]
+                              .securityDeposit
+                          "
+                          style="width: 100%"
+                          min="0"
+                          size="large"
+                          placeholder=""
+                        />
+                      </a-form-item>
+                    </div>
+                  </div>
+
+                  <a-form-item
+                    label="• Add Amenities"
+                    name="amenities"
+                    class="amenities-form"
+                    :label-col="{
+                      style: {
+                        color: '#808097',
+                        fontSize: '20px',
+                        fontWeight: '400',
+                      },
+                    }"
+                  >
+                    <a-checkbox-group
+                      v-model:value="form.unitTypeCounts[currentUnitTypeIndex].propertyAmenities"
+                      class="flex flex-col gap-2"
+                    >
+                      <a-checkbox
+                        v-for="option in amenityOptions"
+                        :key="option.value"
+                        :value="option.value"
+                        class="flex items-center gap-2"
+                      >
+                        <span class="text-[20px] text-[#808097]">{{
+                          option.label
+                        }}</span>
+                      </a-checkbox>
+                    </a-checkbox-group>
+                    
+                  
+                  </a-form-item>
+                  <p
+                    class="flex gap-[20px] items-center cursor-pointer leading-[100%] text-[#C7C7C7]"
+                    @click="showAmenitiesModal = true"
+                  >
+                    <span><PlusOutlined /></span>
+                    <p class="text-[#C7C7C7] text-[20px] m-0">Add amenity</p>
+                </p>
+                 <a-modal
+        :visible="showAmenitiesModal"
+      :closable="false"
+      :bodyStyle="{ padding: '0' }"
+        style="padding: 0;"
+        :footer="null"
+        :width="768"
+        wrap-class-name="custom-modal"
+      >
+       <template #title>
+        <div
+          class="flex items-center justify-between border-b border-[#C7C7C7] py-[12px]"
+        >
+          <div
+            class="cursor-pointer flex items-center gap-[8px] text-txt_dark m-0 text-[18px] font-medium"
+            @click="showAmenitiesModal = false"
+          >
+            <ArrowLeftOutlined @click="goBack" class="text-[18px] m-0" />
+            Back
+          </div>
+          <span class="text-[2rem] m-0 text-[#404164]">Add Amenities</span>
+          <span></span>
+        </div>
+      </template>
+        <a-form
+          ref="formRef"
+          :model="form"
+          :rules="rules"
+          layout="vertical"
+          @finish="handleSubmit"
+          class="mt-[32px] amenitiymodalform"
+        >
+          <!-- Amenity Name -->
+          <a-form-item label="Name" name="name" required class="mb-[32px]">
+            <a-input
+              v-model:value="form.amenityname"
+              placeholder="Amenity"
+              size="large"
+              class="!rounded-lg "
+            />
+          </a-form-item>
+
+        
+
+          <!-- Image Upload -->
+          <!-- <a-form-item label="Image Upload" name="image" required>
+            <div class="space-y-4">
+              Image Preview
+               <div v-if="imagePreview" class="relative">
+                <img
+                  :src="imagePreview"
+                  alt="Preview"
+                  class="w-full h-48 object-cover rounded-lg border border-gray-200"
+                />
+                <a-button
+                  type="text"
+                  danger
+                  size="small"
+                  class="absolute top-2 right-2 bg-white/80 rounded-full"
+                  @click="removeImage"
+                >
+                  <template #icon>
+                    <svg
+                      class="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12"
+                      ></path>
+                    </svg>
+                  </template>
+                </a-button>
+              </div> 
+              <div
+                v-if="!imagePreview"
+                class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors cursor-pointer"
+                @click="triggerFileInput"
+                @dragover.prevent
+                @drop.prevent="handleDrop"
+              >
+                <input
+                  ref="fileInput"
+                  type="file"
+                  accept="image/*"
+                  style="display: none"
+                  @change="handleFileSelect"
+                />
+                <div class=" flex justify-center flex-col items-center gap-4">
+                 <svg width="51" height="52" viewBox="0 0 51 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M33.5 15.3333H33.5267M1.5 36.6667L14.8333 23.3333C17.308 20.952 20.3587 20.952 22.8333 23.3333L36.1667 36.6667M30.8333 31.3333L33.5 28.6667C35.9747 26.2853 39.0253 26.2853 41.5 28.6667L49.5 36.6667M1.5 10C1.5 7.87827 2.34286 5.84344 3.84315 4.34315C5.34344 2.84286 7.37827 2 9.5 2H41.5C43.6217 2 45.6566 2.84286 47.1569 4.34315C48.6571 5.84344 49.5 7.87827 49.5 10V42C49.5 44.1217 48.6571 46.1566 47.1569 47.6569C45.6566 49.1571 43.6217 50 41.5 50H9.5C7.37827 50 5.34344 49.1571 3.84315 47.6569C2.34286 46.1566 1.5 44.1217 1.5 42V10Z" stroke="#808097" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+                  <div>
+                    <p class="text-sm font-medium text-[#808097]">
+                      Upload or drag an image <br/> here
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a-form-item> -->
+  <!-- Keywords -->
+          <a-form-item label="Keywords"  class="form-label text-[#404164] leading-[100%] font-sf mb-8" name="amenitiesKeyWords" required>
+            <a-input
+              v-model:value="form.amenitiesKeyWords"
+              placeholder="e.g., pool, swimming, fitness"
+              size="large"
+              class="!rounded-lg"
+            />
+            <template #help>
+              <span class="text-xs text-gray-500 "
+                >Keywords help in searching and categorizing amenities</span
+              >
+            </template>
+          </a-form-item>
+          <!-- Form Actions -->
+          <div class="">
+            <button
+              html-type="submit"
+              :loading="submitting"
+              @click="HandleCreateAmenities"
+              class="!bg-primary text-white !border-primary flex items-center w-full justify-center py-3"
+            >
+              <span v-if="submitting">Saving...</span>
+              <span v-else>{{
+             "Add Amenity"
+              }}</span>
+            </button>
+          </div>
+        </a-form>
+      </a-modal>
+
+                  <a-form-item
+                    :label="``"
+                    :name="[
+                      'unitTypeCounts',
+                      currentUnitTypeIndex,
+                      'unitImages',
+                    ]"
+                    :validate-status="
+                      form.unitTypeCounts[currentUnitTypeIndex].unitImages
+                        .length === 0
+                        ? 'error'
+                        : ''
+                    "
+                    :help="
+                      form.unitTypeCounts[currentUnitTypeIndex].unitImages
+                        .length === 0
+                        ? 'At least one image is required'
+                        : ''
+                    "
+                    required
+                  >
+                    <template #label>
+                      Unit Images -
+                      {{ form.unitTypeCounts[currentUnitTypeIndex].label }}
+                      <span style="color: red">*</span>
+                    </template>
+                    <CustomImageUpload
+                      v-model="
+                        form.unitTypeCounts[currentUnitTypeIndex].unitImages
+                      "
+                    />
+                  </a-form-item>
+                </div>
+              </a-form>
+            </div>
+          </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <!-- <label class="block text-txt_dark2 text-lg mb-4 font-semibold"
+              >Unit Type(s)</label
+            >
+            <div
+              v-for="(type, idx) in unitTypeOptions"
+              :key="type.value"
+              class="flex items-center justify-between py-2 border-b last:border-b-0"
+            >
+              <span class="text-txt_dark text-base">{{ type.label }}</span>
+              <div class="flex items-center gap-2">
+                <a-button
+                  size="small"
+                  class="border-none text-[#404164]"
+                  shape="circle"
+                  @click="incrementUnitType(type.value, type.label)"
+                  :disabled="disableIncrementButton()"
+                  >+</a-button
+                >
+                <span class="text-gray-700">{{
+                   form.unitTypeCounts.find((unit) => unit.unitType == type.value) ? form.unitTypeCounts.find((unit) => unit.unitType == type.value).quantity : 0
+                }}</span>
+                <a-button
+                  size="small"
+                  class="border-none text-[#404164]"
+                  shape="circle"
+
+                  @click="decrementUnitType(type.value)"
+                  >-</a-button
+                >
+              </div>
+            </div> -->
+
+
+
+
+
+
+
+
+
+
+
+
+               <!-- <div class="flex gap-2">
+            <span>💰</span>
+            <p class="text-txt_dark text-sm leading-4">
+              {{ form.unitTypeDetails.length > 0 ? formatPrice(form.unitTypeDetails[0].rentPerMonth) : (form.rent ? formatPrice(form.rent) : 'Rent') }}
+            </p>
+                    </div> -->
+            <!-- <div class="flex gap-2">
+            <span>🛏️</span>
+            <p class="text-txt_dark text-sm leading-4">
+              {{ getUnitTypeSummary() }}
+            </p>
+                    </div> -->
+            <!-- <div class="flex gap-2">
+            <span>⭐</span>
+            <p
+              class="text-txt_dark text-sm leading-4"
+              v-html="getAmenitiesPreview()"
+            ></p>
+                </div>
+          -->
+
+
+
+
+                <!-- <a-form-item label="Select Landlord" name="landlordId" required class="form-labels" v-if="store.userProfile.role.name !== 'LandLord'">
+                <a-select
+                  v-model:value="form.landlordId"
+                  placeholder="Search and select a landlord"
+                  size="large"
+                  show-search
+                  :filter-option="false"
+                  :loading="landlordLoading"
+                  :options="landlordOptions"
+                  @search="onLandlordSearch"
+                  @popup-scroll="onLandlordScroll"
+                  :field-names="{ label: 'label', value: 'value' }"
+                  :not-found-content="
+                    landlordLoading ? 'Loading...' : 'No landlords found'
+                  "
+                >
+                  <template #option="{ label, value }">
+                    <div class="flex flex-col">
+                      <span class="font-medium"
+                        >{{ label }}</span
+                      >
+                    </div>
+                  </template>
+                  <template #suffixIcon>
+                    <a-spin v-if="landlordLoading" size="small" />
+                  </template>
+                </a-select>
+              </a-form-item>
+               -->
+                <!-- <a-form-item
+                label="Property Name"
+                name="name"
+                required
+                class="form-labels"
+              >
+                <a-input
+                  v-model:value="form.name"
+                  placeholder="Enter property name"
+                  size="large"
+                />
+              </a-form-item>
+
+              <a-form-item
+                label="Property Address"
+                name="address"
+                required
+                class="form-labels"
+              >
+                <a-input
+                  v-model:value="form.address"
+                  placeholder="Enter address"
+                  size="large"
+                />
+              </a-form-item> -->
+
+                <!-- <div class="flex gap-4">
+                <a-form-item
+                  label="Zip Code"
+                  name="zipCode"
+                  required
+                  class="flex-1 form-labels"
+                >
+                  <a-input
+                    v-model:value="form.zipCode"
+                    placeholder="Zip code"
+                    size="large"
+                  />
+                </a-form-item>
+                <a-form-item
+                  label="Province"
+                  name="province"
+                  required
+                  class="flex-1 form-labels"
+                >
+                  <a-input
+                    v-model:value="form.province"
+                    placeholder="Province"
+                    size="large"
+                  />
+                </a-form-item>
+              </div> -->
+
+                <!-- <a-form-item
+                label="Property Type"
+                name="propertyType"
+                required
+                class="form-labels"
+              >
+                <a-select
+               @change="handlePropertyTypeChange"
+                  v-model:value="form.propertyType"
+                  placeholder="Select property type"
+                  :options="propertyTypeOptions"
+                  size="large"
+                />
+              </a-form-item> -->
+
+                <!-- <a-form-item
+                label="Description"
+                name="description"
+                required
+                class="form-labels"
+              >
+                <a-textarea
+                  v-model:value="form.description"
+                  placeholder="Description"
+                  size="large"
+                />
+              </a-form-item> -->
+
+                <!-- <a-form-item
+                label="Total Number of Units"
+                name="units"
+                required
+                class="form-labels"
+              >
+                <a-input-number
+                  :disabled="form.propertyType == 0"
+                  v-model:value="form.units"
+                  style="width: 100%"
+                  min="1"
+                  size="large"
+                />
+              </a-form-item> -->

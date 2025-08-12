@@ -211,7 +211,9 @@
       </div>
     </div>
     <div class="mt-[50px] flex flex-col items-center">
-      <p class="text-[14px] font-sf font-medium underline">See Tenants Info</p>
+      <router-link to="/" class="text-[14px] font-sf font-medium underline"
+        >See Tenant Info</router-link
+      >
       <div class="flex gap-2 mt-[30px]">
         <button
           class="border-[#29C354] text-[#29C354] text-[20px] px-[76px] py-[13px] rounded-[5px] bg-[#EDFFF7] border-[1px] border-solid"
