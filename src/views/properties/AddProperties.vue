@@ -477,9 +477,10 @@
 
          <div v-if="currentStep3 == 2" class="">
                <p class="text-[#000000] text-[18px] font-sf leading-[100%]">
-              Sorem ipsum dolor sit amet, consectetur adipiscing elit
+              {{form.rental_unit == "others" ? "Define What You are Listing " :"Sorem ipsum dolor sit amet, consectetur adipiscing elit"}}
             </p>
             <a-form class="bg-white p-6 rounded-xl flex flex-col gap-2">
+              <div v-if="form.rental_unit !== 'others'">
                 <div class="flex gap-4">
                   <a-form-item
                   name="Security Deposit"
@@ -652,6 +653,7 @@
                 </a-checkbox-group>
                   </div> 
                   </a-form-item>
+                  </div>
 
                   <a-form-item>
                     <p class="form-labels text-base mb-4 font-light leading-[100%] font-sf">Description</p>
@@ -971,6 +973,18 @@ const loading = ref(false);
 const error = ref(null);
 
 const form = reactive({
+  packingType: "",
+  pets: "",
+  heating:"",
+  laundry: "",
+  ac_type:"",
+  lease_type: "",
+  unit_type:"",
+  count:"",
+  rent_price:"",
+  availability_date:"",
+  occupancy_status:"",
+
   rental_unit:null,
   landlordId: null,
   name: "",
@@ -1108,7 +1122,9 @@ const DisableNext = () => {
 // }
 
 const nextOrSubmit = async () => {
+  // makes sure the steps don't go beyond the last step
   if(currentStep.value < 3){
+    // Continue Triggered after first step
 if (currentStep.value === 0) {
     try {
       // await propertyForm.validate();
@@ -1116,16 +1132,52 @@ if (currentStep.value === 0) {
     } catch (err) {
       return;
     }
-  } else if (currentStep.value === 1) {
+  } 
+  // Continue Triggered after second step
+  else if (currentStep.value === 1) {
+    // 
       if(form.rental_unit === "apartment"){
+        // show first form is rental unit is apartment
         currentStep3.value = 0;
+      }
+      else if(form.rental_unit == "others"){
+        currentStep3.value = 2
       }
       else{
         currentStep3.value = 1;
+        
       }
     currentStep.value++;
   }
+  // 
+  // else if (currentStep.value === 3) {
+  //   // Validate the form before submission
+  //   try {
+  //     // await propertyForm.validate();
+  //     loading.value = true;
+  //     const payload = {
+  //       ...form,
+  //       images: fileList.value.map((file) => file.url || file.image),
+  //       unitTypeCounts: form.unitTypeCounts.map((count, index) => ({
+  //         unitTypeId: optionsStore.unitTypes[index].unitTypeId,
+  //         count: count,
+  //       })),
+  //     };
+  //     console.log("Payload to create property:", payload);
+  //     const response = await CreateNewProperty(payload);
+  //     console.log("Response from property creation:", response);
+  //     message.success("Property created successfully!");
+  //     router.push({ name: "Properties" });
+  //   } catch (err) {
+  //     console.error("Error creating property:", err);
+  //     message.error("Failed to create property. Please try again.");
+  //   } finally {
+  //     loading.value = false;
+  //   }
+  // }
+  // continue Triggered after third step
   else if (currentStep.value === 2) {
+    // checks if it's the first step of the third step
     if(currentStep3.value == 0){
       if(form.formType == "Bulk Upload"){
         currentStep3.value = 2
