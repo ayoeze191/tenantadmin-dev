@@ -39,7 +39,7 @@
             <div class="bg-white p-6 rounded-xl">
               <a-form
                 :model="form"
-                :rules="rules"
+                :rules="stepOneRule"
                 ref="propertyFormRef"
                 layout="vertical"
               >
@@ -79,7 +79,7 @@
             <p class="text-[#000000] text-[18px] font-sf leading-[100%]">
               Tell us about your Property
             </p>
-            <a-form class="bg-white p-6 rounded-xl flex flex-col gap-2">
+            <a-form class="bg-white p-6 rounded-xl flex flex-col gap-2" :rules="rules" :model="form">
               <a-form-item name="name" >
                 <div class=" form-labels text-lg mb-4 font-light">
                   Property Name
@@ -158,7 +158,7 @@
                <p class="text-[#000000] text-[18px] font-sf leading-[100%]">
               Define what you are Listing
             </p>
-              <a-form class="bg-white p-6 rounded-xl flex flex-col gap-2">
+              <a-form class="bg-white p-6 rounded-xl flex flex-col gap-2" :model="form" >
             
                 <p v-if="form.formType == 'Bulk Upload'" class="form-labels text-base mb-4 font-normal leading-[100%] font-sf">
                   Add Apartment
@@ -276,7 +276,7 @@
                <p class="text-[#000000] text-[18px] font-sf leading-[100%]">
               Set Up Building And Unit Types
             </p>
-            <a-form class="bg-white p-6 rounded-xl flex flex-col gap-2">
+            <a-form class="bg-white p-6 rounded-xl flex flex-col gap-2" :rules="setuprules" :model="form">
               <a-form-item class="form-labels">
                 <div class="form-labels text-base mb-4 font-regular leading-[100%] font-sf">
                   Rental Unit
@@ -343,7 +343,7 @@
               </div>
               <div class="flex gap-4">
                 <a-form-item
-                  name="Rent Price"
+                  name="unit_type"
                   required
                   class="flex-1 form-labels"
                 >
@@ -351,13 +351,13 @@
                     Unit Type
                   </div>
                   <a-input
-                    v-model:value="form.zipCode"
-                    placeholder="Zip code"
+                    v-model:value="form.unit_type"
+                    placeholder="Unit Type"
                     size="large"
                   />
                 </a-form-item>
                 <a-form-item
-                  name="Security Deposit"
+                  name="count"
                   required
                   class="flex-1 form-labels"
                 >
@@ -365,7 +365,7 @@
                     Count
                   </div>
                   <a-input
-                    v-model:value="form.province"
+                    v-model:value="form.count"
                     placeholder="Province"
                     size="large"
                   />
@@ -373,7 +373,7 @@
               </div>
               <div class="flex gap-4">
                 <a-form-item
-                  name="Rent Price"
+                  name="rent_price"
                   required
                   class="flex-1 form-labels"
                 >
@@ -381,13 +381,13 @@
                     Rent Price
                   </div>
                   <a-input
-                    v-model:value="form.zipCode"
-                    placeholder="Zip code"
+                    v-model:value="form.rent_price"
+                    placeholder="Rent Price"
                     size="large"
                   />
                 </a-form-item>
                 <a-form-item
-                  name="Security Deposit"
+                  name="security_deposit"
                   required
                   class="flex-1 form-labels"
                 >
@@ -395,8 +395,8 @@
                     Security Deposit
                   </div>
                   <a-input
-                    v-model:value="form.province"
-                    placeholder="Province"
+                    v-model:value="form.security_deposit"
+                    placeholder="Security Deposit"
                     size="large"
                   />
                 </a-form-item>
@@ -404,7 +404,7 @@
 
               <div class="flex gap-4">
                 <a-form-item
-                  name="Availability Date"
+                  name="availability_date"
                   required
                   class="flex-1 form-labels"
                 >
@@ -412,14 +412,14 @@
                     Availability Date
                   </div>
                   <a-input
-                    v-model:value="form.zipCode"
-                    placeholder="Zip code"
+                    v-model:value="form.availability_date"
+                    placeholder="Availability Date"
                     size="large"
                     type="Date"
                   />
                 </a-form-item>
                 <a-form-item
-                  name="Security Deposit"
+                  name="occupancy_status"
                   required
                   class="flex-1 form-labels"
                 >
@@ -428,9 +428,9 @@
                   </div>
                   <a-select
                     ref="select"
-                    v-model:value="value1"
+                    v-model:value="form.occupancy_status"
                     style="width: 200px"
-                    placeholder="Select Rental Unit"
+                    placeholder="Select Occupancy Status"
                     class="w-full"
                     @focus="focus"
                   >
@@ -479,11 +479,11 @@
                <p class="text-[#000000] text-[18px] font-sf leading-[100%]">
               {{form.rental_unit == "others" ? "Define What You are Listing " :"Sorem ipsum dolor sit amet, consectetur adipiscing elit"}}
             </p>
-            <a-form class="bg-white p-6 rounded-xl flex flex-col gap-2">
+            <a-form class="bg-white p-6 rounded-xl flex flex-col gap-2" :rules="lastStepThreeRules" :model="form"> 
               <div v-if="form.rental_unit !== 'others'">
                 <div class="flex gap-4">
                   <a-form-item
-                  name="Security Deposit"
+                  name="packingType"
                   required
                   class="flex-1"
                 >
@@ -492,7 +492,7 @@
                   </div>
                   <a-select
                     ref="select"
-                    v-model:value="value1"
+                    v-model:value="form.packingType"
                     style="width: 200px"
                     placeholder="Select Rental Unit"
                     class="w-full h-[52px]"
@@ -514,7 +514,7 @@
                   </a-select>
                 </a-form-item>
                 <a-form-item
-                  name="Rent Price"
+                  name="pets"
                   required
                   class="flex-1 form-labels"
                 >
@@ -523,7 +523,7 @@
                   </div>  
                     <a-select
                     ref="select"
-                    v-model:value="value1"
+                    v-model:value="form.pets"
                     style="width: 200px"
                     placeholder="Select Rental Unit"
                     class="w-full h-[52px]"
@@ -545,7 +545,7 @@
 
                 <div class="flex gap-4">
                   <a-form-item
-                  name="Security Deposit"
+                  name="heating"
                   required
                   class="flex-1 form-labels"
                 >
@@ -554,7 +554,7 @@
                   </div>
                   <a-select
                     ref="select"
-                    v-model:value="value1"
+                    v-model:value="form.heating"
                     style="width: 200px"
                     placeholder="Select Rental Unit"
                     class="w-full h-[52px]"
@@ -573,7 +573,7 @@
                   </a-select>
                 </a-form-item>
                 <a-form-item
-                  name="Rent Price"
+                  name="ac_type"
                   required
                   class="flex-1 form-labels"
                 >
@@ -582,7 +582,7 @@
                   </div>  
                     <a-select
                     ref="select"
-                    v-model:value="value1"
+                    v-model:value="form.ac_type"
                     style="width: 200px"
                     placeholder="Select Rental Unit"
                     class="w-full h-[52px]"
@@ -600,7 +600,7 @@
                 </a-form-item>
               </div>
                <a-form-item
-                  name="Rent Price"
+                  name="laundry"
                   required
                   class="flex-1 form-labels"
                 >
@@ -609,7 +609,7 @@
                   </div>  
                     <a-select
                     ref="select"
-                    v-model:value="value1"
+                    v-model:value="form.laundry"
                     style="width: 200px"
                     placeholder="Select Rental Unit"
                     class="w-full h-[52px]"
@@ -624,13 +624,13 @@
                   </a-select>
                 </a-form-item>
                    <a-form-item
-                  name="Rent Price"
+                  name="lease_type"
                   required
                   class="flex-1 form-labels"
                 >
                   <div class="form-labels text-base mb-4 font-light leading-[100%] font-sf">
                     Lease Type Allowed
-                     <a-checkbox-group class="grid grid-cols-1 gap-5">
+                     <a-checkbox-group class="grid grid-cols-1 gap-5" v-model:value="form.lease_type">
                   <a-checkbox
                     key="Yearly Lease"
                     value="Yearly Lease"
@@ -655,11 +655,11 @@
                   </a-form-item>
                   </div>
 
-                  <a-form-item>
+                  <a-form-item name="description">
                     <p class="form-labels text-base mb-4 font-light leading-[100%] font-sf">Description</p>
                     <a-textarea
                      class="p-[18px]"
-      v-model:value="value2"
+      v-model:value="form.description"
       placeholder="Describe your property..."
       :auto-size="{ minRows: 5, maxRows: 5 }"
     />
@@ -984,6 +984,7 @@ const form = reactive({
   rent_price:"",
   availability_date:"",
   occupancy_status:"",
+  security_deposit:"",
 
   rental_unit:null,
   landlordId: null,
@@ -1062,17 +1063,37 @@ onMounted(async () => {
 });
 
 const rules = {
-  landlordId: [{ required: true, message: "Landlord is required" }],
   name: [{ required: true, message: "Property name is required" }],
   address: [{ required: true, message: "Address is required" }],
   zipCode: [{ required: true, message: "Zip code is required" }],
   province: [{ required: true, message: "Province is required" }],
-  propertyType: [{ required: true, message: "Property type is required" }],
   description: [{ required: true, message: "Description is required" }],
-  units: [{ required: true, message: "Total number of units is required" }],
-  images: [{ required: true, message: "At least one image is required" }],
+  city: [{ required: true, message: "City is required" }],
+};
+const setuprules = {
+  unit_type: [{ required: true, message: "Unit type is required" }],
+  count: [{ required: true, message: "Count is required" }],
+  rent_price: [{ required: true, message: "Rent price is required" }],
+  availability_date: [{ required: true, message: "Availability date is required" }],
+  occupancy_status: [{ required: true, message: "Occupancy status is required" }],
+  security_deposit: [{ required: true, message: "Security deposit is required" }],
+  // packingType: [{ required: true, message: "Packing type is required" }],
+  // pets: [{ required: true, message: "Pets is required" }],
+  // heating: [{ required: true, message: "Heating is required" }],  
+}
+const stepOneRule = {
+  rental_unit: [{ required: true, message: "Rental unit type is required" }],
 };
 
+const lastStepThreeRules = {
+  packingType: [{ required: true, message: "Packing type is required" }],
+  pets: [{ required: true, message: "Pets is required" }],
+  heating: [{ required: true, message: "Heating is required" }],
+  laundry: [{ required: true, message: "Laundry is required" }],
+  ac_type: [{ required: true, message: "AC type is required" }],
+  lease_type: [{ required: true, message: "Lease type is required" }],
+  description: [{ required: true, message: "Description is required" }],
+}
 const fileList = ref([]);; // Cache for uploaded image URLs
 
 // Landlord functions
@@ -1112,6 +1133,23 @@ const DisableNext = () => {
     if (form.name === "" || form.address === "" || form.zipCode === "" || form.province === "" ||  form.city === "") {
       return true;
     }
+  }
+  else if(currentStep.value == 2){
+      if(currentStep3.value == 2){
+        if(form.packingType === "" || form.pets === "" || form.heating === "" || form.laundry === "" || form.ac_type === "" || form.lease_type === "" || form.description === ""){
+          return true;
+        }
+      }
+      else if(currentStep3.value == 1){
+        if(form.unit_type === "" || form.count === "" || form.rent_price === "" || form.availability_date === "" || form.occupancy_status === "" || form.security_deposit === ""){
+          return true;
+        }
+      }
+      // else if(currentStep3.value == 2){
+      //   if(form.landlordId === null){
+      //     return true;
+      //   }
+      // }
   }
   return false
 }
