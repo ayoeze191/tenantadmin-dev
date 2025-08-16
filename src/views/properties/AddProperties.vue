@@ -44,6 +44,7 @@
                 layout="vertical"
               >
               <a-form-item
+                
                 name="formType"
                 class="flex flex-col gap-2 bg-white">
                <a-select
@@ -918,7 +919,7 @@
               class="flex justify-between items-center px-[10px] text-[12px] text-[#808097] font-medium"
             >
               <span class="flex gap-2.5 leading-[25px]"
-                ><CheckOutlined v-if="form.address" />
+                ><span  style="color: green;" v-if="form.address"><CheckOutlined color="green" /></span>
                 <CloseOutlined v-else />Property Address</span
               >
               <p class="text-[#808097] m-0">
@@ -929,7 +930,8 @@
               class="flex justify-between items-center px-[10px] text-[12px] text-[#808097] font-medium"
             >
               <span class="flex gap-2.5 leading-[25px]"
-                ><CheckOutlined v-if="form.zipCode" />
+                >
+                <span  style="color: green;" v-if="form.zipCode"><CheckOutlined color="green" /></span>
                 <CloseOutlined v-else />Zip Code</span
               >
               <p class="text-[#808097] m-0">
@@ -940,7 +942,8 @@
               class="flex justify-between items-center px-[10px] text-[12px] text-[#808097] font-medium"
             >
               <span class="flex gap-2.5 leading-[25px]"
-                ><CheckOutlined v-if="form.province" />
+                >
+                <span  style="color: green;" v-if="form.province"><CheckOutlined color="green" /></span>
                 <CloseOutlined v-else />Province</span
               >
               <p class="text-[#808097] m-0">
@@ -1040,8 +1043,8 @@
 </div>
 
 <div>
-  <button class="bg-[#000130] w-full rounded-[4px] py-[9px] text-[500] leading-[25px] text-white mt-[36px]">View Accomodations</button>
-  <button class="text-[#404164] font-semibold leading-[100%] text-[18px]  mt-4 text-center mx-auto w-full">Edit Accomodations</button>
+  <RouterLink to="/properties" class="bg-[#000130] w-full rounded-[4px] py-[9px] text-[500] leading-[25px] text-white mt-[36px]">View Accomodations</RouterLink>
+  <RouterLink to="/edit" class="text-[#404164] font-semibold leading-[100%] text-[18px]  mt-4 text-center mx-auto w-full">Edit Accomodations</RouterLink>
 </div>
     </a-modal>
 </template>
