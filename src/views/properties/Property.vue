@@ -448,7 +448,7 @@
       </a-tabs>
     </a-modal>
 
-    <a-modal :visible="true" :footer="null" width="540px" :closable="false">
+    <a-modal :visible="false" :footer="null" width="540px" :closable="false">
       <template #title>
         <div
           class="flex items-center justify-between border-b border-[#C7C7C7] py-[12px]"
