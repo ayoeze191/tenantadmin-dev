@@ -101,3 +101,12 @@ export const getunitDetails = async (id) => {
     console.log(error);
   }
 };
+
+export const uploadImage = async (payload) => {
+  try {
+    const response = await postApi("ImageStorage/UploadImage", payload);
+    return response.data;
+  } catch (error) {
+    console.log("Error uploading image:", error);
+  }
+};

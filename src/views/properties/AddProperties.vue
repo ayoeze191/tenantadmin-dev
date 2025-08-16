@@ -43,6 +43,36 @@
                 ref="propertyFormRef"
                 layout="vertical"
               >
+              <a-form-item
+                name="formType"
+                class="flex flex-col gap-2 bg-white">
+               <a-select
+                  v-model:value="form.landlordId"
+                  placeholder="Search and select a landlord"
+                  size="large"
+                  show-search
+                  :filter-option="false"
+                  :loading="landlordLoading"
+                  :options="landlordOptions"
+                  @search="onLandlordSearch"
+                  @popup-scroll="onLandlordScroll"
+                  :field-names="{ label: 'label', value: 'value' }"
+                  :not-found-content="
+                    landlordLoading ? 'Loading...' : 'No landlords found'
+                  "
+                >
+                  <template #option="{ label, value }">
+                    <div class="flex flex-col bg-white">
+                      <span class="font-medium bg-white"
+                        >{{ label }}</span
+                      >
+                    </div>
+                  </template>
+                  <template #suffixIcon>
+                    <a-spin v-if="landlordLoading" size="small" />
+                  </template>
+                </a-select>
+              </a-form-item>
                 <a-form-item class="flex flex-col gap-2">
                   <div class="text-[#404164] text-lg mb-4 font-sf font-normal ">
                     Rental Unit
@@ -223,7 +253,7 @@
                 <li class=" text-lg text-[20px] leading-[100%] mb-4 list-disc text-[#808097] font-normal">
                   Building Amenities
                 </li>
-                <a-checkbox-group class="grid grid-cols-2 gap-4">
+                <a-checkbox-group v-model:value="form.propertyAmenities" class="grid grid-cols-2 gap-4">
                   <a-checkbox
                     v-for="option in amenityOptions"
                     :key="option.value"
@@ -313,7 +343,7 @@
                 <div class="form-labels text-[20px] font-sf font-regular text-[#808097] mb-4 font-[300]">
                   Building Amenities
                 </div>
-                <a-checkbox-group class="grid grid-cols-2 gap-4">
+                <a-checkbox-group class="grid grid-cols-2 gap-4" v-model:value="form.propertyAmenities">
                   <a-checkbox
                     v-for="option in amenityOptions"
                     :key="option.value"
@@ -333,30 +363,55 @@
                     <span><PlusOutlined /></span>
                     <p class="text-[#C7C7C7] text-[20px] m-0">Add amenity</p>
                 </p>
-
-              <div class="flex justify-end">
+              <button class="flex justify-end bg-none border-0" @click="handleAddUnit">
                 <p
-                  class="font-sf text-[1rem] font-[700] leading-[100%] text-[#404164] underline"
+                  class="font-sf text-[1rem] font-[700] leading-[100%] text-[#404164] underline" v-if="form.rental_unit == 'apartment'"
                 >
                   Add Unit
                 </p>
-              </div>
+                   <p
+                  class="font-sf text-[1rem] font-[700] leading-[100%] text-[#404164] underline" v-if="form.rental_unit == 'shared_condo' || form.rental_unit == 'shared_house'" @click="currentStep3 = 0"
+                >
+                  Add Room
+                </p>
+              </button>
+              <div v-for="(i, index) in form.unitTypes">
+               <button class="border-none border-0 w-full flex justify-end" v-if="index !== 0" @click="form.unitTypes.splice(0, 1)"  style="color: red !important;">    <DeleteOutlined /></button>
               <div class="flex gap-4">
+             
                 <a-form-item
+                  v-if="form.rental_unit == 'apartment' || form.rental_unit == 'shared_condo' || form.rental_unit == 'shared_house'"
                   name="unit_type"
                   required
                   class="flex-1 form-labels"
                 >
                   <div class="form-labels text-base mb-4 font-light leading-[100%] font-sf">
-                    Unit Type
+                    {{form.rental_unit == 'shared_condo' || form.rental_unit == 'shared_house' ? 'Room Type' : 'Unit Type'}}
                   </div>
-                  <a-input
-                    v-model:value="form.unit_type"
-                    placeholder="Unit Type"
-                    size="large"
-                  />
+                     <a-select
+                    ref="select"
+                    v-model:value="form.unitTypes[index].unitType"
+                    style="width: 200px"
+                   :placeholder="form.rental_unit == 'shared_condo' || form.rental_unit == 'shared_house' ? 'Room Type' : 'Unit Type'"
+                    class="w-full h-[52px]"
+                    @focus="focus"
+                    @change="handleChange"
+                  >
+                    <a-select-option value="Studio"
+                      >Studio</a-select-option
+                    >
+                    <a-select-option value="2 Bedrooms">2 Bedrooms</a-select-option>
+                    <a-select-option value="2 Bedrooms + Den"
+                      >2 Bedrooms + Den</a-select-option
+                    >
+                    <a-select-option value="3 Bedrooms">3 Bedrooms</a-select-option>
+                    <a-select-option value="3 Bedrooms + Den"
+                      >3 Bedrooms + Den</a-select-option
+                    >
+                  </a-select>
                 </a-form-item>
                 <a-form-item
+                v-if="form.rental_unit == 'apartment'"
                   name="count"
                   required
                   class="flex-1 form-labels"
@@ -365,9 +420,10 @@
                     Count
                   </div>
                   <a-input
-                    v-model:value="form.count"
+                    v-model:value="form.unitTypes[index].quantity"
                     placeholder="Province"
                     size="large"
+                    type="number"
                   />
                 </a-form-item>
               </div>
@@ -381,7 +437,7 @@
                     Rent Price
                   </div>
                   <a-input
-                    v-model:value="form.rent_price"
+                    v-model:value="form.unitTypes[index].rentPerMonth"
                     placeholder="Rent Price"
                     size="large"
                   />
@@ -395,12 +451,45 @@
                     Security Deposit
                   </div>
                   <a-input
-                    v-model:value="form.security_deposit"
+                    v-model:value="form.unitTypes[index].securityDeposit"
                     placeholder="Security Deposit"
                     size="large"
                   />
                 </a-form-item>
               </div>
+
+
+
+              <div class="flex gap-4" v-if="form.rental_unit == 'condo' || form.rental_unit == 'house'">
+                <a-form-item
+                  name="rent_price"
+                  required
+                  class="flex-1 form-labels"
+                >
+                  <div class="form-labels text-base mb-4 font-regular leading-[100%] font-sf">
+                    Bedroom
+                  </div>
+                  <a-input
+                    placeholder="Rent Price"
+                    size="large"
+                  />
+                </a-form-item>
+                <a-form-item
+                  name="security_deposit"
+                  required
+                  class="flex-1 form-labels"
+                >
+                  <div class="form-labels text-base mb-4 font-regular leading-[100%] font-sf">
+                    Bathroom
+                  </div>
+                  <a-input
+                  v-model="form.unitTypes[index].bathrooms"
+                    placeholder="Security Deposit"
+                    size="large"
+                  />
+                </a-form-item>
+              </div>
+
 
               <div class="flex gap-4">
                 <a-form-item
@@ -412,7 +501,7 @@
                     Availability Date
                   </div>
                   <a-input
-                    v-model:value="form.availability_date"
+                    v-model:value="form.unitTypes[index].availabilityDate"
                     placeholder="Availability Date"
                     size="large"
                     type="Date"
@@ -428,7 +517,7 @@
                   </div>
                   <a-select
                     ref="select"
-                    v-model:value="form.occupancy_status"
+                    v-model:value="form.unitTypes[index].occupancyStatus"
                     style="width: 200px"
                     placeholder="Select Occupancy Status"
                     class="w-full"
@@ -451,13 +540,13 @@
               </div>
                   <a-form-item>
                 <a-upload-dragger
-                class="border-dashed border-[#C7C7C7] rounded-[5px] p-[14px]"
-    v-model:fileList="fileList"
-    name="file"
-    :multiple="true"
-    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-    @change="handleChange"
-    @drop="handleDrop"
+  class="border-dashed border-[#C7C7C7] rounded-[5px] p-[14px]"
+  v-model:fileList="i.fileList"
+  name="file"
+  :customRequest="(options) => customUpload(options, index)"
+  :multiple="true"
+  list-type="picture-card"
+  @remove="() => handleRemoveImage(index)"
   >
     <p class="ant-upload-drag-icon mx-auto w-fit pt-[28px]">
       <svg width="26" height="31" viewBox="0 0 26 31" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -471,6 +560,7 @@
     </p>
   </a-upload-dragger>
                 </a-form-item>
+              </div> 
             </a-form>
             </div>
 
@@ -492,7 +582,7 @@
                   </div>
                   <a-select
                     ref="select"
-                    v-model:value="form.packingType"
+                    v-model:value="form.partkingType"
                     style="width: 200px"
                     placeholder="Select Rental Unit"
                     class="w-full h-[52px]"
@@ -523,7 +613,7 @@
                   </div>  
                     <a-select
                     ref="select"
-                    v-model:value="form.pets"
+                    v-model:value="form.pet"
                     style="width: 200px"
                     placeholder="Select Rental Unit"
                     class="w-full h-[52px]"
@@ -554,7 +644,7 @@
                   </div>
                   <a-select
                     ref="select"
-                    v-model:value="form.heating"
+                    v-model:value="form.heatingType"
                     style="width: 200px"
                     placeholder="Select Rental Unit"
                     class="w-full h-[52px]"
@@ -582,7 +672,7 @@
                   </div>  
                     <a-select
                     ref="select"
-                    v-model:value="form.ac_type"
+                    v-model:value="form.acType"
                     style="width: 200px"
                     placeholder="Select Rental Unit"
                     class="w-full h-[52px]"
@@ -609,7 +699,7 @@
                   </div>  
                     <a-select
                     ref="select"
-                    v-model:value="form.laundry"
+                    v-model:value="form.laundryType"
                     style="width: 200px"
                     placeholder="Select Rental Unit"
                     class="w-full h-[52px]"
@@ -630,7 +720,7 @@
                 >
                   <div class="form-labels text-base mb-4 font-light leading-[100%] font-sf">
                     Lease Type Allowed
-                     <a-checkbox-group class="grid grid-cols-1 gap-5" v-model:value="form.lease_type">
+                     <a-checkbox-group class="grid grid-cols-1 gap-5" v-model:value="form.leaseType">
                   <a-checkbox
                     key="Yearly Lease"
                     value="Yearly Lease"
@@ -685,10 +775,11 @@
                 <a-upload-dragger
                 class="border-dashed w-full border-[#C7C7C7] rounded-[5px] p-[14px] m-0"
                 style="margin: 0;"
-    v-model:fileList="fileList"
+    v-model:proofOfOwnershipFileList="proofOfOwnershipFileList"
     name="file"
-    :multiple="true"
-    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+   :customRequest="customProofOwnershipUpload"
+       list-type="picture-card"
+         @remove="handleRemove"
     @change="handleChange"
     @drop="handleDrop"
   >
@@ -715,10 +806,11 @@
                 <a-upload-dragger
                 class="border-dashed w-full border-[#C7C7C7] rounded-[5px] p-[14px] m-0"
                 style="margin: 0;"
-    v-model:fileList="fileList"
+     v-model:GovernmentIssuedFileList="GovernmentIssuedFileList"
     name="file"
-    :multiple="true"
-    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+   :customRequest="customGovernmentIssuedUpload"
+       list-type="picture-card"
+         @remove="handleRemove"
     @change="handleChange"
     @drop="handleDrop"
   >
@@ -744,10 +836,11 @@
                 <a-upload-dragger
                 class="border-dashed w-full border-[#C7C7C7] rounded-[5px] p-[14px] m-0"
                 style="margin: 0;"
-    v-model:fileList="fileList"
+   v-model:otherDocsFileList="otherDocsFileList"
     name="file"
-    :multiple="true"
-    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+   :customRequest="customAdditionalDocumentsUpload"
+       list-type="picture-card"
+         @remove="handleRemove"
     @change="handleChange"
     @drop="handleDrop"
   >
@@ -785,7 +878,7 @@
               :loading="loading"
               :class="'shadow-md rounded-[4px] flex items-center justify-center max-w-[221px] w-full text-center h-fit py-[9px] text-base font-medium'"
             >
-              {{ currentStep === 2 ? "Save" : "Continue" }}
+              {{ currentStep === 3 ? "Save" : "Continue" }}
             </a-button>
           </div>
         </div>
@@ -814,7 +907,7 @@
               class="flex justify-between items-center px-[10px] text-[12px] text-[#808097] font-medium"
             >
               <span class="flex gap-2.5 leading-[25px]"
-                ><CheckOutlined v-if="form.name" />
+                ><span  style="color: green;" v-if="form.name"><CheckOutlined color="green" /></span>
                 <CloseOutlined v-else />Property Name</span
               >
               <p class="text-[#808097] m-0">
@@ -881,17 +974,7 @@
             <div
               class="flex justify-between items-center px-[10px] text-[12px] text-[#808097] font-medium"
             >
-              <span class="flex gap-2.5 leading-[25px] font-medium"
-                ><CheckOutlined v-if="form.unitTypeCounts.length > 0" />
-                <CloseOutlined v-else />Unit Type (s)</span
-              >
-              <p class="text-[#808097] m-0">
-                {{
-                  form.unitTypeCounts
-                    .map((detail) => detail.label)
-                    .join(", ") || "Not Set"
-                }}
-              </p>
+            
             </div>
             <div class="px-[8px]">
               <a-button
@@ -929,30 +1012,52 @@
       </div>
     </div>
   </div>
+  <!-- <a-modal
+  :visible="true"
+  :closable="false"
+  :footer="null"
+  :width="500"
+  >
+  <template #title>
+        <div
+          class="flex items-center justify-between border-b border-[#C7C7C7] py-[12px]"
+        >
+          <span></span>
+          <span></span>
+          <span>
+
+          </span>
+        </div>
+      </template>
+  <div class="mx-auto w-fit">
+  <p class="text-[#404164] text-[20px] font-medium">Submitted Successfully</p>
+  <svg width="200" height="201" viewBox="0 0 200 201" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="100" cy="100.5" r="100" fill="black" fill-opacity="0.25"/>
+<ellipse cx="100.008" cy="99.9324" rx="86.5232" ry="83.948" fill="black" fill-opacity="0.25"/>
+<path d="M162.125 100.434C162.125 134.742 134.313 162.555 100.004 162.555C65.6955 162.555 37.8828 134.742 37.8828 100.434C37.8828 66.1251 65.6955 38.3125 100.004 38.3125C134.313 38.3125 162.125 66.1251 162.125 100.434Z" fill="white"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M100.001 173.228C140.167 173.228 172.728 140.667 172.728 100.501C172.728 60.3346 140.167 27.7734 100.001 27.7734C59.8346 27.7734 27.2734 60.3346 27.2734 100.501C27.2734 140.667 59.8346 173.228 100.001 173.228ZM138.473 81.4232C141.331 77.9947 140.867 72.8992 137.439 70.0421C134.01 67.1851 128.915 67.6483 126.058 71.0768L96.9834 105.966C94.1817 109.328 92.6066 111.189 91.3491 112.333L91.301 112.377L91.2492 112.338C89.8933 111.313 88.1562 109.601 85.0616 106.507L73.3332 94.7784C70.1774 91.6227 65.061 91.6227 61.9052 94.7784C58.7494 97.9342 58.7494 103.051 61.9052 106.206L73.6336 117.935L73.9635 118.265L73.9636 118.265C76.6019 120.904 79.14 123.443 81.5015 125.229C84.1469 127.229 87.6113 129.11 92.0509 128.909C96.4906 128.707 99.7705 126.521 102.224 124.289C104.414 122.297 106.712 119.538 109.1 116.671L109.399 116.312L138.473 81.4232ZM90.596 112.934C90.596 112.934 90.5998 112.932 90.6072 112.928C90.5996 112.933 90.596 112.935 90.596 112.934ZM92.042 112.863C92.0496 112.866 92.0536 112.868 92.0537 112.868C92.0537 112.868 92.0499 112.867 92.042 112.863Z" fill="#000130"/>
+</svg>
+</div>
+    </a-modal> -->
 </template>
 
 <script setup>
-import { CreateNewProperty, FetchLandlords } from "@/api/properties";
+import {  CreateNewProperty, FetchLandlords } from "@/api/properties";
 import { useUserStore } from "@/store";
 import { useOptionsStore } from "@/stores/options";
-import { uploadImages } from "@/utils/helper";
-import { createAmenity, getAmenities } from "@/api/amenity";
-
+// CreateNewProperty,
+// import { uploadImages } from "@/utils/helper";
+import { createAmenity } from "@/api/amenity";
+import { uploadImage } from "@/api/properties";
 import {
   CheckOutlined,
-  LeftOutlined,
-  RightOutlined,
 } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
 import { openDB } from "idb";
 import {
-  defineComponent,
-  h,
-  nextTick,
   onMounted,
   reactive,
   ref,
-  watch,
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
 const listingType = ref("");
@@ -963,31 +1068,120 @@ const showAmenitiesModal = ref(false);
 const amenityOptions = ref([]);
 const landlordOptions = ref([]);
 const landlordLoading = ref(false);
-const landlordSearchValue = ref("");
-const landlordCurrentPage = ref(1);
-const landlordTotalItems = ref(0);
+const uploadedUrls = ref([]) 
+const handleAddUnit = () => {
+  form.unitTypes.push({
+    unitCount:"",
+    occupancyStatus: "",
+    unitType: "",
+    quantity: "",
+    securityDeposit: "",
+    rentPerMonth: "",
+    availabilityDate: "",
+    bathrooms: "",
+    bedrooms: "",
+    unitImg: [],
+    fileList: []
+  });
+}
+const customUpload = async (options, index) => {
+  const { file, onSuccess, onError } = options
+  const formData = new FormData()
+  formData.append('Image', file)
+  formData.append('UploadType', 1)
+  console.log(file)
+  formData.append('ImageTitle', file.name)
+  try {
+    const res = await uploadImage(formData) 
+    console.log("Image upload response:", res);
+    const imageUrl = res.url 
+  if (!Array.isArray(form.unitTypes[index].unitImg)) {
+  form.unitTypes[index].unitImg = []
+}
+form.unitTypes[index].unitImg.push({ imageTitle: file.name, image: imageUrl })
+   onSuccess({ url: imageUrl }, file)
+  } catch (err) {
+    message.error(`${file.name} upload failed.`)
+    onError(err)
+  }
+}
 
+const handleRemoveImage = (file, index, title) => {
+  if(index){
+     form.unitTypes[index].unitImg = form.unitTypes[index].unitImg.filter(
+    img => img.image !== file.url
+  )
+  }
+  else if(title == "property"){
+    form.images = form.proofOfOwnership.filter(
+      img => img.image !== file.url
+    )
+  }
+  else if(title == "government_issued_id"){
+    form.governmentID = form.governmentID.filter(
+      img => img.image !== file.url
+    )
+  }
+  else if(title == "additional_documents"){
+    form.otherDocs = form.otherDocs.filter(
+      img => img.image !== file.url
+    )
+
+  }
+ 
+}
+
+
+function handleDrop(e) {
+  console.log(e);
+}
+const SubmitCreateProperty = async() => {
+  let payload;
+  let landlord = form.landlordId || store.userProfile.referenceID
+  // if(form.rental_unit == 'apartment'){
+    payload = {
+      landlordId: landlord,
+      name: form.name,
+      address: form.address,
+      description: form.description,
+      rentalUnit: form.rental_unit,
+      propertyAmenities: [...form.propertyAmenities],
+      propertyImages: "",
+      city: form.city,
+      zipCode: form.zipCode,
+      province: form.province,
+      unitTypes: [...form.unitTypes],
+      proofOfOwnership: form.proofOfOwnership,
+      governmentID: form.governmentID,
+      otherDocs: form.otherDocs,
+    }
+    // console.log("Payload for Create Property:", payloapayloadd);
+    const res = await CreateNewProperty(payload)
+    console.log("Create Property Response:", res);
+}
 const currentStep = ref(0);
 const currentStep3 = ref(0);
 const loading = ref(false);
 const error = ref(null);
 
 const form = reactive({
-  packingType: "",
-  pets: "",
-  heating:"",
-  laundry: "",
-  ac_type:"",
-  lease_type: "",
+  partkingType: "",
+  pet: "",
+  heatingType:"",
+  laundryType: "",
+  acType:"",
+  leaseType: "",
   unit_type:"",
   count:"",
   rent_price:"",
   availability_date:"",
   occupancy_status:"",
   security_deposit:"",
-
+  governmentID: "",
+  proofOfOwnership: "",
+  governmentID: "",
+  otherDocs: "",
   rental_unit:null,
-  landlordId: null,
   name: "",
   address: "",
   city: "",
@@ -996,9 +1190,22 @@ const form = reactive({
   propertyType: null,
   description: "",
   units: null,
-  unitTypeCounts: [],
-  unitTypeDetails: [], // New array to store details for each unit type
+  unitTypes:[{
+    unitCount:"",
+    occupancyStatus: "",
+    unitType: "",
+    quantity: "",
+    securityDeposit: "",
+    rentPerMonth: "",
+    availabilityDate: "",
+    bathrooms: "",
+    bedrooms: "",
+    unitImg: [],
+    fileList: []
+  }],
   images: [],
+  propertyAmenities: [],
+  landlordId: null,
   amenities: [],
   amenityname: "",
   amenitiesKeyWords: "",
@@ -1021,7 +1228,7 @@ onMounted(async () => {
     image: a.image || a.icon || null,
   }));
  
-  form.unitTypeCounts = Array(optionsStore.unitTypes.length).fill(0);
+  // form.unitTypeCounts = Array(optionsStore.unitTypes.length).fill(0);
 
   // EDIT MODE: If route has id, fetch property from IndexedDB
   const id = route.params.id;
@@ -1041,7 +1248,7 @@ onMounted(async () => {
         form.propertyType = data.propertyType || "";
         form.description = data.description || "";
         form.units = data.units || null;
-        form.unitTypeCounts = Array(optionsStore.unitTypes.length).fill(0); // You may want to map this if you use unitTypeCounts
+        // form.unitTypeCounts = Array(optionsStore.unitTypes.length).fill(0); // You may want to map this if you use unitTypeCounts
         form.rent = data.minimumRent || data.rent || null;
         form.securityDeposit = data.securityDeposit || null;
         // Ensure images have .url property for preview logic
@@ -1095,6 +1302,61 @@ const lastStepThreeRules = {
   description: [{ required: true, message: "Description is required" }],
 }
 const fileList = ref([]);; // Cache for uploaded image URLs
+ // Cache for proof of ownership files
+const GovernmentIssuedFileList = ref([]); // Cache for government-issued ID files
+const proofOfOwnershipFileList = ref([]); // Cache for additional documents files
+const otherDocsFileList = ref([]); // Cache for other documents files
+const customProofOwnershipUpload = async (options) => {
+  const { file, onSuccess, onError } = options;
+  const formData = new FormData();
+  formData.append('Image', file);
+  formData.append('UploadType', 1);
+  formData.append('ImageTitle', file.name);
+  try {
+    const res = await uploadImage(formData);
+    console.log("Proof of ownership upload response:", res);
+    const url = res.url;
+    form.proofOfOwnership = url
+    onSuccess({ url: url }, file);
+  } catch (err) {
+    message.error(`${file.name} upload failed.`);
+    onError(err);
+  }
+};
+const customGovernmentIssuedUpload = async (options) => {
+  const { file, onSuccess, onError } = options;
+  const formData = new FormData();
+  formData.append('Image', file);
+  formData.append('UploadType', 1);
+  formData.append('ImageTitle', file.name);
+  try {
+    const res = await uploadImage(formData);
+    console.log("Government issued ID upload response:", res);
+    const url = res.url;
+    form.governmentID = url;
+    onSuccess({ url: url }, file);
+  } catch (err) {
+    message.error(`${file.name} upload failed.`);
+    onError(err);
+  }
+};
+const customAdditionalDocumentsUpload = async (options) => {
+  const { file, onSuccess, onError } = options;
+  const formData = new FormData();
+  formData.append('Image', file);
+  formData.append('UploadType', 1);
+  formData.append('ImageTitle', file.name);
+  try {
+    const res = await uploadImage(formData);
+    console.log("Additional documents upload response:", res);
+    const url = res.url;
+    form.otherDocs = url
+    onSuccess({ url: url }, file);
+  } catch (err) {
+    message.error(`${file.name} upload failed.`);
+    onError(err);
+  }
+};
 
 // Landlord functions
 const fetchLandlords = async (searchName = "", page = 1) => {
@@ -1123,34 +1385,29 @@ const fetchLandlords = async (searchName = "", page = 1) => {
 
 
 const DisableNext = () => {
-  if(currentStep.value == 0){
-      if(form.rental_unit === null){
-        console.log("Rental unit type is required", form.rental_unit);
-        return true;
-      }
-  }
-  else if(currentStep.value == 1){
-    if (form.name === "" || form.address === "" || form.zipCode === "" || form.province === "" ||  form.city === "") {
-      return true;
-    }
-  }
-  else if(currentStep.value == 2){
-      if(currentStep3.value == 2){
-        if(form.packingType === "" || form.pets === "" || form.heating === "" || form.laundry === "" || form.ac_type === "" || form.lease_type === "" || form.description === ""){
-          return true;
-        }
-      }
-      else if(currentStep3.value == 1){
-        if(form.unit_type === "" || form.count === "" || form.rent_price === "" || form.availability_date === "" || form.occupancy_status === "" || form.security_deposit === ""){
-          return true;
-        }
-      }
-      // else if(currentStep3.value == 2){
-      //   if(form.landlordId === null){
-      //     return true;
-      //   }
-      // }
-  }
+  // if(currentStep.value == 0){
+  //     if(form.rental_unit === null){
+  //       console.log("Rental unit type is required", form.rental_unit);
+  //       return true;
+  //     }
+  // }
+  // else if(currentStep.value == 1){
+  //   if (form.name === "" || form.address === "" || form.zipCode === "" || form.province === "" ||  form.city === "") {
+  //     return true;
+  //   }
+  // }
+  // else if(currentStep.value == 2){
+  //     if(currentStep3.value == 2){
+  //       if(form.packingType === "" || form.pets === "" || form.heating === "" || form.laundry === "" || form.ac_type === "" || form.lease_type === "" || form.description === ""){
+  //         return true;
+  //       }
+  //     }
+  //     else if(currentStep3.value == 1){
+  //       if(form.unit_type === "" || form.count === "" || form.rent_price === "" || form.availability_date === "" || form.occupancy_status === "" || form.security_deposit === ""){
+  //         return true;
+  //       }
+  //     }
+  // }
   return false
 }
 // const handleRadioTypeChange = () => {
@@ -1233,6 +1490,9 @@ if (currentStep.value === 0) {
       currentStep.value++;
     }
   }
+  }
+  else{
+      await SubmitCreateProperty()
   }
 }
 const toPrevious = () => {
@@ -1397,7 +1657,7 @@ const HandleCreateAmenities = async () => {
 
 .custom-modal .ant-modal-content {
   padding: 0 !important;
-  background-color: red; /* test only */
+  
 }
 .custom-modal .ant-modal-body {
   padding: 0 !important;
@@ -1431,7 +1691,7 @@ const HandleCreateAmenities = async () => {
 }
 :deep(.ant-select .ant-select-selector .ant-select-selection-search-input) {
   height: 100% !important;
-  background-color: red !important;
+
 }
 </style>
 <!-- <div class="flex gap-2">

@@ -40,7 +40,7 @@
             >
               Edit Property
             </button>
-            <button
+            <!-- <button
               @click="
                 () => {
                   showAddTenantModal = true;
@@ -73,7 +73,7 @@
                 </svg>
               </div>
               <span class="">Add Tenant</span>
-            </button>
+            </button> -->
           </div>
         </div>
       </section>
@@ -446,6 +446,31 @@
           </div>
         </a-tab-pane>
       </a-tabs>
+    </a-modal>
+
+    <a-modal :visible="true" :footer="null" width="540px" :closable="false">
+      <template #title>
+        <div
+          class="flex items-center justify-between border-b border-[#C7C7C7] py-[12px]"
+        >
+          <div
+            class="cursor-pointer flex items-center gap-[8px] text-txt_dark text-[18px] font-medium"
+          >
+            <ArrowLeftOutlined @click="goBack" class="text-[18px]" />
+            Back
+          </div>
+          <span class="modal-title">Edit Property</span>
+          <span></span>
+        </div>
+      </template>
+      <div>
+        <p>Building Amenities</p>
+        <p>Add Amenity</p>
+        <div>
+          <p>Packing Type</p>
+          <a-input placeholder="Enter amenity" size="large" />
+        </div>
+      </div>
     </a-modal>
   </div>
 </template>
