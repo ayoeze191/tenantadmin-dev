@@ -29,14 +29,13 @@
         <div class="flex gap-3 items-center">
           <div class="flex gap-3 items-center flex-wrap">
             <button
-              :disabled="true"
               :class="[
                 'text-txt_dark px-[33px] py-2 h-fit rounded-[4px] border-[#000130] border-[1px] w-fit font-semibold font-sf leading-[28px] min-w-[120px] transition-all sm:px-6 sm:py-2 sm:text-base xs:px-3 xs:py-2 xs:text-sm xs:min-w-[90px]',
                 true
-                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  ? 'bg-[inherit] text-gray-400 '
                   : 'hover:bg-primary hover:text-white bg-inherit',
               ]"
-              @click="onEdit"
+              @click="showEditPropertyModal = true"
             >
               Edit Property
             </button>
@@ -448,17 +447,23 @@
       </a-tabs>
     </a-modal>
 
-    <a-modal :visible="false" :footer="null" width="540px" :closable="false">
+    <a-modal
+      :visible="showEditPropertyModal"
+      :footer="null"
+      width="540px"
+      :closable="false"
+    >
       <template #title>
         <div
           class="flex items-center justify-between border-b border-[#C7C7C7] py-[12px]"
         >
-          <div
+          <button
+            @click="showEditPropertyModal = false"
             class="cursor-pointer flex items-center gap-[8px] text-txt_dark text-[18px] font-medium"
           >
-            <ArrowLeftOutlined @click="goBack" class="text-[18px]" />
+            <ArrowLeftOutlined class="text-[18px]" />
             Back
-          </div>
+          </button>
           <span class="modal-title">Edit Property</span>
           <span></span>
         </div>
@@ -466,10 +471,150 @@
       <div>
         <p>Building Amenities</p>
         <p>Add Amenity</p>
-        <div>
-          <p>Packing Type</p>
-          <a-input placeholder="Enter amenity" size="large" />
+        <div class="flex gap-4">
+          <a-form-item name="packingType" required class="flex-1">
+            <div
+              class="form-labels text-base mb-4 font-light leading-[100%] font-sf"
+            >
+              Packing Type
+            </div>
+            <a-select
+              ref="select"
+              style="width: 200px"
+              placeholder="Select Rental Unit"
+              class="w-full h-[52px]"
+              @focus="focus"
+              @change="handleChange"
+            >
+              <a-select-option value="apartment"
+                >Driveway Packing</a-select-option
+              >
+              <a-select-option value="condo"
+                >Off Street Packing</a-select-option
+              >
+              <a-select-option value="shared_condo"
+                >1 Car Garage</a-select-option
+              >
+              <a-select-option value="house">2 Car Garage</a-select-option>
+              <a-select-option value="shared_house"
+                >3 Car Garage</a-select-option
+              >
+              <a-select-option value="others">4 Car Garage</a-select-option>
+            </a-select>
+          </a-form-item>
+          <a-form-item name="pets" required class="flex-1 form-labels">
+            <div
+              class="form-labels text-base mb-4 font-light leading-[100%] font-sf"
+            >
+              Pets
+            </div>
+            <a-select
+              ref="select"
+              style="width: 200px"
+              placeholder="Select Pet"
+              class="w-full h-[52px]"
+              @focus="focus"
+              @change="handleChange"
+            >
+              <a-select-option value="apartment">Yes</a-select-option>
+              <a-select-option value="condo">No</a-select-option>
+              <a-select-option value="shared_condo"
+                >Conditional</a-select-option
+              >
+            </a-select>
+          </a-form-item>
         </div>
+
+        <div class="flex gap-4">
+          <a-form-item name="heating" required class="flex-1 form-labels">
+            <div
+              class="form-labels text-base mb-4 font-light leading-[100%] font-sf"
+            >
+              Heating Type
+            </div>
+            <a-select
+              ref="select"
+              style="width: 200px"
+              placeholder="Select Heating Type"
+              class="w-full h-[52px]"
+              @focus="focus"
+              @change="handleChange"
+            >
+              <a-select-option value="apartment"
+                >Central Heating</a-select-option
+              >
+              <a-select-option value="condo">Electric Heating</a-select-option>
+              <a-select-option value="shared_condo"
+                >Gas Heating</a-select-option
+              >
+              <a-select-option value="house">Heating Available</a-select-option>
+            </a-select>
+          </a-form-item>
+          <a-form-item name="ac_type" required class="flex-1 form-labels">
+            <div
+              class="form-labels text-base mb-4 font-light leading-[100%] font-sf"
+            >
+              AC Type
+            </div>
+            <a-select
+              ref="select"
+              style="width: 200px"
+              placeholder="Select AC Type"
+              class="w-full h-[52px]"
+              @focus="focus"
+              @change="handleChange"
+            >
+              <a-select-option value="apartment">Yes</a-select-option>
+              <a-select-option value="condo">No</a-select-option>
+              <a-select-option value="shared_condo"
+                >Conditional</a-select-option
+              >
+            </a-select>
+          </a-form-item>
+        </div>
+        <a-form-item name="laundry" required class="flex-1 form-labels">
+          <div
+            class="form-labels text-base mb-4 font-light leading-[100%] font-sf"
+          >
+            Laundry Type
+          </div>
+          <a-select
+            ref="select"
+            style="width: 200px"
+            placeholder="Select Laundry Type"
+            class="w-full h-[52px]"
+            @focus="focus"
+            @change="handleChange"
+          >
+            <a-select-option value="apartment">In Unit</a-select-option>
+            <a-select-option value="condo">Shared Laundry</a-select-option>
+          </a-select>
+        </a-form-item>
+
+        <a-form-item name="lease_type" required class="flex-1 form-labels">
+          <div
+            class="form-labels text-base mb-4 font-light leading-[100%] font-sf"
+          >
+            Lease Type Allowed
+            <a-checkbox-group class="grid grid-cols-1 gap-5">
+              <a-checkbox
+                key="Yearly Lease"
+                value="Yearly Lease"
+                class="flex items-center gap-2 mt-[16px]"
+              >
+                <span class="text-[20px] text-[#808097]"> Yearly Lease </span>
+              </a-checkbox>
+
+              <a-checkbox
+                key="Month to Month"
+                value="Month to Month"
+                class="flex items-center gap-2"
+              >
+                <span class="text-[20px] text-[#808097]"> Month to Month </span>
+              </a-checkbox>
+            </a-checkbox-group>
+          </div>
+        </a-form-item>
       </div>
     </a-modal>
   </div>
@@ -496,6 +641,8 @@ const loading = ref(true);
 const error = ref(null);
 
 const showAddTenantModal = ref(false);
+const showEditPropertyModal = ref(false);
+
 const UNIT_TYPE_ENUM = [
   { label: "Two Bedroom", value: 2 },
   { label: "Three Bedroom", value: 3 },
@@ -1102,5 +1249,23 @@ async function fetchCurrentAmenities(id) {
   /* border: 1px solid #d9d9d9; */
   /* border-radius: 8px; */
   padding: 8px;
+}
+
+:deep(.ant-select) {
+  width: 100% !important;
+  height: 52px !important;
+}
+:deep(.ant-select .ant-select-selector) {
+  height: 100% !important;
+  border-radius: 8px !important;
+  border: 1px solid #e5e6ea !important;
+  display: flex !important;
+  align-items: center !important;
+}
+:deep(.ant-input) {
+  height: 52px !important;
+}
+:deep(.ant-select .ant-select-selector .ant-select-selection-search-input) {
+  height: 100% !important;
 }
 </style>
