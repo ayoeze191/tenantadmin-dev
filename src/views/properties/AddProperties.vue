@@ -1012,20 +1012,20 @@
       </div>
     </div>
   </div>
-  <!-- <a-modal
-  :visible="true"
+  <a-modal
+  :visible="showSuccessModal"
   :closable="false"
   :footer="null"
   :width="500"
   >
   <template #title>
         <div
-          class="flex items-center justify-between border-b border-[#C7C7C7] py-[12px]"
+          class="flex items-center justify-between py-[12px]"
         >
           <span></span>
           <span></span>
           <span>
-
+              <CloseOutlined />
           </span>
         </div>
       </template>
@@ -1038,7 +1038,12 @@
 <path fill-rule="evenodd" clip-rule="evenodd" d="M100.001 173.228C140.167 173.228 172.728 140.667 172.728 100.501C172.728 60.3346 140.167 27.7734 100.001 27.7734C59.8346 27.7734 27.2734 60.3346 27.2734 100.501C27.2734 140.667 59.8346 173.228 100.001 173.228ZM138.473 81.4232C141.331 77.9947 140.867 72.8992 137.439 70.0421C134.01 67.1851 128.915 67.6483 126.058 71.0768L96.9834 105.966C94.1817 109.328 92.6066 111.189 91.3491 112.333L91.301 112.377L91.2492 112.338C89.8933 111.313 88.1562 109.601 85.0616 106.507L73.3332 94.7784C70.1774 91.6227 65.061 91.6227 61.9052 94.7784C58.7494 97.9342 58.7494 103.051 61.9052 106.206L73.6336 117.935L73.9635 118.265L73.9636 118.265C76.6019 120.904 79.14 123.443 81.5015 125.229C84.1469 127.229 87.6113 129.11 92.0509 128.909C96.4906 128.707 99.7705 126.521 102.224 124.289C104.414 122.297 106.712 119.538 109.1 116.671L109.399 116.312L138.473 81.4232ZM90.596 112.934C90.596 112.934 90.5998 112.932 90.6072 112.928C90.5996 112.933 90.596 112.935 90.596 112.934ZM92.042 112.863C92.0496 112.866 92.0536 112.868 92.0537 112.868C92.0537 112.868 92.0499 112.867 92.042 112.863Z" fill="#000130"/>
 </svg>
 </div>
-    </a-modal> -->
+
+<div>
+  <button class="bg-[#000130] w-full rounded-[4px] py-[9px] text-[500] leading-[25px] text-white mt-[36px]">View Accomodations</button>
+  <button class="text-[#404164] font-semibold leading-[100%] text-[18px]  mt-4 text-center mx-auto w-full">Edit Accomodations</button>
+</div>
+    </a-modal>
 </template>
 
 <script setup>
@@ -1064,7 +1069,7 @@ const listingType = ref("");
 // 1. Define the enum array at the top of the script
 const showAmenitiesModal = ref(false);
 // 2. Use this for unitTypeOptions
-
+const showSuccessModal = ref(false);
 const amenityOptions = ref([]);
 const landlordOptions = ref([]);
 const landlordLoading = ref(false);
@@ -1156,8 +1161,16 @@ const SubmitCreateProperty = async() => {
       otherDocs: form.otherDocs,
     }
     // console.log("Payload for Create Property:", payloapayloadd);
-    const res = await CreateNewProperty(payload)
-    console.log("Create Property Response:", res);
+    try{
+      const res = await CreateNewProperty(payload)
+      showSuccessModal.value = true;
+    }
+    catch(err){
+      console.error("Error creating property:", err);
+      message.error("Failed to create property. Please try again.");
+      return;
+    }
+    
 }
 const currentStep = ref(0);
 const currentStep3 = ref(0);
