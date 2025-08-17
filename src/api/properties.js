@@ -65,6 +65,15 @@ export const CreateNewProperty = async (payload) => {
   }
 };
 
+export const UpdateProperty = async (payload) => {
+  try {
+    const response = await putApi(`Accommodation/EditProperty`, payload);
+    return response.data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+
 export const AddAmenities = async (payload) => {
   try {
     const response = await postApi(`Amenity/CreateAmenity`, payload);

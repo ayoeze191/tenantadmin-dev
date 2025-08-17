@@ -1162,8 +1162,13 @@ const SubmitCreateProperty = async() => {
       proofOfOwnership: form.proofOfOwnership,
       governmentID: form.governmentID,
       otherDocs: form.otherDocs,
+      partkingType: form.partkingType,
+      pet: form.pet,
+      heatingType: form.heatingType,
+      laundryType: form.laundryType,
+      acType: form.acType,
+      leaseType: form.leaseType,
     }
-    // console.log("Payload for Create Property:", payloapayloadd);
     try{
       const res = await CreateNewProperty(payload)
       showSuccessModal.value = true;
@@ -1707,7 +1712,6 @@ const HandleCreateAmenities = async () => {
 }
 :deep(.ant-select .ant-select-selector .ant-select-selection-search-input) {
   height: 100% !important;
-
 }
 </style>
 <!-- <div class="flex gap-2">

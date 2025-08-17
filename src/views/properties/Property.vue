@@ -450,7 +450,8 @@
     <a-modal
       :visible="showEditPropertyModal"
       :footer="null"
-      width="540px"
+      width="768px"
+      class="px-0"
       :closable="false"
     >
       <template #title>
@@ -468,9 +469,30 @@
           <span></span>
         </div>
       </template>
-      <div>
-        <p>Building Amenities</p>
-        <p>Add Amenity</p>
+      <div class="px-[32px]">
+        <li
+          class="text-[#808097] text-[20px] leading-[100%] font-sf list-disc mt-[40px] mb-4"
+        >
+          Building Amenities
+        </li>
+        <a-checkbox-group
+          v-model:value="form.propertyAmenities"
+          class="grid grid-cols-2 gap-4"
+        >
+          <a-checkbox
+            v-for="option in amenityOptions"
+            :key="option.value"
+            :value="option.value"
+            class="flex items-center gap-2"
+          >
+            <span class="text-[20px] text-[#808097]">{{ option.label }}</span>
+          </a-checkbox>
+        </a-checkbox-group>
+        <button
+          class="border-0 text-[#C7C7C7] text-[20px] font-sf mt-[24px] mb-[24px]"
+        >
+          <PlusOutlined /> Add Amenity
+        </button>
         <div class="flex gap-4">
           <a-form-item name="packingType" required class="flex-1">
             <div
@@ -480,6 +502,7 @@
             </div>
             <a-select
               ref="select"
+              v-model:value="form.parkingType"
               style="width: 200px"
               placeholder="Select Rental Unit"
               class="w-full h-[52px]"
@@ -515,6 +538,7 @@
               class="w-full h-[52px]"
               @focus="focus"
               @change="handleChange"
+              v-model:value="form.pets"
             >
               <a-select-option value="apartment">Yes</a-select-option>
               <a-select-option value="condo">No</a-select-option>
@@ -533,6 +557,7 @@
               Heating Type
             </div>
             <a-select
+              v-model:value="form.heatingType"
               ref="select"
               style="width: 200px"
               placeholder="Select Heating Type"
@@ -557,6 +582,7 @@
               AC Type
             </div>
             <a-select
+              v-model:value="form.acType"
               ref="select"
               style="width: 200px"
               placeholder="Select AC Type"
@@ -579,6 +605,7 @@
             Laundry Type
           </div>
           <a-select
+            v-model:value="form.laundryType"
             ref="select"
             style="width: 200px"
             placeholder="Select Laundry Type"
@@ -596,7 +623,10 @@
             class="form-labels text-base mb-4 font-light leading-[100%] font-sf"
           >
             Lease Type Allowed
-            <a-checkbox-group class="grid grid-cols-1 gap-5">
+            <a-checkbox-group
+              class="grid grid-cols-1 gap-5"
+              v-model:value="form.leaseType"
+            >
               <a-checkbox
                 key="Yearly Lease"
                 value="Yearly Lease"
@@ -615,24 +645,63 @@
             </a-checkbox-group>
           </div>
         </a-form-item>
+
+        <a-form-item name="description">
+          <p
+            class="form-labels text-base mb-4 font-light leading-[100%] font-sf"
+          >
+            Description
+          </p>
+          <a-textarea
+            class="p-[18px]"
+            v-model:value="form.description"
+            placeholder="Describe your property..."
+            :auto-size="{ minRows: 5, maxRows: 5 }"
+          />
+        </a-form-item>
+        <div class="flex gap-2.5 ml-auto w-fit">
+          <button
+            class="border-[#000130] border py-[12px] px-[62px] text-[#404164] font-sf font-semibold leading-[28px] rounded-[4px]"
+          >
+            Cancel
+          </button>
+          <button
+            class="bg-[#000130] border py-[12px] px-[62px] text-[#fff] font-sf font-semibold leading-[28px] rounded-[4px]"
+          >
+            Save
+          </button>
+        </div>
       </div>
     </a-modal>
   </div>
 </template>
 
 <script setup>
-import { EditOutlined } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
 import { openDB } from "idb";
 import { computed, h, onMounted, reactive, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Propertyheader from "@/components/Propertyheader.vue";
 import { useToast } from "vue-toast-notification";
+import { useOptionsStore } from "@/stores/options";
+import { UpdateProperty } from "@/api/properties";
+
 import {
   GetAccomodationById,
   AddTenants,
   getunitDetails,
 } from "@/api/properties";
+const form = reactive({
+  parkingType: "",
+  pets: "da",
+  heatingType: "",
+  acType: "",
+  laundryType: "",
+  leaseType: [],
+  propertyAmenities: [],
+  description: "",
+});
+const amenityOptions = ref([]);
 const route = useRoute();
 const activeKey = ref(1);
 const router = useRouter();
@@ -642,6 +711,7 @@ const error = ref(null);
 
 const showAddTenantModal = ref(false);
 const showEditPropertyModal = ref(false);
+const optionsStore = useOptionsStore();
 
 const UNIT_TYPE_ENUM = [
   { label: "Two Bedroom", value: 2 },
@@ -655,7 +725,16 @@ const UNIT_TYPE_ENUM = [
   { label: "Shared Accommodation", value: 10 },
   { label: "Hostel/Dormitory", value: 11 },
 ];
+onMounted(async () => {
+  await optionsStore.fetchAmenities();
 
+  amenityOptions.value = optionsStore.amenities.map((a) => ({
+    label: a.name,
+    value: a.amenityId,
+    image: a.image || a.icon || null,
+  }));
+  console.log(optionsStore.amenities);
+});
 const tenantTab = ref("single");
 const tenantLoading = ref(false);
 const tenantForm = reactive({
@@ -722,6 +801,9 @@ const createProperties = async () => {
   tenantLoading.value == false;
   showAddTenantModal.value = false;
 };
+const EditProperty = async () => {
+  const res = await UpdateProperty();
+};
 const propertyOptions = computed(() => {
   // You can fetch or map your properties here. For demo, use current property only.
   return property.value.units
@@ -733,7 +815,7 @@ const propertyOptions = computed(() => {
 
 onMounted(async () => {
   const id = route.params.id || route.params.accommodationId;
-  getAccomodationDetails(id);
+  await getAccomodationDetails(id);
   if (!id) {
     error.value = "No property ID provided.";
     loading.value = false;
@@ -963,9 +1045,17 @@ function downloadSampleFile() {
   a.click();
   URL.revokeObjectURL(url);
 }
+
 async function getAccomodationDetails(id) {
   const response = await GetAccomodationById(id);
   console.log(response);
+  form.acType = response.acType;
+  form.heatingType = response.heatingType;
+  form.laundryType = response.laundryType;
+  form.leaseType = response.leaseType;
+  form.parkingType = response.parkingType;
+  form.pets = response.pet;
+  // pageProperty = { ...response };
 }
 
 const currentAmenities = ref();
