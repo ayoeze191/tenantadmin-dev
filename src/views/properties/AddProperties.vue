@@ -306,7 +306,7 @@
                <p class="text-[#000000] text-[18px] font-sf leading-[100%]">
               Set Up Building And Unit Types
             </p>
-            <a-form class="bg-white p-6 rounded-xl flex flex-col gap-2" :rules="setuprules" :model="form">
+            <a-form class="bg-white p-6 rounded-xl flex flex-col gap-2"  :model="form">
               <a-form-item class="form-labels">
                 <div class="form-labels text-base mb-4 font-regular leading-[100%] font-sf">
                   Rental Unit
@@ -316,17 +316,7 @@
                   :disabled="true"
                   placeholder="Enter rental unit"
                   size="large"/>
-                <!-- <a-select
-                  ref="select"
-                  v-model:value="form.rental_unit"
-                  style="width: 200px"
-                  placeholder="Select Rental Unit"
-                  class="w-full"
-                  @focus="focus"
-                  @change="handleChange"
-                >
-                  <a-select-option value="condo">House</a-select-option>
-                </a-select> -->
+              
               </a-form-item>
 
               <a-form-item
@@ -381,14 +371,16 @@
              
                 <a-form-item
                   v-if="form.rental_unit == 'apartment' || form.rental_unit == 'shared_condo' || form.rental_unit == 'shared_house'"
-                  name="unit_type"
+                  name="unitType"
                   required
                   class="flex-1 form-labels"
+                  :rules="setuprules.unitType"
                 >
                   <div class="form-labels text-base mb-4 font-light leading-[100%] font-sf">
                     {{form.rental_unit == 'shared_condo' || form.rental_unit == 'shared_house' ? 'Room Type' : 'Unit Type'}}
                   </div>
                      <a-select
+                     
                     ref="select"
                     v-model:value="form.unitTypes[index].unitType"
                     style="width: 200px"
@@ -412,7 +404,8 @@
                 </a-form-item>
                 <a-form-item
                 v-if="form.rental_unit == 'apartment'"
-                  name="count"
+                  :rules="setuprules.quantity"
+                  name="quantity"
                   required
                   class="flex-1 form-labels"
                 >
@@ -429,9 +422,11 @@
               </div>
               <div class="flex gap-4">
                 <a-form-item
-                  name="rent_price"
+                  name="rentPerMonth"
                   required
                   class="flex-1 form-labels"
+                  :rules="setuprules.rentPerMonth"
+
                 >
                   <div class="form-labels text-base mb-4 font-regular leading-[100%] font-sf">
                     Rent Price
@@ -443,7 +438,8 @@
                   />
                 </a-form-item>
                 <a-form-item
-                  name="security_deposit"
+                  :rules="setuprules.securityDeposit"
+                  name="securityDeposit"
                   required
                   class="flex-1 form-labels"
                 >
@@ -462,38 +458,59 @@
 
               <div class="flex gap-4" v-if="form.rental_unit == 'condo' || form.rental_unit == 'house'">
                 <a-form-item
-                  name="rent_price"
+                  :rules="setuprules.bedRoom"
+                  name="bedRoom"
                   required
                   class="flex-1 form-labels"
                 >
                   <div class="form-labels text-base mb-4 font-regular leading-[100%] font-sf">
                     Bedroom
                   </div>
-                  <a-input
-                    placeholder="Rent Price"
-                    size="large"
-                  />
+                   <a-select
+                    ref="select"
+                    v-model:value="form.unitTypes[index].bedRoom"
+                    style="width: 200px"
+                    class="w-full h-[52px]"
+                    @focus="focus"
+                    @change="handleChange"
+                  >
+                 
+                    <a-select-option value="Yes">Yes</a-select-option>
+                    <a-select-option value="No"
+                      >No</a-select-option
+                    >
+                  </a-select>
                 </a-form-item>
                 <a-form-item
-                  name="security_deposit"
+                  :rules="setuprules.bathroom"
+                  name="bathroom"
                   required
                   class="flex-1 form-labels"
                 >
                   <div class="form-labels text-base mb-4 font-regular leading-[100%] font-sf">
                     Bathroom
                   </div>
-                  <a-input
-                  v-model="form.unitTypes[index].bathrooms"
-                    placeholder="Security Deposit"
-                    size="large"
-                  />
+                  <a-select
+                    ref="select"
+                    v-model:value="form.unitTypes[index].bathroom"
+                    style="width: 200px"
+                    class="w-full h-[52px]"
+                    @focus="focus"
+                    @change="handleChange"
+                  >
+                 
+                    <a-select-option value="Yes">Yes</a-select-option>
+                    <a-select-option value="No"
+                      >No</a-select-option
+                    >
+                  </a-select>
                 </a-form-item>
               </div>
 
 
               <div class="flex gap-4">
                 <a-form-item
-                  name="availability_date"
+                  name="availabilityDate"
                   required
                   class="flex-1 form-labels"
                 >
@@ -508,7 +525,7 @@
                   />
                 </a-form-item>
                 <a-form-item
-                  name="occupancy_status"
+                  name="occupancyStatus"
                   required
                   class="flex-1 form-labels"
                 >
@@ -705,10 +722,10 @@
                     @focus="focus"
                     @change="handleChange"
                   >
-                    <a-select-option value="apartment"
+                    <a-select-option value="In Unit"
                       >In Unit</a-select-option
                     >
-                    <a-select-option value="condo">Shared Laundry</a-select-option>
+                    <a-select-option value="Shared Laundry">Shared Laundry</a-select-option>
 
                   </a-select>
                 </a-form-item>
@@ -1221,7 +1238,9 @@ const form = reactive({
     bathrooms: "",
     bedrooms: "",
     unitImg: [],
-    fileList: []
+    fileList: [],
+    bedRoom: "",
+    bathroom: ""
   }],
   images: [],
   propertyAmenities: [],
@@ -1297,17 +1316,43 @@ const rules = {
   description: [{ required: true, message: "Description is required" }],
   city: [{ required: true, message: "City is required" }],
 };
+
 const setuprules = {
-  unit_type: [{ required: true, message: "Unit type is required" }],
-  count: [{ required: true, message: "Count is required" }],
-  rent_price: [{ required: true, message: "Rent price is required" }],
-  availability_date: [{ required: true, message: "Availability date is required" }],
-  occupancy_status: [{ required: true, message: "Occupancy status is required" }],
-  security_deposit: [{ required: true, message: "Security deposit is required" }],
-  // packingType: [{ required: true, message: "Packing type is required" }],
-  // pets: [{ required: true, message: "Pets is required" }],
-  // heating: [{ required: true, message: "Heating is required" }],  
-}
+  propertyAmenities: [
+    { required: true, message: 'Please select at least one amenity', type: 'array' }
+  ],
+  unitType: [
+    { required: true, message: 'Please select a unit type' }
+  ],
+  quantity: [
+    { required: true, message: 'Please enter quantity' },
+    { type: 'number', min: 1, message: 'Quantity must be at least 1' }
+  ],
+  rentPerMonth: [
+    { required: true, message: 'Please enter rent price' },
+    // { pattern: /^[0-9]+$/, message: 'Rent price must be a number'}
+  ],
+  securityDeposit: [
+    { required: true, message: 'Please enter security deposit' },
+    { pattern: /^[0-9]+$/, message: 'Deposit must be a number' }
+  ],
+  bedRoom: [
+    { required: true, message: 'Please select bedroom option' }
+  ],
+  bathroom: [
+    { required: true, message: 'Please select bathroom option' }
+  ],
+  availabilityDate: [
+    { required: true, message: 'Please enter availability date' }
+  ],
+  occupancyStatus: [
+    { required: true, message: 'Please select occupancy status' }
+  ],
+  fileList: [
+    { required: true, message: 'Please upload at least one image', type: 'array' }
+  ]
+};
+
 const stepOneRule = {
   rental_unit: [{ required: true, message: "Rental unit type is required" }],
 };
