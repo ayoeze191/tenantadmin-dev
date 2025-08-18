@@ -573,7 +573,7 @@
               <div v-if="form.rental_unit !== 'others'">
                 <div class="flex gap-4">
                   <a-form-item
-                  name="packingType"
+                  name="partkingType"
                   required
                   class="flex-1"
                 >
@@ -604,7 +604,7 @@
                   </a-select>
                 </a-form-item>
                 <a-form-item
-                  name="pets"
+                  name="pet"
                   required
                   class="flex-1 form-labels"
                 >
@@ -623,8 +623,8 @@
                     <a-select-option value="apartment"
                       >Yes</a-select-option
                     >
-                    <a-select-option value="condo">No</a-select-option>
-                    <a-select-option value="shared_condo"
+                    <a-select-option value="No">No</a-select-option>
+                    <a-select-option value="Conditional"
                       >Conditional</a-select-option
                     >
 
@@ -635,7 +635,7 @@
 
                 <div class="flex gap-4">
                   <a-form-item
-                  name="heating"
+                  name="heatingType"
                   required
                   class="flex-1 form-labels"
                 >
@@ -651,19 +651,18 @@
                     @focus="focus"
                     @change="handleChange"
                   >
-                    <a-select-option value="apartment"
+                    <a-select-option value="Central Heating"
                       >Central Heating</a-select-option
                     >
-                    <a-select-option value="condo">Electric Heating</a-select-option>
-                    <a-select-option value="shared_condo"
+                    <a-select-option value="Electric Heating">Electric Heating</a-select-option>
+                    <a-select-option value="Gas Heating"
                       >Gas Heating</a-select-option
                     >
-                    <a-select-option value="house">Heating Available</a-select-option>
-
+                    <a-select-option value="Heating Available">Heating Available</a-select-option>
                   </a-select>
                 </a-form-item>
                 <a-form-item
-                  name="ac_type"
+                  name="acType"
                   required
                   class="flex-1 form-labels"
                 >
@@ -679,18 +678,18 @@
                     @focus="focus"
                     @change="handleChange"
                   >
-                    <a-select-option value="apartment"
+                    <a-select-option value="Yes"
                       >Yes</a-select-option
                     >
-                    <a-select-option value="condo">No</a-select-option>
-                    <a-select-option value="shared_condo"
+                    <a-select-option value="No">No</a-select-option>
+                    <a-select-option value="Conditional"
                       >Conditional</a-select-option
                     >
                   </a-select>
                 </a-form-item>
               </div>
                <a-form-item
-                  name="laundry"
+                  name="laundryType"
                   required
                   class="flex-1 form-labels"
                 >
@@ -714,7 +713,7 @@
                   </a-select>
                 </a-form-item>
                    <a-form-item
-                  name="lease_type"
+                  name="leaseType"
                   required
                   class="flex-1 form-labels"
                 >
@@ -1313,13 +1312,14 @@ const stepOneRule = {
   rental_unit: [{ required: true, message: "Rental unit type is required" }],
 };
 
+
 const lastStepThreeRules = {
-  packingType: [{ required: true, message: "Packing type is required" }],
+  partkingType: [{ required: true, message: "Packing type is required" }],
   pets: [{ required: true, message: "Pets is required" }],
-  heating: [{ required: true, message: "Heating is required" }],
-  laundry: [{ required: true, message: "Laundry is required" }],
-  ac_type: [{ required: true, message: "AC type is required" }],
-  lease_type: [{ required: true, message: "Lease type is required" }],
+  heatingType: [{ required: true, message: "Heating is required" }],
+  laundryType: [{ required: true, message: "Laundry is required" }],
+  acType: [{ required: true, message: "AC type is required" }],
+  leaseType: [{ required: true, message: "Lease type is required" }],
   description: [{ required: true, message: "Description is required" }],
 }
 const fileList = ref([]);; // Cache for uploaded image URLs
@@ -1418,8 +1418,8 @@ const DisableNext = () => {
     }
   }
   // else if(currentStep.value == 2){
-  //     if(currentStep3.value == 2){
-  //       if(form.packingType === "" || form.pets === "" || form.heating === "" || form.laundry === "" || form.ac_type === "" || form.lease_type === "" || form.description === ""){
+  //     if(currentStep3.value == 1){
+  //       if(form.rent_price === "" || form.security_deposit === "" || form.heating === "" || form.laundry === "" || form.ac_type === "" || form.lease_type === "" || form.description === ""){
   //         return true;
   //       }
   //     }
@@ -1429,6 +1429,18 @@ const DisableNext = () => {
   //       }
   //     }
   // }
+  else if(currentStep.value == 2){
+    if(currentStep3.value == 2){
+       if(form.partkingType === "" || form.pet === "" || form.heatingType === "" || form.acType === "" || form.laundryType === "" || form.leaseType === "" || form.description === ""){
+          return true;
+        }
+    }
+  }
+  else if(currentStep.value == 3){
+    if(form.governmentID == '' || form.proofOfOwnership == "" || form.otherDocs == ""){
+      return true
+    }
+  }
   return false
 }
 // const handleRadioTypeChange = () => {
@@ -1461,7 +1473,6 @@ if (currentStep.value === 0) {
       }
       else{
         currentStep3.value = 1;
-        
       }
     currentStep.value++;
   }
