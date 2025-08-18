@@ -44,7 +44,6 @@
                 layout="vertical"
               >
               <a-form-item
-                
                 name="formType"
                 class="flex flex-col gap-2 bg-white">
                <a-select
@@ -1169,6 +1168,7 @@ const SubmitCreateProperty = async() => {
       acType: form.acType,
       leaseType: form.leaseType,
     }
+    // console.log("Payload for Create Property:", payloapayloadd);
     try{
       const res = await CreateNewProperty(payload)
       showSuccessModal.value = true;
@@ -1406,17 +1406,17 @@ const fetchLandlords = async (searchName = "", page = 1) => {
 
 
 const DisableNext = () => {
-  // if(currentStep.value == 0){
-  //     if(form.rental_unit === null){
-  //       console.log("Rental unit type is required", form.rental_unit);
-  //       return true;
-  //     }
-  // }
-  // else if(currentStep.value == 1){
-  //   if (form.name === "" || form.address === "" || form.zipCode === "" || form.province === "" ||  form.city === "") {
-  //     return true;
-  //   }
-  // }
+ if(currentStep.value == 0){
+       if(form.rental_unit === null || form.landlordId == null){
+         console.log("Rental unit type is required", form.rental_unit);
+         return true;
+       }
+   }
+  else if(currentStep.value == 1){
+    if (form.name === "" || form.address === "" || form.zipCode === "" || form.province === "" ||  form.city === "") {
+      return true;
+    }
+  }
   // else if(currentStep.value == 2){
   //     if(currentStep3.value == 2){
   //       if(form.packingType === "" || form.pets === "" || form.heating === "" || form.laundry === "" || form.ac_type === "" || form.lease_type === "" || form.description === ""){

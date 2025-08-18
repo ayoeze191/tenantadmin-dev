@@ -332,39 +332,15 @@
                   size="large"
                 />
               </a-form-item>
-              <div class="font-semibold text-gray-700 text-base mt-6 mb-2">
-                Lease Information
-              </div>
-              <a-form-item label="Property" name="unitId" required>
-                <a-select
-                  v-model:value="tenantForm.unitId"
-                  :options="propertyOptions"
-                  placeholder="Select property"
+
+              <a-form-item label="Lease Start Date" name="phoneNumber" required>
+                <a-input
+                  v-model:value="tenantForm.phoneNumber"
+                  placeholder="Lease Start Date"
                   size="large"
                 />
               </a-form-item>
-              <a-form-item label="Lease Start Date" name="startDate" required>
-                <a-date-picker
-                  v-model:value="tenantForm.startDate"
-                  style="width: 100%"
-                  size="large"
-                />
-              </a-form-item>
-              <a-form-item label="Lease End Date" name="endDate" required>
-                <a-date-picker
-                  v-model:value="tenantForm.endDate"
-                  style="width: 100%"
-                  size="large"
-                />
-              </a-form-item>
-              <a-form-item label="Rent Rate" name="rentRate" required>
-                <a-input-number
-                  v-model:value="tenantForm.rentRate"
-                  style="width: 100%"
-                  min="0"
-                  size="large"
-                />
-              </a-form-item>
+
               <div class="flex justify-end gap-3 mt-8">
                 <a-button @click="resetTenantModal" size="large"
                   >Cancel</a-button
@@ -509,20 +485,24 @@
               @focus="focus"
               @change="handleChange"
             >
-              <a-select-option value="apartment"
+              <a-select-option value="Driveway Packing"
                 >Driveway Packing</a-select-option
               >
-              <a-select-option value="condo"
+              <a-select-option value="Off Street Packing"
                 >Off Street Packing</a-select-option
               >
-              <a-select-option value="shared_condo"
+              <a-select-option value="1 Car Garage"
                 >1 Car Garage</a-select-option
               >
-              <a-select-option value="house">2 Car Garage</a-select-option>
-              <a-select-option value="shared_house"
+              <a-select-option value="2 Car Garage"
+                >2 Car Garage</a-select-option
+              >
+              <a-select-option value="3 Car Garage"
                 >3 Car Garage</a-select-option
               >
-              <a-select-option value="others">4 Car Garage</a-select-option>
+              <a-select-option value="4 Car Garage"
+                >4 Car Garage</a-select-option
+              >
             </a-select>
           </a-form-item>
           <a-form-item name="pets" required class="flex-1 form-labels">
@@ -565,14 +545,16 @@
               @focus="focus"
               @change="handleChange"
             >
-              <a-select-option value="apartment"
+              <a-select-option value="Electric Heating"
                 >Central Heating</a-select-option
               >
-              <a-select-option value="condo">Electric Heating</a-select-option>
-              <a-select-option value="shared_condo"
-                >Gas Heating</a-select-option
+              <a-select-option value="Electric Heating"
+                >Electric Heating</a-select-option
               >
-              <a-select-option value="house">Heating Available</a-select-option>
+              <a-select-option value="Gas Heating">Gas Heating</a-select-option>
+              <a-select-option value="Heating Available"
+                >Heating Available</a-select-option
+              >
             </a-select>
           </a-form-item>
           <a-form-item name="ac_type" required class="flex-1 form-labels">
@@ -613,8 +595,10 @@
             @focus="focus"
             @change="handleChange"
           >
-            <a-select-option value="apartment">In Unit</a-select-option>
-            <a-select-option value="condo">Shared Laundry</a-select-option>
+            <a-select-option value="In Unit">In Unit</a-select-option>
+            <a-select-option value="Shared Laundry"
+              >Shared Laundry</a-select-option
+            >
           </a-select>
         </a-form-item>
 
@@ -667,11 +651,183 @@
           </button>
           <button
             class="bg-[#000130] border py-[12px] px-[62px] text-[#fff] font-sf font-semibold leading-[28px] rounded-[4px]"
+            @click="EditProperty"
           >
             Save
           </button>
         </div>
       </div>
+    </a-modal>
+    <a-modal
+      :footer="null"
+      width="768px"
+      :visible="false"
+      centered
+      :bodyStyle="{ padding: '0' }"
+      class=""
+      :closable="false"
+      @cancel="resetTenantModal"
+    >
+      <!-- <div class="add-tenants-modal-header">
+        <div class="modal-title">Add Tenants</div>
+      </div> -->
+      <template #title>
+        <div
+          class="flex items-center justify-between border-b border-[#C7C7C7] py-[12px]"
+        >
+          <div
+            class="cursor-pointer flex items-center gap-[8px] text-txt_dark text-[18px] font-medium"
+          >
+            <ArrowLeftOutlined
+              @click="goBack"
+              class="text-[18px] text-[#808097]"
+            />
+            Back
+          </div>
+          <span class="modal-title">Edit Units</span>
+          <span></span>
+        </div>
+      </template>
+      <div>
+        <div
+          class="bg-[#E6F1FC] flex items-start gap-[8px] p-2 rounded-[8px] mt-[37px]"
+        >
+          <div class="">
+            <svg
+              width="21"
+              height="20"
+              viewBox="0 0 21 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10.5 0.25C8.57164 0.25 6.68657 0.821828 5.08319 1.89317C3.47982 2.96451 2.23013 4.48726 1.49218 6.26884C0.754225 8.05042 0.561142 10.0108 0.937348 11.9021C1.31355 13.7934 2.24215 15.5307 3.60571 16.8943C4.96928 18.2579 6.70656 19.1865 8.59787 19.5627C10.4892 19.9389 12.4496 19.7458 14.2312 19.0078C16.0127 18.2699 17.5355 17.0202 18.6068 15.4168C19.6782 13.8134 20.25 11.9284 20.25 10C20.2473 7.41498 19.2192 4.93661 17.3913 3.10872C15.5634 1.28084 13.085 0.25273 10.5 0.25ZM10.5 18.25C8.86831 18.25 7.27326 17.7661 5.91655 16.8596C4.55984 15.9531 3.50242 14.6646 2.878 13.1571C2.25358 11.6496 2.0902 9.99085 2.40853 8.3905C2.72685 6.79016 3.51259 5.32015 4.66637 4.16637C5.82016 3.01259 7.29017 2.22685 8.89051 1.90852C10.4909 1.59019 12.1497 1.75357 13.6571 2.37799C15.1646 3.00242 16.4531 4.05984 17.3596 5.41655C18.2661 6.77325 18.75 8.3683 18.75 10C18.7475 12.1873 17.8775 14.2843 16.3309 15.8309C14.7843 17.3775 12.6873 18.2475 10.5 18.25ZM12 14.5C12 14.6989 11.921 14.8897 11.7803 15.0303C11.6397 15.171 11.4489 15.25 11.25 15.25C10.8522 15.25 10.4706 15.092 10.1893 14.8107C9.90804 14.5294 9.75 14.1478 9.75 13.75V10C9.55109 10 9.36033 9.92098 9.21967 9.78033C9.07902 9.63968 9 9.44891 9 9.25C9 9.05109 9.07902 8.86032 9.21967 8.71967C9.36033 8.57902 9.55109 8.5 9.75 8.5C10.1478 8.5 10.5294 8.65804 10.8107 8.93934C11.092 9.22064 11.25 9.60218 11.25 10V13.75C11.4489 13.75 11.6397 13.829 11.7803 13.9697C11.921 14.1103 12 14.3011 12 14.5ZM9 5.875C9 5.6525 9.06598 5.43499 9.1896 5.24998C9.31322 5.06498 9.48892 4.92078 9.69449 4.83564C9.90005 4.75049 10.1263 4.72821 10.3445 4.77162C10.5627 4.81502 10.7632 4.92217 10.9205 5.0795C11.0778 5.23684 11.185 5.43729 11.2284 5.65552C11.2718 5.87375 11.2495 6.09995 11.1644 6.30552C11.0792 6.51109 10.935 6.68679 10.75 6.8104C10.565 6.93402 10.3475 7 10.125 7C9.82664 7 9.54049 6.88147 9.32951 6.6705C9.11853 6.45952 9 6.17337 9 5.875Z"
+                fill="#163278"
+              />
+            </svg>
+          </div>
+          <div class="m-0">
+            <p class="text-[#163278] m-0 font-sf font-semibold leading-[100%]">
+              You are editing a single unit
+            </p>
+            <p class="text-[#163278] m-0 text-[14px] font-sf">
+              Not all instances of the similar units would change or be affected
+              by this edit.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <a-form>
+        <p class="text-[#404164] text-[20px] font-sf font-medium mt-[38px]">
+          Unit Information
+        </p>
+        <a-form-item name="rentRate" required>
+          <div
+            class="form-labels text-base mb-4 font-light leading-[100%] font-sf"
+          >
+            Reference Number
+          </div>
+          <a-input-number style="width: 100%" min="0" size="large" />
+        </a-form-item>
+
+        <div class="flex gap-4">
+          <a-form-item name="rent_price" required class="flex-1 form-labels">
+            <div
+              class="form-labels text-base mb-4 font-regular leading-[100%] font-sf"
+            >
+              Rent Price
+            </div>
+            <a-input placeholder="Rent Price" size="large" />
+          </a-form-item>
+          <a-form-item
+            name="security_deposit"
+            required
+            class="flex-1 form-labels"
+          >
+            <div
+              class="form-labels text-base mb-4 font-regular leading-[100%] font-sf"
+            >
+              Security Deposit
+            </div>
+            <a-input placeholder="Security Deposit" size="large" />
+          </a-form-item>
+        </div>
+
+        <div class="flex gap-4">
+          <a-form-item name="rent_price" required class="flex-1 form-labels">
+            <div
+              class="form-labels text-base mb-4 font-regular leading-[100%] font-sf"
+            >
+              Availability Date
+            </div>
+            <a-input placeholder="Rent Price" size="large" />
+          </a-form-item>
+          <a-form-item
+            name="security_deposit"
+            required
+            type="date"
+            class="flex-1 form-labels"
+          >
+            <div
+              class="form-labels text-base mb-4 font-regular leading-[100%] font-sf"
+            >
+              Occupancy Status
+            </div>
+            <a-input placeholder="Security Deposit" size="large" />
+          </a-form-item>
+        </div>
+        <a-form-item>
+          <div
+            class="form-labels text-base mb-4 font-regular leading-[100%] font-sf"
+          >
+            Upload Photos
+          </div>
+          <a-upload-dragger
+            class="border-dashed border-[#C7C7C7] rounded-[5px] p-[14px]"
+            name="file"
+            list-type="picture-card"
+          >
+            <p class="ant-upload-drag-icon mx-auto w-fit pt-[28px]">
+              <svg
+                width="26"
+                height="31"
+                viewBox="0 0 26 31"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M25.0459 9.07906L17.1709 1.20406C17.0664 1.09962 16.9423 1.01681 16.8057 0.960347C16.6691 0.903885 16.5228 0.874884 16.375 0.875H2.875C2.27826 0.875 1.70597 1.11205 1.28401 1.53401C0.862053 1.95597 0.625 2.52826 0.625 3.125V27.875C0.625 28.4717 0.862053 29.044 1.28401 29.466C1.70597 29.8879 2.27826 30.125 2.875 30.125H23.125C23.7217 30.125 24.294 29.8879 24.716 29.466C25.1379 29.044 25.375 28.4717 25.375 27.875V9.875C25.3751 9.72722 25.3461 9.58086 25.2897 9.44429C25.2332 9.30772 25.1504 9.18362 25.0459 9.07906ZM17.5 4.71547L21.5345 8.75H17.5V4.71547ZM23.125 27.875H2.875V3.125H15.25V9.875C15.25 10.1734 15.3685 10.4595 15.5795 10.6705C15.7905 10.8815 16.0766 11 16.375 11H23.125V27.875ZM17.1709 16.9541C17.2755 17.0586 17.3584 17.1827 17.4149 17.3192C17.4715 17.4558 17.5006 17.6022 17.5006 17.75C17.5006 17.8978 17.4715 18.0442 17.4149 18.1808C17.3584 18.3173 17.2755 18.4414 17.1709 18.5459C17.0664 18.6505 16.9423 18.7334 16.8058 18.7899C16.6692 18.8465 16.5228 18.8756 16.375 18.8756C16.2272 18.8756 16.0808 18.8465 15.9442 18.7899C15.8077 18.7334 15.6836 18.6505 15.5791 18.5459L14.125 17.0905V23.375C14.125 23.6734 14.0065 23.9595 13.7955 24.1705C13.5845 24.3815 13.2984 24.5 13 24.5C12.7016 24.5 12.4155 24.3815 12.2045 24.1705C11.9935 23.9595 11.875 23.6734 11.875 23.375V17.0905L10.4209 18.5459C10.3164 18.6505 10.1923 18.7334 10.0558 18.7899C9.91919 18.8465 9.77282 18.8756 9.625 18.8756C9.47718 18.8756 9.33081 18.8465 9.19424 18.7899C9.05767 18.7334 8.93359 18.6505 8.82906 18.5459C8.72454 18.4414 8.64163 18.3173 8.58506 18.1808C8.52849 18.0442 8.49937 17.8978 8.49937 17.75C8.49937 17.6022 8.52849 17.4558 8.58506 17.3192C8.64163 17.1827 8.72454 17.0586 8.82906 16.9541L12.2041 13.5791C12.3085 13.4745 12.4326 13.3915 12.5692 13.3349C12.7058 13.2783 12.8522 13.2491 13 13.2491C13.1478 13.2491 13.2942 13.2783 13.4308 13.3349C13.5674 13.3915 13.6915 13.4745 13.7959 13.5791L17.1709 16.9541Z"
+                  fill="#404164"
+                />
+              </svg>
+            </p>
+            <p
+              class="ant-upload-text text-[#404164] font-600 font-sf leading-[100%]"
+            >
+              Drop Photos here or click to upload
+            </p>
+            <p
+              class="ant-upload-hint text-[#808097] font-[12px] font-sf leading-[100%]"
+            >
+              Accepted File Types: png, jpg
+            </p>
+          </a-upload-dragger>
+        </a-form-item>
+
+        <div class="flex gap-2.5 ml-auto w-fit">
+          <button
+            class="border-[#000130] border py-[12px] px-[62px] text-[#404164] font-sf font-semibold leading-[28px] rounded-[4px]"
+          >
+            Cancel
+          </button>
+          <button
+            class="bg-[#000130] border py-[12px] px-[62px] text-[#fff] font-sf font-semibold leading-[28px] rounded-[4px]"
+          >
+            Save
+          </button>
+        </div>
+      </a-form>
     </a-modal>
   </div>
 </template>
@@ -692,6 +848,7 @@ import {
   getunitDetails,
 } from "@/api/properties";
 const form = reactive({
+  accommodationId: "",
   parkingType: "",
   pets: "da",
   heatingType: "",
@@ -725,6 +882,7 @@ const UNIT_TYPE_ENUM = [
   { label: "Shared Accommodation", value: 10 },
   { label: "Hostel/Dormitory", value: 11 },
 ];
+
 onMounted(async () => {
   await optionsStore.fetchAmenities();
 
@@ -802,7 +960,12 @@ const createProperties = async () => {
   showAddTenantModal.value = false;
 };
 const EditProperty = async () => {
-  const res = await UpdateProperty();
+  try {
+    const res = await UpdateProperty({ ...form });
+    showEditPropertyModal.value = false;
+  } catch (err) {
+    console.log(err);
+  }
 };
 const propertyOptions = computed(() => {
   // You can fetch or map your properties here. For demo, use current property only.
@@ -1055,6 +1218,7 @@ async function getAccomodationDetails(id) {
   form.leaseType = response.leaseType;
   form.parkingType = response.parkingType;
   form.pets = response.pet;
+  form.accommodationId = response.accommodationId;
   // pageProperty = { ...response };
 }
 
@@ -1205,7 +1369,9 @@ async function fetchCurrentAmenities(id) {
   align-items: center;
   gap: 1rem;
 }
-
+.ant-modal .ant-modal-body {
+  padding: 0 !important;
+}
 .landlord-avatar {
   display: flex;
   align-items: center;

@@ -67,7 +67,7 @@ export const CreateNewProperty = async (payload) => {
 
 export const UpdateProperty = async (payload) => {
   try {
-    const response = await putApi(`Accommodation/EditProperty`, payload);
+    const response = await postApi(`Accommodation/EditProperty`, payload);
     return response.data;
   } catch (error) {
     handleError(error);
