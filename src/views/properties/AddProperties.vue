@@ -1057,8 +1057,8 @@
 </svg>
 </div>
 
-<div>
-  <RouterLink to="/properties" class="bg-[#000130] w-full rounded-[4px] py-[9px] text-[500] leading-[25px] text-white mt-[36px]">View Accomodations</RouterLink>
+<div class="flex flex-col">
+  <RouterLink to="/properties" class="bg-[#000130] text-center w-full rounded-[4px] py-[9px] text-[500] leading-[25px] text-white mt-[36px]">View Accomodations</RouterLink>
   <RouterLink to="/edit" class="text-[#404164] font-semibold leading-[100%] text-[18px]  mt-4 text-center mx-auto w-full">Edit Accomodations</RouterLink>
 </div>
     </a-modal>
