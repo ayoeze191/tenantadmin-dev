@@ -1182,7 +1182,7 @@ const SubmitCreateProperty = async() => {
       heatingType: form.heatingType,
       laundryType: form.laundryType,
       acType: form.acType,
-      leaseType: form.leaseType,
+      leaseType: form.leaseType.join(','),
     }
     // console.log("Payload for Create Property:", payloapayloadd);
     try{
