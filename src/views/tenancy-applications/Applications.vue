@@ -99,6 +99,9 @@ export default {
     onModalClose() {
       console.log("Modal was closed");
     },
+    fetchData() {
+      console.log("fetching");
+    },
   },
 };
 </script>
