@@ -20,17 +20,28 @@ export const FetchLandlords = async (params = {}) => {
   }
 };
 
+export const getPropertyInfo = async (id) => {
+  try {
+    const response = await getApi(
+      `Accommodation/ViewPropertyInfo?accommodationId=${38}`
+    );
+    return response.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const FetchProperties = async (landlordId, query) => {
   let response;
   try {
     if (landlordId == "NN1") {
       response = await getApi(
-        `/Accommodation/GetAllProperties?pageNumber=${query.page}&pageSize=${query.size}`
+        `Accommodation/PropertyList?CurrentPage=${query.page}&pageSize=${query.size}`
       );
       return response.data;
     }
     response = await getApi(
-      `/Accommodation/GetAllProperties?LandLordId=${landlordId}&pageNumber=${query.page}&pageSize=${query.size}`
+      `Accommodation/PropertyList?LandLordId=${landlordId}&CurrentPage=${query.page}&pageSize=${query.size}`
     );
     return response.data;
   } catch (error) {
@@ -117,5 +128,14 @@ export const uploadImage = async (payload) => {
     return response.data;
   } catch (error) {
     console.log("Error uploading image:", error);
+  }
+};
+
+export const getProvinces = async () => {
+  try {
+    const response = await getApi("Location/provinces-with-cities");
+    return response.data;
+  } catch (error) {
+    console.log(error);
   }
 };

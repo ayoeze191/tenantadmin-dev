@@ -4,18 +4,37 @@
     :footer="footer"
     @ok="onOk"
     @cancel="onCancel"
-    :width="480"
+    :width="768"
   >
+    <template #title>
+      <div
+        class="flex items-center justify-between border-b border-[#C7C7C7] py-[12px]"
+      >
+        <div
+          class="cursor-pointer flex items-center gap-[8px] text-txt_dark text-[18px] font-medium"
+        >
+          <ArrowLeftOutlined
+            @click="
+              () => {
+                showApproveSuccessModal = false;
+                showRequestsModal = true;
+              }
+            "
+            class="text-[18px]"
+          />
+        </div>
+        <span class="text-[32px] leading-[28px] font-[500] font-sf">
+          {{ payment.tenantName }}</span
+        >
+        <span></span>
+      </div>
+    </template>
     <div>
       <div v-if="modalType === 'notify'">
-        <div class="text-xl font-bold text-gray-900 mb-1">
-          Send Notification
-        </div>
         <div
-          v-if="payment?.tenantName"
-          class="text-base font-medium text-primary mb-6"
+          class="text-xl mt-[24px] mb-[32px] font-sf font-medium text-gray-900"
         >
-          {{ payment.tenantName }}
+          Send Notification
         </div>
       </div>
       <div v-else-if="modalType === 'confirm'">

@@ -42,7 +42,7 @@
         @ok="sendNotification"
         @cancel="closeNotifyModal"
       >
-        <div class="space-y-3 max-w-md mx-auto">
+        <div class="space-y-3 mx-auto">
           <a-form-item
             :validate-status="notifyErrors.title ? 'error' : ''"
             :help="notifyErrors.title"
@@ -66,7 +66,7 @@
             />
           </a-form-item>
           <div>
-            <div class="mb-1 text-xs text-gray-400 font-medium">
+            <div class="mb-1 font-sf text-[#808097] font-medium">
               Choose saved messages
             </div>
             <div class="flex flex-wrap gap-2 mb-1">
@@ -74,7 +74,7 @@
                 v-for="msg in savedMessages"
                 :key="msg"
                 @click="notifyMessage = msg"
-                class="cursor-pointer bg-gray-100 hover:bg-primary/10 border-none text-gray-700"
+                class="cursor-pointer bg-gray-100 hover:bg-primary/10 border-none text-[#808097] py-[6px] font-medium leading-[28px]"
                 >{{ msg.length > 30 ? msg.slice(0, 30) + "..." : msg }}</a-tag
               >
             </div>

@@ -121,7 +121,7 @@
                         stroke-linejoin="round"
                       />
                     </svg>
-                    {{ property.units.length }} Units
+                    {{ property.totalUnits }} Units
                   </span>
                 </div>
                 <!-- View Details Button -->
@@ -223,10 +223,10 @@ export default {
       FetchProperties(this.store.userProfile.referenceID, query)
         .then((response) => {
           if (response.responseCode == "00") {
-            this.propertyList = response.properties.items;
-            this.total = response.properties.totalItemCount || 0;
-            this.pageSize = response.properties.pageSize || this.pageSize;
-            this.currentPage = response.properties.page || page;
+            this.propertyList = response.propertyRecs.items;
+            this.total = response.propertyRecs.totalItemCount || 0;
+            this.pageSize = response.propertyRecs.pageSize || this.pageSize;
+            this.currentPage = response.propertyRecs.page || page;
           } else {
             this.error = "Failed to load properties.";
           }

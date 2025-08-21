@@ -1,7 +1,7 @@
-import { defineStore } from 'pinia';
-import { FetchAmenities, FetchUnitTypes } from '@/api/properties';
+import { defineStore } from "pinia";
+import { FetchAmenities, FetchUnitTypes } from "@/api/properties";
 
-export const useOptionsStore = defineStore('options', {
+export const useOptionsStore = defineStore("options", {
   state: () => ({
     amenities: [],
     unitTypes: [],
@@ -21,8 +21,9 @@ export const useOptionsStore = defineStore('options', {
     async fetchUnitTypes() {
       if (!this.unitTypesLoaded) {
         const res = await FetchUnitTypes();
-        if (res && Array.isArray(res)) {
-          this.unitTypes = res;
+        console.log(res.data, "as");
+        if (res && Array.isArray(res.data)) {
+          this.unitTypes = res.data;
           this.unitTypesLoaded = true;
         }
       }
@@ -32,6 +33,6 @@ export const useOptionsStore = defineStore('options', {
       this.unitTypes = [];
       this.amenitiesLoaded = false;
       this.unitTypesLoaded = false;
-    }
-  }
-}); 
+    },
+  },
+});

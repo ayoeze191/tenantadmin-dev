@@ -840,7 +840,7 @@ import { useRoute, useRouter } from "vue-router";
 import Propertyheader from "@/components/Propertyheader.vue";
 import { useToast } from "vue-toast-notification";
 import { useOptionsStore } from "@/stores/options";
-import { UpdateProperty } from "@/api/properties";
+import { UpdateProperty, getPropertyInfo } from "@/api/properties";
 
 import {
   GetAccomodationById,
@@ -855,7 +855,7 @@ const form = reactive({
   acType: "",
   laundryType: "",
   leaseType: [],
-  propertyAmenities: [],
+  amenities: [],
   description: "",
 });
 const amenityOptions = ref([]);
@@ -863,6 +863,8 @@ const route = useRoute();
 const activeKey = ref(1);
 const router = useRouter();
 const property = ref(null);
+const propertyInfo = ref(null);
+const propertyUnitIInfo = ref(null);
 const loading = ref(true);
 const error = ref(null);
 
@@ -961,7 +963,10 @@ const createProperties = async () => {
 };
 const EditProperty = async () => {
   try {
-    const res = await UpdateProperty({ ...form });
+    const res = await UpdateProperty({
+      ...form,
+      leaseType: form.leaseType.join(","),
+    });
     showEditPropertyModal.value = false;
   } catch (err) {
     console.log(err);
@@ -979,6 +984,7 @@ const propertyOptions = computed(() => {
 onMounted(async () => {
   const id = route.params.id || route.params.accommodationId;
   await getAccomodationDetails(id);
+  await fetchPropertyInfo(id);
   if (!id) {
     error.value = "No property ID provided.";
     loading.value = false;
@@ -1208,10 +1214,20 @@ function downloadSampleFile() {
   a.click();
   URL.revokeObjectURL(url);
 }
+async function fetchPropertyInfo(id) {
+  try {
+    const response = await getPropertyInfo(id);
+    console.log(response);
+    propertyInfo.value = response.propertydata;
+    propertyUnitIInfo.value = response.propertyunits;
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 async function getAccomodationDetails(id) {
   const response = await GetAccomodationById(id);
-  console.log(response);
+  // console.log(response);
   form.acType = response.acType;
   form.heatingType = response.heatingType;
   form.laundryType = response.laundryType;

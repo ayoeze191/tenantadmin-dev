@@ -130,7 +130,35 @@
                   size="large"
                 />
               </a-form-item>
-              <a-form-item class="">
+               <a-form-item class="w-full">
+                <div class="form-labels text-lg mb-4 font-light">
+                  Province
+                </div>
+                <a-select
+                  ref="select"
+                  v-model:value="form.province"
+                  style="width: 200px"
+                  placeholder="Select City"
+                  class="w-full"
+                  @focus="focus"
+                  @change="handleChange"
+                >
+                  <a-select-option v-for="prov in allProvinces" :value="prov.provinceId">{{prov.name}}</a-select-option>
+                </a-select>
+              </a-form-item>
+
+              <div class="flex gap-4">
+                <a-form-item name="zipCode" required class=" w-full">
+                  <div class="form-labels text-lg mb-4 font-light">
+                    Zip Code
+                  </div>
+                  <a-input
+                    v-model:value="form.zipCode"
+                    placeholder="Zip code"
+                    size="large"
+                  />
+                </a-form-item>
+               <a-form-item class="w-full">
                 <div class="form-labels text-lg mb-4 font-light">
                   City
                 </div>
@@ -143,41 +171,16 @@
                   @focus="focus"
                   @change="handleChange"
                 >
-                  <a-select-option value="New York">New York</a-select-option>
+                 <a-select-option 
+  v-for="city in allProvinces.find(prov => prov.provinceId === form.province)?.cities || []" 
+  :key="city.id"
+  :value="city.name"
+>
+  {{ city.name }}
+</a-select-option>
 
-                  <a-select-option value="Lodon">London</a-select-option>
-                  <a-select-option value="Italy"
-                    >Italy</a-select-option
-                  >
-                  <a-select-option value="Amsterdan">Amsterdan</a-select-option>
                 </a-select>
               </a-form-item>
-
-              <div class="flex gap-4">
-                <a-form-item name="zipCode" required class="flex-1">
-                  <div class="form-labels text-lg mb-4 font-light">
-                    Zip Code
-                  </div>
-                  <a-input
-                    v-model:value="form.zipCode"
-                    placeholder="Zip code"
-                    size="large"
-                  />
-                </a-form-item>
-                <a-form-item
-                  name="province"
-                  required
-                  class="flex-1 "
-                >
-                  <div class="form-labels text-lg mb-4 font-light">
-                    Province
-                  </div>
-                  <a-input
-                    v-model:value="form.province"
-                    placeholder="Province"
-                    size="large"
-                  />
-                </a-form-item>
               </div>
             </a-form>
           </div>
@@ -389,16 +392,9 @@
                     @focus="focus"
                     @change="handleChange"
                   >
-                    <a-select-option value="Studio"
-                      >Studio</a-select-option
-                    >
-                    <a-select-option value="2 Bedrooms">2 Bedrooms</a-select-option>
-                    <a-select-option value="2 Bedrooms + Den"
-                      >2 Bedrooms + Den</a-select-option
-                    >
-                    <a-select-option value="3 Bedrooms">3 Bedrooms</a-select-option>
-                    <a-select-option value="3 Bedrooms + Den"
-                      >3 Bedrooms + Den</a-select-option
+                    <a-select-option v-model:value="unit.id"
+                    v-for="unit in unitTypeOptions"
+                      >{{unit.name}}</a-select-option
                     >
                   </a-select>
                 </a-form-item>
@@ -466,44 +462,18 @@
                   <div class="form-labels text-base mb-4 font-regular leading-[100%] font-sf">
                     Bedroom
                   </div>
-                   <a-select
-                    ref="select"
-                    v-model:value="form.unitTypes[index].bedRoom"
-                    style="width: 200px"
-                    class="w-full h-[52px]"
-                    @focus="focus"
-                    @change="handleChange"
-                  >
-                 
-                    <a-select-option value="Yes">Yes</a-select-option>
-                    <a-select-option value="No"
-                      >No</a-select-option
-                    >
-                  </a-select>
+                  <a-input type="number" placeholder="Enter Bedroom No" v-model="form.unitTypes[index].bedrooms" />
                 </a-form-item>
-                <a-form-item
+                 <a-form-item
                   :rules="setuprules.bathroom"
-                  name="bathroom"
+                  name="Bathroom"
                   required
                   class="flex-1 form-labels"
                 >
                   <div class="form-labels text-base mb-4 font-regular leading-[100%] font-sf">
                     Bathroom
                   </div>
-                  <a-select
-                    ref="select"
-                    v-model:value="form.unitTypes[index].bathroom"
-                    style="width: 200px"
-                    class="w-full h-[52px]"
-                    @focus="focus"
-                    @change="handleChange"
-                  >
-                 
-                    <a-select-option value="Yes">Yes</a-select-option>
-                    <a-select-option value="No"
-                      >No</a-select-option
-                    >
-                  </a-select>
+                  <a-input type="number" placeholder="Enter Bathroom No" v-model="form.unitTypes[index].bathroom" />
                 </a-form-item>
               </div>
 
@@ -919,6 +889,17 @@
                 No Image
               </div>
             </div>
+              <div
+              class="flex justify-between items-center px-[10px] text-[12px] text-[#808097] font-medium"
+            >
+              <span class="flex gap-2.5 leading-[25px]"
+                ><span  style="color: green;" v-if="form.rental_unit"><CheckOutlined color="green" /></span>
+                <CloseOutlined v-else />Rental Unit</span
+              >
+              <p class="text-[#808097] m-0">
+                {{ form.rental_unit || "Not Set" }}
+              </p>
+            </div>
             <div
               class="flex justify-between items-center px-[10px] text-[12px] text-[#808097] font-medium"
             >
@@ -1065,7 +1046,7 @@
 </template>
 
 <script setup>
-import {  CreateNewProperty, FetchLandlords } from "@/api/properties";
+import {  CreateNewProperty, FetchLandlords, getProvinces } from "@/api/properties";
 import { useUserStore } from "@/store";
 import { useOptionsStore } from "@/stores/options";
 // CreateNewProperty,
@@ -1107,6 +1088,13 @@ const handleAddUnit = () => {
     fileList: []
   });
 }
+
+const allProvinces = ref([])
+const fetchProvinces = async () => {
+  const response = await getProvinces() 
+  allProvinces.value = response
+}
+const allUnittpyes = ref([])
 const customUpload = async (options, index) => {
   const { file, onSuccess, onError } = options
   const formData = new FormData()
@@ -1255,18 +1243,19 @@ const router = useRouter();
 const route = useRoute();
 const store = useUserStore();
 const optionsStore = useOptionsStore();
-
+const unitTypeOptions = ref({})
 onMounted(async () => {
   await optionsStore.fetchAmenities();
+  await optionsStore.fetchUnitTypes()
   console.log("restaurantely");
   await fetchLandlords();
-
+  await fetchProvinces()
   amenityOptions.value = optionsStore.amenities.map((a) => ({
     label: a.name,
     value: a.amenityId,
     image: a.image || a.icon || null,
   }));
- 
+  unitTypeOptions.value = [...optionsStore.unitTypes]
   // form.unitTypeCounts = Array(optionsStore.unitTypes.length).fill(0);
 
   // EDIT MODE: If route has id, fetch property from IndexedDB

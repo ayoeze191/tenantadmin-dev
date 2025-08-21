@@ -21,10 +21,10 @@
             <h3
               class="text-[#404164] leading-[100%] text-[26px] font-bold font-sf"
             >
-              Claudia Martins
+              {{ application.applicantName || "Nill" }}
             </h3>
             <p class="text-[#404164] font-sf text-[18px] leading-[100%]">
-              claudiamartins@gmail.com
+              {{ application.email || "Nill" }}
             </p>
             <p class="text-[18px] font-sf text-[#404164] leading-[100%]">
               24 Years Old
@@ -44,6 +44,7 @@
             Approve
           </button>
           <button
+            @click="showDeclinemoldal = true"
             class="border-[#F47B7B] h-fit bg-[#FFEDED] text-[#F47B7B] border-[0.99px] border-solid rounded-[5px] px-[12px] py-[6px]"
           >
             Decline
@@ -72,7 +73,7 @@
             Current Address<span
               class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
             >
-              123, Lavington Road, New Brunswick
+              {{ application.currentAddress || "Nill" }}
             </span>
           </p>
           <p
@@ -80,8 +81,9 @@
           >
             Nationality<span
               class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-              >Nigerian</span
             >
+              {{ application.nationality || "Nill" }}
+            </span>
           </p>
           <p
             class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
@@ -172,6 +174,7 @@
         </p>
         <div class="flex items-center justify-center mt-[64px]">
           <button
+            @click="HandleGenerateLease"
             class="bg-[#000130] rounded-[4px] w-[229px] h-[51px] text-white mx-auto"
           >
             Generate Lease
@@ -193,7 +196,7 @@
               class="cursor-pointer flex items-center gap-[8px] text-txt_dark text-[18px] font-medium"
             >
               <ArrowLeftOutlined
-                @click="showmoldal = false"
+                @click="showDeclinemoldal = false"
                 class="text-[18px]"
               />
             </div>
@@ -202,26 +205,251 @@
           </div>
         </template>
         <div class="flex items-center flex-col mx-auto">
-          <p class="text-[#404164] text-[20px] font-sf text-center mt-[57px]">
+          <p
+            class="text-[#404164] text-[20px] font-sf text-center font-[500] mt-[57px] m-0"
+          >
             Kindly enter your reason for declining this application.
           </p>
           <p
-            class="text-[#808097] font-medium font-sf text-base leading-[28px]"
+            class="text-[#808097] m-0 font-medium font-sf text-base leading-[28px]"
           >
             Applicant will be notified of this reason
           </p>
         </div>
-        <p
-          class="text-[#808097] text-[18px] font-sf font-medium text-center mt-[24px]"
-        >
-          Generate a lease now to be signed by applicant
-        </p>
+        <a-form-item class="mt-[38px] px-[88px]">
+          <a-textarea
+            v-model:value="value2"
+            class="py-[17px] px-[28px] border-[#C7C7C7] border-[1px]"
+            placeholder="Enter Reason for decline"
+            :auto-size="{ minRows: 10, maxRows: 15 }"
+          />
+        </a-form-item>
         <div class="flex items-center justify-center mt-[64px]">
           <button
             class="bg-[#000130] rounded-[4px] w-[229px] h-[51px] text-white mx-auto"
           >
-            Generate Lease
+            Submit
           </button>
+        </div>
+      </a-modal>
+      <a-modal
+        :visible="showGenerateLeaseModal"
+        :footer="null"
+        width="1245px"
+        :closable="false"
+      >
+        <div class="flex w-full">
+          <div class="border-r-solid border-r-[1px] pr-[75px] w-[570px]">
+            <p class="text-[#404164] font-sf text-[20px] font-[400p] py-[24px]">
+              PROPERTY & TENANT DETAILS
+            </p>
+            <div>
+              <p
+                class="text-[#404164] text-[20px] font-[500] font-sf leading-[100%]"
+              >
+                Property Address
+              </p>
+              <p
+                class="mt-[8px] text-[20px] font-sf leading-[100%] text-[#808097]"
+              >
+                12 Ontario Dr,Toronto, ON M6K 3C3, Canada
+              </p>
+            </div>
+            <div>
+              <p
+                class="text-[#404164] m-0 text-[20px] font-[500] font-sf leading-[100%]"
+              >
+                Applicant
+              </p>
+              <p
+                class="mt-[8px] text-[20px] font-sf leading-[100%] text-[#808097]"
+              >
+                Meredith Grey
+              </p>
+            </div>
+            <div>
+              <p
+                class="text-[#404164] text-[20px] font-[500] m-0 font-sf leading-[100%]"
+              >
+                Rent
+              </p>
+              <p
+                class="mt-[8px] text-[20px] font-sf leading-[100%] text-[#808097]"
+              >
+                C$ 670
+              </p>
+            </div>
+            <div>
+              <p
+                class="text-[#404164] m-0 text-[20px] font-[500] font-sf leading-[100%]"
+              >
+                Security Deposit
+              </p>
+              <p
+                class="mt-[8px] text-[20px] font-sf leading-[100%] text-[#808097]"
+              >
+                C$ 670
+              </p>
+            </div>
+            <div>
+              <p
+                class="text-[#404164] m-0 text-[20px] font-[500] font-sf leading-[100%]"
+              >
+                Lease Type
+              </p>
+              <p
+                class="mt-[8px] text-[20px] font-sf leading-[100%] text-[#808097]"
+              >
+                Month-to-Month
+              </p>
+            </div>
+            <div>
+              <p
+                class="text-[#404164] m-0 text-[20px] font-[500] font-sf leading-[100%]"
+              >
+                Lease Start Date
+              </p>
+              <p
+                class="mt-[8px] text-[20px] font-sf leading-[100%] text-[#808097]"
+              >
+                12/07/2026
+              </p>
+            </div>
+          </div>
+          <div class="pl-[24px]">
+            <p class="text-[#404164] text-[20px] leading-[100%] font-sf m-0">
+              LEASE DOCUMENT PREVIEW
+            </p>
+            <p
+              class="mx-auto w-fit mt-[28px] text-[#404164] leading-[100%] font-[500] font-sf"
+            >
+              RESIDENTIAL LEASE AGREEMENT
+            </p>
+            <div class="font-sf">
+              <p class="text-[#404164] font-sf leading-[100%] font-[400] mb-4">
+                This Lease Agreement is entered into on August 12, 2025,
+                between 10ANTS Property Management (Landlord) and John
+                Doe (Tenant).
+              </p>
+              <div class="mb-4">
+                <p class="text-[#404164] font-sf leading-[100%] font-[500] m-0">
+                  1. PROPERTY DESCRIPTION
+                </p>
+                <p class="text-[#404164] font-sf leading-[100%] font-[400] m-0">
+                  The Landlord hereby leases to the Tenant the residential
+                  property located at Block B, Apartment 4, subject to the terms
+                  and conditions set forth in this agreement.
+                </p>
+              </div>
+
+              <div class="mb-4">
+                <p class="text-[#404164] font-sf leading-[100%] font-[500] m-0">
+                  2. LEASE TERM
+                </p>
+                <p class="text-[#404164] font-sf leading-[100%] font-[400] m-0">
+                  The lease term shall commence on August 12, 2025 and shall
+                  continue for a period of twelve (12) months, ending on August
+                  12, 2026.
+                </p>
+              </div>
+
+              <div class="mb-4">
+                <p class="text-[#404164] font-sf leading-[100%] font-[500] m-0">
+                  3. RENT AND PAYMENT TERMS
+                </p>
+                <p class="text-[#404164] font-sf leading-[100%] font-[400] m-0">
+                  The annual rent for the premises is ₦1,500,000 (One Million
+                  Five Hundred Thousand Naira), payable in monthly installments
+                  of ₦125,000. Rent is due on the first day of each month and
+                  shall be considered late if not received within five (5) days
+                  of the due date.
+                </p>
+              </div>
+
+              <div class="mb-4">
+                <p class="text-[#404164] font-sf leading-[100%] font-[500] m-0">
+                  3. RENT AND PAYMENT TERMS
+                </p>
+                <p class="text-[#404164] font-sf leading-[100%] font-[400] m-0">
+                  The annual rent for the premises is ₦1,500,000 (One Million
+                  Five Hundred Thousand Naira), payable in monthly installments
+                  of ₦125,000. Rent is due on the first day of each month and
+                  shall be considered late if not received within five (5) days
+                  of the due date.
+                </p>
+              </div>
+
+              <div class="mb-4">
+                <p class="text-[#404164] font-sf leading-[100%] font-[500] m-0">
+                  4. SECURITY DEPOSIT
+                </p>
+                <p class="text-[#404164] font-sf leading-[100%] font-[400] m-0">
+                  Tenant shall pay a security deposit equivalent to two (2)
+                  months' rent, totalling C$50,000, to be held by the Landlord
+                  as security for any damages or unpaid rent.
+                </p>
+              </div>
+
+              <div class="mb-4">
+                <p class="text-[#404164] font-sf leading-[100%] font-[500] m-0">
+                  5. UTILITIES AND MAINTENANCE
+                </p>
+                <p class="text-[#404164] font-sf leading-[100%] font-[400] m-0">
+                  Tenant shall be responsible for all utilities including
+                  electricity, water, and internet. Landlord shall maintain the
+                  structural integrity of the property and handle major repairs
+                </p>
+              </div>
+
+              <div class="mb-4">
+                <p class="text-[#404164] font-sf leading-[100%] font-[500] m-0">
+                  6. TERMINATION
+                </p>
+                <p class="text-[#404164] font-sf leading-[100%] font-[400] m-0">
+                  This lease may be terminated by either party with thirty (30)
+                  days written notice, subject to the terms outlined in this
+                  agreement.
+                </p>
+              </div>
+              <hr />
+              <p
+                class="mt-[12px] text-[16px] font-sf leading-[100%] text-[#404164]"
+              >
+                IN WITNESS WHEREOF, the parties have executed this lease
+                agreement on the date first written above.
+              </p>
+              <div class="flex justify-between mt-[24px]">
+                <div class="w-[40%]">
+                  <hr class="w-full" />
+                  <p
+                    class="text-[#404164] mt-[10px] text-[14px] leading-[100%] font-sf"
+                  >
+                    Landlord Signature
+                  </p>
+                </div>
+                <div class="w-[40%]">
+                  <hr class="w-full" />
+                  <p
+                    class="text-[#404164] mt-[10px] text-[14px] leading-[100%] font-sf"
+                  >
+                    Tenant Signature (John Doe)
+                  </p>
+                </div>
+              </div>
+              <div class="ml-auto mt-[28px] w-fit flex gap-[40px]">
+                <button
+                  class="px-[43px] py-[12px] font-sf font-[600] text-[14px] text-[#000130] rounded-[4px] border-[1px] border-[#000130]"
+                >
+                  Download Pdf
+                </button>
+                <button
+                  class="px-[43px] py-[12px] font-sf font-[600] text-[14px] rounded-[4px] text-white bg-[#000130]"
+                >
+                  Send Lease
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </a-modal>
       <div>
@@ -541,15 +769,36 @@
 </template>
 
 <script>
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
+import { openDB } from "idb";
+
 export default {
   name: "Applications-Details",
   data() {
     return {
       router: useRouter(),
+      route: useRoute(),
       showmoldal: false,
       showDeclinemoldal: false,
+      showGenerateLeaseModal: false,
+      application: {},
     };
+  },
+  methods: {
+    HandleGenerateLease() {
+      this.showmoldal = false;
+      this.showGenerateLeaseModal = true;
+    },
+    async getApplications() {
+      const id = this.route.params.id;
+      const db = await openDB("application-db", 1);
+      const data = await db.get("applications", Number(id));
+      this.application = data;
+      console.log(data);
+    },
+  },
+  created() {
+    this.getApplications();
   },
 };
 </script>

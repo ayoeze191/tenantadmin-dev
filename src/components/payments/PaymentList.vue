@@ -43,7 +43,10 @@
               class="ant-dropdown-link cursor-pointer text-xl px-2 flex items-center justify-center"
               @click.prevent
             >
-              <IconMoreVertical style="width: 22px; height: 22px" />
+              <IconMoreVertical
+                style="width: 22px; height: 22px"
+                class="text-[#404164]"
+              />
             </span>
 
             <template #overlay>
