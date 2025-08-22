@@ -946,14 +946,21 @@
             class="bg-white border-[#C7C7C7] border-[1px] w-full py-0 text-left flex flex-col gap-2 rounded-xl"
           >
             <div class="">
-              <!-- <a-image
-                v-if="getPreviewImageFromUnitTypes()"
-                :src="getPreviewImageFromUnitTypes()"
+              <img
+                v-if="form.propertyImages.length > 0"
+                :src="form.propertyImages[0].imageUrl"
                 width="100%"
                 style="border-radius: 8px; object-fit: cover; height: 216px"
-              /> -->
+              /> 
+                <img
+                v-if="form.unitTypes[0].unitImg.length > 0"
+                :src="form.unitTypes[0].unitImg.image"
+                width="100%"
+                style="border-radius: 8px; object-fit: cover; height: 216px"
+              /> 
+              
               <div
-                
+                v-if="form.propertyImages.length == 0 && form.unitTypes[0].unitImg.length == 0"
                 class="w-full h-[216px] bg-gray-200 rounded-t-lg flex items-center justify-center text-gray-400"
               >
                 No Image
@@ -1214,7 +1221,6 @@ const customUpload = async (options, index) => {
   const formData = new FormData()
   formData.append('Image', file)
   formData.append('UploadType', 1)
-  console.log(file)
   formData.append('ImageTitle', file.name)
   try {
     const res = await uploadImage(formData) 

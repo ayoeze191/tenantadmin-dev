@@ -563,6 +563,9 @@
         >
           Emergency Information
         </p>
+        <p class="text-[#404164] text-[20px] font-medium font-sf">
+          Emergency Contact
+        </p>
         <div class="grid grid-cols-4 gap-y-[32px]">
           <p
             class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
@@ -586,18 +589,18 @@
           <p
             class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
           >
-            Current Landlord’s Name
+            Email Address
             <span
               class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-              >Nigerian</span
+              >{{ application.emergencyRelationship || "nil" }}</span
             >
           </p>
           <p
             class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
           >
-            Approximate Monthly Income<span
+            RelationsShip<span
               class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-              >C$4560/month</span
+              >{{ application.emergencyRelationship || "nil" }}</span
             >
           </p>
           <p
