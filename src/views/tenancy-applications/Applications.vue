@@ -38,19 +38,21 @@
           <li class="flex justify-between">
             <p class="text-primary text-xs leading-3.5 font-medium">Email</p>
             <p class="text-txt_dark text-xs leading-3.5">
-              {{ items.email }}
+              {{ items.email || "nill" }}
             </p>
           </li>
           <li class="flex justify-between">
             <p class="text-primary text-xs leading-3.5 font-medium">Phone No</p>
-            <p class="text-txt_dark text-xs leading-3.5">{{ items.phone }}</p>
+            <p class="text-txt_dark text-xs leading-3.5">
+              {{ items.phone | "nill" }}
+            </p>
           </li>
           <li class="flex justify-between">
             <p class="text-primary text-xs leading-3.5 font-medium">
               Nationality
             </p>
             <p class="text-txt_dark text-xs leading-3.5">
-              {{ items.nationality }}
+              {{ items.nationality || "nill" }}
             </p>
           </li>
         </ul>

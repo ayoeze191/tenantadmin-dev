@@ -567,19 +567,20 @@
           <p
             class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
           >
-            Name of Employer<span
+            Full Name<span
               class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-              >+1(250) 555-0199</span
             >
+              {{ application.emergencyFullName || "nil" }}
+            </span>
           </p>
           <p
             class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
           >
-            Current Landlord’s Name
+            Phone Number
             <span
               class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
             >
-              Product Owner
+              {{ application.emergencyPhoneNo || "nil" }}
             </span>
           </p>
           <p
