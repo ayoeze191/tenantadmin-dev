@@ -20,6 +20,12 @@
         class="py-3.5 px-2.5 border border-br1 bg-neutral_light rounded-[5px] w-full max-w-64 flex flex-col gap-[25px] text-center"
       >
         <img
+          v-if="!items.profileImage"
+          class="w-16 h-16 mx-auto rounded-full object-cover"
+          src="https://plus.unsplash.com/premium_photo-1688572454849-4348982edf7d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8fDA%3D"
+        />
+        <img
+          v-else
           class="w-16 h-16 mx-auto rounded-full object-cover"
           :src="items.profileImage"
           alt="user profile"
