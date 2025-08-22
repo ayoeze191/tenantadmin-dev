@@ -470,7 +470,7 @@
           {{ console.log(amenityOptions, form.amenities) }}
           <a-checkbox
             v-for="option in amenityOptions"
-            :checked="option"
+            :checked="form.amenities.find((option) => option)"
             :key="option"
             :value="option"
             class="flex items-center gap-2"
