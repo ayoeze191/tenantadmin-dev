@@ -467,10 +467,12 @@
           v-model:value="form.amenities"
           class="grid grid-cols-2 gap-4"
         >
+          {{ console.log(amenityOptions, form.amenities) }}
           <a-checkbox
             v-for="option in amenityOptions"
-            :key="option.value"
-            :value="option.value"
+            :checked="option"
+            :key="option"
+            :value="option"
             class="flex items-center gap-2"
           >
             <span class="text-[20px] text-[#808097]">{{ option.label }}</span>
@@ -482,7 +484,7 @@
           <PlusOutlined /> Add Amenity
         </button>
         <div class="flex gap-4">
-          <a-form-item name="packingType" required class="flex-1">
+          <a-form-item name="packingType" class="flex-1">
             <div
               class="form-labels text-base mb-4 font-light leading-[100%] font-sf"
             >
@@ -497,27 +499,19 @@
               @focus="focus"
               @change="handleChange"
             >
-              <a-select-option value="Driveway Packing"
-                >Driveway Packing</a-select-option
-              >
-              <a-select-option value="Off Street Packing"
-                >Off Street Packing</a-select-option
-              >
-              <a-select-option value="1 Car Garage"
-                >1 Car Garage</a-select-option
-              >
-              <a-select-option value="2 Car Garage"
-                >2 Car Garage</a-select-option
-              >
-              <a-select-option value="3 Car Garage"
-                >3 Car Garage</a-select-option
-              >
-              <a-select-option value="4 Car Garage"
-                >4 Car Garage</a-select-option
+              <a-select-option :value="1">Garage</a-select-option>
+              <a-select-option :value="2">Drive way Parking</a-select-option>
+              <a-select-option :value="3">Off Street Parking</a-select-option>
+              <a-select-option :value="4">Parking Available</a-select-option>
+              <a-select-option :value="5">One Car Garage</a-select-option>
+              <a-select-option :value="6">Two Car Garage</a-select-option>
+              <a-select-option :value="7">Three Car Garage</a-select-option>
+              <a-select-option :value="8">Four Car Garage</a-select-option>
+              <a-select-option :value="9">Underground Parking</a-select-option>
               >
             </a-select>
           </a-form-item>
-          <a-form-item name="pets" required class="flex-1 form-labels">
+          <a-form-item name="pets" class="flex-1 form-labels">
             <div
               class="form-labels text-base mb-4 font-light leading-[100%] font-sf"
             >
@@ -532,17 +526,15 @@
               @change="handleChange"
               v-model:value="form.pets"
             >
-              <a-select-option value="apartment">Yes</a-select-option>
-              <a-select-option value="condo">No</a-select-option>
-              <a-select-option value="shared_condo"
-                >Conditional</a-select-option
-              >
+              <a-select-option :value="2">Yes</a-select-option>
+              <a-select-option :value="1">No</a-select-option>
+              <a-select-option :value="3">Conditional</a-select-option>
             </a-select>
           </a-form-item>
         </div>
 
         <div class="flex gap-4">
-          <a-form-item name="heating" required class="flex-1 form-labels">
+          <a-form-item name="heating" class="flex-1 form-labels">
             <div
               class="form-labels text-base mb-4 font-light leading-[100%] font-sf"
             >
@@ -557,19 +549,13 @@
               @focus="focus"
               @change="handleChange"
             >
-              <a-select-option value="Electric Heating"
-                >Central Heating</a-select-option
-              >
-              <a-select-option value="Electric Heating"
-                >Electric Heating</a-select-option
-              >
-              <a-select-option value="Gas Heating">Gas Heating</a-select-option>
-              <a-select-option value="Heating Available"
-                >Heating Available</a-select-option
-              >
+              <a-select-option :value="1">Central Heating</a-select-option>
+              <a-select-option :value="2">Electric Heating</a-select-option>
+              <a-select-option :value="3">Gas Heating</a-select-option>
+              <a-select-option :value="4">Heating Available</a-select-option>
             </a-select>
           </a-form-item>
-          <a-form-item name="ac_type" required class="flex-1 form-labels">
+          <a-form-item name="ac_type" class="flex-1 form-labels">
             <div
               class="form-labels text-base mb-4 font-light leading-[100%] font-sf"
             >
@@ -584,15 +570,14 @@
               @focus="focus"
               @change="handleChange"
             >
-              <a-select-option value="apartment">Yes</a-select-option>
-              <a-select-option value="condo">No</a-select-option>
-              <a-select-option value="shared_condo"
-                >Conditional</a-select-option
-              >
+              <a-select-option :value="1">CentralAC</a-select-option>
+              <a-select-option :value="2">Conditional</a-select-option>
+              <a-select-option :value="3">AC Available</a-select-option>
+              <a-select-option :value="4">AC Not Available</a-select-option>
             </a-select>
           </a-form-item>
         </div>
-        <a-form-item name="laundry" required class="flex-1 form-labels">
+        <a-form-item name="laundry" class="flex-1 form-labels">
           <div
             class="form-labels text-base mb-4 font-light leading-[100%] font-sf"
           >
@@ -607,14 +592,12 @@
             @focus="focus"
             @change="handleChange"
           >
-            <a-select-option value="In Unit">In Unit</a-select-option>
-            <a-select-option value="Shared Laundry"
-              >Shared Laundry</a-select-option
-            >
+            <a-select-option :value="1">In Unit</a-select-option>
+            <a-select-option :value="2">Shared Laundry</a-select-option>
           </a-select>
         </a-form-item>
 
-        <a-form-item name="lease_type" required class="flex-1 form-labels">
+        <a-form-item name="lease_type" class="flex-1 form-labels">
           <div
             class="form-labels text-base mb-4 font-light leading-[100%] font-sf"
           >
@@ -996,6 +979,7 @@ const propertyOptions = computed(() => {
 
 onMounted(async () => {
   const id = route.params.id || route.params.accommodationId;
+  form.accommodationId = id;
   await getAccomodationDetails(id);
   await fetchPropertyInfo(id);
   if (!id) {
@@ -1232,23 +1216,23 @@ async function fetchPropertyInfo(id) {
     const response = await getPropertyInfo(id);
     console.log(response);
     propertyInfo.value = response.propertydata;
+    form.description = response.propertydata.description;
+    form.laundryType = response.propertydata.laundry;
+    form.heatingType = response.propertydata.heating;
+    form.acType = response.propertydata.ac;
+    form.pets = response.propertydata.pet;
+    form.parkingType = response.propertydata.parking;
+    form.leaseType = response.propertydata.leaseType;
     propertyUnitIInfo.value = response.propertyunits;
+    form.amenities = response.propertyAmenities;
   } catch (error) {
     console.log(error);
   }
 }
 
 async function getAccomodationDetails(id) {
-  const response = await GetAccomodationById(id);
-  // console.log(response);
-  form.acType = response.acType;
-  form.heatingType = response.heatingType;
-  form.laundryType = response.laundryType;
-  form.leaseType = response.leaseType;
-  form.parkingType = response.parkingType;
-  form.amenities = response.amenities;
-  form.pets = response.pet;
-  form.accommodationId = response.accommodationId;
+  // const response = await GetAccomodationById(id);
+  // // console.log(response);
   // pageProperty = { ...response };
 }
 
