@@ -54,7 +54,7 @@
               <div class="">
                 <!-- Placeholder: show if no images -->
                 <img
-                  v-if="!property.images || property.images.length === 0"
+                  v-if="!property.imageUrl"
                   src="/placeholder.png"
                   class="w-full object-cover rounded-t-xl h-full top-0 left-0 z-0 blur-sm transition-opacity duration-300"
                   alt="No image available"
@@ -62,10 +62,9 @@
                 />
                 <!-- Real image: show if images exist, no opacity/imageLoadedMap logic for debugging -->
                 <img
-                  v-if="property.images && property.images.length > 0"
-                  :src="property.images[0].image"
+                  v-if="property.imageUrl"
+                  :src="property.imageUrl"
                   class="w-full object-cover rounded-t-xl h-[216px] top-0 left-0 z-10"
-                  :alt="property.name + ' ' + property.images[0].imageTitle"
                   loading="lazy"
                   @load="onImgLoad(property.accommodationId)"
                   @error="onImgError(property.accommodationId, $event)"

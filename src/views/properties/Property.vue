@@ -93,8 +93,20 @@
                     v-if="
                       propertyInfo.imageUrls && propertyInfo.imageUrls.length
                     "
+                    class="w-full h-full"
                   >
+                    <img
+                      v-if="
+                        !propertyInfo.imageUrls ||
+                        propertyInfo.imageUrls.length === 0
+                      "
+                      src="/placeholder.png"
+                      class="w-[100%] object-cover h-full rounded-t-xl top-0 left-0 z-0 transition-opacity duration-300"
+                      alt="No image available"
+                      loading="lazy"
+                    />
                     <a-image
+                      v-else
                       :src="propertyInfo.imageUrls[currentImageIndex]"
                       :width="'100%'"
                       :height="'100%'"
@@ -102,6 +114,7 @@
                       :preview="{ visible: false }"
                       @click="showPreview(currentImageIndex)"
                     />
+
                     <!-- Hidden images for preview group -->
                     <template v-for="(img, idx) in images" :key="idx">
                       <a-image
