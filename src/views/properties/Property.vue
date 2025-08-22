@@ -190,6 +190,29 @@
                       :property="propertyInfo"
                       :units="propertyUnitIInfo"
                     />
+                    <div
+                      class="flex items-center gap-2 text-[#808097] font-sf mt-2"
+                    >
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M8.66667 14V9.33333L5.33333 6L2 9.33333V14H5.33333M8.66667 14H5.33333M8.66667 14H14V2.66667C14 2.48986 13.9298 2.32029 13.8047 2.19526C13.6797 2.07024 13.5101 2 13.3333 2H6.66667C6.48986 2 6.32029 2.07024 6.19526 2.19526C6.07024 2.32029 6 2.48986 6 2.66667V6.66667M5.33333 14V11.3333M8.66667 4.66667V4.67333M11.3333 4.66667V4.67333M11.3333 7.33333V7.34M11.3333 10V10.0067"
+                          stroke="#808097"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                      <span class="text-sm leading-[16px] font-normal">
+                        {{ propertyUnitIInfo.length }} Units
+                      </span>
+                    </div>
+
                     <div class="mt-4 text-[#808097]">
                       <h1
                         class="font-medium text-base text-txt_dark leading-[100%]"
@@ -223,8 +246,77 @@
                       :units="propertyUnitIInfo"
                     />
 
-                    <div class="mt-4 text-[#808097]">
-                      <div class="flex gap-[24px]">
+                    <div class="mt-4 text-[#808097] px-[] flex flex-col gap-2">
+                      <div
+                        v-for="uni in unit.numberOfRooms"
+                        class="bg-[#F8F8F8] flex rounded-[4px] justify-between pr-[16px]"
+                      >
+                        <div class="px-4 py-2">
+                          <p class="m-0 p-0">
+                            <span
+                              style="color: #404164 !important"
+                              class="text-[#404164] leading-[100%] text-[18px] font-medium m-0"
+                            >
+                              {{ unit.unitName }}
+                            </span>
+                            <span
+                              class="text-[#808097] m-0 text-[18px] leading-[100%] font-sf font-[500] ml-[8px]"
+                            >
+                              {{ console.log(uni) }}
+                              C${{ unit.price }}</span
+                            >
+                          </p>
+                          <p class="m-0">
+                            <span
+                              class="m-0 text-[#808097] text-[18px] leading-[100%] font-sf"
+                              >{{ unit.referenceNumber }}</span
+                            >
+                          </p>
+                        </div>
+
+                        <div class="flex flex-col gap-[8px] py-[4px]">
+                          {{ console.log(unit, "asa") }}
+                          <button
+                            class="ml-auto w-fit border-none"
+                            @click="
+                              () => {
+                                editUnitModal = true;
+                                selectedUnit = {
+                                  ...unit,
+                                  availabilityDate: dayjs(
+                                    unit.availabilityDate
+                                  ),
+                                };
+                              }
+                            "
+                          >
+                            <svg
+                              width="17"
+                              height="17"
+                              viewBox="0 0 17 17"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M15.7586 4.73262L12.268 1.24122C12.1519 1.12511 12.0141 1.03301 11.8624 0.970178C11.7107 0.907342 11.5482 0.875 11.384 0.875C11.2198 0.875 11.0572 0.907342 10.9056 0.970178C10.7539 1.03301 10.6161 1.12511 10.5 1.24122L0.866412 10.8756C0.749834 10.9912 0.657407 11.1289 0.594506 11.2806C0.531604 11.4323 0.499482 11.595 0.500006 11.7592V15.2506C0.500006 15.5821 0.631702 15.9001 0.866123 16.1345C1.10054 16.3689 1.41849 16.5006 1.75001 16.5006H5.24141C5.40563 16.5011 5.5683 16.469 5.71999 16.4061C5.87168 16.3432 6.00935 16.2508 6.12501 16.1342L15.7586 6.50059C15.8747 6.38452 15.9668 6.2467 16.0296 6.09503C16.0925 5.94335 16.1248 5.78078 16.1248 5.61661C16.1248 5.45243 16.0925 5.28986 16.0296 5.13819C15.9668 4.98651 15.8747 4.8487 15.7586 4.73262ZM5.24141 15.2506H1.75001V11.7592L8.62501 4.88419L12.1164 8.37559L5.24141 15.2506ZM13 7.49122L9.5086 4.00059L11.3836 2.12559L14.875 5.61622L13 7.49122Z"
+                                fill="black"
+                              />
+                            </svg>
+                          </button>
+                          <button
+                            class="bg-[#000130] rounded-[26px] px-[14px] py-[4px] text-[#FFFFFF]"
+                            @click="
+                              () => {
+                                showAddTenantModal = true;
+                                tenantForm.unitId = unit.unitId;
+                              }
+                            "
+                          >
+                            Add Tenant
+                          </button>
+                        </div>
+                      </div>
+                      <!-- <div class="flex gap-[24px]">
                         <span class="">
                           <h1
                             class="font-medium text-base text-txt_dark leading-[100%]"
@@ -251,9 +343,9 @@
                             ${{ unit.price }}
                           </p>
                         </span>
-                      </div>
+                      </div> -->
                     </div>
-                    <div
+                    <!-- <div
                       class="mt-[16px] text-[#808097] flex flex-col gap-[4px] font-sf font-semibold list-disc"
                     >
                       <li
@@ -268,7 +360,7 @@
                       >
                         {{ amenity.amenity }}
                       </li>
-                    </div>
+                    </div> -->
                   </a-tab-pane>
                 </a-tabs>
               </div>
@@ -345,11 +437,29 @@
                 />
               </a-form-item>
 
-              <a-form-item label="Lease Start Date" name="phoneNumber" required>
-                <a-input
-                  v-model:value="tenantForm.phoneNumber"
-                  placeholder="Lease Start Date"
+              <a-form-item
+                label="Lease Start Date"
+                name="leasestartDate"
+                required
+                class="w-full"
+              >
+                <a-date-picker
+                  v-model:value="tenantForm.leasestartDate"
                   size="large"
+                  class="w-full"
+                />
+              </a-form-item>
+
+              <a-form-item
+                label="Lease Start Date"
+                name="leaseendDate"
+                required
+                class="w-full"
+              >
+                <a-date-picker
+                  v-model:value="tenantForm.leaseendDate"
+                  size="large"
+                  class="w-full"
                 />
               </a-form-item>
 
@@ -463,21 +573,21 @@
         >
           Building Amenities
         </li>
+        {{ console.log(form.amenities, amenityOptions, "466") }}
         <a-checkbox-group
           v-model:value="form.amenities"
           class="grid grid-cols-2 gap-4"
         >
-          {{ console.log(amenityOptions, form.amenities) }}
           <a-checkbox
             v-for="option in amenityOptions"
-            :checked="form.amenities.find((option) => option)"
-            :key="option"
-            :value="option"
+            :key="option.value"
+            :value="option.value"
             class="flex items-center gap-2"
           >
             <span class="text-[20px] text-[#808097]">{{ option.label }}</span>
           </a-checkbox>
         </a-checkbox-group>
+
         <button
           class="border-0 text-[#C7C7C7] text-[20px] font-sf mt-[24px] mb-[24px]"
         >
@@ -656,7 +766,7 @@
     <a-modal
       :footer="null"
       width="768px"
-      :visible="false"
+      :visible="editUnitModal"
       centered
       :bodyStyle="{ padding: '0' }"
       class=""
@@ -670,7 +780,8 @@
         <div
           class="flex items-center justify-between border-b border-[#C7C7C7] py-[12px]"
         >
-          <div
+          <button
+            @click="editUnitModal = false"
             class="cursor-pointer flex items-center gap-[8px] text-txt_dark text-[18px] font-medium"
           >
             <ArrowLeftOutlined
@@ -678,7 +789,7 @@
               class="text-[18px] text-[#808097]"
             />
             Back
-          </div>
+          </button>
           <span class="modal-title">Edit Units</span>
           <span></span>
         </div>
@@ -723,7 +834,12 @@
           >
             Reference Number
           </div>
-          <a-input-number style="width: 100%" min="0" size="large" />
+          <a-input-number
+            style="width: 100%"
+            min="0"
+            size="large"
+            v-model:value="selectedUnit.referenceNumber"
+          />
         </a-form-item>
 
         <div class="flex gap-4">
@@ -733,7 +849,11 @@
             >
               Rent Price
             </div>
-            <a-input placeholder="Rent Price" size="large" />
+            <a-input
+              placeholder="Rent Price"
+              size="large"
+              v-model:value="selectedUnit.price"
+            />
           </a-form-item>
           <a-form-item
             name="security_deposit"
@@ -745,7 +865,11 @@
             >
               Security Deposit
             </div>
-            <a-input placeholder="Security Deposit" size="large" />
+            <a-input
+              placeholder="Security Deposit"
+              size="large"
+              v-model:value="selectedUnit.securityDeposit"
+            />
           </a-form-item>
         </div>
 
@@ -756,11 +880,14 @@
             >
               Availability Date
             </div>
-            <a-input placeholder="Rent Price" size="large" />
+            <a-date-picker
+              placeholder="Rent Price"
+              size="large"
+              v-model:value="selectedUnit.availabilityDate"
+            />
           </a-form-item>
           <a-form-item
             name="security_deposit"
-            required
             type="date"
             class="flex-1 form-labels"
           >
@@ -769,7 +896,19 @@
             >
               Occupancy Status
             </div>
-            <a-input placeholder="Security Deposit" size="large" />
+            <a-select
+              ref="select"
+              v-model:value="selectedUnit.occupancyStatus"
+              style="width: 200px"
+              placeholder="Select Occupancy Status"
+              class="w-full"
+              @focus="focus"
+            >
+              <a-select-option :value="1">Available and Vacant</a-select-option>
+              <a-select-option :value="2">Currently Occupied</a-select-option>
+              <a-select-option :value="3">Under Renovation</a-select-option>
+              <a-select-option :value="4">Sale Closing Soon</a-select-option>
+            </a-select>
           </a-form-item>
         </div>
         <a-form-item>
@@ -817,6 +956,7 @@
             Cancel
           </button>
           <button
+            @click="SubmitEditUnit"
             class="bg-[#000130] border py-[12px] px-[62px] text-[#fff] font-sf font-semibold leading-[28px] rounded-[4px]"
           >
             Save
@@ -835,8 +975,12 @@ import { useRoute, useRouter } from "vue-router";
 import Propertyheader from "@/components/Propertyheader.vue";
 import { useToast } from "vue-toast-notification";
 import { useOptionsStore } from "@/stores/options";
-import { UpdateProperty, getPropertyInfo } from "@/api/properties";
-
+import {
+  UpdateProperty,
+  getPropertyInfo,
+  EditPropertyUnit,
+} from "@/api/properties";
+import dayjs from "dayjs";
 import {
   GetAccomodationById,
   AddTenants,
@@ -862,11 +1006,17 @@ const propertyInfo = ref(null);
 const propertyUnitIInfo = ref(null);
 const loading = ref(true);
 const error = ref(null);
-
+const editUnitModal = ref(false);
 const showAddTenantModal = ref(false);
 const showEditPropertyModal = ref(false);
 const optionsStore = useOptionsStore();
-
+const selectedUnit = ref({
+  referenceNumber: "",
+  price: "",
+  securityDeposit: "",
+  availabilityDate: "",
+  occupancyStatus: 1,
+});
 const UNIT_TYPE_ENUM = [
   { label: "Two Bedroom", value: 2 },
   { label: "Three Bedroom", value: 3 },
@@ -879,6 +1029,28 @@ const UNIT_TYPE_ENUM = [
   { label: "Shared Accommodation", value: 10 },
   { label: "Hostel/Dormitory", value: 11 },
 ];
+
+const SubmitEditUnit = async () => {
+  const payload = {
+    unitId: selectedUnit.value.unitId,
+    refNumber: selectedUnit.value.referenceNumber,
+    rentPrice: selectedUnit.value.price,
+    securityDeposit: selectedUnit.value.securityDeposit,
+    availabilityDate: selectedUnit.value.availabilityDate,
+    occupancyStatus: selectedUnit.value.occupancyStatus,
+    // unitImg: [
+    //   {
+    //     "imageTitle": "string",
+    //     "image": "string",
+    //     "isMain": true
+    //   }
+    // ]
+  };
+  const response = await EditPropertyUnit(payload);
+  const toast = useToast();
+  toast.success("Succsfully updated the unit");
+  editUnitModal.value = false;
+};
 
 onMounted(async () => {
   await optionsStore.fetchAmenities();
@@ -893,16 +1065,19 @@ onMounted(async () => {
 const tenantTab = ref("single");
 const tenantLoading = ref(false);
 const tenantForm = reactive({
+  unitId: 0,
   emailAddress: "",
   FullName: "",
-  dob: "",
+  // dob: "",
   phoneNumber: "",
-  accountType: 0,
-  accountRefNumber: "",
-  unitId: 0,
-  startDate: "",
-  endDate: "",
-  rentRate: 0,
+  leasestartDate: "",
+  leaseendDate: "",
+  // accountType: 0,
+  // accountRefNumber: "",
+  // unitId: 0,
+  // startDate: "",
+  // endDate: "",
+  // rentRate: 0,
 });
 const tenantFormRef = ref();
 const tenantRules = {
@@ -916,9 +1091,8 @@ const tenantRules = {
     { pattern: /^\d{7,15}$/, message: "Invalid phone number" },
   ],
   unitId: [{ required: true, message: "Property is required" }],
-  startDate: [{ required: true, message: "Lease start date is required" }],
-  endDate: [{ required: true, message: "Lease end date is required" }],
-  rentRate: [{ required: true, message: "Monthly rent is required" }],
+  leaseendDate: [{ required: true, message: "Lease end date is required" }],
+  leaseStartDate: [{ required: true, message: "Lease start date is required" }],
 };
 const createProperties = async () => {
   tenantLoading.value = true;
@@ -930,7 +1104,7 @@ const createProperties = async () => {
   const payload = {
     emailAddress: tenantForm.emailAddress,
     firstname,
-    lastname,
+    lastname: lastname || "",
     dob: "",
     phoneNumber: tenantForm.phoneNumber,
     accountType: 0,
@@ -938,9 +1112,9 @@ const createProperties = async () => {
     contractRequest: {
       unitId: tenantForm.unitId,
       isActive: true,
-      startDate: tenantForm.startDate,
-      endDate: tenantForm.endDate,
-      rentRate: tenantForm.rentRate,
+      startDate: tenantForm.leasestartDate,
+      endDate: tenantForm.leaseendDate,
+      rentRate: 0,
     },
   };
   console.log(payload, "payload");
@@ -957,12 +1131,15 @@ const createProperties = async () => {
   showAddTenantModal.value = false;
 };
 const EditProperty = async () => {
+  console.log(form.amenities, "Amenities");
   try {
     const res = await UpdateProperty({
       ...form,
+      amenities: form.amenities,
       leaseType: form.leaseType,
     });
     console.log(res);
+    form.amenities;
     showEditPropertyModal.value = false;
   } catch (err) {
     console.log(err);
@@ -1224,7 +1401,8 @@ async function fetchPropertyInfo(id) {
     form.parkingType = response.propertydata.parking;
     form.leaseType = response.propertydata.leaseType;
     propertyUnitIInfo.value = response.propertyunits;
-    form.amenities = response.propertyAmenities;
+    form.amenities = response.propertyAmenities.map((item) => item.amenityId);
+    console.log("form.amenities:", form.amenities);
   } catch (error) {
     console.log(error);
   }

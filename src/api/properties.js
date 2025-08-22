@@ -19,7 +19,14 @@ export const FetchLandlords = async (params = {}) => {
     handleError(error);
   }
 };
-
+export const EditPropertyUnit = async (payload) => {
+  try {
+    const response = await postApi(`Accommodation/EditPropertyUnit`, payload);
+    return response.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
 export const getPropertyInfo = async (id) => {
   try {
     const response = await getApi(
