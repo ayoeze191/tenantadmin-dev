@@ -82,16 +82,20 @@
           <template v-if="error">
             <a-result status="404" :title="'Not Found'" :sub-title="error" />
           </template>
-          <template v-else-if="property">
+          <template v-else-if="propertyInfo">
             <div>
               <div class="flex h-[300px]">
                 <!-- Images Carousel with Ant Design Preview -->
                 <div
                   class="relative w-full rounded-xl h-full flex gap-2 items-center justify-center"
                 >
-                  <a-image-preview-group v-if="images && images.length">
+                  <a-image-preview-group
+                    v-if="
+                      propertyInfo.imageUrls && propertyInfo.imageUrls.length
+                    "
+                  >
                     <a-image
-                      :src="images[currentImageIndex]"
+                      :src="propertyInfo.imageUrls[currentImageIndex]"
                       :width="'100%'"
                       :height="'100%'"
                       class="w-full h-full object-cover rounded-xl cursor-pointer"
@@ -181,7 +185,11 @@
                   @change="fetchCurrentAmenities(activeKey)"
                 >
                   <a-tab-pane :key="1" tab="Property Info">
-                    <propertyheader :property="property" />
+                    <propertyheader
+                      v-if="propertyInfo !== null"
+                      :property="propertyInfo"
+                      :units="propertyUnitIInfo"
+                    />
                     <div class="mt-4 text-[#808097]">
                       <h1
                         class="font-medium text-base text-txt_dark leading-[100%]"
@@ -192,7 +200,7 @@
                         class="text-[#808097]"
                         style="color: #808097 !important"
                       >
-                        {{ property.description }}
+                        {{ propertyInfo.description }}
                       </p>
                     </div>
                     <div class="mt-[16px]">
@@ -205,11 +213,15 @@
                     </div>
                   </a-tab-pane>
                   <a-tab-pane
-                    v-for="unit in property.units"
+                    v-for="unit in propertyUnitIInfo"
                     :key="unit.unitId"
                     :tab="unit.unitName"
                   >
-                    <propertyheader :property="property" />
+                    <propertyheader
+                      v-if="propertyInfo !== null"
+                      :property="propertyInfo"
+                      :units="propertyUnitIInfo"
+                    />
 
                     <div class="mt-4 text-[#808097]">
                       <div class="flex gap-[24px]">
@@ -452,7 +464,7 @@
           Building Amenities
         </li>
         <a-checkbox-group
-          v-model:value="form.propertyAmenities"
+          v-model:value="form.amenities"
           class="grid grid-cols-2 gap-4"
         >
           <a-checkbox
@@ -850,7 +862,7 @@ import {
 const form = reactive({
   accommodationId: "",
   parkingType: "",
-  pets: "da",
+  pets: "",
   heatingType: "",
   acType: "",
   laundryType: "",
@@ -965,8 +977,9 @@ const EditProperty = async () => {
   try {
     const res = await UpdateProperty({
       ...form,
-      leaseType: form.leaseType.join(","),
+      leaseType: form.leaseType,
     });
+    console.log(res);
     showEditPropertyModal.value = false;
   } catch (err) {
     console.log(err);
@@ -1233,6 +1246,7 @@ async function getAccomodationDetails(id) {
   form.laundryType = response.laundryType;
   form.leaseType = response.leaseType;
   form.parkingType = response.parkingType;
+  form.amenities = response.amenities;
   form.pets = response.pet;
   form.accommodationId = response.accommodationId;
   // pageProperty = { ...response };

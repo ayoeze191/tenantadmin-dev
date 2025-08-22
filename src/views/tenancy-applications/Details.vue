@@ -464,7 +464,7 @@
           >
             Name of Employer<span
               class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-              >+1(250) 555-0199</span
+              >{{ "nil" }}</span
             >
           </p>
           <p
@@ -474,7 +474,7 @@
             <span
               class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
             >
-              Product Owner
+              {{ application.currentLandLordName || "Nil" }}
             </span>
           </p>
           <p
@@ -483,15 +483,16 @@
             Current Landlord’s Name
             <span
               class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-              >Nigerian</span
             >
+              {{ application.currentLandLordName || "Nil" }}
+            </span>
           </p>
           <p
             class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
           >
             Approximate Monthly Income<span
               class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-              >C$4560/month</span
+              >{{ application.apprMonthlyIncome }}/month</span
             >
           </p>
           <p
@@ -501,7 +502,7 @@
 
             <span
               class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-              >Applicant</span
+              >{{ "nil" }}</span
             >
           </p>
 
@@ -512,7 +513,7 @@
 
             <span
               class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-              >Applicant</span
+              >nil</span
             >
           </p>
           <p
@@ -522,7 +523,7 @@
 
             <span
               class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-              >Applicant</span
+              >nil</span
             >
           </p>
           <p
@@ -531,7 +532,7 @@
             Budget For Accomodation
             <span
               class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-              >Applicant</span
+              >{{ application.budgetForAccommodation }}</span
             >
           </p>
           <p

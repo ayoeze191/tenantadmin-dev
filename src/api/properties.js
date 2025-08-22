@@ -23,7 +23,7 @@ export const FetchLandlords = async (params = {}) => {
 export const getPropertyInfo = async (id) => {
   try {
     const response = await getApi(
-      `Accommodation/ViewPropertyInfo?accommodationId=${38}`
+      `Accommodation/ViewPropertyInfo?accommodationId=${id}`
     );
     return response.data;
   } catch (err) {

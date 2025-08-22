@@ -1,13 +1,14 @@
 <template>
   <div>
     <h2 class="text-xl leading-[100%] font-medium font-sf text-gray-900 mb-2">
-      {{ property.name }}
+      {{ console.log(property) }}
+      {{ property.name || "nil" }}
     </h2>
 
     <div class="flex items-center gap-2 text-[#808097] font-sf">
       <EnvironmentOutlined class="text-[#808097]" />
       <span class="text-sm leading-[16px] font-normal">
-        {{ property.address }}
+        {{ property.address | "nil" }}
       </span>
     </div>
 
@@ -28,7 +29,7 @@
         />
       </svg>
       <span class="text-sm leading-[16px] font-normal">
-        {{ property.units.length }} Units
+        {{ units.length }} Units
       </span>
     </div>
   </div>
@@ -51,6 +52,10 @@ export default {
         address: "",
         units: 0,
       }),
+    },
+    units: {
+      type: Array,
+      required: true,
     },
   },
 };
