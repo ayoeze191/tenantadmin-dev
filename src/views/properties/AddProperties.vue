@@ -1182,7 +1182,6 @@ const customUploadPropertyImage = async (options) => {
 
   try {
     const res = await uploadImage(formData)
-    console.log('Image upload response:', res)
 
     const imageUrl = res.url   // from backend
     const imageId = res.imageId
@@ -1224,7 +1223,6 @@ const customUpload = async (options, index) => {
   formData.append('ImageTitle', file.name)
   try {
     const res = await uploadImage(formData) 
-    console.log("Image upload response:", res);
     const imageUrl = res.url 
   if (!Array.isArray(form.unitTypes[index].unitImg)) {
   form.unitTypes[index].unitImg = []
@@ -1269,7 +1267,6 @@ function handleDrop(e) {
 const SubmitCreateProperty = async() => {
   let payload;
   let landlord = form.landlordId || store.userProfile.referenceID
-  console.log(form)
   // if(form.rental_unit == 'apartment'){
     payload = {
       landlordId: landlord,
@@ -1293,7 +1290,6 @@ const SubmitCreateProperty = async() => {
       acType: form.acType,
       leaseType: form.leaseType.join(','),
     }
-    console.log("Payload for Create Property:", payload);
     try{
       const res = await CreateNewProperty(payload)
       showSuccessModal.value = true;
@@ -1367,7 +1363,6 @@ const unitTypeOptions = ref({})
 onMounted(async () => {
   await optionsStore.fetchAmenities();
   await optionsStore.fetchUnitTypes()
-  console.log("restaurantely");
   await fetchLandlords();
   await fetchProvinces()
   amenityOptions.value = optionsStore.amenities.map((a) => ({
@@ -1489,7 +1484,6 @@ const customProofOwnershipUpload = async (options) => {
   formData.append('ImageTitle', file.name);
   try {
     const res = await uploadImage(formData);
-    console.log("Proof of ownership upload response:", res);
     const url = res.url;
     form.proofOfOwnership = url
     onSuccess({ url: url }, file);
@@ -1506,7 +1500,6 @@ const customGovernmentIssuedUpload = async (options) => {
   formData.append('ImageTitle', file.name);
   try {
     const res = await uploadImage(formData);
-    console.log("Government issued ID upload response:", res);
     const url = res.url;
     form.governmentID = url;
     onSuccess({ url: url }, file);
@@ -1523,7 +1516,6 @@ const customAdditionalDocumentsUpload = async (options) => {
   formData.append('ImageTitle', file.name);
   try {
     const res = await uploadImage(formData);
-    console.log("Additional documents upload response:", res);
     const url = res.url;
     form.otherDocs = url
     onSuccess({ url: url }, file);
@@ -1538,14 +1530,13 @@ const fetchLandlords = async (searchName = "", page = 1) => {
   landlordLoading.value = true;
   try {
     const response = await FetchLandlords();
-    console.log("fetching", response);
     if (response && response.data) {
       const landlords = response.data.map((landlord) => ({
         label: `${landlord.text}`,
         value: landlord.value,
         // data: landlord,
       }));
-      console.log(landlords);
+      
       landlordOptions.value = landlords;
       // landlordOptions.value = [...landlordOptions.value, ...landlords];
       // landlordTotalItems.value = response.accountList.totalItemCount;
@@ -1559,9 +1550,7 @@ const fetchLandlords = async (searchName = "", page = 1) => {
 };
 
 const Check = (val) => {
-  console.log(form.unitTypes)
   for (let i of form.unitTypes){
-    console.log(i[val])
     if(i[val] == '' || i[val] == 0){
       return ''
     }
@@ -1571,10 +1560,8 @@ const Check = (val) => {
 
 
 const DisableNext = () => {
-  console.log(Check('rentPerMonth'))
  if(currentStep.value == 0){
        if(form.rental_unit === null || form.landlordId == null){
-         console.log("Rental unit type is required", form.rental_unit);
          return true;
        }
    }
@@ -1619,8 +1606,9 @@ const DisableNext = () => {
 
 
 const nextOrSubmit = async () => {
-  console.log(form)
   // makes sure the steps don't go beyond the last step
+  console.log(form)
+
   if(currentStep.value < 3){
     // Continue Triggered after first step
 if (currentStep.value === 0) {

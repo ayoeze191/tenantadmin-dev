@@ -44,10 +44,10 @@
             <Button :label="'Reload'" :onClick="reload" type="primary" />
           </div>
           <!-- Data State -->
-          <div v-else class="grid grid-cols-3 gap-[30px] w-fit h-full">
+          <div v-else class="grid grid-cols-3 gap-[30px] w-full h-full">
             <a
               v-for="property in propertyList"
-              class="group flex flex-col bg-white border max-w-[334px] border-gray-200 shadow-2xs rounded-xl hover:shadow-md transition cursor-pointer"
+              class="group flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl hover:shadow-md transition cursor-pointer"
               :key="property.accommodationId"
               @click.prevent="handleRedirect(property)"
             >
