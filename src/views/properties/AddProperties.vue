@@ -948,13 +948,13 @@
             <div class="">
               <img
                 v-if="form.propertyImages.length > 0"
-                :src="form.propertyImages[0].imageUrl"
+                :src="form.propertyImages[0].image"
                 width="100%"
                 style="border-radius: 8px; object-fit: cover; height: 216px"
               /> 
                 <img
                 v-if="form.unitTypes[0].unitImg.length > 0"
-                :src="form.unitTypes[0].unitImg.image"
+                :src="form.unitTypes[0].unitImg[0].image"
                 width="100%"
                 style="border-radius: 8px; object-fit: cover; height: 216px"
               /> 
