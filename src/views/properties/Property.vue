@@ -245,7 +245,17 @@
                       >
                         Key Features
                       </li>
-                      <li></li>
+                      <li v-for="option in amenityOptions">
+                        {{ console.log(form.amenities) }}
+                        <li
+                        class="list-disc text-[14px] text-txt_dark leading-[100%]"
+                          v-if="
+                            form.amenities.find((ame) => ame == option.value)
+                          "
+                          >{{ option.label }}</li
+                        >
+                      </li>
+                      <!-- <li v-for="value in ameniti"></li> -->
                     </div>
                   </a-tab-pane>
                   <a-tab-pane
@@ -1010,6 +1020,7 @@ const form = reactive({
   amenities: [],
   description: "",
 });
+const AllAmenities = ref(null);
 const amenityOptions = ref([]);
 const route = useRoute();
 const activeKey = ref(1);
@@ -1415,6 +1426,7 @@ async function fetchPropertyInfo(id) {
     form.leaseType = response.propertydata.leaseType;
     propertyUnitIInfo.value = response.propertyunits;
     form.amenities = response.propertyAmenities.map((item) => item.amenityId);
+    AllAmenities.value = response.propertyAmenities;
     console.log("form.amenities:", form.amenities);
   } catch (error) {
     console.log(error);
