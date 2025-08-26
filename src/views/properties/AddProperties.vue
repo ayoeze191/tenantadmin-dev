@@ -1660,15 +1660,7 @@ const toPrevious = () => {
         currentStep3.value--
       }
       else if(currentStep3.value == 1 && (form.rental_unit == 'condo' || form.rental_unit == 'house')){
-                currentStep3.value--
-        return ;
-      }
-      else if(currentStep3.value == 1 && (form.rental_unit !== 'condo' || form.rental_unit !== 'house')){
-        currentStep3.value--
-        return ;
-      }
-      else if(currentStep3.value == 0){
-        currentStep.value --
+                currentStep.value--
         return ;
       }
       }
