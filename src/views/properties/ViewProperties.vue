@@ -56,7 +56,7 @@
                 <img
                   v-if="!property.imageUrl"
                   src="/placeholder.png"
-                  class="w-full object-cover rounded-t-xl h-full top-0 left-0 z-0 blur-sm transition-opacity duration-300"
+                  class="w-full object-cover rounded-t-xl h-[216px] top-0 left-0 z-0 blur-sm transition-opacity duration-300"
                   alt="No image available"
                   loading="lazy"
                 />

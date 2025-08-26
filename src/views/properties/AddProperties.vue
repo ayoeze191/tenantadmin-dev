@@ -1586,9 +1586,7 @@ const DisableNext = () => {
           return true;
         }
       }
-  }
-  else if(currentStep.value == 2){
-    if(currentStep3.value == 2){
+       else if(currentStep3.value == 2){
        if(form.partkingType === "" || form.pet === "" || form.heatingType === "" || form.acType === "" || form.laundryType === "" || form.leaseType === "" || form.description === ""){
           return true;
         }
@@ -1657,10 +1655,19 @@ const toPrevious = () => {
   if (currentStep.value > 0) {
     if (currentStep.value === 2) {
       if(currentStep3.value == 0){
-        currentStep3.value--
+        currentStep.value--
+        return;
       }
       else if(currentStep3.value == 1 && (form.rental_unit == 'condo' || form.rental_unit == 'house')){
                 currentStep.value--
+        return ;
+      }
+       else if(currentStep3.value == 1 && (form.rental_unit == 'apartment')){
+                currentStep3.value--
+        return ;
+      }
+      else if(currentStep3.value == 2){
+                currentStep3.value--
         return ;
       }
       }
