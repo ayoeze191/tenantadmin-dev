@@ -363,7 +363,7 @@
                   Add Unit
                 </p>
                    <p
-                  class="font-sf text-[1rem] font-[700] leading-[100%] text-[#404164] underline" v-if="form.rental_unit == 'shared_condo' || form.rental_unit == 'shared_house'" @click="currentStep3 = 0"
+                  class="font-sf text-[1rem] font-[700] leading-[100%] text-[#404164] underline" v-if="form.rental_unit == 'shared_condo' || form.rental_unit == 'shared_house'"
                 >
                   Add Room
                 </p>
@@ -371,7 +371,7 @@
               <div v-for="(i, index) in form.unitTypes" >
                <button class="border-none border-0 w-full flex justify-end" v-if="index !== 0" @click="form.unitTypes.splice(0, 1)"  style="color: red !important;">    <DeleteOutlined /></button>
               <div class="flex gap-4 flex-col" v-if="form.rental_unit == 'shared_condo' || form.rental_unit == 'shared_house' || form.rental_unit == 'apartment'">
-                <div>
+                <div class="flex gap-4"> 
                 <a-form-item
                   v-if="form.rental_unit == 'apartment' || form.rental_unit == 'shared_condo' || form.rental_unit == 'shared_house'"
                  :name="['unitTypes', index, 'unitType']"
@@ -1605,19 +1605,15 @@ const DisableNext = () => {
 
 const nextOrSubmit = async () => {
   // makes sure the steps don't go beyond the last step
-  console.log(form)
 
   if(currentStep.value < 3){
-    // Continue Triggered after first step
 if (currentStep.value === 0) {
     try {
-      // await propertyForm.validate();
       currentStep.value++;
     } catch (err) {
       return;
     }
   } 
-  // Continue Triggered after second step
   else if (currentStep.value === 1) {
     // 
       if(form.rental_unit === "apartment"){
