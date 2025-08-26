@@ -566,7 +566,7 @@
         <p class="text-[#404164] text-[20px] font-medium font-sf">
           Emergency Contact
         </p>
-        <div class="grid grid-cols-4 gap-y-[32px]">
+        <div class="p-0 items-center grid grid-cols-4 gap-y-[32px]">
           <p
             class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
           >
@@ -603,63 +603,111 @@
               >{{ application.emergencyRelationship || "nil" }}</span
             >
           </p>
+        </div>
+        <p class="text-[#404164] text-[20px] font-medium font-sf">
+          Guarantor Information 1
+        </p>
+        <div class="grid grid-cols-4 gap-y-[32px]">
           <p
             class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
           >
-            Length of Time With Employeer
+            Full Name
 
             <span
               class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-              >Applicant</span
+              >{{ application.guarantor1FullName || "nil" }}</span
             >
           </p>
 
           <p
             class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
           >
-            Work Supervisor's Phone Number
+            Phone Number
+            <span
+              class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
+              >{{ application.guarantor1PhoneNo || "nil" }}</span
+            >
+          </p>
+          <p
+            class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
+          >
+            Email Address
 
             <span
               class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-              >Applicant</span
+              >{{ application.guarantor1Email || "nil" }}</span
             >
           </p>
           <p
             class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
           >
-            Work Supervisor's Email
+            Address
+            <span
+              class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
+              >{{ application.guarantor1Address || "nil" }}</span
+            >
+          </p>
+          <p
+            class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
+          >
+            Occupation
+            <span
+              class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
+              >{{ application.guarantor1Occupation || "nil" }}</span
+            >
+          </p>
+        </div>
+
+        <p class="text-[#404164] text-[20px] font-medium font-sf mt-[24px]">
+          Guarantor Information 2
+        </p>
+        <div class="grid grid-cols-4 gap-y-[32px]">
+          <p
+            class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
+          >
+            Full Name
 
             <span
               class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-              >Applicant</span
-            >
-          </p>
-          <p
-            class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-          >
-            Budget For Accomodation
-            <span
-              class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-              >Applicant</span
-            >
-          </p>
-          <p
-            class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-          >
-            Car Make, Model
-            <span
-              class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-              >Applicant</span
+              >{{ application.guarantor2FullName || "nil" }}</span
             >
           </p>
 
           <p
             class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
           >
-            Car License Number
+            Phone Number
             <span
               class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-              >Applicant</span
+              >{{ application.guarantor2PhoneNo || "nil" }}</span
+            >
+          </p>
+          <p
+            class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
+          >
+            Email Address
+
+            <span
+              class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
+              >{{ application.guarantor2Email || "nil" }}</span
+            >
+          </p>
+          <p
+            class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
+          >
+            Address
+            <span
+              class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
+              >{{ application.guarantor2Address || "nil" }}</span
+            >
+          </p>
+          <p
+            class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
+          >
+            Occupation
+            <span
+              class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
+              >{{ application.guarantor2Occupation || "nil" }}</span
             >
           </p>
         </div>
@@ -676,95 +724,80 @@
           <p
             class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
           >
-            Name of Employer<span
-              class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-              >+1(250) 555-0199</span
-            >
-          </p>
-          <p
-            class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-          >
-            Current Landlord’s Name
+            Brought to court by a landlord?
             <span
               class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-            >
-              Product Owner
+              >{{ application.haveYoubeenToCourtByLandLord ? "Yes" : "No" }}
             </span>
           </p>
           <p
             class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
           >
-            Current Landlord’s Name
+            Moved still owing rent?
             <span
               class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-              >Nigerian</span
+            >
+              {{
+                application.haveYoueverDamageApartmentOrMovestillowning
+                  ? "Yes"
+                  : "No"
+              }}
+            </span>
+          </p>
+          <p
+            class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
+          >
+            Total move-in amount available?
+            <span
+              class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
+              >{{ application.doYouHaveTotalMoveinAmount ? "Yes" : "No" }}</span
             >
           </p>
           <p
             class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
           >
-            Approximate Monthly Income<span
+            Have pets?<span
               class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-              >C$4560/month</span
+              >{{ doYouHavePets ? "Yes" : "No" }}</span
             >
           </p>
           <p
             class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
           >
-            Length of Time With Employeer
-
+            Smoke
             <span
               class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-              >Applicant</span
-            >
-          </p>
-
-          <p
-            class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-          >
-            Work Supervisor's Phone Number
-
-            <span
-              class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-              >Applicant</span
-            >
-          </p>
-          <p
-            class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-          >
-            Work Supervisor's Email
-
-            <span
-              class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-              >Applicant</span
-            >
-          </p>
-          <p
-            class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-          >
-            Budget For Accomodation
-            <span
-              class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-              >Applicant</span
-            >
-          </p>
-          <p
-            class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-          >
-            Car Make, Model
-            <span
-              class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-              >Applicant</span
+              >{{ application.doYouSmoke ? "Yes" : "No" }}</span
             >
           </p>
 
           <p
             class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
           >
-            Car License Number
+            Current rent up to date?
             <span
               class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-              >Applicant</span
+              >{{ application.isYourCurrentRentUpToDate ? "Yes" : "No" }}</span
+            >
+          </p>
+          <p
+            class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
+          >
+            Damaged an apartment?
+            <span
+              class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
+              >{{
+                application.haveYoueverDamageApartmentOrMoves ? "Yes" : "No"
+              }}</span
+            >
+          </p>
+          <p
+            class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
+          >
+            Been evicted as a tenant?
+            <span
+              class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
+              >{{ application.haveYouEverBeenEvicted ? "Yes" : "No" }}</span
             >
           </p>
         </div>

@@ -382,7 +382,6 @@
                     {{form.rental_unit == 'shared_condo' || form.rental_unit == 'shared_house' ? 'Room Type' : 'Unit Type'}}
                   </div>
                      <a-select
-                
                     ref="select"
                     v-model:value="form.unitTypes[index].unitType"
                     style="width: 200px"
@@ -958,7 +957,6 @@
                 width="100%"
                 style="border-radius: 8px; object-fit: cover; height: 216px"
               /> 
-              
               <div
                 v-if="form.propertyImages.length == 0 && form.unitTypes[0].unitImg.length == 0"
                 class="w-full h-[216px] bg-gray-200 rounded-t-lg flex items-center justify-center text-gray-400"
@@ -1335,7 +1333,7 @@ const form = reactive({
   unitTypes:[{
     unitCount:"",
     occupancyStatus: "",
-    unitType: 0,
+    unitType: "",
     quantity: "",
     securityDeposit: "",
     rentPerMonth: "",
@@ -1578,7 +1576,7 @@ const DisableNext = () => {
           }
         }
         else if(form.rental_unit == 'condo' || form.rental_unit == 'house'){
-          if(Check('rentPerMonth') == '' || Check('securityDeposit') == '' || Check('numberOfBathrooms') == ''  || Check('numberOfBedrooms') == '' || Check('quantity') == ''){
+          if(Check('rentPerMonth') == '' || Check('securityDeposit') == '' || Check('numberOfBathrooms') == ''  || Check('numberOfBedrooms') == ''){
             return true
           }
         }
