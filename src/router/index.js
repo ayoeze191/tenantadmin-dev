@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import LoginPage from "../views/auth/Login.vue";
+import ForgotPassword from "../views/auth/forgotpassword.vue";
+
 import SignUpPage from "../views/auth/SignUp.vue";
 import CreatePasswordPage from "../views/auth/CreatePassword.vue";
 import Dashboard from "../views/dashboard/Dashboard.vue";
@@ -42,6 +44,11 @@ const router = createRouter({
       path: "/login",
       name: "login",
       component: LoginPage,
+    },
+    {
+      path: "/forgot-password",
+      name: "forgot-password",
+      component: ForgotPassword,
     },
     {
       path: "/reset-password",

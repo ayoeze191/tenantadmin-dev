@@ -37,18 +37,20 @@
           </div>
         </div>
         <div class="flex gap-[8px] ml-auto">
-          <button
-            @click="showmoldal = true"
+          <a-button
+            :loading="approving"
+            @click="approveData"
             class="border-[#29C354] h-fit bg-[#EDFFF7] text-[#29C354] border-[0.99px] border-solid rounded-[5px] px-[12px] py-[6px]"
           >
             Approve
-          </button>
-          <button
-            @click="showDeclinemoldal = true"
+          </a-button>
+          <a-button
+            :loading="declining"
+            @click="declineData"
             class="border-[#F47B7B] h-fit bg-[#FFEDED] text-[#F47B7B] border-[0.99px] border-solid rounded-[5px] px-[12px] py-[6px]"
           >
             Decline
-          </button>
+          </a-button>
         </div>
       </div>
 
@@ -124,7 +126,9 @@
                 class="text-[18px]"
               />
             </div>
-            <span class="modal-title">Steph Orkuma</span>
+            <span class="modal-title">{{
+              application.applicantName || "nil"
+            }}</span>
             <span></span>
           </div>
         </template>
@@ -807,14 +811,17 @@
 </template>
 
 <script>
-import { useRouter, useRoute } from "vue-router";
+import { useRouter, useRoute, routerKey } from "vue-router";
 import { openDB } from "idb";
+import { ApproveTenant } from "@/api/tenancy";
 
 export default {
   name: "Applications-Details",
   data() {
     return {
       router: useRouter(),
+      approving: false,
+      declining: false,
       route: useRoute(),
       showmoldal: false,
       showDeclinemoldal: false,
@@ -833,6 +840,31 @@ export default {
       const data = await db.get("applications", Number(id));
       this.application = data;
       console.log(data);
+    },
+    async approveData() {
+      this.approving = true;
+      const payload = {
+        applicationId: this.application.applicationId,
+        approve: true,
+      };
+      ApproveTenant({ ...payload }).then((response) => {
+        this.showmoldal = true;
+        this.approving = false;
+        console.log(response);
+      });
+    },
+    async declineData() {
+      this.declining = true;
+      const payload = {
+        applicationId: this.application.applicationId,
+        approve: false,
+      };
+      ApproveTenant({ ...payload }).then((response) => {
+        console.log(response);
+        this.showDeclinemoldal = true;
+        this.declining = false;
+        // this.router.push("/applications");
+      });
     },
   },
   created() {

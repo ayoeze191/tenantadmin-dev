@@ -11,3 +11,15 @@ export const FetchTenant = async () => {
     console.log(err, "error");
   }
 };
+
+export const ApproveTenant = async (body) => {
+  try {
+    const response = await postApi(
+      "Accommodation/ApproveOrDeclineAccommodationApplication",
+      body
+    );
+    return response.data;
+  } catch (err) {
+    console.log(err);
+  }
+};

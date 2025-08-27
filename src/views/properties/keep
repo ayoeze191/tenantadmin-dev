@@ -537,3 +537,35 @@
                   size="large"
                 />
               </a-form-item> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              <!-- public enum AccommodationApplicationStatus
+{
+    Pending = 1,
+    Failed = 0,
+    InProcess = 2,
+    AwaitingPayment = 3,
+    Declined = 4,
+    PaymentCompeted = 5,
+    Cancel = 6,
+    Completed = 7
+} -->

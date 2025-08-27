@@ -37,7 +37,6 @@
                 size="large"
               />
             </a-form-item>
-
             <a-form-item
               name="lastname"
               class="w-full flex flex-col form-labels"
@@ -100,7 +99,7 @@
       >
         Already have an account?
         <router-link to="/login">
-          <span class="text-[#404164] font-bold">Login</span>
+          <span class="text-[#404164] font-bold font-sf">Login</span>
         </router-link>
       </p>
     </div>

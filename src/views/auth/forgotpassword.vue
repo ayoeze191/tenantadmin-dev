@@ -1,5 +1,5 @@
 <template>
-  <main class="py-6 bg-white w-full h-screen overflow-y-scroll font-sf">
+  <main class="py-6 bg-[#FAFCFF] w-full h-screen overflow-y-scroll font-sf">
     <div class="w-[90%] max-w-[800px] mx-auto py-4">
       <img class="mx-auto w-21 mb-16" src="../../assets/logo.svg" alt="logo" />
 
@@ -7,7 +7,7 @@
       <p
         class="auth_header_text text-2xl sm:text-3xl md:text-4xl font-semibold text-center"
       >
-        Login
+        Forgot Password
       </p>
 
       <!-- Responsive Subheader -->
@@ -28,38 +28,6 @@
           v-model="email"
         />
 
-        <section class="w-full flex flex-row justify-between gap-2">
-          <label
-            for="password"
-            class="input_label text-sm sm:text-base md:text-xl"
-            >Password</label
-          >
-          <router-link
-            to="/forgot-password"
-            class="text-txt_dark2 text-sm sm:text-base leading-snug sm:leading-normal"
-          >
-            Forgot password?
-          </router-link>
-        </section>
-
-        <div class="input flex mt-4 mb-10 items-center">
-          <input
-            class="w-full outline-none border-0"
-            :type="viewPassword ? 'text' : 'password'"
-            v-model="password"
-          />
-          <view-password-icon
-            class="cursor-pointer"
-            @click="togglePassword"
-            v-if="!viewPassword"
-          />
-          <hide-password-icon
-            v-else
-            class="cursor-pointer"
-            @click="togglePassword"
-          />
-        </div>
-
         <button-component
           label="Login"
           :loading="isLoading"
@@ -69,7 +37,7 @@
 
       <!-- Responsive Footer Text -->
       <p
-        class="text-center mt-7 text-base sm:text-lg md:text-xl leading-6 text-txt_dark font-sf"
+        class="text-center mt-7 text-base sm:text-lg md:text-xl leading-6 text-txt_dark"
       >
         Don’t have an account?
         <router-link to="/register">
