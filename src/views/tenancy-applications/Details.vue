@@ -45,8 +45,7 @@
             Approve
           </a-button>
           <a-button
-            :loading="declining"
-            @click="declineData"
+            @click="showDeclinemoldal = true"
             class="border-[#F47B7B] h-fit bg-[#FFEDED] text-[#F47B7B] border-[0.99px] border-solid rounded-[5px] px-[12px] py-[6px]"
           >
             Decline
@@ -222,18 +221,20 @@
         </div>
         <a-form-item class="mt-[38px] px-[88px]">
           <a-textarea
-            v-model:value="value2"
+            v-model:value="declineReason"
             class="py-[17px] px-[28px] border-[#C7C7C7] border-[1px]"
             placeholder="Enter Reason for decline"
             :auto-size="{ minRows: 10, maxRows: 15 }"
           />
         </a-form-item>
         <div class="flex items-center justify-center mt-[64px]">
-          <button
+          <a-button
+            :loading="declining"
+            @click="declineData"
             class="bg-[#000130] rounded-[4px] w-[229px] h-[51px] text-white mx-auto"
           >
             Submit
-          </button>
+          </a-button>
         </div>
       </a-modal>
       <a-modal
@@ -814,6 +815,7 @@
 import { useRouter, useRoute, routerKey } from "vue-router";
 import { openDB } from "idb";
 import { ApproveTenant } from "@/api/tenancy";
+import { useToast } from "vue-toast-notification";
 
 export default {
   name: "Applications-Details",
@@ -827,6 +829,8 @@ export default {
       showDeclinemoldal: false,
       showGenerateLeaseModal: false,
       application: {},
+      declineReason: "",
+      toast: useToast(),
     };
   },
   methods: {
@@ -848,9 +852,13 @@ export default {
         approve: true,
       };
       ApproveTenant({ ...payload }).then((response) => {
-        this.showmoldal = true;
-        this.approving = false;
-        console.log(response);
+        if (response.responseCode == "00") {
+          this.showmoldal = true;
+          this.approving = false;
+          console.log(response);
+        } else {
+          this.toast.success("Coudln't update");
+        }
       });
     },
     async declineData() {
@@ -858,11 +866,17 @@ export default {
       const payload = {
         applicationId: this.application.applicationId,
         approve: false,
+        declineReason: this.declineReason,
       };
       ApproveTenant({ ...payload }).then((response) => {
-        console.log(response);
-        this.showDeclinemoldal = true;
-        this.declining = false;
+        if (response.responseCode == "00") {
+          console.log(response);
+          this.declining = false;
+          this.showDeclinemoldal = false;
+        } else {
+          this.declining = false;
+          this.showDeclinemoldal = false;
+        }
         // this.router.push("/applications");
       });
     },

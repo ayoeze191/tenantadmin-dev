@@ -941,8 +941,11 @@
             Upload Photos
           </div>
           <a-upload-dragger
+          v-model:UnitImageFileList="UnitImageFileList"
+    name="file"
+   :customRequest="customUnitImageUpload"
             class="border-dashed border-[#C7C7C7] rounded-[5px] p-[14px]"
-            name="file"
+            
             list-type="picture-card"
           >
             <p class="ant-upload-drag-icon mx-auto w-fit pt-[28px]">
@@ -998,6 +1001,8 @@ import { useRoute, useRouter } from "vue-router";
 import Propertyheader from "@/components/Propertyheader.vue";
 import { useToast } from "vue-toast-notification";
 import { useOptionsStore } from "@/stores/options";
+import { uploadImage } from "@/api/properties";
+
 import {
   UpdateProperty,
   getPropertyInfo,
@@ -1009,6 +1014,23 @@ import {
   AddTenants,
   getunitDetails,
 } from "@/api/properties";
+const UnitImageFileList = ref([])
+const customUnitImageUpload = async (options) => {
+  const { file, onSuccess, onError } = options;
+  const formData = new FormData();
+  formData.append('Image', file);
+  formData.append('UploadType', 1);
+  formData.append('ImageTitle', file.name);
+  try {
+    const res = await uploadImage(formData);
+    const url = res.url;
+    selectedUnit.value.unitImg.push({ImageTitle: file.name, image:url, isMain: true})
+    onSuccess({ url: url }, file);
+  } catch (err) {
+    message.error(`${file.name} upload failed.`);
+    onError(err);
+  }
+};
 const form = reactive({
   accommodationId: "",
   parkingType: "",
@@ -1040,19 +1062,24 @@ const selectedUnit = ref({
   securityDeposit: "",
   availabilityDate: "",
   occupancyStatus: 1,
+  unitImg: {
+    imageTitle: "",
+    image: "string",
+    isMain: true
+  } 
 });
-const UNIT_TYPE_ENUM = [
-  { label: "Two Bedroom", value: 2 },
-  { label: "Three Bedroom", value: 3 },
-  { label: "PentHouse", value: 4 },
-  { label: "Loft", value: 5 },
-  { label: "TownHouse", value: 6 },
-  { label: "Duplex", value: 7 },
-  { label: "Villa", value: 8 },
-  { label: "Serviced Apartment", value: 9 },
-  { label: "Shared Accommodation", value: 10 },
-  { label: "Hostel/Dormitory", value: 11 },
-];
+// const UNIT_TYPE_ENUM = [
+//   { label: "Two Bedroom", value: 2 },
+//   { label: "Three Bedroom", value: 3 },
+//   { label: "PentHouse", value: 4 },
+//   { label: "Loft", value: 5 },
+//   { label: "TownHouse", value: 6 },
+//   { label: "Duplex", value: 7 },
+//   { label: "Villa", value: 8 },
+//   { label: "Serviced Apartment", value: 9 },
+//   { label: "Shared Accommodation", value: 10 },
+//   { label: "Hostel/Dormitory", value: 11 },
+// ];
 
 const SubmitEditUnit = async () => {
   const payload = {
@@ -1062,13 +1089,7 @@ const SubmitEditUnit = async () => {
     securityDeposit: selectedUnit.value.securityDeposit,
     availabilityDate: selectedUnit.value.availabilityDate,
     occupancyStatus: selectedUnit.value.occupancyStatus,
-    // unitImg: [
-    //   {
-    //     "imageTitle": "string",
-    //     "image": "string",
-    //     "isMain": true
-    //   }
-    // ]
+    unitImg: selectedUnit.value.unitImg
   };
   const response = await EditPropertyUnit(payload);
   const toast = useToast();

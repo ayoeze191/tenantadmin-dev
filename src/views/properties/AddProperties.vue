@@ -1152,7 +1152,7 @@ const handleAddUnit = () => {
   form.unitTypes.push({
     unitCount:"",
     occupancyStatus: "",
-    unitType: 0,
+    unitType: '',
     quantity: "",
     securityDeposit: "",
     rentPerMonth: "",
@@ -1180,9 +1180,7 @@ const customUploadPropertyImage = async (options) => {
 
   try {
     const res = await uploadImage(formData)
-
     const imageUrl = res.url   // from backend
-    const imageId = res.imageId
 
     // ✅ push into your form array (make sure propertyImages: [] initially)
     form.propertyImages.push({

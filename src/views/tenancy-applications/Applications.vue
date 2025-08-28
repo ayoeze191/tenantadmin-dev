@@ -7,7 +7,7 @@
     </section>
     <div class="mt-4 flex justify-between w-full items-center">
       <a-input
-        v-model:value="userName"
+        v-model:value="searchQuery"
         placeholder="Search by name, gender, age.."
         class="py-[9px] max-w-[451px] border-none"
       >
@@ -118,29 +118,43 @@
     </div>
     <div
       v-if="selectedListType == 'List'"
-      class="grid grid-cols-6 mt-[44px] bg-[#FAFCFF] py-[10px] px-[24px] rounded-t-[10px] border-b-[#f1f0f0] border-b-[1px]"
+      class="grid grid-cols-6 mt-[44px] bg-[#FAFCFF] rounded-t-[10px] border-b-[#f1f0f0] border-b-[1px]"
     >
-      <span class="text-[#404164] font-bold font-sf">NAME</span>
-      <span class="text-[#404164] font-bold font-sf">GENDER</span>
-      <span class="text-[#404164] font-bold font-sf">AGE</span>
-      <span class="text-[#404164] font-bold font-sf">EMAIL</span>
-      <span class="text-[#404164] font-bold font-sf">PHONE NO.</span>
-      <span class="text-[#404164] font-bold font-sf">VIEW DETAILS</span>
+      <span class="text-[#404164] font-bold font-sf py-[10px] px-[24px]"
+        >NAME</span
+      >
+      <span class="text-[#404164] font-bold font-sf py-[10px] px-[24px]"
+        >GENDER</span
+      >
+      <span class="text-[#404164] font-bold font-sf py-[10px] px-[24px]"
+        >AGE</span
+      >
+      <span class="text-[#404164] font-bold font-sf py-[10px] px-[24px]"
+        >EMAIL</span
+      >
+      <span class="text-[#404164] font-bold font-sf py-[10px] px-[24px]"
+        >PHONE NO.</span
+      >
+      <span class="text-[#404164] font-bold font-sf py-[10px] px-[24px]"
+        >VIEW DETAILS</span
+      >
     </div>
     <ul
       class="w-full"
       :class="{
         'grid grid-cols-4 gap-6': selectedListType === 'Grid',
-        'flex flex-col gap-6': selectedListType === 'List',
+        'flex flex-col': selectedListType === 'List',
       }"
     >
       <li
-        v-if="Applications.length > 0 && selectedListType === 'Grid'"
+        v-if="filteredApplications.length > 0 && selectedListType === 'Grid'"
         v-for="(items, index) in selectedStatus == 'Status'
-          ? Applications
-          : Applications.filter((app) => app.statusName == selectedStatus)"
+          ? filteredApplications
+          : filteredApplications.filter(
+              (app) => app.statusName == selectedStatus
+            )"
         :key="items.id || index"
-        class="py-3.5 px-2.5 border mt-[44px] border-br1 bg-neutral_light rounded-[5px] w-full max-w-64 flex flex-col gap-[25px] text-center"
+        class="py-3.5 px-2.5 border mt-[44px] border-br1 bg-neutral_light rounded-[5px] w-full flex flex-col gap-[25px] text-center"
       >
         <img
           v-if="!items.profileImage"
@@ -155,7 +169,9 @@
         />
         <p class="font-medium text-xl leading-6 text-txt_dark">
           {{ items.applicantName }} <br />
-          <span class="text-secondary">{{ items.gender || "nil" }}, 24</span>
+          <span class="text-secondary"
+            >{{ items.gender || "nil" }}, {{ items.age || "nil" }}</span
+          >
         </p>
         <ul class="w-full flex flex-col gap-[18px]">
           <li class="flex justify-between">
@@ -181,13 +197,72 @@
         </ul>
         <button
           class="btn btn_primary text-base py-[9px] rounded-md"
+          :class="{
+            'bg-green-600': items.statusName == 'Completed',
+            'bg-red-600': items.statusName == 'Declined',
+          }"
           @click="() => goto(items)"
         >
-          View Full Details
+          {{
+            items.statusName == "Completed"
+              ? "Approved"
+              : items.statusName == "Declined"
+              ? "Declined"
+              : "View Full Details"
+          }}
         </button>
       </li>
+      <div
+        v-if="filteredApplications.length > 0 && selectedListType === 'List'"
+        class="grid grid-cols-6"
+        v-for="(value, index) in selectedStatus == 'Status'
+          ? filteredApplications
+          : filteredApplications.filter(
+              (app) => app.statusName == selectedStatus
+            )"
+      >
+        <span
+          class="bg-[#FFFFFF] text-[#404164] border-gray-100 border-y-[1px] px-[24px] py-[24px]"
+        >
+          {{ value.applicantName || "nil" }}
+        </span>
+        <span
+          class="bg-[#FFFFFF] text-[#404164] border-gray-100 border-y-[1px] px-[24px] py-[24px]"
+        >
+          {{ value.gender || "nil" }}
+        </span>
+        <span
+          class="bg-[#FFFFFF] text-[#404164] border-gray-100 border-y-[1px] px-[24px] py-[24px]"
+          >{{ value.age || "nil" }}</span
+        >
+        <span
+          class="bg-[#FFFFFF] text-[#404164] border-gray-100 border-y-[1px] px-[24px] py-[24px]"
+        >
+          {{ value.email || "nil" }}
+        </span>
+        <span
+          class="bg-[#FFFFFF] text-[#404164] border-gray-100 border-y-[1px] px-[24px] py-[24px]"
+        >
+          {{ value.phone || "nil" }}
+        </span>
+        <button
+          @click="() => goto(value)"
+          class="bg-[#FFFFFF] flex justify-start text-[#404164] border-gray-100 border-y-[1px] px-[24px] py-[24px]"
+        >
+          <EyeOutlined @click="() => goto(value)" />
+        </button>
+      </div>
       <li v-else>No application atm</li>
     </ul>
+    <div class="flex justify-center mt-8 mb-4">
+      <a-pagination
+        :current="currentPage"
+        :pageSize="pageSize"
+        :total="total"
+        @change="onPageChange"
+        :itemRender="itemRender"
+      />
+    </div>
   </div>
 </template>
 
@@ -206,9 +281,14 @@ export default {
       selected_tab: "pending",
       selected_Request: {},
       status: "Status",
+      computedData: [],
       router: useRouter(),
       selectedStatus: "Status",
       selectedListType: "List",
+      currentPage: 1,
+      searchQuery: "",
+      total: 0,
+      pageSize: 16,
       dummyList: [
         "https://plus.unsplash.com/premium_photo-1688572454849-4348982edf7d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8fDA%3D",
         "https://images.unsplash.com/photo-1667053508464-eb11b394df83?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fHByb2ZpbGUlMjBwaWN0dXJlfGVufDB8fDB8fHww",
@@ -221,6 +301,20 @@ export default {
       ],
       Applications: [],
     };
+  },
+  computed: {
+    filteredApplications() {
+      if (!this.searchQuery) return this.Applications;
+      const q = this.searchQuery.toLowerCase();
+      return this.Applications.filter(
+        (app) =>
+          (app.applicantName && app.applicantName.toLowerCase().includes(q)) ||
+          (app.email && app.email.toLowerCase().includes(q)) ||
+          (app.statusName && app.statusName.toLowerCase().includes(q)) ||
+          (app.unitName && app.unitName.toLowerCase().includes(q)) ||
+          (app.gender && app.gender.toLowerCase().includes(q))
+      );
+    },
   },
   components: {
     "search-icon": IconSearch,
@@ -257,16 +351,38 @@ export default {
     onModalClose() {
       console.log("Modal was closed");
     },
-    fetchData() {
-      FetchTenant().then((response) => {
-        console.log(response.applications.items, "Saffafele");
-        this.Applications = response.applications.items;
-        console.log("fetching", response.applications.items);
+    onPageChange(page) {
+      this.currentPage = page;
+      this.fetchData(page);
+    },
+    fetchData(page = this.currentPage) {
+      const query = {
+        size: this.pageSize,
+        page: page,
+        query: "",
+      };
+      FetchTenant(query).then((response) => {
+        if (response.responseCode == "00") {
+          this.Applications = response.applications.items;
+          this.currentPage = response.page || page;
+          this.total = response.totalItemCount || 0;
+          this.computedData = response.applications.items;
+          console.log("fetching", response.applications.items);
+        }
       });
     },
+
+    handleSearch(value) {},
   },
   created() {
     this.fetchData();
   },
 };
 </script>
+
+<style scoped>
+:deep(.ant-pagination-item) {
+  background: #000130 !important;
+  color: white !important;
+}
+</style>
