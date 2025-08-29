@@ -44,6 +44,7 @@
                 layout="vertical"
               >
               <a-form-item
+              v-if="store.userProfile.referenceID == 'NN1'"
                 name="formType"
                 class="flex flex-col gap-2 bg-white">
                <a-select
