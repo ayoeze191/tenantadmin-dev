@@ -1297,9 +1297,8 @@ const SubmitCreateProperty = async() => {
     try{
       const res = await CreateNewProperty(payload)
       const toast = useToast();
-
       showSuccessModal.value = true;
-      if (response.responseCode == "00") {
+      if (res.responseCode == "00") {
         toast.success("Successfully created")  
       }
       else{
