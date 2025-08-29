@@ -423,7 +423,11 @@
                 :name="['unitTypes', index, 'rentPerMonth']"
 
                   class="flex-1 form-labels"
-                :rules="[{ required: true, message: 'Please input Rent Price' }]"
+                :rules="[
+  { required: true, message: 'Please input Rent Price' },
+  { pattern: /^[0-9]+$/, message: 'Rent Price must be a number' }
+]
+"
                 >
                   <div class="form-labels text-base mb-4 font-regular leading-[100%] font-sf">
                     Rent Price
@@ -431,12 +435,16 @@
                   <a-input
                     v-model:value="form.unitTypes[index].rentPerMonth"
                     placeholder="Rent Price"
+                    
                     size="large"
                   />
                 </a-form-item>
                 <a-form-item
                 
-                                  :rules="[{ required: true, message: 'Please input Deposit' }]"
+                                  :rules="[
+  { required: true, message: 'Please input Security Deposit' },
+  { pattern: /^[0-9]+$/, message: 'Security Deposit must be a number' }
+]"
                 :name="['unitTypes', index, 'securityDeposit']"
 
                   required
@@ -455,11 +463,9 @@
               <div class="flex gap-4">
                 <a-form-item
                 :name="['unitTypes', index, 'availabilityDate']"
-                                  :rules="[{ required: true, message: 'Please input Deposit' }]"
-                
+                  :rules="[{ required: true, message: 'Please input Availability Date' }]"
                   required
                   class="flex-1 form-labels"
-                  
                 >
                   <div class="form-labels text-base mb-4 font-regular leading-[100%] font-sf">
                     Availability Date
@@ -1134,6 +1140,7 @@ import {
 } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
 import { openDB } from "idb";
+import { useToast } from "vue-toast-notification";
 import {
   onMounted,
   reactive,
@@ -1289,7 +1296,15 @@ const SubmitCreateProperty = async() => {
     }
     try{
       const res = await CreateNewProperty(payload)
+      const toast = useToast();
+
       showSuccessModal.value = true;
+      if (response.responseCode == "00") {
+        toast.success("Successfully created")  
+      }
+      else{
+        toast.error("Successfully created")  
+      }
     }
     catch(err){
       console.error("Error creating property:", err);
@@ -1410,13 +1425,20 @@ onMounted(async () => {
 });
 
 const rules = {
-  name: [{ required: true, message: "Property name is required" }],
-  address: [{ required: true, message: "Address is required" }],
-  zipCode: [{ required: true, message: "Zip code is required" }],
-  province: [{ required: true, message: "Province is required" }],
-  description: [{ required: true, message: "Description is required" }],
-  city: [{ required: true, message: "City is required" }],
-};
+  name: [
+    { required: true, message: 'Property name is required' },
+    { 
+      pattern: /^[A-Za-z\s]+$/, 
+      message: 'Property name should not contain numbers' 
+    }
+  ],
+  address: [{ required: true, message: 'Address is required' }],
+  zipCode: [{ required: true, message: 'Zip code is required' }],
+  province: [{ required: true, message: 'Province is required' }],
+  description: [{ required: true, message: 'Description is required' }],
+  city: [{ required: true, message: 'City is required' }],
+}
+
 
 const setuprules = {
   propertyAmenities: [

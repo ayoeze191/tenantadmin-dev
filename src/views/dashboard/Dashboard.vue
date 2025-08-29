@@ -472,6 +472,7 @@ import { h } from "vue";
 import { LoadingOutlined } from "@ant-design/icons-vue";
 import { FetchServiceRequests } from "@/api/serviceRequest";
 import { AccomodationApplications, MyTenants } from "@/api/dashboard";
+import { useUserStore } from "@/store";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
