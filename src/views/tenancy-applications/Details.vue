@@ -36,7 +36,10 @@
             </p>
           </div>
         </div>
-        <div class="flex gap-[8px] ml-auto">
+        <div
+          class="flex gap-[8px] ml-auto"
+          v-if="application.statusName == 'Pending'"
+        >
           <a-button
             :loading="approving"
             @click="approveData"
@@ -50,6 +53,20 @@
           >
             Decline
           </a-button>
+        </div>
+
+        <div
+          v-else-if="application.statusName == 'Completed'"
+          class="text-green-500 ml-auto text-[20px] flex items-center gap-2"
+        >
+          Approved <CheckCircleOutlined />
+        </div>
+
+        <div
+          v-else-if="application.statusName == 'Declined'"
+          class="text-red-500 ml-auto text-[20px] flex items-center gap-2"
+        >
+          Declined <CloseCircleOutlined />
         </div>
       </div>
 
@@ -77,7 +94,7 @@
               {{ application.currentAddress || "Nill" }}
             </span>
           </p>
-          <p
+          <!-- <p
             class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
           >
             Nationality<span
@@ -85,7 +102,7 @@
             >
               {{ application.nationality || "Nill" }}
             </span>
-          </p>
+          </p> -->
           <p
             class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
           >

@@ -1,5 +1,7 @@
 <template>
-  <div class="bg-neutral py-5 px-10 w-full overflow-y-scroll h-screen pb-40">
+  <div
+    class="bg-neutral py-5 px-10 w-full overflow-y-scroll h-screen pb-40 font-sf"
+  >
     <section class="flex justify-between w-full border-b border-br1">
       <p class="text-[#808097] font-[500] font-sf text-[18px]">
         All Applications (8)
@@ -118,7 +120,7 @@
     </div>
     <div
       v-if="selectedListType == 'List'"
-      class="grid grid-cols-6 mt-[44px] bg-[#FAFCFF] rounded-t-[10px] border-b-[#f1f0f0] border-b-[1px]"
+      class="grid grid-cols-7 mt-[44px] bg-[#FAFCFF] rounded-t-[10px] border-b-[#f1f0f0] border-b-[1px]"
     >
       <span class="text-[#404164] font-bold font-sf py-[10px] px-[24px]"
         >NAME</span
@@ -136,13 +138,17 @@
         >PHONE NO.</span
       >
       <span class="text-[#404164] font-bold font-sf py-[10px] px-[24px]"
+        >STATUS</span
+      >
+      <span class="text-[#404164] font-bold font-sf py-[10px] px-[24px]"
         >VIEW DETAILS</span
       >
     </div>
     <ul
-      class="w-full"
+      class="w-full font-sf"
       :class="{
-        'grid grid-cols-4 gap-6': selectedListType === 'Grid',
+        'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6':
+          selectedListType === 'Grid',
         'flex flex-col': selectedListType === 'List',
       }"
     >
@@ -214,7 +220,7 @@
       </li>
       <div
         v-if="filteredApplications.length > 0 && selectedListType === 'List'"
-        class="grid grid-cols-6"
+        class="grid grid-cols-7"
         v-for="(value, index) in selectedStatus == 'Status'
           ? filteredApplications
           : filteredApplications.filter(
@@ -245,6 +251,16 @@
         >
           {{ value.phone || "nil" }}
         </span>
+        <span
+          class="bg-[#FFFFFF] border-gray-100 border-y-[1px] px-[24px] py-[24px]"
+          :class="{
+            'text-[#404164]': value.statusName == 'Pending',
+            'text-red-700': value.statusName == 'Declined',
+            'text-green-500': value.statusName == 'Completed',
+          }"
+        >
+          {{ value.statusName || "nil" }}
+        </span>
         <button
           @click="() => goto(value)"
           class="bg-[#FFFFFF] flex justify-start text-[#404164] border-gray-100 border-y-[1px] px-[24px] py-[24px]"
@@ -255,13 +271,13 @@
       <li v-else>No application atm</li>
     </ul>
     <div class="flex justify-center mt-8 mb-4">
-      <a-pagination
+      <!-- <a-pagination
         :current="currentPage"
         :pageSize="pageSize"
         :total="total"
         @change="onPageChange"
         :itemRender="itemRender"
-      />
+      /> -->
     </div>
   </div>
 </template>

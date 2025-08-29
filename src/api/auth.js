@@ -101,3 +101,12 @@ export const ResetAdminPassword = async (payload) => {
     handleError(error);
   }
 };
+
+export const ForgottenPassword = async (payload) => {
+  try {
+    const response = await postApi("AdminUser/ForgotPassword", payload);
+    return response.data;
+  } catch (error) {
+    handleError(error);
+  }
+};

@@ -941,7 +941,7 @@
             Upload Photos
           </div>
           <a-upload-dragger
-          v-model:UnitImageFileList="UnitImageFileList"
+          v-model:fileList="UnitImageFileList"
     name="file"
    :customRequest="customUnitImageUpload"
             class="border-dashed border-[#C7C7C7] rounded-[5px] p-[14px]"

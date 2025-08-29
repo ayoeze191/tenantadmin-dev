@@ -17,22 +17,25 @@
         Access your administrative account
       </p>
 
-      <form class="auth_form" @submit.prevent="handleLogin()">
-        <label for="email" class="input_label text-sm sm:text-base md:text-xl"
-          >Email Address</label
-        >
-        <input
-          id="email"
-          name="email"
-          class="input mt-4 mb-10"
-          v-model="email"
-        />
+      <form class="auth_form" @submit.prevent="handleForgottenPassword()">
+        <a-form-item for="email" name="email">
+          <p class="input_label text-sm sm:text-base md:text-xl">
+            Email Address
+          </p>
+          <a-input
+            id="email"
+            class="input mt-4 mb-10"
+            v-model:value="email"
+            :rules="[{ required: true, message: 'Please input Email' }]"
+            name="email"
+          />
 
-        <button-component
-          label="Login"
-          :loading="isLoading"
-          :disabled="isDisabled()"
-        />
+          <button-component
+            label="Login"
+            :loading="isLoading"
+            :disabled="isDisabled()"
+          />
+        </a-form-item>
       </form>
 
       <!-- Responsive Footer Text -->
@@ -57,7 +60,7 @@ import { useToast } from "vue-toast-notification";
 import { setCookie } from "@/utils/cookies";
 import handleError from "@/utils/handleError";
 import { useUserStore } from "@/store";
-
+import { ForgottenPassword } from "@/api/auth";
 export default {
   data() {
     return {
@@ -79,23 +82,21 @@ export default {
       this.viewPassword = !this.viewPassword;
     },
     isDisabled() {
-      if (!this.email || !this.password || this.isLoading) {
+      if (!this.email || this.isLoading) {
         return true;
       }
       return false;
     },
-    handleLogin() {
-      const $toast = useToast({ position: "top-right" });
+    handleForgottenPassword() {
+      const toast = useToast({ position: "top-right" });
       this.isLoading = true;
       const payload = {
         email: this.email,
-        password: this.password,
       };
-      LoginUser(payload).then((response) => {
+      ForgottenPassword(payload).then((response) => {
         this.isLoading = false;
         if (response.result.responseCode == "00") {
-          this.store.logUserIn(response.result.userProfile);
-          setCookie("10ants-tk", response.result.authToken);
+          toast.success("Messages");
           this.$router.push({
             name: "admin-dashboard",
           });
