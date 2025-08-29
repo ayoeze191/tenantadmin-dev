@@ -29,9 +29,10 @@
               class="flex gap-[4px] items-end font-medium text-dark text-sm h-fit text-[16px] md:text-[15px] sm:text-[14px]"
             >
               <span
-                class="text-lrge h-full font-[600] font-sf leading-[100%] text-[24px] md:text-[20px] sm:text-[18px]"
-                >{{ AccomodationApplicationsCount }}</span
+                class="h-full font-[600] font-sf leading-[100%] text-[24px] md:text-[20px] sm:text-[18px]"
+                >{{ AccomodationApplicationsCount.completed }}</span
               >
+
               <span
                 class="text-[14px] mb-[2px] leading-[100%] md:text-[13px] sm:text-[12px]"
               >
@@ -59,7 +60,7 @@
               Ongoing
               <span
                 class="text-[#A31616] text-[12px] bg-[#FFE8EC] px-[5px] py-[2px] rounded-[15px] flex md:text-[11px] sm:text-[10px] md:px-[4px] md:py-[1.5px] sm:px-[3px] sm:py-[1px]"
-                >9</span
+                >{{ AccomodationApplicationsCount.ongoing }}</span
               >
             </li>
           </section>
@@ -485,7 +486,11 @@ export default {
   data() {
     return {
       progress: 50,
-      AccomodationApplicationsCount: 0,
+      AccomodationApplicationsCount: {
+        completed: 0,
+        ongoing: 0,
+        awaitingPayment: 0,
+      },
       tenantsCounts: 0,
       customIcon: h(LoadingOutlined, {
         style: {
