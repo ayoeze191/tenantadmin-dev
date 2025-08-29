@@ -30,7 +30,7 @@
             >
               <span
                 class="h-full font-[600] font-sf leading-[100%] text-[24px] md:text-[20px] sm:text-[18px]"
-                >{{ AccomodationApplicationsCount.completed }}</span
+                >{{ AccomodationApplicationsCount.completed || 0 }}</span
               >
 
               <span
@@ -60,7 +60,7 @@
               Ongoing
               <span
                 class="text-[#A31616] text-[12px] bg-[#FFE8EC] px-[5px] py-[2px] rounded-[15px] flex md:text-[11px] sm:text-[10px] md:px-[4px] md:py-[1.5px] sm:px-[3px] sm:py-[1px]"
-                >{{ AccomodationApplicationsCount.ongoing }}</span
+                >{{ AccomodationApplicationsCount.ongoing || 0 }}</span
               >
             </li>
           </section>
@@ -88,7 +88,7 @@
             >
               <span
                 class="text-lrge font-[600] font-sf m-0 p-0 leading-[100%] text-[24px] md:text-[20px] sm:text-[18px]"
-                >{{ tenantsCounts }}</span
+                >{{ tenantsCounts || 0 }}</span
               >
             </p>
           </section>
