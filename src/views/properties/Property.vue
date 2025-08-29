@@ -95,7 +95,7 @@
                     "
                     class="w-full h-full"
                   >
-                    <img
+                    <a-img
                       v-if="
                         !propertyInfo.imageUrls ||
                         propertyInfo.imageUrls.length === 0
@@ -115,15 +115,6 @@
                       @click="showPreview(currentImageIndex)"
                     />
 
-                    <!-- Hidden images for preview group -->
-                    <template v-for="(img, idx) in images" :key="idx">
-                      <a-image
-                        v-if="idx !== currentImageIndex"
-                        :src="img"
-                        style="display: none"
-                      />
-                    </template>
-                    <!-- Prev Button -->
                     <button
                       v-if="images.length > 1"
                       @click="prevImage"
@@ -145,9 +136,8 @@
                         />
                       </svg>
                     </button>
-                    <!-- Next Button -->
                     <button
-                      v-if="images.length > 1"
+                      v-if="propertyInfo.imageUrls.length > 1"
                       @click="nextImage"
                       class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow rounded-full p-1 z-10"
                       aria-label="Next image"
@@ -167,12 +157,11 @@
                         />
                       </svg>
                     </button>
-                    <!-- +N Remaining Images Indicator -->
                     <div
-                      v-if="images.length > 1"
+                      v-if="propertyInfo.imageUrls.length > 1"
                       class="absolute top-2 bg-black/60 text-white text-xs font-semibold px-3 py-1 rounded-full z-10"
                     >
-                      +{{ images.length - 1 }}
+                      +{{ propertyInfo.imageUrls.length - 1 }}
                     </div>
                   </a-image-preview-group>
                   <template v-else>
@@ -186,7 +175,7 @@
                 <div class="flex ml-2 flex-col gap-[8px] overflow-y-scroll">
                   <img
                     :src="img"
-                    v-for="img in images"
+                    v-for="img in propertyInfo.imageUrls"
                     class="h-[128px] w-[145px] rounded-lg"
                   />
                 </div>

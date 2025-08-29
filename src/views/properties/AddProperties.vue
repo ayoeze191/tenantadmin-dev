@@ -1099,9 +1099,9 @@
         >
           <span></span>
           <span></span>
-          <span>
+          <button @click="() => showSuccessModal = false">
               <CloseOutlined />
-          </span>
+          </button>
         </div>
       </template>
   <div class="mx-auto w-fit">
