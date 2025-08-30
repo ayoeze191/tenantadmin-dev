@@ -96,10 +96,8 @@ export default {
       ForgottenPassword(payload).then((response) => {
         this.isLoading = false;
         if (response.result.responseCode == "00") {
-          toast.success("Messages");
-          this.$router.push({
-            name: "admin-dashboard",
-          });
+          toast.success("Please check your mail");
+          this.email = "";
         } else {
           handleError(response);
         }

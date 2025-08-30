@@ -10,30 +10,30 @@ export const LoginUser = async (payload) => {
   }
 };
 
-// export const CreateUser = async (payload) => {
-//   try {
-//     const response = await postApi("Account/CreateUser", payload);
-//     if (response.data.responseCode == "00") {
-//       const createlandlord = await SignUpLandlord(
-//         response.data.onboardedAccount.accountId
-//       );
-//       return createlandlord;
-//     } else {
-//       return response.data;
-//     }
-//   } catch (error) {
-//     handleError(error);
-//   }
-// };
-
 export const CreateUser = async (payload) => {
   try {
-    const response = await postApi("AdminUser/AddAdminUser");
-    return response.data;
-  } catch (err) {
-    console.log(err);
+    const response = await postApi("Account/CreateUser", payload);
+    if (response.data.responseCode == "00") {
+      const createlandlord = await SignUpLandlord(
+        response.data.onboardedAccount.accountId
+      );
+      return createlandlord;
+    } else {
+      return response.data;
+    }
+  } catch (error) {
+    handleError(error);
   }
 };
+
+// export const CreateUser = async (payload) => {
+//   try {
+//     const response = await postApi("AdminUser/AddAdminUser");
+//     return response.data;
+//   } catch (err) {
+//     console.log(err);
+//   }
+// };
 
 export const AddAdminUser = async (payload) => {
   try {
