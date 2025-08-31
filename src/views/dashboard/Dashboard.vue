@@ -486,6 +486,7 @@ export default {
   },
   data() {
     return {
+      store: useUserStore(),
       progress: 50,
       AccomodationApplicationsCount: {
         completed: 0,
@@ -584,7 +585,7 @@ export default {
     },
 
     handleAccomodationApplication() {
-      AccomodationApplications()
+      AccomodationApplications(this.store.userProfile.referenceID)
         .then((response) => {
           this.AccomodationApplicationsCount = response.count;
         })
@@ -594,7 +595,7 @@ export default {
     },
 
     handleTenants() {
-      MyTenants()
+      MyTenants(this.store.userProfile.referenceID)
         .then((response) => {
           this.tenantsCounts = response.count;
         })

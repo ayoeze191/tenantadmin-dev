@@ -218,6 +218,8 @@
           }}
         </button>
       </li>
+      <li v-else>No application atm</li>
+
       <div
         v-if="filteredApplications.length > 0 && selectedListType === 'List'"
         class="grid grid-cols-7"
@@ -289,11 +291,14 @@ import Modal from "@/components/Modal.vue";
 import { useRouter } from "vue-router";
 import { FetchTenant, ApproveTenant } from "@/api/tenancy";
 import { openDB } from "idb";
+import { useUserStore } from "@/store";
+
 import { useRoute } from "vue-router";
 export default {
   name: "Applications",
   data() {
     return {
+      store: useUserStore(),
       selected_tab: "pending",
       selected_Request: {},
       status: "Status",
@@ -377,15 +382,17 @@ export default {
         page: page,
         query: "",
       };
-      FetchTenant(query).then((response) => {
-        if (response.responseCode == "00") {
-          this.Applications = response.applications.items;
-          this.currentPage = response.page || page;
-          this.total = response.totalItemCount || 0;
-          this.computedData = response.applications.items;
-          console.log("fetching", response.applications.items);
+      FetchTenant(query, this.store.userProfile.referenceID).then(
+        (response) => {
+          if (response.responseCode == "00") {
+            this.Applications = response.applications.items;
+            this.currentPage = response.page || page;
+            this.total = response.totalItemCount || 0;
+            this.computedData = response.applications.items;
+            console.log("fetching", response.applications.items);
+          }
         }
-      });
+      );
     },
 
     handleSearch(value) {},

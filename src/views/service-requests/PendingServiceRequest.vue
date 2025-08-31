@@ -253,12 +253,15 @@ import {
 import StatusDropdown from "@/components/StatusDropdown.vue";
 import IconSearch from "../../components/icons/IconSearch.vue";
 import Modal from "@/components/Modal.vue";
+import { useUserStore } from "@/store";
+
 import { useToast } from "vue-toast-notification";
 
 export default {
   data() {
     return {
       selected_tab: "all",
+      store: useUserStore(),
       userSelectedOption: "",
       selected_Request: {},
       serviceRequests: [],
@@ -295,14 +298,16 @@ export default {
       return this.serviceLiterals[service.serviceStatus];
     },
     handleFetchServiceRequest() {
-      FetchServiceRequests().then((response) => {
-        console.log(response);
-        if (response.responseCode == "00") {
-          this.serviceRequests = response.serviceRequests.filter(
-            (req) => req.serviceStatus == 1
-          );
-        } else handleError(response);
-      });
+      FetchServiceRequests(this.store.userProfile.referenceID).then(
+        (response) => {
+          console.log(response);
+          if (response.responseCode == "00") {
+            this.serviceRequests = response.serviceRequests.filter(
+              (req) => req.serviceStatus == 1
+            );
+          } else handleError(response);
+        }
+      );
     },
     toggleTabs(value) {
       this.selected_tab = value;

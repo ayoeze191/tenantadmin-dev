@@ -1,10 +1,17 @@
 import handleError from "@/utils/handleError";
 import { getApi, postApi, putApi } from "@/utils/reqClient";
 
-export const FetchTenant = async (query) => {
+export const FetchTenant = async (query, landlordId) => {
+  let response;
   try {
-    const response = await getApi(
-      `Accommodation/GetAccommodationApplicationById?CurrentPage=${query.page}&pageSize=${query.size}`
+    if (landlordId == "NN1") {
+      response = await getApi(
+        `Accommodation/GetAccommodationApplicationById?CurrentPage=${query.page}&pageSize=${query.size}`
+      );
+      return response.data;
+    }
+    response = await getApi(
+      `Accommodation/GetAccommodationApplicationById?CurrentPage=${query.page}&pageSize=${query.size}&LandlordId=${landlordId}`
     );
     return response.data;
   } catch (err) {

@@ -40,8 +40,12 @@
             v-else-if="propertyList.length === 0"
             class="col-span-full flex flex-col items-center justify-center min-h-[363px]"
           >
-            <p class="text-secondary text-lg mb-4">No Apartments Found</p>
-            <Button :label="'Reload'" :onClick="reload" type="primary" />
+            <p class="text-secondary text-lg mb-4">No Property Yet</p>
+            <Button
+              :label="'Add A Property'"
+              :onClick="() => router.push('/properties/add')"
+              type="primary"
+            />
           </div>
           <!-- Data State -->
           <div v-else class="grid grid-cols-3 gap-[30px] w-full h-full">
@@ -167,6 +171,7 @@ import { handleToast } from "@/utils/helper";
 import dayjs from "dayjs";
 import { Pagination } from "ant-design-vue";
 import { openDB } from "idb";
+import { useRouter } from "vue-router";
 
 export default {
   components: {
@@ -180,6 +185,7 @@ export default {
   },
   data() {
     return {
+      router: useRouter(),
       propertyList: [],
       store: useUserStore(),
       loading: false,

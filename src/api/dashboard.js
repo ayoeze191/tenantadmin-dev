@@ -10,18 +10,30 @@ export const dashboard = async (payload) => {
   }
 };
 
-export const AccomodationApplications = async () => {
+export const AccomodationApplications = async (landlordId) => {
+  let response;
   try {
-    const response = await getApi("Dashboard/AccommodationApplications");
+    if (landlordId == "NN1") {
+      response = await getApi(`Dashboard/AccommodationApplications`);
+      return response.data;
+    }
+    response = await getApi(
+      `Dashboard/AccommodationApplications?LandLordId=${landlordId}`
+    );
     return response.data;
   } catch (error) {
     console.log(error);
   }
 };
 
-export const MyTenants = async () => {
+export const MyTenants = async (landlordId) => {
+  let response;
   try {
-    const response = await getApi("Dashboard/MyTenants");
+    if (landlordId == "NN1") {
+      response = await getApi("Dashboard/MyTenants");
+      return response.data;
+    }
+    response = await getApi(`Dashboard/MyTenants?LandLordId=${landlordId}`);
     return response.data;
   } catch (error) {
     console.log(error);
