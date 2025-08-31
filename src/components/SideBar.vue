@@ -97,7 +97,7 @@
           >
         </a-menu-item>
       </a-sub-menu>
-      <a-sub-menu key="users" title="Users">
+      <a-sub-menu key="users" title="Users" v-if="userType == 'NN1'">
         <template #icon><users-icon /></template>
         <a-menu-item key="admin-users-landlord">
           <router-link :to="{ name: 'admin-users-landlord' }"
@@ -113,7 +113,7 @@
           >
         </a-menu-item>
       </a-sub-menu>
-      <a-sub-menu key="roles" title="Roles">
+      <a-sub-menu key="roles" title="Roles" v-if="userType == 'NN1'">
         <template #icon><roles-icon /></template>
         <a-menu-item key="admin-users-roles">
           <router-link :to="{ name: 'admin-users-roles' }"
@@ -132,7 +132,7 @@
           Amenities
         </router-link>
       </a-menu-item> -->
-      <a-menu-item key="admin-users-notification">
+      <a-menu-item key="admin-users-notification" v-if="userType == 'NN1'">
         <router-link :to="{ name: 'admin-users-notification' }">
           <template #icon><notification-icon /></template>
           User Notification
@@ -154,6 +154,7 @@ import IconUser from "./icons/IconUser.vue";
 import IconRoles from "./icons/IconRoles.vue";
 import IconNotification from "./icons/IconNotification.vue";
 import IconAmenities from "./icons/IconAmenities.vue";
+import { useUserStore } from "@/store";
 
 export default {
   components: {
@@ -174,6 +175,8 @@ export default {
   },
   data() {
     return {
+      userType: useUserStore().userProfile.referenceID || "NN1",
+
       selectedKey: this.$route.name,
       openKeys: [],
     };
