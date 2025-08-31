@@ -587,7 +587,7 @@ export default {
     handleAccomodationApplication() {
       AccomodationApplications(this.store.userProfile.referenceID)
         .then((response) => {
-          this.AccomodationApplicationsCount = response.count;
+          this.AccomodationApplicationsCount = { ...response };
         })
         .catch((err) => {
           console.log(err);
