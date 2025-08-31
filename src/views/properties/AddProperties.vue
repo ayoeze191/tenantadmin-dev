@@ -26,12 +26,10 @@
         <a-step title="Basic Info" />
         <a-step title="Property Setup" />
         <a-step title="Document Upload" />
-
       </a-steps>
-
       <!-- Step 1: Property Info -->
       <div class="flex w-full gap-[22px]">
-        <div class="w-[60%] min-w-[600px]">
+        <div class="w-[60%]">
           <div v-if="currentStep === 0">
             <p class="text-[#000000] text-[18px] font-sf font-[400] leading-[100%]">
               Define what you are Listing
@@ -944,7 +942,7 @@
             </a-button>
           </div>
         </div>
-        <div class="w-[40%] min-w-[445px]">
+        <div class="w-[40%] ">
           <a-typography-title class="font-sf" :level="4" font-family="Inter">
             Quick Preview
           </a-typography-title>
@@ -1569,6 +1567,7 @@ const fetchLandlords = async (searchName = "", page = 1) => {
 
 const Check = (val) => {
   for (let i of form.unitTypes){
+    console.log(i[val], val)
     if(i[val] == '' || i[val] == 0){
       return ''
     }
@@ -1597,7 +1596,7 @@ const DisableNext = () => {
   else if(currentStep.value == 2){
       if(currentStep3.value == 1){
         if(form.rental_unit == 'apartment' || form.rental_unit == 'shared_condo' || form.rental_unit == 'shared_house'){
-          if(Check('rentPerMonth') == '' || Check('securityDeposit') == '' || Check('availabilityDate') == ''  || Check('occupancyStatus') == '' || Check('quantity') == ''){
+          if(Check('rentPerMonth') == '' || Check('securityDeposit') == '' || Check('availabilityDate') == ''  || Check('occupancyStatus') == ''){
             return true
           }
         }
