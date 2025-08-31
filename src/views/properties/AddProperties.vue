@@ -1579,9 +1579,15 @@ const Check = (val) => {
 
 const DisableNext = () => {
  if(currentStep.value == 0){
-       if(form.rental_unit === null || form.landlordId == null){
+    if(store.userProfile.referenceID == "NN1"){
+ if(form.rental_unit === null || form.landlordId == null){
          return true;
        }
+    }
+    else if(form.rental_unit === null){
+      return true
+    }
+      
    }
   else if(currentStep.value == 1){
     if (form.name === "" || form.address === "" || form.zipCode === "" || form.province === "" ||  form.city === "") {
