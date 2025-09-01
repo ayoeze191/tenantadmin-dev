@@ -14,8 +14,9 @@
           >All My Properties</a-select-option
         >
       </a-select>
-      <h1 class="text-txt_dark font-[600] text-[36px]  leading-[100%]"
-      :style="{  fontFamily: 'SF Compact Text' }"
+      <h1
+        class="text-txt_dark font-[600] text-[36px] leading-[100%]"
+        :style="{ fontFamily: 'SF Compact Text' }"
       >
         {{ routeName }}
       </h1>
@@ -119,7 +120,7 @@
                     >
                   </div>
                 </div>
-                </div>
+              </div>
             </div>
           </div>
         </template>
@@ -136,7 +137,9 @@
           class="flex items-center gap-3 cursor-pointer"
           @click="toggleDropdown"
         >
-          <a-avatar :src="profileImage" size="large" />
+          <a-avatar size="large">
+            <UserOutlined />
+          </a-avatar>
           <div class="flex flex-col">
             <span class="text-txt_dark font-medium text-base leading-6.5"
               >{{ store.userProfile.firstname }}
@@ -280,7 +283,7 @@ export default {
       // Ant Design handles dropdown visibility
     },
     LogUserOut() {
-        this.store.logUserOut();
+      this.store.logUserOut();
     },
     renderTab(label, count) {
       return `${label} <span class='notification-tab-count'>${count}</span>`;
