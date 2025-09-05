@@ -223,8 +223,6 @@
           }}
         </button>
       </li>
-      <li v-else>No application atm</li>
-
       <div
         v-if="filteredApplications.length > 0 && selectedListType === 'List'"
         class="grid grid-cols-6"
@@ -272,7 +270,17 @@
           <EyeOutlined @click="() => goto(value)" />
         </button>
       </div>
-      <li v-else>No application atm</li>
+      <div
+        v-else-if="filteredApplications.length === 0"
+        class="col-span-full flex flex-col items-center justify-center min-h-[363px]"
+      >
+        <p class="text-secondary text-lg mb-4">No Applications Yet</p>
+        <Button
+          :label="'Add A Property'"
+          :onClick="() => router.push('/properties/add')"
+          type="primary"
+        />
+      </div>
     </ul>
     <div class="flex justify-center mt-8 mb-4">
       <!-- <a-pagination
@@ -294,6 +302,7 @@ import { useRouter } from "vue-router";
 import { FetchTenant, ApproveTenant } from "@/api/tenancy";
 import { openDB } from "idb";
 import { useUserStore } from "@/store";
+import Button from "@/components/Button.vue";
 
 import { useRoute } from "vue-router";
 export default {
