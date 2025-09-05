@@ -51,10 +51,16 @@
           <div v-else class="grid grid-cols-3 gap-[30px] w-full h-full">
             <a
               v-for="property in propertyList"
-              class="group flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl hover:shadow-md transition cursor-pointer"
+              class="group flex flex-col bg-white relative border border-gray-200 shadow-2xs rounded-xl hover:shadow-md transition cursor-pointer"
               :key="property.accommodationId"
               @click.prevent="handleRedirect(property)"
             >
+              <button
+                v-if="store.userProfile.referenceID == 'NN1'"
+                class="bg-[#DCFCE7] rounded-[12px] text-[#036B26] px-[12px] py-[3px] absolute right-4 top-3"
+              >
+                Approved
+              </button>
               <div class="">
                 <!-- Placeholder: show if no images -->
                 <img

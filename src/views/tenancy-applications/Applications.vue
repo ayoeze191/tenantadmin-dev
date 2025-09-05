@@ -120,19 +120,16 @@
     </div>
     <div
       v-if="selectedListType == 'List'"
-      class="grid grid-cols-7 mt-[44px] bg-[#FAFCFF] rounded-t-[10px] border-b-[#f1f0f0] border-b-[1px]"
+      class="grid grid-cols-6 mt-[44px] bg-[#FAFCFF] rounded-t-[10px] border-b-[#f1f0f0] border-b-[1px]"
     >
       <span class="text-[#404164] font-bold font-sf py-[10px] px-[24px]"
         >NAME</span
       >
       <span class="text-[#404164] font-bold font-sf py-[10px] px-[24px]"
-        >GENDER</span
+        >RENTAL UNIT</span
       >
       <span class="text-[#404164] font-bold font-sf py-[10px] px-[24px]"
-        >AGE</span
-      >
-      <span class="text-[#404164] font-bold font-sf py-[10px] px-[24px]"
-        >EMAIL</span
+        >PROPERTY NAME</span
       >
       <span class="text-[#404164] font-bold font-sf py-[10px] px-[24px]"
         >PHONE NO.</span
@@ -181,9 +178,9 @@
         </p>
         <ul class="w-full flex flex-col gap-[18px]">
           <li class="flex justify-between">
-            <p class="text-primary text-xs leading-3.5 font-medium">Email</p>
+            <p class="text-primary text-xs leading-3.5 font-medium">Name</p>
             <p class="text-txt_dark text-xs leading-3.5">
-              {{ items.email || "nill" }}
+              {{ items.applicantName || "nill" }}
             </p>
           </li>
           <li class="flex justify-between">
@@ -194,7 +191,15 @@
           </li>
           <li class="flex justify-between">
             <p class="text-primary text-xs leading-3.5 font-medium">
-              Nationality
+              Rental Unit
+            </p>
+            <p class="text-txt_dark text-xs leading-3.5">
+              {{ items.unitName || "nill" }}
+            </p>
+          </li>
+          <li class="flex justify-between">
+            <p class="text-primary text-xs leading-3.5 font-medium">
+              Property Name
             </p>
             <p class="text-txt_dark text-xs leading-3.5">
               {{ items.nationality || "nill" }}
@@ -222,7 +227,7 @@
 
       <div
         v-if="filteredApplications.length > 0 && selectedListType === 'List'"
-        class="grid grid-cols-7"
+        class="grid grid-cols-6"
         v-for="(value, index) in selectedStatus == 'Status'
           ? filteredApplications
           : filteredApplications.filter(
@@ -237,12 +242,9 @@
         <span
           class="bg-[#FFFFFF] text-[#404164] border-gray-100 border-y-[1px] px-[24px] py-[24px]"
         >
-          {{ value.gender || "nil" }}
+          {{ value.unitName || "nil" }}
         </span>
-        <span
-          class="bg-[#FFFFFF] text-[#404164] border-gray-100 border-y-[1px] px-[24px] py-[24px]"
-          >{{ value.age || "nil" }}</span
-        >
+
         <span
           class="bg-[#FFFFFF] text-[#404164] border-gray-100 border-y-[1px] px-[24px] py-[24px]"
         >
@@ -330,7 +332,7 @@ export default {
       return this.Applications.filter(
         (app) =>
           (app.applicantName && app.applicantName.toLowerCase().includes(q)) ||
-          (app.email && app.email.toLowerCase().includes(q)) ||
+          (app.email && app.unitName.toLowerCase().includes(q)) ||
           (app.statusName && app.statusName.toLowerCase().includes(q)) ||
           (app.unitName && app.unitName.toLowerCase().includes(q)) ||
           (app.gender && app.gender.toLowerCase().includes(q))

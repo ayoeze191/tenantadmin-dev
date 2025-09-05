@@ -222,7 +222,7 @@
                         Description
                       </h1>
                       <p
-                        class="text-[#808097]"
+                        class="text-[#808097] text-[14px] font-sf leading-[100%]"
                         style="color: #808097 !important"
                       >
                         {{ propertyInfo.description }}
@@ -232,10 +232,10 @@
                       <li
                         class="font-medium text-base text-txt_dark leading-[100%]"
                       >
-                        Key Features
+                        Amenities
                       </li>
-                      <li v-for="option in amenityOptions">
-                        {{ console.log(form.amenities) }}
+                      <div class="mt-2">
+                      <li v-for="option in amenityOptions" style="color: #808097 !important; " class="text-[] text-[14px] font-sf leading-[100%] ">
                         <li
                         class="list-disc text-[14px] text-txt_dark leading-[100%]"
                           v-if="
@@ -244,7 +244,18 @@
                           >{{ option.label }}</li
                         >
                       </li>
+                      </div>
                       <!-- <li v-for="value in ameniti"></li> -->
+                    </div>
+                    <div class="mt-[26px]">
+                       <h1
+                        class="font-medium text-base text-txt_dark leading-[100%]"
+                      >
+                        Documents
+                      </h1>
+                      <div>
+
+                      </div>
                     </div>
                   </a-tab-pane>
                   <a-tab-pane

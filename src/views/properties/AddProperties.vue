@@ -1612,6 +1612,11 @@ const DisableNext = () => {
         }
       }
        else if(currentStep3.value == 2){
+      //  if(form.rental_unit == 'others'){
+      //     if(form.description == ''){
+      //       return true
+      //     }
+      //  }
        if(form.partkingType === "" || form.pet === "" || form.heatingType === "" || form.acType === "" || form.laundryType === "" || form.leaseType === "" || form.description === ""){
           return true;
         }
