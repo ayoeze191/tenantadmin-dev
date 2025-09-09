@@ -274,7 +274,7 @@
         v-else-if="filteredApplications.length === 0"
         class="col-span-full flex flex-col items-center justify-center min-h-[363px]"
       >
-        <p class="text-secondary text-lg mb-4">No Applications Yet</p>
+        <p class="text-lg mb-4 text-red-600">No Applications Yet</p>
         <Button
           :label="'Add A Property'"
           :onClick="() => router.push('/properties/add')"

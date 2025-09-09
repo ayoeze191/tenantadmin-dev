@@ -31,6 +31,7 @@ import Amenities from "@/views/amenities/Amenities.vue";
 import RentPayment from "../views/payments/RentPayment.vue";
 import UtilityPayment from "../views/payments/UtilityPayment.vue";
 import Details from "../views/tenancy-applications/Details.vue";
+import Verification from "@/views/properties/Verification.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -100,6 +101,11 @@ const router = createRouter({
           path: "/applications",
           name: "admin-applications",
           component: Applications,
+        },
+        {
+          path: "/property/verification",
+          name: "property-verification",
+          component: Verification,
         },
         {
           path: "/applications/:id",
