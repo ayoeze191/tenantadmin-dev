@@ -28,7 +28,7 @@
         <a-step title="Document Upload" />
       </a-steps>
       <!-- Step 1: Property Info -->
-      <div class="flex w-full gap-[22px]" :class="[ currentStep === 0 ? 'max-w-[1076px]' : '' ]">
+      <div class="flex  gap-[22px]" :class="[ currentStep === 0 ? 'max-w-[1076px] w-full' : '' ]">
         <div class="w-full">
           <div v-if="currentStep === 0">
             <p class="text-[#000000] text-[18px] font-sf font-[400] leading-[100%]">
@@ -1069,7 +1069,7 @@
             </a-button>
           </div>
         </div>
-        <div class="w-[40%]" v-if="currentStep !== 0">
+        <div class="w-[50%]" v-if="currentStep !== 0">
           <a-typography-title class="font-sf" :level="4" font-family="Inter">
             Quick Preview
           </a-typography-title>
