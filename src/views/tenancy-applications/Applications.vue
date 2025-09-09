@@ -126,16 +126,16 @@
         >NAME</span
       >
       <span class="text-[#404164] font-bold font-sf py-[10px] px-[24px]"
-        >RENTAL UNIT</span
+        >CONTACT INFO</span
       >
       <span class="text-[#404164] font-bold font-sf py-[10px] px-[24px]"
-        >PROPERTY NAME</span
+        >PROPERTY</span
       >
       <span class="text-[#404164] font-bold font-sf py-[10px] px-[24px]"
-        >PHONE NO.</span
+        >UNIT</span
       >
       <span class="text-[#404164] font-bold font-sf py-[10px] px-[24px]"
-        >STATUS</span
+        >APPLICATION STATUS</span
       >
       <span class="text-[#404164] font-bold font-sf py-[10px] px-[24px]"
         >VIEW DETAILS</span

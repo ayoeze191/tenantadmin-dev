@@ -28,7 +28,7 @@
         <a-step title="Document Upload" />
       </a-steps>
       <!-- Step 1: Property Info -->
-      <div class="flex w-full gap-[22px] max-w-[1076px]">
+      <div class="flex w-full gap-[22px]" :class="[ currentStep === 0 ? 'max-w-[1076px]' : '' ]">
         <div class="w-full">
           <div v-if="currentStep === 0">
             <p class="text-[#000000] text-[18px] font-sf font-[400] leading-[100%]">
