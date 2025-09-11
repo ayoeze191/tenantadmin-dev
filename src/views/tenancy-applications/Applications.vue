@@ -240,9 +240,10 @@
         <span
           class="bg-[#FFFFFF] text-[#404164] border-gray-100 border-y-[1px] px-[24px] py-[24px]"
         >
-          {{ value.unitName || "nil" }}
+          <!-- {{ value.unitName || "nil" }} -->
+          <div>{{ value.email || "nil" }}</div>
+          {{ value.phone || "nil" }}
         </span>
-
         <span
           class="bg-[#FFFFFF] text-[#404164] border-gray-100 border-y-[1px] px-[24px] py-[24px]"
         >
@@ -253,15 +254,35 @@
         >
           {{ value.phone || "nil" }}
         </span>
-        <span
-          class="bg-[#FFFFFF] border-gray-100 border-y-[1px] px-[24px] py-[24px]"
-          :class="{
-            'text-[#404164]': value.statusName == 'Pending',
-            'text-red-700': value.statusName == 'Declined',
-            'text-green-500': value.statusName == 'Completed',
-          }"
-        >
-          {{ value.statusName || "nil" }}
+        <span class="bg-[#FFFFFF] border-gray-100 flex items-center">
+          <span
+            :class="{
+              'bg-[#404164]': value.statusName == 'Pending',
+              'bg-red-700 text-red-100': value.statusName == 'Declined',
+              'bg-[#DCFCE7] text-[#166434]': value.statusName == 'Completed',
+              'bg-[#FEF9C3] text-[#854D0F]':
+                value.statusName == 'AwaitingPayment',
+            }"
+            class="flex gap-2 px-[20px] text-[14px] font-sf rounded-[12px] leading-[145%] py-[2px] items-center relative group"
+          >
+            <InfoCircleOutlined class="cursor-pointer" />
+            <span
+              :class="{
+                'bg-[#404164] border-solid': value.statusName == 'Pending',
+                'bg-red-700 text-red-300 border-red-300 border-solid border-[1px]':
+                  value.statusName == 'Declined',
+                'bg-[#DCFCE7] text-[#166434] border-[#166434] border-solid border-[1px] z-50 left-[30%]':
+                  value.statusName == 'Completed',
+                'bg-[#FEF9C3] text-[#854D0F] border-solid border-[1px] border-[#854D0F] z- left-[20%]':
+                  value.statusName == 'AwaitingPayment',
+              }"
+              class="absolute top-[20%] mb-2 hidden group-hover:block text-xs rounded px-2 py-1 whitespace-nowrap shadow-lg"
+            >
+              <p>{{ value.statusName || "nil" }}</p>
+              <p>This status means the request is still pending approval</p>
+            </span>
+            {{ value.statusName || "nil" }}
+          </span>
         </span>
         <button
           @click="() => goto(value)"

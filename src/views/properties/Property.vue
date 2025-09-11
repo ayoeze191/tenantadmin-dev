@@ -235,9 +235,9 @@
                         Amenities
                       </li>
                       <div class="mt-2">
-                      <li v-for="option in amenityOptions" style="color: #808097 !important; " class="text-[] text-[14px] font-sf leading-[100%] ">
+                      <li v-for="option in amenityOptions" style="color: #808097 !important; " class="text-[#808097] text-[14px] font-sf leading-[100%] ">
                         <li
-                        class="list-disc text-[14px] text-txt_dark leading-[100%]"
+                        class="list-disc text-[14px] text-[#808097] leading-[100%]"
                           v-if="
                             form.amenities.find((ame) => ame == option.value)
                           "
@@ -272,7 +272,7 @@
                     <div class="mt-4 text-[#808097] px-[] flex flex-col gap-2">
                       <div
                         v-for="uni in unit.numberOfRooms"
-                        class="bg-[#F8F8F8] flex rounded-[4px] justify-between pr-[16px]"
+                        class="bg-[#F8F8F8] flex rounded-[4px] justify-between pr-[16px] items-center"
                       >
                         <div class="px-4 py-2">
                           <p class="m-0 p-0">
@@ -297,8 +297,7 @@
                           </p>
                         </div>
 
-                        <div class="flex flex-col gap-[8px] py-[4px]">
-                          {{ console.log(unit, "asa") }}
+                        <!-- <div class="flex flex-col gap-[8px] py-[4px]">
                           <button
                             class="ml-auto w-fit border-none"
                             @click="
@@ -337,7 +336,40 @@
                           >
                             Add Tenant
                           </button>
-                        </div>
+                        </div> -->
+                        <div class="py-[4px]">
+                        <a-dropdown>
+    <a class="ant-dropdown-link" @click.prevent>
+      <MoreOutlined style="font-size: 20px;" />
+    </a>
+    <template #overlay>
+      <a-menu>
+        <a-menu-item key="1"> View Units </a-menu-item>
+        <a-menu-item key="2"  @click="
+                              () => {
+                                showAddTenantModal = true;
+                                tenantForm.unitId = unit.unitId;
+                              }
+                            "> Add Tenants </a-menu-item>
+        <a-menu-item key="3" 
+          @click="
+                              () => {
+                                editUnitModal = true;
+                                selectedUnit = {
+                                  ...unit,
+                                  availabilityDate: dayjs(
+                                    unit.availabilityDate
+                                  ),
+                                };
+                              }
+                            "
+        
+        > Edit Units </a-menu-item>
+      </a-menu>
+    </template>
+  </a-dropdown>
+  </div>
+
                       </div>
                       <!-- <div class="flex gap-[24px]">
                         <span class="">
