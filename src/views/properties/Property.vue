@@ -344,7 +344,16 @@
     </a>
     <template #overlay>
       <a-menu>
-        <a-menu-item key="1"> View Units </a-menu-item>
+        <a-menu-item key="1" @click="() => {
+          viewUnitModal = true
+          selectedUnit = {
+                                  ...unit,
+                                  availabilityDate: dayjs(
+                                    unit.availabilityDate
+                                  ),
+                                };
+
+        }"> View Units </a-menu-item>
         <a-menu-item key="2"  @click="
                               () => {
                                 showAddTenantModal = true;
@@ -1022,11 +1031,118 @@
         </div>
       </a-form>
     </a-modal>
+    <a-modal
+      :footer="null"
+      width="768px"
+      :visible="viewUnitModal"
+      centered
+      :bodyStyle="{ padding: '0' }"
+      class=""
+      :closable="false"
+    >
+            <template #title>
+        <div
+          class="flex items-center justify-between border-b border-[#C7C7C7] p-0 m-0 py-[25px]"
+        >
+          <div
+            @click="viewUnitModal = false"
+            class="cursor-pointer flex items-center gap-[8px] text-txt_dark text-[18px] font-medium m-0 p-0"
+          >
+            <ArrowLeftOutlined
+              @click="goBack"
+              class="text-[18px] text-[#808097]"
+            />
+            Back
+            </div>
+          <span class="text-[32px] font-[500] font-sf leading-[28px] ">
+            {{selectedUnit.unitName}}
+          </span>
+          <span class="m-0 p-0"></span>
+        </div>
+      </template>
+
+      <div class="grid grid-cols-2 gap-y-[8px] px-[87px] py-[47px]">
+        <div>
+          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Unit Type</p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">{{selectedUnit.unitName}}</p>
+        </div>
+        <div>
+          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Packing Type</p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">nil</p>
+        </div>
+         <div>
+          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Reference Number</p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">{{selectedUnit.referenceNumber}}</p>
+        </div>
+         <div>
+          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Pets</p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">{{'nil'}}</p>
+        </div>
+        <div>
+          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">No of Bathroom (s)</p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">{{selectedUnit.bathRoom}}</p>
+        </div>
+        <div>
+          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">AC Type</p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">Central AC</p>
+        </div>
+        <!-- Next -->
+
+         <div>
+          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Occupancy Status</p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">Available and Vacant</p>
+        </div>
+        <div>
+          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Heating Type</p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">nil</p>
+        </div>
+         <div>
+          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  "> Rent </p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">${{ selectedUnit.price }}</p>
+        </div>
+         <div>
+          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Laundry Type</p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">Yes</p>
+        </div>
+        <div>
+          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Security Deposit</p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">$450</p>
+        </div>
+        <div>
+          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Availability Date</p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">12/07/2025</p>
+        </div>
+      </div>
+      <div class="p-0 m-0 font-sf">
+        <div class="flex justify-between px-[87px] py-[47px] font-sf">
+          <p class="leading-[100%] text-[16px]  text-[#404164]">Unit Images</p>
+        <p class="leading-[100%] text-[16px]  text-[#404164]">{{selectedUnit.accommodationImages.length}} Images</p>
+        </div>
+      </div>
+        <div class="px-[87px] pb-[47px]">
+          <a-carousel autoplay arrows>
+             <template #prevArrow>
+      <div class="custom-slick-arrow" style="left: 10px; z-index: 1">
+        <left-circle-outlined />
+      </div>
+    </template>
+     <template #nextArrow>
+      <div class="custom-slick-arrow" style="right: 10px">
+        <right-circle-outlined />
+      </div>
+    </template>
+    <div v-for="value in selectedUnit.accommodationImages" class="carousel-item">
+      <img :src="value.image" class="carousel-item" />
+    </div>
+   
+  </a-carousel>
+        </div>  
+    </a-modal>
   </div>
 </template>
 
 <script setup>
-import { message } from "ant-design-vue";
+import { message, Select } from "ant-design-vue";
 import { openDB } from "idb";
 import { computed, h, onMounted, reactive, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -1085,6 +1201,7 @@ const propertyUnitIInfo = ref(null);
 const loading = ref(true);
 const error = ref(null);
 const editUnitModal = ref(false);
+const viewUnitModal = ref(false);
 const showAddTenantModal = ref(false);
 const showEditPropertyModal = ref(false);
 const optionsStore = useOptionsStore();
@@ -1793,5 +1910,35 @@ async function fetchCurrentAmenities(id) {
 }
 :deep(.ant-select .ant-select-selector .ant-select-selection-search-input) {
   height: 100% !important;
+}
+
+:deep(.slick-slide) {
+  text-align: center;
+  height: 160px;
+  line-height: 160px;
+  background: #364d79;
+  overflow: hidden;
+}
+
+:deep(.slick-arrow.custom-slick-arrow) {
+  width: 25px;
+  height: 25px;
+  font-size: 25px;
+  color: #fff;
+  background-color: rgba(31, 45, 61, 0.11);
+  transition: ease all 0.3s;
+  opacity: 0.3;
+  z-index: 1;
+}
+:deep(.slick-arrow.custom-slick-arrow:before) {
+  display: none;
+}
+:deep(.slick-arrow.custom-slick-arrow:hover) {
+  color: #fff;
+  opacity: 0.5;
+}
+
+:deep(.slick-slide h3) {
+  color: #fff;
 }
 </style>
