@@ -8,7 +8,41 @@
       <span class="text-[#808097]"> <ArrowLeftOutlined /></span>
       Back
     </h2>
-    <div class="bg-white mt-4 px-[22px] py-[30px] max-w-[873px] mx-auto">
+    <div class="flex justify-between items-start">
+      <div>
+        <p class="text-[#000000] m-0 mb-0 font-sf font-bold text-[24px]">
+          Stage 1 - Initial Review
+        </p>
+        <p class="text-[#000000] text-[16px] m-0 font-sf leading-[28px]">
+          Review applicant details and make initial decision
+        </p>
+      </div>
+      <span
+        class="flex gap-2 -mt-[40px] rounded-[4px] flex-col items-start bg-[#FEF9C3] border-[#854D0F] border-solid border-[0.5px] text-[#854D0F] px-[20px] text-[14px] font-sf leading-[145%] py-[8px]"
+      >
+        <span class="font-[500] text-[20px]"
+          ><InfoCircleOutlined class="cursor-pointer" />
+          {{ application.statusName || "nil" }}
+        </span>
+        <span>
+          You requested more documents. Application will continue once tenant
+          uploads them.
+        </span>
+      </span>
+    </div>
+    <div class="mt-[23px]">
+      <a-steps
+        :current="currentStep"
+        class="max-w-[790px] mb-8 text-[16px] mx-auto"
+      >
+        <a-step title="Initial Review" />
+        <a-step title="Document Approval" />
+        <a-step title="Set Move-in Date" />
+        <a-step title="Lease Generation" />
+      </a-steps>
+    </div>
+
+    <div class="bg-white mt-4 px-[22px] py-[30px] mx-auto">
       <div class="flex items-center">
         <div class="flex items-center gap-[20px]">
           <div class="w-[120px] h-[120px] rounded-full">
@@ -74,414 +108,7 @@
         </div>
       </div>
 
-      <div class="mt-[51px]">
-        <a-tabs
-          v-model:activeKey="activeKey"
-          tab-position="left"
-          class="custom-vertical-tabs"
-        >
-          <a-tab-pane key="Personal Information">
-            <template #tab>
-              <span> Personal Information </span>
-            </template>
-            <div class="grid flex-c flex-col gap-y-4">
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Phone<span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >+1(250) 555-0199</span
-                >
-              </p>
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Responsible for Rent<span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >+Applicatnt</span
-                >
-              </p>
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Current Address<span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                >
-                  {{ application.currentAddress || "Nill" }}
-                </span>
-              </p>
-
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Gender<span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                >
-                  {{ application.gender || "Nill" }}
-                </span>
-              </p>
-
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Intended Move-in-Date<span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                >
-                  {{ "23-December-2026" || "Nill" }}
-                </span>
-              </p>
-
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Phone Number<span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >Product Owner</span
-                >
-              </p>
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Whatsapp Number<span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >Product Owner</span
-                >
-              </p>
-            </div>
-          </a-tab-pane>
-          <a-tab-pane key="Professional Information">
-            <template #tab>
-              <span> Professional Information </span>
-            </template>
-            <div class="grid flex-c flex-col gap-y-4">
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Approximate Monthly Income<span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >C$2700</span
-                >
-              </p>
-
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Budget For Accomodation<span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >Ronnie Sosan</span
-                >
-              </p>
-
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Name of Employer<span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >Reenato INC.</span
-                >
-              </p>
-
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Length of Time With Employeer<span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >0-2 Years</span
-                >
-              </p>
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Work Supervisor's Phone Number<span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >+michel@reenato.com</span
-                >
-              </p>
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Car Make, Model<span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >+447686345654</span
-                >
-              </p>
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Car License Number
-                <span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >+447686345654</span
-                >
-              </p>
-            </div>
-          </a-tab-pane>
-          <a-tab-pane key="Emergency Information">
-            <template #tab>
-              <span> Emergency Information </span>
-            </template>
-
-            <p
-              class="text-[#404164] text-[20px] font-medium font-sf border-solid border-b"
-            >
-              Emergency Contact
-            </p>
-            <div class="p-0 items-center grid grid-cols-1 gap-y-4">
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Full Name<span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                >
-                  {{ application.emergencyFullName || "nil" }}
-                </span>
-              </p>
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Phone Number
-                <span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                >
-                  {{ application.emergencyPhoneNo || "nil" }}
-                </span>
-              </p>
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Email Address
-                <span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >{{ application.emergencyRelationship || "nil" }}</span
-                >
-              </p>
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                RelationsShip<span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >{{ application.emergencyRelationship || "nil" }}</span
-                >
-              </p>
-            </div>
-            <p
-              class="text-[#404164] text-[20px] font-medium font-sf border-solid border-b"
-            >
-              Guarantor Information 1
-            </p>
-            <div class="grid grid-cols-1 gap-y-[16px]">
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Full Name
-
-                <span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >{{ application.guarantor1FullName || "nil" }}</span
-                >
-              </p>
-
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Phone Number
-                <span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >{{ application.guarantor1PhoneNo || "nil" }}</span
-                >
-              </p>
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Email Address
-
-                <span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >{{ application.guarantor1Email || "nil" }}</span
-                >
-              </p>
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Address
-                <span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >{{ application.guarantor1Address || "nil" }}</span
-                >
-              </p>
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Occupation
-                <span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >{{ application.guarantor1Occupation || "nil" }}</span
-                >
-              </p>
-            </div>
-
-            <p
-              class="text-[#404164] text-[20px] font-medium font-sf border-solid border-b"
-            >
-              Guarantor Information 2
-            </p>
-            <div class="grid grid-cols-1 gap-y-[16px]">
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Full Name
-
-                <span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >{{ application.guarantor2FullName || "nil" }}</span
-                >
-              </p>
-
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Phone Number
-                <span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >{{ application.guarantor2PhoneNo || "nil" }}</span
-                >
-              </p>
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Email Address
-
-                <span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >{{ application.guarantor2Email || "nil" }}</span
-                >
-              </p>
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Address
-                <span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >{{ application.guarantor2Address || "nil" }}</span
-                >
-              </p>
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Occupation
-                <span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >{{ application.guarantor2Occupation || "nil" }}</span
-                >
-              </p>
-            </div>
-          </a-tab-pane>
-          <a-tab-pane key="Livestyle Habits">
-            <template #tab>
-              <span>Livestyle Habits</span>
-            </template>
-            <div class="grid grid-cols-1 gap-y-4">
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Brought to court by a landlord?
-                <span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >{{ application.haveYoubeenToCourtByLandLord ? "Yes" : "No" }}
-                </span>
-              </p>
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Moved still owing rent?
-                <span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                >
-                  {{
-                    application.haveYoueverDamageApartmentOrMovestillowning
-                      ? "Yes"
-                      : "No"
-                  }}
-                </span>
-              </p>
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Total move-in amount available?
-                <span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >{{
-                    application.doYouHaveTotalMoveinAmount ? "Yes" : "No"
-                  }}</span
-                >
-              </p>
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Have pets?<span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >{{ doYouHavePets ? "Yes" : "No" }}</span
-                >
-              </p>
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Smoke
-                <span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >{{ application.doYouSmoke ? "Yes" : "No" }}</span
-                >
-              </p>
-
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Current rent up to date?
-                <span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >{{
-                    application.isYourCurrentRentUpToDate ? "Yes" : "No"
-                  }}</span
-                >
-              </p>
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Damaged an apartment?
-                <span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >{{
-                    application.haveYoueverDamageApartmentOrMoves ? "Yes" : "No"
-                  }}</span
-                >
-              </p>
-              <p
-                class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
-              >
-                Been evicted as a tenant?
-                <span
-                  class="text-[#404164] font-medium text-[18px] font-sf mt-[6px] leading-[100%]"
-                  >{{ application.haveYouEverBeenEvicted ? "Yes" : "No" }}</span
-                >
-              </p>
-            </div>
-          </a-tab-pane>
-
-          <!-- <a-tab-pane key="Emergency Information">
-            <template #tab>
-              <span> Emergency Information </span>
-            </template>
-            Emergency Information
-          </a-tab-pane> -->
-          <a-tab-pane key="Documents">
-            <template #tab>
-              <span> Documents </span>
-            </template>
-          </a-tab-pane>
-        </a-tabs>
-      </div>
-
-      <!-- <div>
+      <div>
         <p
           class="text-[#404164] leading-[100%] font-[600] text-[22px] mt-[50px] border-solid border-b pb-[4px]"
         >
@@ -505,7 +132,7 @@
               {{ application.currentAddress || "Nill" }}
             </span>
           </p>
-      
+
           <p
             class="flex flex-col text-[#808097] leading-[100%] font-sf font-normal"
           >
@@ -524,7 +151,7 @@
             >Applicant</span
           >
         </p>
-      </div> -->
+      </div>
 
       <!-- Professional Information -->
       <a-modal
@@ -877,7 +504,7 @@
           </div>
         </div>
       </a-modal>
-      <!-- <div>
+      <div>
         <p
           class="text-[#404164] leading-[100%] font-[600] text-[22px] mt-[50px] border-solid border-b pb-[4px] w-"
         >
@@ -980,9 +607,9 @@
             >
           </p>
         </div>
-      </div> -->
+      </div>
       <!-- Emergency Information -->
-      <!-- <div>
+      <div>
         <p
           class="text-[#404164] leading-[100%] font-[600] text-[22px] mt-[50px] border-solid border-b pb-[4px] w-"
         >
@@ -1136,10 +763,10 @@
             >
           </p>
         </div>
-      </div> -->
+      </div>
       <!-- Personal Behaviour -->
 
-      <!-- <div>
+      <div>
         <p
           class="text-[#404164] leading-[100%] font-[600] text-[22px] mt-[50px] border-solid border-b pb-[4px] w-"
         >
@@ -1239,7 +866,7 @@
             ></div>
           </div>
         </div>
-      </div> -->
+      </div>
     </div>
   </div>
 </template>
@@ -1324,6 +951,11 @@ export default {
 <style scoped>
 :deep(.custom-vertical-tabs .ant-tabs-nav) {
   border-right: none !important; /* remove the default vertical border */
+}
+
+:deep(.ant-steps-item-title) {
+  font-size: 18px !important;
+  line-height: 100% !important;
 }
 
 :deep(.custom-vertical-tabs .ant-tabs-tab) {
