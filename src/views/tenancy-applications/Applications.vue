@@ -257,31 +257,56 @@
         <span class="bg-[#FFFFFF] border-gray-100 flex items-center">
           <span
             :class="{
-              'bg-[#404164]': value.statusName == 'Pending',
-              'bg-red-700 text-red-100': value.statusName == 'Declined',
-              'bg-[#DCFCE7] text-[#166434]': value.statusName == 'Completed',
+              'bg-[#F3E8FF] text-[#6D24A9]':
+                AccommodationApplicationStatus[value.status] ==
+                'MoveInDateTenantConfirmationPending',
+              'bg-[#F3E8FF] text-[#6D24A9]':
+                AccommodationApplicationStatus[value.status] ==
+                'MoveInDateLandlordConfirmationPending',
+              'bg-[#404164] ':
+                AccommodationApplicationStatus[value.status] == 'Pending',
+              'bg-red-700 text-red-100':
+                AccommodationApplicationStatus[value.status] == 'Declined',
+              'bg-[#DCFCE7] text-[#166434]':
+                AccommodationApplicationStatus[value.status] == 'Completed',
               'bg-[#FEF9C3] text-[#854D0F]':
-                value.statusName == 'AwaitingPayment',
+                AccommodationApplicationStatus[value.status] ==
+                'AwaitingPayment',
             }"
             class="flex gap-2 px-[20px] text-[14px] font-sf rounded-[12px] leading-[145%] py-[2px] items-center relative group"
           >
             <InfoCircleOutlined class="cursor-pointer" />
             <span
               :class="{
-                'bg-[#404164] border-solid': value.statusName == 'Pending',
+                'bg-[#F3E8FF] text-[#6D24A9] border-[#6D24A9] border-solid border-[1px] ':
+                  AccommodationApplicationStatus[value.status] ==
+                  'MoveInDateLandlordConfirmationPending',
+                'bg-[#404164] border-solid  border-[1px] ':
+                  AccommodationApplicationStatus[value.status] == 'Pending',
                 'bg-red-700 text-red-300 border-red-300 border-solid border-[1px]':
-                  value.statusName == 'Declined',
+                  AccommodationApplicationStatus[value.status] == 'Declined',
                 'bg-[#DCFCE7] text-[#166434] border-[#166434] border-solid border-[1px] z-50 left-[30%]':
-                  value.statusName == 'Completed',
+                  AccommodationApplicationStatus[value.status] == 'Completed',
                 'bg-[#FEF9C3] text-[#854D0F] border-solid border-[1px] border-[#854D0F] z- left-[20%]':
-                  value.statusName == 'AwaitingPayment',
+                  AccommodationApplicationStatus[value.status] ==
+                  'AwaitingPayment',
               }"
               class="absolute top-[20%] mb-2 hidden group-hover:block text-xs rounded px-2 py-1 whitespace-nowrap shadow-lg"
             >
-              <p>{{ value.statusName || "nil" }}</p>
-              <p>This status means the request is still pending approval</p>
+              <p>
+                {{
+                  TurnCamelCaseToWords(
+                    AccommodationApplicationStatus[value.status]
+                  ) || "nil"
+                }}
+              </p>
+              <p>{{ AccommodationApplicationStatusDesc[value.status] }}</p>
             </span>
-            {{ value.statusName || "nil" }}
+            {{
+              TurnCamelCaseToWords(
+                AccommodationApplicationStatus[value.status]
+              ) || "nil"
+            }}
           </span>
         </span>
         <button
@@ -324,13 +349,42 @@ import { FetchTenant, ApproveTenant } from "@/api/tenancy";
 import { openDB } from "idb";
 import { useUserStore } from "@/store";
 import Button from "@/components/Button.vue";
-
 import { useRoute } from "vue-router";
 export default {
   name: "Applications",
   data() {
     return {
       store: useUserStore(),
+      AccommodationApplicationStatus: {
+        0: "Failed", // Application submission failed or system error occurred
+        1: "ApplicationReview", // Application has been submitted and is under review by landlord
+        2: "AdditionalDocumentsRequired", // Landlord has requested additional documents from tenant
+        3: "MoveInDateLandlordConfirmationPending", // Application approved, awaiting landlord to confirm move-in date
+        4: "MoveInDateTenantConfirmationPending", // Landlord set different date, awaiting tenant confirmation
+        5: "AwaitingPayment", // Move-in date confirmed, awaiting security deposit payment
+        6: "AwaitingLeaseGeneration", // Payment received, awaiting lease document generation
+        7: "Completed", // Lease generated and application process completed
+        8: "Declined", // Application has been declined by landlord or tenant
+        9: "Cancelled", // Application has been cancelled by tenant
+
+        // Legacy statuses (backward compatibility)
+        1: "Pending", // Use ApplicationReview instead
+        2: "InProcess", // Use ApplicationReview instead
+        6: "Cancel", // Use Cancelled instead
+        5: "PaymentCompeted", // Use Completed instead
+      },
+      AccommodationApplicationStatusDesc: {
+        0: "Application submission failed or system error occurred",
+        1: "Application has been submitted and is under review by landlord",
+        2: "Landlord has requested additional documents from tenant",
+        3: "Application approved, awaiting landlord to confirm move-in date",
+        4: "Landlord set different date, awaiting tenant confirmation",
+        5: "Move-in date confirmed, awaiting security deposit payment",
+        6: "Payment received, awaiting lease document generation",
+        7: "Lease generated and application process completed",
+        8: "Application has been declined by landlord or tenant",
+        9: "Application has been cancelled by tenant",
+      },
       selected_tab: "pending",
       selected_Request: {},
       status: "Status",
@@ -375,6 +429,14 @@ export default {
     "modal-component": Modal,
   },
   methods: {
+    TurnCamelCaseToWords(str) {
+      return str
+        .replace(/([A-Z])/g, " $1") // Insert a space before all caps
+        .replace(/^./, function (str) {
+          return str.toUpperCase();
+        }) // Uppercase the first character
+        .trim(); // Remove any leading or trailing spaces
+    },
     handleMenuClick(e) {
       this.selectedStatus = e.key;
     },

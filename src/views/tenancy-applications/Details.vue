@@ -42,7 +42,10 @@
       </a-steps>
     </div>
 
-    <div class="bg-white mt-4 px-[22px] py-[30px] mx-auto">
+    <div
+      class="bg-white mt-4 px-[22px] py-[30px] mx-auto"
+      v-if="currentStep === 'Initial Review'"
+    >
       <div class="flex items-center">
         <div class="flex items-center gap-[20px]">
           <div class="w-[120px] h-[120px] rounded-full">
@@ -866,6 +869,24 @@
             ></div>
           </div>
         </div>
+
+        <div class="flex gap-[8px] mx-auto w-fit">
+          <button
+            class="bg-[#1A7D36] py-[6px] px-[26.5px] rounded-[5px] border-[#29C354] border-[0.99px] text-[#FFFFFF]"
+          >
+            Approve
+          </button>
+          <button
+            class="bg-[#DC2625] py-[6px] px-[26.5px] rounded-[5px] border-[#F47B7B] border-[0.99px] text-[#FFFFFF]"
+          >
+            Decline
+          </button>
+          <button
+            class="bg-[#ffffff] py-[6px] px-[16.5px] rounded-[5px] border-[#000130] border-[0.99px] text-[#000130]"
+          >
+            Request Additional Documents
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -892,6 +913,7 @@ export default {
       application: {},
       declineReason: "",
       toast: useToast(),
+      currentStep: "Initial Review",
     };
   },
   methods: {
@@ -949,34 +971,5 @@ export default {
 </script>
 
 <style scoped>
-:deep(.custom-vertical-tabs .ant-tabs-nav) {
-  border-right: none !important; /* remove the default vertical border */
-}
-
-:deep(.ant-steps-item-title) {
-  font-size: 18px !important;
-  line-height: 100% !important;
-}
-
-:deep(.custom-vertical-tabs .ant-tabs-tab) {
-  /* add bottom border under each tab */
-  margin: 0 !important;
-  padding: 8px 16px;
-}
-
-:deep(.custom-vertical-tabs .ant-tabs-tab-active) {
-  font-weight: bold;
-  border-bottom: 1px solid #d9d9d9; /* thicker border for active tab */
-  border-right: none !important; /* remove the default vertical border */
-}
-
-:deep(.ant-tabs-content-holder) {
-  border: none !important;
-}
-
-:deep(.custom-vertical-tabs .ant-tabs-tab-active) {
-  border-right: none !important;
-}
-
 /* Optional: also remove default background if you don’t want it */
 </style>
