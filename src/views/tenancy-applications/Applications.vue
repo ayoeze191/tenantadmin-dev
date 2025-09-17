@@ -259,12 +259,12 @@
             :class="{
               'bg-[#F3E8FF] text-[#6D24A9]':
                 AccommodationApplicationStatus[value.status] ==
-                'MoveInDateTenantConfirmationPending',
-              'bg-[#F3E8FF] text-[#6D24A9]':
+                  'MoveInDateLandlordConfirmationPending' ||
                 AccommodationApplicationStatus[value.status] ==
-                'MoveInDateLandlordConfirmationPending',
-              'bg-[#404164] ':
-                AccommodationApplicationStatus[value.status] == 'Pending',
+                  'MoveInDateTenantConfirmationPending',
+              'bg-[#DBE9FE] text-[#1D40AE] ':
+                AccommodationApplicationStatus[value.status] ==
+                'Awaiting Review',
               'bg-red-700 text-red-100':
                 AccommodationApplicationStatus[value.status] == 'Declined',
               'bg-[#DCFCE7] text-[#166434]':
@@ -273,16 +273,19 @@
                 AccommodationApplicationStatus[value.status] ==
                 'AwaitingPayment',
             }"
-            class="flex gap-2 px-[20px] text-[14px] font-sf rounded-[12px] leading-[145%] py-[2px] items-center relative group"
+            class="flex gap-2 px-[20px] text-[14px] cursor-pointer font-sf rounded-[12px] leading-[145%] py-[2px] items-center relative group"
           >
-            <InfoCircleOutlined class="cursor-pointer" />
+            <InfoCircleOutlined class="" />
             <span
               :class="{
                 'bg-[#F3E8FF] text-[#6D24A9] border-[#6D24A9] border-solid border-[1px] ':
                   AccommodationApplicationStatus[value.status] ==
-                  'MoveInDateLandlordConfirmationPending',
-                'bg-[#404164] border-solid  border-[1px] ':
-                  AccommodationApplicationStatus[value.status] == 'Pending',
+                    'MoveInDateLandlordConfirmationPending' ||
+                  AccommodationApplicationStatus[value.status] ==
+                    'MoveInDateTenantConfirmationPending',
+                'bg-[#DBE9FE] border-solid  border-[1px] text-[#1D40AE] border-[#1D40AE]':
+                  AccommodationApplicationStatus[value.status] ==
+                  'Awaiting Review',
                 'bg-red-700 text-red-300 border-red-300 border-solid border-[1px]':
                   AccommodationApplicationStatus[value.status] == 'Declined',
                 'bg-[#DCFCE7] text-[#166434] border-[#166434] border-solid border-[1px] z-50 left-[30%]':
@@ -291,22 +294,27 @@
                   AccommodationApplicationStatus[value.status] ==
                   'AwaitingPayment',
               }"
-              class="absolute top-[20%] mb-2 hidden group-hover:block text-xs rounded px-2 py-1 whitespace-nowrap shadow-lg"
+              class="absolute z-10 top-[20%] mb-2 hidden group-hover:block text-xs rounded px-2 py-1 whitespace-nowrap shadow-lg"
             >
-              <p>
+              <p class="">
                 {{
                   TurnCamelCaseToWords(
                     AccommodationApplicationStatus[value.status]
                   ) || "nil"
                 }}
               </p>
-              <p>{{ AccommodationApplicationStatusDesc[value.status] }}</p>
+              <p
+                class="h-fit"
+                v-html="AccommodationApplicationStatusDesc[value.status]"
+              ></p>
             </span>
-            {{
-              TurnCamelCaseToWords(
-                AccommodationApplicationStatus[value.status]
-              ) || "nil"
-            }}
+            <span>
+              {{
+                TurnCamelCaseToWords(
+                  AccommodationApplicationStatus[value.status]
+                ) || "nil"
+              }}
+            </span>
           </span>
         </span>
         <button
@@ -357,7 +365,7 @@ export default {
       store: useUserStore(),
       AccommodationApplicationStatus: {
         0: "Failed", // Application submission failed or system error occurred
-        1: "ApplicationReview", // Application has been submitted and is under review by landlord
+        1: "Awaiting Review", // Application has been submitted and is under review by landlord
         2: "AdditionalDocumentsRequired", // Landlord has requested additional documents from tenant
         3: "MoveInDateLandlordConfirmationPending", // Application approved, awaiting landlord to confirm move-in date
         4: "MoveInDateTenantConfirmationPending", // Landlord set different date, awaiting tenant confirmation
@@ -368,14 +376,15 @@ export default {
         9: "Cancelled", // Application has been cancelled by tenant
 
         // Legacy statuses (backward compatibility)
-        1: "Pending", // Use ApplicationReview instead
-        2: "InProcess", // Use ApplicationReview instead
-        6: "Cancel", // Use Cancelled instead
-        5: "PaymentCompeted", // Use Completed instead
+        // 1: "Pending", // Use ApplicationReview instead
+        // 2: "InProcess", // Use ApplicationReview instead
+        // 6: "Cancel", // Use Cancelled instead
+        // 5: "PaymentCompeted", // Use Completed instead
       },
       AccommodationApplicationStatusDesc: {
         0: "Application submission failed or system error occurred",
-        1: "Application has been submitted and is under review by landlord",
+        1: "New Application submitted, review Tenant details and<br> decide whether to approve, decline or request more documents",
+
         2: "Landlord has requested additional documents from tenant",
         3: "Application approved, awaiting landlord to confirm move-in date",
         4: "Landlord set different date, awaiting tenant confirmation",

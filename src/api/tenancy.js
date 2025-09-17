@@ -30,3 +30,27 @@ export const ApproveTenant = async (body) => {
     console.log(err);
   }
 };
+
+export const ConfirmMoveInDate = async (body) => {
+  try {
+    const response = await postApi(
+      `v2/AccommodationApplications/ConfirmMoveInDate`,
+      body
+    );
+    return response.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const RequestAdditionalDocuments = async (body) => {
+  try {
+    const response = await postApi(
+      `v2/AccommodationApplications/RequestAdditionalDocument`,
+      body
+    );
+    return response.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
