@@ -660,6 +660,7 @@
             Decline
           </button>
           <button
+            :disabled="true"
             @click="showRequestDocumentModal = true"
             class="bg-[#ffffff] py-[6px] px-[16.5px] rounded-[5px] border-[#000130] border-[0.99px] text-[#000130]"
           >
@@ -696,7 +697,7 @@
             <div
               class="text-[#404164] font-sf font-[400] mt-[2px] leading-[100%]"
             >
-              Claudia Martins
+              {{ application.applicantName || "Nill" }}
             </div>
           </div>
           <div class="mt-[13px]">
@@ -708,7 +709,7 @@
             <div
               class="text-[#404164] font-sf font-[400] mt-[2px] leading-[100%]"
             >
-              mchen@email.com
+              {{ application.email || "Nill" }}
             </div>
           </div>
           <div class="mt-[13px]">
@@ -720,7 +721,7 @@
             <div
               class="text-[#404164] font-sf font-[400] mt-[2px] leading-[100%]"
             >
-              (555) 234-5678
+              {{ application.phoneNo || "Nill" }}
             </div>
           </div>
 
@@ -733,7 +734,7 @@
             <div
               class="text-[#404164] font-sf font-[400] mt-[2px] leading-[100%]"
             >
-              Graphic Designer
+              {{ application.occupation || "Nill" }}
             </div>
           </div>
           <div class="mt-[13px]">
@@ -745,7 +746,7 @@
             <div
               class="text-[#404164] font-sf font-[400] mt-[2px] leading-[100%]"
             >
-              5500
+              {{ application.apprMonthlyIncome || "Nill" }}
             </div>
           </div>
         </div>
@@ -815,7 +816,7 @@
             <div
               class="text-[#404164] font-sf font-[400] mt-[2px] leading-[100%]"
             >
-              (555) 234-5678
+              {{ application.apprMonthlyIncome }}
             </div>
           </div>
 
@@ -828,7 +829,7 @@
             <div
               class="text-[#404164] font-sf font-[400] mt-[2px] leading-[100%]"
             >
-              Graphic Designer
+              {{ application.occupation || "Nill" }}
             </div>
           </div>
           <div class="mt-[13px]">
@@ -840,7 +841,7 @@
             <div
               class="text-[#404164] font-sf font-[400] mt-[2px] leading-[100%]"
             >
-              5500
+              {{ application.apprMonthlyIncome || "Nill" }}
             </div>
           </div>
         </div>
@@ -861,7 +862,7 @@
             <p
               class="font-medium font-sf leading-[100%] text-[#1F3A8A] m-0 mt-[2px]"
             >
-              2024-04-20
+              {{ application.intendedMoveInDate || "Nill" }}
             </p>
           </div>
           <div class="mt-[8px]">
@@ -877,7 +878,7 @@
         </div>
         <div class="flex gap-[8px] mx-auto w-fit mt-[51px]">
           <button
-            @click="currentStep = 3"
+            @click="approveData"
             class="bg-[#1A7D36] py-[6px] px-[26.5px] rounded-[5px] border-[#29C354] border-[0.99px] text-[#FFFFFF]"
           >
             Approve
@@ -1049,6 +1050,7 @@
             class="rounded-[6px] border-[#D8D8D8] border-[1px] border-solid h-[48px]"
             placeholder="Add Document"
           />
+
           <button
             @click="
               () => {
@@ -1065,7 +1067,9 @@
         </div>
         <div class="mt-[1rem] flex gap-[10px] items-center">
           <button
-            class="bg-[#000130] flex-1 leading-[28px] py-[8px] px-[42.5px] rounded-[4px] font-sf font-[600] text-[#FFFFFF]"
+            @click="handleRequestDocument"
+            :disabled="form.requestDocuments.length === 0"
+            class="bg-[#000130] disabled:bg-slate-400 disabled:cursor-not-allowed flex-1 leading-[28px] py-[8px] px-[42.5px] rounded-[4px] font-sf font-[600] text-[#FFFFFF]"
           >
             Send Request
           </button>
@@ -1101,15 +1105,17 @@
         <p class="m-0 text-[#404164] text-[16px] font-sf">
           Move-In Date(Tenant’s Preferred : 2024 - 04-20)
         </p>
-        <a-input
-          v-model:value="form.otherDocument"
-          class="rounded-[6px] border-[#D8D8D8] border-[1px] border-solid h-[48px]"
+        <a-date-picker
+          v-model:value="form.moveInDate"
+          class="rounded-[6px] mt-[4px] border-[#D8D8D8] border-[1px] w-full border-solid h-[48px]"
           placeholder="Add Document"
         />
       </div>
       <div class="mt-[1rem] flex gap-[10px] items-center">
         <button
-          class="bg-[#1A7D36] flex-1 leading-[28px] py-[8px] px-[42.5px] rounded-[4px] font-sf font-[600] text-[#FFFFFF]"
+          :disabled="!form.moveInDate"
+          @click="handleMovingDate"
+          class="bg-[#1A7D36] disabled:cursor-not-allowed disabled:bg-slate-300 flex-1 leading-[28px] py-[8px] px-[42.5px] rounded-[4px] font-sf font-[600] text-[#FFFFFF]"
         >
           Send Date
         </button>
@@ -1397,6 +1403,7 @@ import { useRouter, useRoute, routerKey } from "vue-router";
 import { openDB } from "idb";
 import { ApproveTenant } from "@/api/tenancy";
 import { useToast } from "vue-toast-notification";
+import { useUserStore } from "@/store";
 import { ConfirmMoveInDate, RequestAdditionalDocuments } from "@/api/tenancy";
 
 export default {
@@ -1422,6 +1429,7 @@ export default {
         { label: "Co-signer Information", value: "Co-signer Information" },
         { label: "Pet Documentation", value: "Pet Documentation" },
       ],
+      store: useUserStore(),
       activeKey: "Personal Information",
       router: useRouter(),
       approving: false,
@@ -1437,6 +1445,7 @@ export default {
       form: {
         requestDocuments: [],
         otherDocument: "",
+        moveInDate: "",
       },
       route: useRoute(),
       showmoldal: false,
@@ -1449,7 +1458,7 @@ export default {
       AccommodationApplicationStatus: {
         0: "Failed", // Application submission failed or system error occurred
         1: "InitialReview", // Application has been submitted and is under review by landlord
-        2: "AdditionalDocumentsRequired", // Landlord has requested additional documents from tenant
+        2: "AwaitingAdditionalDocuments", // Landlord has requested additional documents from tenant
         3: "MoveInDateLandlordConfirmationPending", // Application approved, awaiting landlord to confirm move-in date
         4: "MoveInDateTenantConfirmationPending", // Landlord set different date, awaiting tenant confirmation
         5: "AwaitingPayment", // Move-in date confirmed, awaiting security deposit payment
@@ -1467,7 +1476,8 @@ export default {
       AccommodationApplicationStatusDesc: {
         0: "Application submission failed or system error occurred",
         1: "New Application submitted, review Tenant details and decide whether to approve, decline or request more documents",
-        2: "Landlord has requested additional documents from tenant",
+        2: "You have requested extra documents waiting for tenants to upload",
+
         3: "Application approved, awaiting landlord to confirm move-in date",
         4: "Landlord set different date, awaiting tenant confirmation",
         5: "Move-in date confirmed, awaiting security deposit payment",
@@ -1494,12 +1504,16 @@ export default {
       const payload = {
         applicationId: this.application.applicationId,
         approve: true,
+        note: "",
+        approvedBy: this.store.userProfile.referenceID,
       };
       ApproveTenant({ ...payload }).then((response) => {
+        this.currentStep = 3;
+
         if (response.responseCode == "00") {
+          this.currentStep = 3;
           this.showmoldal = true;
           this.approving = false;
-          console.log(response);
         } else {
           this.toast.success("Coudln't update");
         }
@@ -1508,8 +1522,8 @@ export default {
     async handleMovingDate() {
       const payload = {
         ApplicationId: this.application.applicationId,
-        MoveInDate: "2024-04-20",
-        IsOriginalDateApproved: "",
+        MoveInDate: this.form.moveInDate,
+        IsOriginalDateApproved: false,
         ConfirmedByUserId: "lanlord",
         Comments: "",
       };
@@ -1525,8 +1539,8 @@ export default {
     async handleRequestDocument() {
       const payload = {
         ApplicationId: this.application.applicationId,
-        RequiredDocumentsJson: this.form.requestDocuments,
-        MessageToTenant: this.form.otherDocument,
+        RequiredDocumentsJson: this.form.requestDocuments.join(","),
+        MessageToTenant: "Please add the following documents",
         LandlordId: "landlord",
       };
       RequestAdditionalDocuments({ ...payload }).then((response) => {
@@ -1545,6 +1559,7 @@ export default {
         approve: false,
         declineReason: this.declineReason,
       };
+
       ApproveTenant({ ...payload }).then((response) => {
         if (response.responseCode == "00") {
           console.log(response);

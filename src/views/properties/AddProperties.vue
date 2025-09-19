@@ -342,7 +342,7 @@
               </a-radio>
             </a-radio-group>
                 </a-form-item>
-                <p v-if="form.formType == 'Bulk Upload'" class="underline  text-[#404164] font-[500] leading-[100%] font-sf">Download the Template</p>
+<a href="/template/10ants_Apartment_upload_template.xlsx"  v-if="form.formType == 'Bulk Upload'" class="underline  text-[#404164] font-[500] leading-[100%] font-sf">Download the Template</a>
                 <a-form-item v-if="form.formType == 'Bulk Upload'">
                   <p  class="text-[14px] font-inter leading-[100%] text-[#404164] p-0 m-0">Upload Document</p>
    <a-upload-dragger

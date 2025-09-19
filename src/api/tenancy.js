@@ -22,15 +22,29 @@ export const FetchTenant = async (query, landlordId) => {
 export const ApproveTenant = async (body) => {
   try {
     const response = await postApi(
-      "Accommodation/ApproveOrDeclineAccommodationApplication",
-      body
+      `v2/AccommodationApplications/${body.applicationId}/approve`,
+      { approvedBy: body.approvedBy, notes: body.note }
     );
     return response.data;
   } catch (err) {
     console.log(err);
   }
 };
-
+export const DeclineTenant = async (body) => {
+  try {
+    const response = await postApi(
+      `/api/v2/AccommodationApplications/${body.applicationId}/status`,
+      {
+        applicationId: body.applicationId,
+        declinedBy: body.declinedBy,
+        notes: body.note,
+      }
+    );
+    return response.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
 export const ConfirmMoveInDate = async (body) => {
   try {
     const response = await postApi(

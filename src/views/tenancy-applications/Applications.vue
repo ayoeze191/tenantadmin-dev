@@ -202,7 +202,7 @@
               Property Name
             </p>
             <p class="text-txt_dark text-xs leading-3.5">
-              {{ items.nationality || "nill" }}
+              {{ items.propertyName || "nill" }}
             </p>
           </li>
         </ul>
@@ -247,16 +247,19 @@
         <span
           class="bg-[#FFFFFF] text-[#404164] border-gray-100 border-y-[1px] px-[24px] py-[24px]"
         >
-          {{ value.email || "nil" }}
+          {{ value.propertyName || "nil" }}
         </span>
         <span
           class="bg-[#FFFFFF] text-[#404164] border-gray-100 border-y-[1px] px-[24px] py-[24px]"
         >
-          {{ value.phone || "nil" }}
+          {{ value.unitName || "nil" }}
         </span>
         <span class="bg-[#FFFFFF] border-gray-100 flex items-center">
           <span
             :class="{
+              'bg-[#FEF9C3]   text-[#854D0F]':
+                AccommodationApplicationStatus[value.status] ==
+                'AwaitingAdditionalDocuments',
               'bg-[#F3E8FF] text-[#6D24A9]':
                 AccommodationApplicationStatus[value.status] ==
                   'MoveInDateLandlordConfirmationPending' ||
@@ -278,6 +281,9 @@
             <InfoCircleOutlined class="" />
             <span
               :class="{
+                'bg-[#FEF9C3] border-[#854D0F] border-solid border-[0.5px] text-[#854D0F]':
+                  AccommodationApplicationStatus[value.status] ==
+                  'AwaitingAdditionalDocuments',
                 'bg-[#F3E8FF] text-[#6D24A9] border-[#6D24A9] border-solid border-[1px] ':
                   AccommodationApplicationStatus[value.status] ==
                     'MoveInDateLandlordConfirmationPending' ||
@@ -358,6 +364,7 @@ import { openDB } from "idb";
 import { useUserStore } from "@/store";
 import Button from "@/components/Button.vue";
 import { useRoute } from "vue-router";
+import { AccomodationApplications } from "@/api/dashboard";
 export default {
   name: "Applications",
   data() {
@@ -366,7 +373,7 @@ export default {
       AccommodationApplicationStatus: {
         0: "Failed", // Application submission failed or system error occurred
         1: "Awaiting Review", // Application has been submitted and is under review by landlord
-        2: "AdditionalDocumentsRequired", // Landlord has requested additional documents from tenant
+        2: "AwaitingAdditionalDocuments", // Landlord has requested additional documents from tenant
         3: "MoveInDateLandlordConfirmationPending", // Application approved, awaiting landlord to confirm move-in date
         4: "MoveInDateTenantConfirmationPending", // Landlord set different date, awaiting tenant confirmation
         5: "AwaitingPayment", // Move-in date confirmed, awaiting security deposit payment
@@ -374,7 +381,6 @@ export default {
         7: "Completed", // Lease generated and application process completed
         8: "Declined", // Application has been declined by landlord or tenant
         9: "Cancelled", // Application has been cancelled by tenant
-
         // Legacy statuses (backward compatibility)
         // 1: "Pending", // Use ApplicationReview instead
         // 2: "InProcess", // Use ApplicationReview instead
@@ -385,7 +391,7 @@ export default {
         0: "Application submission failed or system error occurred",
         1: "New Application submitted, review Tenant details and<br> decide whether to approve, decline or request more documents",
 
-        2: "Landlord has requested additional documents from tenant",
+        2: "You have requested extra documents waiting for tenants to upload",
         3: "Application approved, awaiting landlord to confirm move-in date",
         4: "Landlord set different date, awaiting tenant confirmation",
         5: "Move-in date confirmed, awaiting security deposit payment",
