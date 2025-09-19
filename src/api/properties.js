@@ -146,3 +146,12 @@ export const getProvinces = async () => {
     console.log(error);
   }
 };
+
+export const uploadBulkexcelfile = async (payload) => {
+  try {
+    const response = await postApi("Accommodation/UnitBulkUpload", payload);
+    return response.data;
+  } catch (error) {
+    console.log("Error uploading file:", error);
+  }
+};

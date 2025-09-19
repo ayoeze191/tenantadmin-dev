@@ -345,15 +345,16 @@
 <a href="/template/10ants_Apartment_upload_template.xlsx"  v-if="form.formType == 'Bulk Upload'" class="underline  text-[#404164] font-[500] leading-[100%] font-sf">Download the Template</a>
                 <a-form-item v-if="form.formType == 'Bulk Upload'">
                   <p  class="text-[14px] font-inter leading-[100%] text-[#404164] p-0 m-0">Upload Document</p>
-   <a-upload-dragger
-                class="border-dashed border-[#C7C7C7] rounded-[5px] p-[14px] m-0 p-0"
-    v-model:fileList="fileList"
-    name="file"
-    :multiple="true"
-    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-    @change="handleChange"
-    @drop="handleDrop"
-  >
+<a-upload-dragger
+  class="border-dashed border-[#C7C7C7] rounded-[5px] p-[14px] m-0"
+  v-model:fileList="bulkuploaddocumentfileList"
+  name="file"
+  :multiple="true"
+  accept=".xls,.xlsx"
+  :beforeUpload="beforeUpload"
+    :before-upload="() => false"
+  :showUploadList="true"
+>
     <p class="ant-upload-drag-icon mx-auto w-fit pt-[28px]">
       <svg width="26" height="31" viewBox="0 0 26 31" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M25.0459 9.07906L17.1709 1.20406C17.0664 1.09962 16.9423 1.01681 16.8057 0.960347C16.6691 0.903885 16.5228 0.874884 16.375 0.875H2.875C2.27826 0.875 1.70597 1.11205 1.28401 1.53401C0.862053 1.95597 0.625 2.52826 0.625 3.125V27.875C0.625 28.4717 0.862053 29.044 1.28401 29.466C1.70597 29.8879 2.27826 30.125 2.875 30.125H23.125C23.7217 30.125 24.294 29.8879 24.716 29.466C25.1379 29.044 25.375 28.4717 25.375 27.875V9.875C25.3751 9.72722 25.3461 9.58086 25.2897 9.44429C25.2332 9.30772 25.1504 9.18362 25.0459 9.07906ZM17.5 4.71547L21.5345 8.75H17.5V4.71547ZM23.125 27.875H2.875V3.125H15.25V9.875C15.25 10.1734 15.3685 10.4595 15.5795 10.6705C15.7905 10.8815 16.0766 11 16.375 11H23.125V27.875ZM17.1709 16.9541C17.2755 17.0586 17.3584 17.1827 17.4149 17.3192C17.4715 17.4558 17.5006 17.6022 17.5006 17.75C17.5006 17.8978 17.4715 18.0442 17.4149 18.1808C17.3584 18.3173 17.2755 18.4414 17.1709 18.5459C17.0664 18.6505 16.9423 18.7334 16.8058 18.7899C16.6692 18.8465 16.5228 18.8756 16.375 18.8756C16.2272 18.8756 16.0808 18.8465 15.9442 18.7899C15.8077 18.7334 15.6836 18.6505 15.5791 18.5459L14.125 17.0905V23.375C14.125 23.6734 14.0065 23.9595 13.7955 24.1705C13.5845 24.3815 13.2984 24.5 13 24.5C12.7016 24.5 12.4155 24.3815 12.2045 24.1705C11.9935 23.9595 11.875 23.6734 11.875 23.375V17.0905L10.4209 18.5459C10.3164 18.6505 10.1923 18.7334 10.0558 18.7899C9.91919 18.8465 9.77282 18.8756 9.625 18.8756C9.47718 18.8756 9.33081 18.8465 9.19424 18.7899C9.05767 18.7334 8.93359 18.6505 8.82906 18.5459C8.72454 18.4414 8.64163 18.3173 8.58506 18.1808C8.52849 18.0442 8.49937 17.8978 8.49937 17.75C8.49937 17.6022 8.52849 17.4558 8.58506 17.3192C8.64163 17.1827 8.72454 17.0586 8.82906 16.9541L12.2041 13.5791C12.3085 13.4745 12.4326 13.3915 12.5692 13.3349C12.7058 13.2783 12.8522 13.2491 13 13.2491C13.1478 13.2491 13.2942 13.2783 13.4308 13.3349C13.5674 13.3915 13.6915 13.4745 13.7959 13.5791L17.1709 16.9541Z" fill="#404164"/>
@@ -409,11 +410,10 @@
                   <p class="text-[14px] font-inter leading-[100%] text-[#404164] p-0 m-0">Upload Photos</p>
    <a-upload-dragger
                 class="border-dashed border-[#C7C7C7] rounded-[5px] p-[14px] m-0 p-0"
-    v-model:fileList="fileList"
+    v-model:fileList="bulkImagefileListUpload"
     name="file"
     :multiple="true"
-    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-    @change="handleChange"
+    :customRequest="CustomUploadBulkImage"
     @drop="handleDrop"
   >
     <p class="ant-upload-drag-icon mx-auto w-fit pt-[28px]">
@@ -462,7 +462,7 @@
                 <div class="form-labels text-[20px] font-sf font-regular text-[#808097] mb-4 font-[300]">
                   Building Amenities
                 </div>
-                <a-checkbox-group class="grid grid-cols-2 gap-4" v-model:value="form.propertyAmenities">
+                <a-checkbox-group v-model:value="form.propertyAmenities" class="grid grid-cols-2 gap-4" >
                   <a-checkbox
                     v-for="option in amenityOptions"
                     :key="option.value"
@@ -753,7 +753,7 @@
 
          <div v-if="currentStep3 == 2" class="">
                <p class="text-[#000000] text-[18px] font-sf leading-[100%]">
-              {{form.rental_unit == "others" ? "Define What You are Listing " :"Sorem ipsum dolor sit amet, consectetur adipiscing elit"}}
+              {{form.rental_unit == "others" ? "Define What You are Listing " :"Setup Your Property Features, Amenities and Lease options"}}
             </p>
             <a-form class="bg-white p-6 rounded-xl flex flex-col gap-2" :rules="lastStepThreeRules" :model="form"> 
               <div v-if="form.rental_unit !== 'others'">
@@ -1254,7 +1254,7 @@
 </template>
 
 <script setup>
-import {  CreateNewProperty, FetchLandlords, getProvinces } from "@/api/properties";
+import {  CreateNewProperty, FetchLandlords, getProvinces, uploadBulkexcelfile } from "@/api/properties";
 import { useUserStore } from "@/store";
 import { useOptionsStore } from "@/stores/options";
 // CreateNewProperty,
@@ -1267,6 +1267,7 @@ import {
 import { message } from "ant-design-vue";
 import { openDB } from "idb";
 import { useToast } from "vue-toast-notification";
+
 import {
   onMounted,
   reactive,
@@ -1278,6 +1279,8 @@ const listingType = ref("");
 const showAmenitiesModal = ref(false);
 // 2. Use this for unitTypeOptions
 const showSuccessModal = ref(false);
+const bulkuploaddocumentfileList = ref([]);
+const bulkImagefileListUpload = ref([]);
 const amenityOptions = ref([]);
 const landlordOptions = ref([]);
 const landlordLoading = ref(false);
@@ -1305,6 +1308,43 @@ const fetchProvinces = async () => {
 }
 const propertyImageList = ref([])
 
+const beforeUpload = (file) => {
+  const isExcel =
+    file.type === 'application/vnd.ms-excel' ||
+    file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+
+  if (!isExcel) {
+    alert('Only Excel files (.xls, .xlsx) are allowed');
+    return Upload.LIST_IGNORE; // prevent upload & ignore file
+  }
+
+  return true;
+};
+
+const CustomUploadBulkImage = async(options) => {
+  const { file, onSuccess, onError } = options;
+  const formData = new FormData();
+  formData.append('Image', file);
+  formData.append('UploadType', 1);
+  formData.append('ImageTitle', file.name);
+  try {
+    const res = await uploadImage(formData);
+    // const url = res.url;
+    const imageUrl = res.url   
+    const imageId = res.imageId // assuming backend returns an imageId
+    // from backend
+     form.propertyImages.push({
+      imageId,                // keep track of backend id if you need it
+      imageTitle: file.name,
+      image: imageUrl
+    })
+
+    onSuccess({ url: imageUrl }, file);
+  } catch (err) {
+    message.error(`${file.name} upload failed.`);
+    onError(err);
+  }
+}
 const customUploadPropertyImage = async (options) => {
   const { file, onSuccess, onError } = options
   const formData = new FormData()
@@ -1315,7 +1355,7 @@ const customUploadPropertyImage = async (options) => {
   try {
     const res = await uploadImage(formData)
     const imageUrl = res.url   // from backend
-
+    const imageId = res.imageId // assuming backend returns an imageId
     // ✅ push into your form array (make sure propertyImages: [] initially)
     form.propertyImages.push({
       imageId,                // keep track of backend id if you need it
@@ -1424,8 +1464,14 @@ const SubmitCreateProperty = async() => {
       const res = await CreateNewProperty(payload)
       const toast = useToast();
       if (res.responseCode == "00") {
+        console.log("Property created successfully:", res);
+       if(form.formType == "In App Form"){
         toast.success("Successfully created")  
         showSuccessModal.value = true;
+       }
+       else{
+        await handleuploadExcelFile(res.accommodationId)
+       }
       }
       else{
         toast.error("Couldn't create")  
@@ -1437,6 +1483,9 @@ const SubmitCreateProperty = async() => {
       return;
     }
     
+}
+const handleuploadExcelFile = async(accommodationId) => {
+       const res = await uploadBulkexcelfile({AccommodationId:accommodationId , ExcelFile:bulkuploaddocumentfileList.value })
 }
 const currentStep = ref(0);
 const currentStep3 = ref(0);
@@ -1475,7 +1524,7 @@ const form = reactive({
     unitType: "",
     quantity: "",
     securityDeposit: "",
-    rentPerMonth: "",
+    rentPerMonth: 0,
     availabilityDate: "",
     numberOfBathrooms: 0,
     numberOfBedrooms: 0,

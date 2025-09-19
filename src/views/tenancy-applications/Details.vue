@@ -18,7 +18,27 @@
         </p>
       </div>
       <span
-        class="flex gap-2 -mt-[40px] rounded-[4px] flex-col items-start bg-[#FEF9C3] border-[#854D0F] border-solid border-[0.5px] text-[#854D0F] px-[20px] text-[14px] font-sf leading-[145%] py-[8px]"
+        class="flex gap-2 -mt-[40px] rounded-[4px] flex-col items-start border-solid border-[0.5px] text-[#854D0F] px-[20px] text-[14px] font-sf leading-[145%] py-[8px]"
+        :class="{
+          'bg-[#FEF9C3] border-[#854D0F] border-solid border-[0.5px] text-[#854D0F]':
+            AccommodationApplicationStatus[application.status] ==
+            'AwaitingAdditionalDocuments',
+          'bg-[#F3E8FF] text-[#6D24A9] border-[#6D24A9] border-solid border-[1px] ':
+            AccommodationApplicationStatus[application.status] ==
+              'MoveInDateLandlordConfirmationPending' ||
+            AccommodationApplicationStatus[application.status] ==
+              'MoveInDateTenantConfirmationPending',
+          'bg-[#FEF9C3] border-solid  border-[1px] text-[#1D40AE] border-[#1D40AE]':
+            AccommodationApplicationStatus[application.status] ==
+            'AwaitingReview',
+          'bg-red-700 text-red-300 border-red-300 border-solid border-[1px]':
+            AccommodationApplicationStatus[application.status] == 'Declined',
+          'bg-[#DCFCE7] text-[#166434] border-[#166434] border-solid border-[1px] z-50 left-[30%]':
+            AccommodationApplicationStatus[application.status] == 'Completed',
+          'bg-[#FEF9C3] text-[#854D0F] border-solid border-[1px] border-[#854D0F] z- left-[20%]':
+            AccommodationApplicationStatus[application.status] ==
+            'AwaitingPayment',
+        }"
       >
         <span class="font-[500] text-[20px]"
           ><InfoCircleOutlined class="cursor-pointer" />
@@ -1457,7 +1477,7 @@ export default {
       currentStep: 0,
       AccommodationApplicationStatus: {
         0: "Failed", // Application submission failed or system error occurred
-        1: "InitialReview", // Application has been submitted and is under review by landlord
+        1: "AwaitingReview", // Application has been submitted and is under review by landlord
         2: "AwaitingAdditionalDocuments", // Landlord has requested additional documents from tenant
         3: "MoveInDateLandlordConfirmationPending", // Application approved, awaiting landlord to confirm move-in date
         4: "MoveInDateTenantConfirmationPending", // Landlord set different date, awaiting tenant confirmation

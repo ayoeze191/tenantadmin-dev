@@ -264,7 +264,7 @@
                 AccommodationApplicationStatus[value.status] ==
                   'MoveInDateLandlordConfirmationPending' ||
                 AccommodationApplicationStatus[value.status] ==
-                  'MoveInDateTenantConfirmationPending',
+                  'ConfirmingMove-inDate',
               'bg-[#DBE9FE] text-[#1D40AE] ':
                 AccommodationApplicationStatus[value.status] ==
                 'Awaiting Review',
@@ -288,7 +288,7 @@
                   AccommodationApplicationStatus[value.status] ==
                     'MoveInDateLandlordConfirmationPending' ||
                   AccommodationApplicationStatus[value.status] ==
-                    'MoveInDateTenantConfirmationPending',
+                    'ConfirmingMove-inDate',
                 'bg-[#DBE9FE] border-solid  border-[1px] text-[#1D40AE] border-[#1D40AE]':
                   AccommodationApplicationStatus[value.status] ==
                   'Awaiting Review',
@@ -299,6 +299,8 @@
                 'bg-[#FEF9C3] text-[#854D0F] border-solid border-[1px] border-[#854D0F] z- left-[20%]':
                   AccommodationApplicationStatus[value.status] ==
                   'AwaitingPayment',
+                'bg-red-500 text-white border-solid border-[1px] border-red-500 z- left-[20%]':
+                  AccommodationApplicationStatus[value.status] === 'Failed',
               }"
               class="absolute z-10 top-[20%] mb-2 hidden group-hover:block text-xs rounded px-2 py-1 whitespace-nowrap shadow-lg"
             >
@@ -375,7 +377,7 @@ export default {
         1: "Awaiting Review", // Application has been submitted and is under review by landlord
         2: "AwaitingAdditionalDocuments", // Landlord has requested additional documents from tenant
         3: "MoveInDateLandlordConfirmationPending", // Application approved, awaiting landlord to confirm move-in date
-        4: "MoveInDateTenantConfirmationPending", // Landlord set different date, awaiting tenant confirmation
+        4: "ConfirmingMove-inDate", // Landlord set different date, awaiting tenant confirmation
         5: "AwaitingPayment", // Move-in date confirmed, awaiting security deposit payment
         6: "AwaitingLeaseGeneration", // Payment received, awaiting lease document generation
         7: "Completed", // Lease generated and application process completed
