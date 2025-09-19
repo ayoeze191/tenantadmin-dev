@@ -278,7 +278,7 @@
               'bg-red-200 text-red-500 border-solid border-[1px]  ':
                 AccommodationApplicationStatus[value.status] === 'Failed',
             }"
-            class="flex gap-2 w-full text-center justify-center px-[20px] text-[14px] cursor-pointer font-sf rounded-[12px] leading-[145%] py-[2px] items-center relative group"
+            class="flex gap-2 w-full text-center px-[20px] text-[14px] cursor-pointer font-sf rounded-[12px] leading-[145%] py-[2px] items-center relative group"
           >
             <InfoCircleOutlined class="" />
             <span
@@ -301,7 +301,7 @@
                 'bg-[#FEF9C3] text-[#854D0F] border-solid border-[1px] border-[#854D0F] z- left-[20%]':
                   AccommodationApplicationStatus[value.status] ==
                   'AwaitingPayment',
-                'bg-red-500 text-white border-solid border-[1px] border-red-500 z- left-[20%]':
+                'bg-red-200 text-red-500 border-solid border-[1px] border-red-500 z- left-[20%]':
                   AccommodationApplicationStatus[value.status] === 'Failed',
               }"
               class="absolute z-10 top-[20%] mb-2 hidden group-hover:block text-xs rounded px-2 py-1 whitespace-nowrap shadow-lg"
@@ -328,10 +328,23 @@
           </span>
         </span>
         <button
+          :class="{
+            'cursor-not-allowed':
+              AccommodationApplicationStatus[value.status] === 'Failed',
+          }"
+          :disabled="AccommodationApplicationStatus[value.status] === 'Failed'"
           @click="() => goto(value)"
           class="bg-[#FFFFFF] flex justify-start text-[#404164] border-gray-100 border-y-[1px] px-[24px] py-[24px]"
         >
-          <EyeOutlined @click="() => goto(value)" />
+          <EyeOutlined
+            :disabled="
+              AccommodationApplicationStatus[value.status] === 'Failed'
+            "
+            :class="{
+              'cursor-not-allowed':
+                AccommodationApplicationStatus[value.status] === 'Failed',
+            }"
+          />
         </button>
       </div>
       <div

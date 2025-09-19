@@ -42,7 +42,11 @@
       >
         <span class="font-[500] text-[20px]"
           ><InfoCircleOutlined class="cursor-pointer" />
-          {{ AccommodationApplicationStatus[application.status] || "nil" }}
+          {{
+            TurnCamelCaseToWords(
+              AccommodationApplicationStatus[application.status]
+            ) || "nil"
+          }}
         </span>
         <span>
           {{ AccommodationApplicationStatusDesc[application.status] }}
@@ -99,7 +103,6 @@
         >
           <a-button
             :loading="approving"
-            @click="approveData"
             class="border-[#29C354] h-fit bg-[#EDFFF7] text-[#29C354] border-[0.99px] border-solid rounded-[5px] w-[101px] px-[12px] py-[6px]"
           >
             Approve
@@ -669,7 +672,7 @@
 
         <div class="flex gap-[8px] mx-auto w-fit">
           <button
-            @click="currentStep = 1"
+            @click="approveData()"
             class="bg-[#1A7D36] py-[6px] px-[26.5px] rounded-[5px] border-[#29C354] border-[0.99px] text-[#FFFFFF]"
           >
             Approve
@@ -812,7 +815,7 @@
             <div
               class="text-[#404164] font-sf font-[400] mt-[2px] leading-[100%]"
             >
-              Claudia Martins
+              {{ application.propertyName }}
             </div>
           </div>
           <div class="mt-[13px]">
@@ -898,7 +901,7 @@
         </div>
         <div class="flex gap-[8px] mx-auto w-fit mt-[51px]">
           <button
-            @click="approveData"
+            @click="() => handleMovingDate(true)"
             class="bg-[#1A7D36] py-[6px] px-[26.5px] rounded-[5px] border-[#29C354] border-[0.99px] text-[#FFFFFF]"
           >
             Approve
@@ -936,7 +939,7 @@
             <p
               class="font-medium font-sf leading-[100%] text-[#529C66] m-0 mt-[2px]"
             >
-              David Rodriquez
+              {{ application.applicantName || "Nill" }}
             </p>
           </div>
           <div class="mt-[8px]">
@@ -952,7 +955,7 @@
             <p
               class="font-medium font-sf leading-[100%] text-[#529C66] m-0 mt-[2px]"
             >
-              $2,500
+              {{ application.securityDepositAmount || "Nill" }}
             </p>
           </div>
         </div>
@@ -1025,13 +1028,121 @@
               />
             </svg>
           </p>
-          <div>
-            <p>Lease Details Preview</p>
+          <div class="py-[8px] bg-[#F9FAFB] mt-2 px-[16px] rounded-[8px]">
+            <p
+              class="text-[#404164] text-base font-medium leading-[100%] font-sf"
+            >
+              Lease Details Preview
+            </p>
+            <div class="flex flex-col gap-4">
+              <div>
+                <p
+                  class="text-[#404164] text-[14px] font-sf font-medium leading-[100%] m-0"
+                >
+                  Applicant
+                </p>
+                <p
+                  class="text-[#808097] text-[14px] font-sf font-normal leading-[100%] m-0 mt-[4px]"
+                >
+                  {{ application.applicantName || "Nill" }}
+                </p>
+              </div>
+              <div>
+                <p
+                  class="text-[#404164] text-[14px] font-sf font-medium leading-[100%] m-0"
+                >
+                  Property Address
+                </p>
+                <p
+                  class="text-[#808097] text-[14px] font-sf font-normal leading-[100%] m-0 mt-[4px]"
+                >
+                  {{ application.currentAddress || "Nill" }}
+                </p>
+              </div>
+
+              <div>
+                <p
+                  class="text-[#404164] text-[14px] font-sf font-medium leading-[100%] m-0"
+                >
+                  Rent
+                </p>
+                <p
+                  class="text-[#808097] text-[14px] font-sf font-normal leading-[100%] m-0 mt-[4px]"
+                >
+                  {{ application.budgetForAccommodation.source || "Nill" }}
+                </p>
+              </div>
+
+              <div>
+                <p
+                  class="text-[#404164] text-[14px] font-sf font-medium leading-[100%] m-0"
+                >
+                  Rent
+                </p>
+                <p
+                  class="text-[#808097] text-[14px] font-sf font-normal leading-[100%] m-0 mt-[4px]"
+                >
+                  C$ 670
+                </p>
+              </div>
+
+              <div>
+                <p
+                  class="text-[#404164] text-[14px] font-sf font-medium leading-[100%] m-0"
+                >
+                  Security Deposit
+                </p>
+                <p
+                  class="text-[#808097] text-[14px] font-sf font-normal leading-[100%] m-0 mt-[4px]"
+                >
+                  C$ 670
+                </p>
+              </div>
+
+              <div>
+                <p
+                  class="text-[#404164] text-[14px] font-sf font-medium leading-[100%] m-0"
+                >
+                  Move-In Date
+                </p>
+                <p
+                  class="text-[#808097] text-[14px] font-sf font-normal leading-[100%] m-0 mt-[4px]"
+                >
+                  12/07/2024
+                </p>
+              </div>
+
+              <div>
+                <p
+                  class="text-[#404164] text-[14px] font-sf font-medium leading-[100%] m-0"
+                >
+                  Lease Type
+                </p>
+                <p
+                  class="text-[#808097] text-[14px] font-sf font-normal leading-[100%] m-0 mt-[4px]"
+                >
+                  Month to Month
+                </p>
+              </div>
+
+              <div>
+                <p
+                  class="text-[#404164] text-[14px] font-sf font-medium leading-[100%] m-0"
+                >
+                  Lease Start Date
+                </p>
+                <p
+                  class="text-[#808097] text-[14px] font-sf font-normal leading-[100%] m-0 mt-[4px]"
+                >
+                  12/07/2024
+                </p>
+              </div>
+            </div>
           </div>
           <div class="mx-auto w-fit mt-[50px]">
             <button
               class="bg-[#000130] w-[229px] mx-auto h-[50px] text-center text-[#FFFFFF] rounded-[5px] mt-[16px]"
-              @click="HandleGenerateLease"
+              @click="showGenerateLease"
             >
               Generate Lease
             </button>
@@ -1134,7 +1245,7 @@
       <div class="mt-[1rem] flex gap-[10px] items-center">
         <button
           :disabled="!form.moveInDate"
-          @click="handleMovingDate"
+          @click="() => handleMovingDate(false)"
           class="bg-[#1A7D36] disabled:cursor-not-allowed disabled:bg-slate-300 flex-1 leading-[28px] py-[8px] px-[42.5px] rounded-[4px] font-sf font-[600] text-[#FFFFFF]"
         >
           Send Date
@@ -1407,6 +1518,7 @@
               </button>
               <button
                 class="px-[43px] py-[12px] font-sf font-[600] text-[14px] rounded-[4px] text-white bg-[#000130]"
+                @click="HandleGenerateLease"
               >
                 Send Lease
               </button>
@@ -1424,7 +1536,11 @@ import { openDB } from "idb";
 import { ApproveTenant } from "@/api/tenancy";
 import { useToast } from "vue-toast-notification";
 import { useUserStore } from "@/store";
-import { ConfirmMoveInDate, RequestAdditionalDocuments } from "@/api/tenancy";
+import {
+  ConfirmMoveInDate,
+  RequestAdditionalDocuments,
+  GenerateLease,
+} from "@/api/tenancy";
 
 export default {
   name: "Applications-Details",
@@ -1509,8 +1625,22 @@ export default {
     };
   },
   methods: {
-    HandleGenerateLease() {
+    showGenerateLease() {
       this.showGenerateLeaseModal = true;
+    },
+    async HandleGenerateLease() {
+      GenerateLease({ ApplicationId: this.application.applicationId }).then(
+        (response) => {
+          if (response.responseCode == "00") {
+            this.showGenerateLeaseModal = false;
+            this.toast.success("Lease Generated Successfully");
+            this.showGenerateLeaseModal = false;
+            this.currentStep = 4;
+          } else {
+            this.toast.error("Coudln't generate lease");
+          }
+        }
+      );
     },
     async getApplications() {
       const id = this.route.params.id;
@@ -1525,13 +1655,15 @@ export default {
         applicationId: this.application.applicationId,
         approve: true,
         note: "",
-        approvedBy: this.store.userProfile.referenceID,
+        approvedBy:
+          this.store.userProfile.referenceID == "NN1"
+            ? 1
+            : this.store.userProfile.referenceID,
       };
       ApproveTenant({ ...payload }).then((response) => {
-        this.currentStep = 3;
-
+        this.currentStep = 2;
         if (response.responseCode == "00") {
-          this.currentStep = 3;
+          this.currentStep = 2;
           this.showmoldal = true;
           this.approving = false;
         } else {
@@ -1539,16 +1671,30 @@ export default {
         }
       });
     },
-    async handleMovingDate() {
-      const payload = {
+    TurnCamelCaseToWords(str) {
+      return str
+        .replace(/([A-Z])/g, " $1") // Insert a space before all caps
+        .replace(/^./, function (str) {
+          return str.toUpperCase();
+        }) // Uppercase the first character
+        .trim(); // Remove any leading or trailing spaces
+    },
+    async handleMovingDate(original) {
+      let payload = {
         ApplicationId: this.application.applicationId,
-        MoveInDate: this.form.moveInDate,
-        IsOriginalDateApproved: false,
+        IsOriginalDateApproved: original ? true : false,
         ConfirmedByUserId: "lanlord",
         Comments: "",
+        NewMoveInDate: this.application.intendedMoveInDate,
       };
+      if (original == false) {
+        payload = { ...payload, NewMoveInDate: this.form.moveInDate };
+      }
       ConfirmMoveInDate({ ...payload }).then((response) => {
+        this.currentStep = 3;
+
         if (response.responseCode == "00") {
+          this.currentStep = 3;
           this.showMovieInDateModal = false;
           this.toast.success("Move-in date confirmed");
         } else {

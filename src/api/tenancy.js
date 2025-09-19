@@ -68,3 +68,15 @@ export const RequestAdditionalDocuments = async (body) => {
     console.log(err);
   }
 };
+
+export const GenerateLease = async (applicationId) => {
+  try {
+    const response = await postApi(
+      `v2/AccommodationApplications/${applicationId}/GenerateLeaseAgreement`,
+      body
+    );
+    return response.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
