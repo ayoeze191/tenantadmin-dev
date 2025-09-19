@@ -254,7 +254,7 @@
         >
           {{ value.unitName || "nil" }}
         </span>
-        <span class="bg-[#FFFFFF] border-gray-100 flex items-center">
+        <span class="bg-[#FFFFFF] border-gray-100 flex items-center pl-0">
           <span
             :class="{
               'bg-[#FEF9C3]   text-[#854D0F]':
@@ -275,8 +275,10 @@
               'bg-[#FEF9C3] text-[#854D0F]':
                 AccommodationApplicationStatus[value.status] ==
                 'AwaitingPayment',
+              'bg-red-200 text-red-500 border-solid border-[1px]  ':
+                AccommodationApplicationStatus[value.status] === 'Failed',
             }"
-            class="flex gap-2 px-[20px] text-[14px] cursor-pointer font-sf rounded-[12px] leading-[145%] py-[2px] items-center relative group"
+            class="flex gap-2 w-full text-center justify-center px-[20px] text-[14px] cursor-pointer font-sf rounded-[12px] leading-[145%] py-[2px] items-center relative group"
           >
             <InfoCircleOutlined class="" />
             <span
