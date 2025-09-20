@@ -99,36 +99,27 @@
             </p>
           </div>
         </div>
-        <div
-          class="flex gap-[8px] ml-auto"
-          v-if="application.statusName == 'Pending'"
-        >
-          <a-button
-            :loading="approving"
-            class="border-[#29C354] h-fit bg-[#EDFFF7] text-[#29C354] border-[0.99px] border-solid rounded-[5px] w-[101px] px-[12px] py-[6px]"
+        <div class="flex gap-[8px] ml-auto w-fit">
+          <button
+            :disabled="application.status == 4 || application.status == 7"
+            @click="approveData()"
+            class="bg-[#1A7D36] disabled:cursor-not-allowed disabled:bg-gray-300 py-[6px] px-[26.5px] rounded-[5px] border-[0.99px] text-[#FFFFFF]"
           >
             Approve
-          </a-button>
-          <a-button
-            @click="showDeclinemoldal = true"
-            class="border-[#F47B7B] h-fit bg-[#FFEDED] text-[#F47B7B] border-[0.99px] border-solid rounded-[5px] w-[101px] px-[12px] py-[6px]"
+          </button>
+          <button
+            :disabled="application.status == 4 || application.status == 7"
+            class="bg-[#DC2625] disabled:cursor-not-allowed disabled:bg-gray-300 py-[6px] px-[26.5px] rounded-[5px] border-[0.99px] text-[#FFFFFF]"
           >
             Decline
-          </a-button>
-        </div>
-
-        <div
-          v-else-if="application.statusName == 'Completed'"
-          class="text-green-500 ml-auto text-[20px] flex items-center gap-2"
-        >
-          Approved <CheckCircleOutlined />
-        </div>
-
-        <div
-          v-else-if="application.statusName == 'Declined'"
-          class="text-red-500 ml-auto text-[20px] flex items-center gap-2"
-        >
-          Declined <CloseCircleOutlined />
+          </button>
+          <button
+            :disabled="application.status == 4 || application.status == 7"
+            @click="showRequestDocumentModal = true"
+            class="bg-[#ffffff] py-[6px] disabled:cursor-not-allowed px-[16.5px] rounded-[5px] border-[#000130] border-[0.99px] text-[#000130]"
+          >
+            Request Additional Documents
+          </button>
         </div>
       </div>
 
@@ -674,20 +665,22 @@
 
         <div class="flex gap-[8px] mx-auto w-fit">
           <button
+            :disabled="application.status == 4 || application.status == 7"
             @click="approveData()"
-            class="bg-[#1A7D36] py-[6px] px-[26.5px] rounded-[5px] border-[#29C354] border-[0.99px] text-[#FFFFFF]"
+            class="bg-[#1A7D36] disabled:cursor-not-allowed disabled:bg-gray-300 py-[6px] px-[26.5px] rounded-[5px] border-[0.99px] text-[#FFFFFF]"
           >
             Approve
           </button>
           <button
-            class="bg-[#DC2625] py-[6px] px-[26.5px] rounded-[5px] border-[#F47B7B] border-[0.99px] text-[#FFFFFF]"
+            :disabled="application.status == 4 || application.status == 7"
+            class="bg-[#DC2625] disabled:cursor-not-allowed disabled:bg-gray-300 py-[6px] px-[26.5px] rounded-[5px] border-[0.99px] text-[#FFFFFF]"
           >
             Decline
           </button>
           <button
-            :disabled="true"
+            :disabled="application.status == 4 || application.status == 7"
             @click="showRequestDocumentModal = true"
-            class="bg-[#ffffff] py-[6px] px-[16.5px] rounded-[5px] border-[#000130] border-[0.99px] text-[#000130]"
+            class="bg-[#ffffff] py-[6px] disabled:cursor-not-allowed px-[16.5px] rounded-[5px] border-[#000130] border-[0.99px] text-[#000130]"
           >
             Request Additional Documents
           </button>
