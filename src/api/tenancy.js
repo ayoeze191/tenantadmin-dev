@@ -71,9 +71,8 @@ export const RequestAdditionalDocuments = async (body) => {
 
 export const GenerateLease = async (applicationId) => {
   try {
-    const response = await postApi(
-      `v2/AccommodationApplications/${applicationId}/GenerateLeaseAgreement`,
-      body
+    const response = await getApi(
+      `v2/AccommodationApplications/${applicationId}/GenerateLeaseAgreement`
     );
     return response.data;
   } catch (err) {

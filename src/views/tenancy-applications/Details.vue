@@ -43,9 +43,11 @@
         <span class="font-[500] text-[20px]"
           ><InfoCircleOutlined class="cursor-pointer" />
           {{
-            TurnCamelCaseToWords(
-              AccommodationApplicationStatus[application.status]
-            ) || "nil"
+            AccommodationApplicationStatus[application.status]
+              ? TurnCamelCaseToWords(
+                  AccommodationApplicationStatus[application.status]
+                )
+              : "nil"
           }}
         </span>
         <span>
@@ -1629,18 +1631,19 @@ export default {
       this.showGenerateLeaseModal = true;
     },
     async HandleGenerateLease() {
-      GenerateLease({ ApplicationId: this.application.applicationId }).then(
-        (response) => {
-          if (response.responseCode == "00") {
-            this.showGenerateLeaseModal = false;
-            this.toast.success("Lease Generated Successfully");
-            this.showGenerateLeaseModal = false;
-            this.currentStep = 4;
-          } else {
-            this.toast.error("Coudln't generate lease");
-          }
+      const response = await GenerateLease(this.application.applicationId);
+      try {
+        if (response.responseCode == "00") {
+          this.showGenerateLeaseModal = false;
+          this.toast.success("Lease Generated Successfully");
+          this.showGenerateLeaseModal = false;
+          this.currentStep = 4;
+        } else {
+          this.toast.error("Coudln't generate lease");
         }
-      );
+      } catch (err) {
+        console.log(err);
+      }
     },
     async getApplications() {
       const id = this.route.params.id;
@@ -1681,14 +1684,14 @@ export default {
     },
     async handleMovingDate(original) {
       let payload = {
-        ApplicationId: this.application.applicationId,
-        IsOriginalDateApproved: original ? true : false,
-        ConfirmedByUserId: "lanlord",
-        Comments: "",
-        NewMoveInDate: this.application.intendedMoveInDate,
+        applicationId: this.application.applicationId,
+        isOriginalDateApproved: original ? true : false,
+        confirmedByUserId: "landlord",
+        comments: "",
+        moveInDate: this.application.intendedMoveInDate,
       };
       if (original == false) {
-        payload = { ...payload, NewMoveInDate: this.form.moveInDate };
+        payload = { ...payload, moveInDate: this.form.moveInDate };
       }
       ConfirmMoveInDate({ ...payload }).then((response) => {
         this.currentStep = 3;
