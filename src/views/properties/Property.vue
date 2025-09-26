@@ -1120,13 +1120,13 @@
         </div>
         <div>
           <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">AC Type</p>
-          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">Central AC</p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">Nil</p>
         </div>
         <!-- Next -->
 
          <div>
           <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Occupancy Status</p>
-          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">Available and Vacant</p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">{{selectedUnit.occupancyStatus}}</p>
         </div>
         <div>
           <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Heating Type</p>
@@ -1138,11 +1138,11 @@
         </div>
          <div>
           <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Laundry Type</p>
-          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">Yes</p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">{{'Nil'}}</p>
         </div>
         <div>
           <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Security Deposit</p>
-          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">$450</p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">${{selectedUnit.securityDeposit}}</p>
         </div>
         <div>
           <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Availability Date</p>
@@ -1956,7 +1956,7 @@ async function fetchCurrentAmenities(id) {
   text-align: center;
   height: 160px;
   line-height: 160px;
-  background: #364d79;
+  /* background: #364d79; */
   overflow: hidden;
 }
 
@@ -1965,7 +1965,7 @@ async function fetchCurrentAmenities(id) {
   height: 25px;
   font-size: 25px;
   color: #fff;
-  background-color: rgba(31, 45, 61, 0.11);
+  /* background-color: rgba(31, 45, 61, 0.11); */
   transition: ease all 0.3s;
   opacity: 0.3;
   z-index: 1;
