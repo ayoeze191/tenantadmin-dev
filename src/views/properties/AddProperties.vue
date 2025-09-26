@@ -1174,7 +1174,7 @@
                 <CloseOutlined v-else />Total Number of Units</span
               >
               <p class="text-[#808097] m-0">
-                {{ form.units || "Not Set" }}
+                {{ form.unitTypes.length || "Not Set" }}
               </p>
             </div>
 
@@ -1449,7 +1449,6 @@ const SubmitCreateProperty = async() => {
       city: form.city,
       zipCode: form.zipCode,
       province: form.province,
-      unitTypes: [...form.unitTypes],
       proofOfOwnership: form.proofOfOwnership,
       governmentID: form.governmentID,
       otherDocs: form.otherDocs,
@@ -1459,6 +1458,10 @@ const SubmitCreateProperty = async() => {
       laundryType: form.laundryType,
       acType: form.acType,
       leaseType: form.leaseType.join(','),
+      unitTypes: []
+    }
+    if(form.formType == 'In App Form'){
+      payload[unitTypes] = [...form.unitTypes]
     }
     try{
       const res = await CreateNewProperty(payload)
@@ -1484,9 +1487,34 @@ const SubmitCreateProperty = async() => {
     }
     
 }
-const handleuploadExcelFile = async(accommodationId) => {
-       const res = await uploadBulkexcelfile({AccommodationId:accommodationId , ExcelFile:bulkuploaddocumentfileList.value })
-}
+const handleuploadExcelFile = async (accommodationId) => {
+  if (!bulkuploaddocumentfileList.value.length) {
+    console.error("No file selected");
+    return;
+  }
+  const file = bulkuploaddocumentfileList.value[0].originFileObj; // 👈 this is the real Excel file
+  const formData = new FormData();
+  formData.append('AccommodationId', accommodationId);
+  formData.append('ExcelFile', file);
+
+  try {
+    const res = await uploadBulkexcelfile(formData);
+
+const blob = new Blob([res], {
+  type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+});
+
+const link = document.createElement('a');
+link.href = URL.createObjectURL(blob);
+link.download = 'bulk-upload-response-document.xlsx';
+link.click();
+toast.success("Successfully created")  
+        showSuccessModal.value = true;
+  } catch (err) {
+    console.error('Upload failed:', err);
+  }
+};
+
 const currentStep = ref(0);
 const currentStep3 = ref(0);
 const loading = ref(false);

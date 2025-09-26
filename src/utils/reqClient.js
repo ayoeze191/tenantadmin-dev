@@ -17,6 +17,15 @@ export const postApi = async (url, body, headers) =>
     },
   });
 
+export const postDocumentApi = async (url, body, config = {}) =>
+  axios.post(`${BASE_URL}/${url}`, body, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("_10at_")}`,
+      ...config.headers,
+    },
+    ...config, // 👈 spread extra config like responseType
+  });
+
 export const putApi = async (url, body, headers) =>
   axios.put(`${BASE_URL}/${url}`, body, {
     headers: {

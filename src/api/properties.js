@@ -1,5 +1,7 @@
 import handleError from "@/utils/handleError";
-import { getApi, postApi, putApi } from "@/utils/reqClient";
+import { getApi, postApi, postDocumentApi } from "@/utils/reqClient";
+import axios from "axios";
+import BASE_URL from "../api/baseUrl";
 
 export const FetchLandlords = async (params = {}) => {
   try {
@@ -147,9 +149,29 @@ export const getProvinces = async () => {
   }
 };
 
+// export const uploadBulkexcelfile = async (payload) => {
+//   try {
+//     const response = await postApi("Accommodation/UnitBulkUpload", payload, {
+//       responseType: "arraybuffer",
+//     });
+//     return response.data;
+//   } catch (error) {
+//     console.log("Error uploading file:", error);
+//   }
+// };
+
 export const uploadBulkexcelfile = async (payload) => {
   try {
-    const response = await postApi("Accommodation/UnitBulkUpload", payload);
+    const response = await axios.post(
+      `${BASE_URL}/Accommodation/UnitBulkUpload`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("_10at_")}`,
+        },
+        responseType: "arraybuffer", // 👈 key line
+      }
+    );
     return response.data;
   } catch (error) {
     console.log("Error uploading file:", error);
