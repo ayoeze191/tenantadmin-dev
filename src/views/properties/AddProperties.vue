@@ -1508,7 +1508,7 @@ const link = document.createElement('a');
 link.href = URL.createObjectURL(blob);
 link.download = 'bulk-upload-response-document.xlsx';
 link.click();
-toast.success("Successfully created")  
+window.open(link.href, '_blank');
         showSuccessModal.value = true;
   } catch (err) {
     console.error('Upload failed:', err);
