@@ -65,6 +65,8 @@ export default {
       },
       fontFamily: {
         sf: ["SF Compact Text", "ui-sans-serif", "system-ui", "sans-serif"],
+        redwing: ["redwing", "ui-sans-serif", "system-ui", "sans-serif"],
+        inter: ["inter", "ui-sans-serif", "system-ui", "sans-serif"],
       },
       screens: {
         smallLaptop: { max: "1248px" },

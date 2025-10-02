@@ -360,13 +360,13 @@
       </div>
     </ul>
     <div class="flex justify-center mt-8 mb-4">
-      <!-- <a-pagination
+      <a-pagination
         :current="currentPage"
         :pageSize="pageSize"
         :total="total"
         @change="onPageChange"
         :itemRender="itemRender"
-      /> -->
+      />
     </div>
   </div>
 </template>
@@ -427,7 +427,7 @@ export default {
       currentPage: 1,
       searchQuery: "",
       total: 0,
-      pageSize: 16,
+      pageSize: 9,
       dummyList: [
         "https://plus.unsplash.com/premium_photo-1688572454849-4348982edf7d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8fDA%3D",
         "https://images.unsplash.com/photo-1667053508464-eb11b394df83?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fHByb2ZpbGUlMjBwaWN0dXJlfGVufDB8fDB8fHww",
@@ -512,8 +512,8 @@ export default {
         (response) => {
           if (response.responseCode == "00") {
             this.Applications = response.applications.items;
-            this.currentPage = response.page || page;
-            this.total = response.totalItemCount || 0;
+            this.currentPage = response.applications.page || page;
+            this.total = response.applications.totalItemCount || 0;
             this.computedData = response.applications.items;
             console.log("fetching", response.applications.items);
           }
@@ -531,7 +531,7 @@ export default {
 
 <style scoped>
 :deep(.ant-pagination-item) {
-  background: #000130 !important;
-  color: white !important;
+  /* background: #000130 !important; */
+  /* color: white !important; */
 }
 </style>

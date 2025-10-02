@@ -34,6 +34,14 @@
     font-weight: 700;
     font-style: normal;
   }
+  @font-face {
+    font-family: "redwing";
+    src: url('./assets/fonts/redwing/Redwing-Medium.otf') format("opentype");
+  }
+    @font-face {
+    font-family: "inter";
+    src: url('./assets/fonts/Inter/Inter-VariableFont_opsz\,wght.ttf') format("opentype");
+  }
 }
 
 
@@ -99,13 +107,13 @@
     @apply bg-overdue_light text-overdue;
   }
   .auth_header_text {
-    @apply mb-4 text-center text-txt_dark text-4xl leading-[43px];
+    @apply mb-[4px] text-center text-txt_dark text-[24px] leading-[100%] mt-0;
   }
   .auth_subheader_text {
     @apply text-txt_dark text-2xl leading-7 text-center mb-16;
   }
   .auth_form {
-    @apply px-[33px] py-[39px] bg-neutral_light rounded-[10px];
+    @apply  max-w-[450px]  rounded-[10px];
   }
   .btn {
     @apply outline-none w-full rounded-[10px] text-center px-4 py-4.5 cursor-pointer hover:opacity-90 text-2xl leading-7;

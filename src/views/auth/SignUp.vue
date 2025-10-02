@@ -1,109 +1,124 @@
 <template>
-  <main class="py-6 bg-[#FAFCFF] w-full h-screen overflow-y-scroll">
-    <div class="w-4/6 mx-auto py-4 smallTablet:w-5/6">
-      <img
-        class="mx-auto w-21 mb-[46px]"
-        src="../../assets/logo.svg"
-        alt="logo"
-      />
-
-      <!-- Responsive Header Text -->
-      <p
-        class="auth_header_text text-2xl sm:text-3xl text-[#404164] md:text-4xl font-semibold text-center"
-      >
-        Sign Up
-      </p>
-
-      <!-- Responsive Subheader Text -->
-      <p
-        class="auth_subheader_text text-base sm:text-lg md:text-xl lg:text-[24px] text-center text-[#404164] mt-2 mb-6"
-      >
-        Access your administrative account
-      </p>
-
-      <a-form class="auth_form bg-[#FFFFFF]" :rules="rule" :model="modelForm">
-        <div>
-          <section class="flex gap-4 phone:flex-col">
-            <a-form-item
-              name="firstname"
-              class="w-full flex flex-col form-labels"
-            >
-              <span class="text-sm md:text-base font-medium text-[#404164]"
-                >First Name</span
-              >
-              <a-input
-                class="input w-full mt-4"
-                v-model:value="modelForm.firstname"
-                size="large"
-              />
-            </a-form-item>
-            <a-form-item
-              name="lastname"
-              class="w-full flex flex-col form-labels"
-            >
-              <span class="text-sm mb-4 md:text-base font-medium text-[#404164]"
-                >Last Name</span
-              >
-              <a-input
-                class="input w-full mt-4"
-                v-model:value="modelForm.lastname"
-                size="large"
-              />
-            </a-form-item>
-          </section>
-
-          <a-form-item
-            name="emailAddress"
-            class="w-full form-labels flex flex-col"
-          >
-            <span class="text-sm md:text-base font-medium text-[#404164]"
-              >Email Address</span
-            >
-            <a-input
-              class="input w-full mt-4"
-              v-model:value="modelForm.emailAddress"
-              size="large"
-              type="email"
+  <div class="w-full flex items-center">
+    <auth-hero />
+    <main class="bg-[#FAFCFF] flex-1 h-screen overflow-y-scroll">
+      <div class="mx-auto h-full">
+        <!-- Responsive Header Text -->
+        <div class="flex justify-center flex-col w-fit h-full mx-auto">
+          <div>
+            <img
+              class="mr-auto mb-[24px] p-0 m-0"
+              src="../../assets/logo.svg"
+              alt="logo"
             />
-          </a-form-item>
-
-          <a-form-item
-            name="phoneNumber"
-            class="w-full flex flex-col form-labels"
-          >
-            <span class="text-sm md:text-base font-medium text-[#404164]"
-              >Phone Number</span
+            <p
+              class="auth_header_text text-[24px] font-redwing mx-auto p-0 text-[#000000] m-0 md:text-4xl font-[500] text-left"
             >
-            <a-input
-              class="input w-full mt-4"
-              v-model:value="modelForm.phoneNumber"
-              size="large"
-              type="number"
-            />
-          </a-form-item>
+              Create an account
+            </p>
+
+            <!-- Responsive Subheader Text -->
+            <p
+              class="text-[#626262] text-[14px] font-regular leading-[100%] mb-[24px]"
+            >
+              Access your administrative account
+            </p>
+          </div>
+          <a-form class="auth_form" :rules="rule" :model="modelForm">
+            <div>
+              <section class="flex gap-4 phone:flex-col">
+                <a-form-item
+                  name="firstname"
+                  class="w-full flex flex-col form-labels"
+                >
+                  <span
+                    class="text-sm md:text-base font-medium font-inter text-[#404164]"
+                    >First Name</span
+                  >
+                  <a-input
+                    class="input w-full mt-2"
+                    v-model:value="modelForm.firstname"
+                    size="large"
+                  />
+                </a-form-item>
+                <a-form-item
+                  name="lastname"
+                  class="w-full flex flex-col form-labels"
+                >
+                  <span
+                    class="text-sm md:text-base mt-2 font-medium text-[#404164]"
+                    >Last Name</span
+                  >
+                  <a-input
+                    class="input w-full mt-2"
+                    v-model:value="modelForm.lastname"
+                    size="large"
+                  />
+                </a-form-item>
+              </section>
+
+              <a-form-item
+                name="emailAddress"
+                class="w-full form-labels flex flex-col font-inter"
+              >
+                <span
+                  class="text-sm font-inter md:text-base font-medium text-[#404164]"
+                  >Email Address</span
+                >
+                <a-input
+                  class="input w-full mt-2"
+                  v-model:value="modelForm.emailAddress"
+                  size="large"
+                  type="email"
+                />
+              </a-form-item>
+
+              <a-form-item
+                name="phoneNumber"
+                class="w-full flex flex-col form-labels"
+              >
+                <span
+                  class="text-sm md:text-base font-medium text-[#404164] font-inter"
+                  >Phone Number</span
+                >
+                <a-input
+                  class="input w-full mt-2"
+                  v-model:value="modelForm.phoneNumber"
+                  size="large"
+                  type="number"
+                />
+              </a-form-item>
+            </div>
+            <p
+              class="p-0 m-0 text-[#626262] text-[14px] leading-[21px] mb-[24px]"
+            >
+              By proceeding you agree to your
+              <span class="text-[#020332] underline">Privacy Policy</span> and
+              <span class="text-[#020332] underline"> Terms & Conditions</span>
+            </p>
+            <button
+              class="btn btn_primary rounded-[100px] text-base sm:text-lg"
+              @click="handleSubmit"
+              :disabled="isDisabled()"
+            >
+              Continue
+            </button>
+          </a-form>
+          <p class="text-center mt-[23px] p-0 text-sm leading-6 text-txt_dark">
+            Already have an account?
+            <router-link to="/login">
+              <span
+                class="text-[#404164] font-medium font-sf text-[14px] underline"
+                >Login</span
+              >
+            </router-link>
+          </p>
         </div>
-
-        <button
-          class="btn btn_primary text-base sm:text-lg"
-          @click="handleSubmit"
-          :disabled="isDisabled()"
-        >
-          Sign Up
-        </button>
-      </a-form>
-
-      <!-- :disabled="isDisabled()" -->
-      <!-- Responsive Footer Text -->
-      <p
-        class="text-center mt-7 text-base sm:text-lg md:text-xl leading-6 text-txt_dark"
-      >
-        Already have an account?
-        <router-link to="/login">
-          <span class="text-[#404164] font-bold font-sf">Login</span>
-        </router-link>
-      </p>
-    </div>
-  </main>
+        <!-- :disabled="isDisabled()" -->
+        <!-- Responsive Footer Text -->
+      </div>
+    </main>
+  </div>
 </template>
 
 <script>
@@ -115,6 +130,7 @@ import { useToast } from "vue-toast-notification";
 import { useRouter } from "vue-router";
 import IconViewPassword from "@/components/icons/iconViewPassword.vue";
 import IconHidePassword from "@/components/icons/IconHidePassword.vue";
+import AuthHero from "@/components/AuthHero.vue";
 export default {
   data() {
     return {
@@ -151,6 +167,7 @@ export default {
     "view-password-icon": IconViewPassword,
     "hide-password-icon": IconHidePassword,
     "button-component": Button,
+    "auth-hero": AuthHero,
   },
   methods: {
     togglePassword() {
