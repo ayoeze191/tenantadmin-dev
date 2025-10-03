@@ -3,54 +3,60 @@
     <auth-hero />
 
     <div class="bg-[#FAFCFF] flex-1 h-screen overflow-y-scroll">
-      <div>
-        <img
-          class="mr-auto mb-[24px] p-0 m-0"
-          src="../../assets/logo.svg"
-          alt="logo"
-        />
-        <p
-          class="auth_header_text mx-auto p-0 text-[#000000] m-0 md:text-4xl font-[500] text-left"
-        >
-          Forgot Password
-        </p>
-        <p
-          class="text-[#626262] text-[14px] font-regular leading-[100%] mb-[24px]"
-        >
-          Access your administrative account
-        </p>
-      </div>
+      <div class="mx-auto h-full">
+        <div class="flex justify-center flex-col w-fit h-full mx-auto">
+          <div>
+            <img
+              class="mr-auto mb-[24px] p-0 m-0"
+              src="../../assets/logo.svg"
+              alt="logo"
+            />
+            <p
+              class="auth_header_text mx-auto p-0 text-[#000000] m-0 md:text-4xl font-[500] text-left"
+            >
+              Forgot Password
+            </p>
+            <p
+              class="text-[#626262] text-[14px] font-regular leading-[100%] mb-[24px]"
+            >
+              Access your administrative account
+            </p>
+          </div>
 
-      <form class="auth_form" @submit.prevent="handleForgottenPassword()">
-        <a-form-item for="email" name="email">
-          <p class="input_label text-sm sm:text-base md:text-xl">
-            Email Address
+          <form class="auth_form" @submit.prevent="handleForgottenPassword()">
+            <a-form-item for="email" name="email">
+              <p class="input_label text-sm sm:text-base md:text-xl">
+                Email Address
+              </p>
+              <a-input
+                id="email"
+                class="input mt-4 mb-10"
+                v-model:value="email"
+                :rules="[{ required: true, message: 'Please input Email' }]"
+                name="email"
+              />
+
+              <button-component
+                label="Login"
+                :loading="isLoading"
+                :disabled="isDisabled()"
+              />
+            </a-form-item>
+          </form>
+
+          <!-- Responsive Footer Text -->
+          <p
+            class="text-center mt-7 text-base sm:text-lg md:text-xl leading-6 text-txt_dark"
+          >
+            Don’t have an account?
+            <router-link to="/register">
+              <span class="text-primary font-bold font-sf"
+                >Create account.</span
+              >
+            </router-link>
           </p>
-          <a-input
-            id="email"
-            class="input mt-4 mb-10"
-            v-model:value="email"
-            :rules="[{ required: true, message: 'Please input Email' }]"
-            name="email"
-          />
-
-          <button-component
-            label="Login"
-            :loading="isLoading"
-            :disabled="isDisabled()"
-          />
-        </a-form-item>
-      </form>
-
-      <!-- Responsive Footer Text -->
-      <p
-        class="text-center mt-7 text-base sm:text-lg md:text-xl leading-6 text-txt_dark"
-      >
-        Don’t have an account?
-        <router-link to="/register">
-          <span class="text-primary font-bold font-sf">Create account.</span>
-        </router-link>
-      </p>
+        </div>
+      </div>
     </div>
   </main>
 </template>
