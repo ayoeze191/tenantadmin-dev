@@ -31,27 +31,29 @@
           <form class="auth_form" @submit.prevent="handleLogin()">
             <label
               for="email"
-              class="text-sm text-[#333332] font-inter font-medium leading-[100%] sm:text-base md:text-xl mb-0 mt-0"
+              class="text-sm md:text-base font-medium font-inter text-[#404164]"
               >Email Address</label
             >
             <input
               id="email"
               name="email"
-              class="input mt-2 mb-3"
+              class="input w-full mt-2"
               v-model="email"
             />
 
-            <section class="w-full flex flex-row justify-between gap-2">
+            <section
+              class="w-full flex flex-row justify-between gap-2 mt-[12px]"
+            >
               <label
                 for="email"
-                class="text-sm text-[#333332] font-inter font-medium leading-[100%] sm:text-base md:text-xl mb-0 mt-0"
+                class="text-sm md:text-base font-medium font-inter text-[#404164]"
                 >Password</label
               >
             </section>
 
             <div class="input flex mt-4 items-center">
               <input
-                class="w-full outline-none border-0 mt-2 mb-3"
+                class="w-full outline-none border-0"
                 :type="viewPassword ? 'text' : 'password'"
                 v-model="password"
               />

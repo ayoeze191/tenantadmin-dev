@@ -27,12 +27,14 @@
 
           <form class="auth_form" @submit.prevent="handleForgottenPassword()">
             <a-form-item for="email" name="email">
-              <p class="input_label text-sm sm:text-base md:text-xl">
+              <p
+                class="text-sm md:text-base font-medium m-0 p-0 font-inter text-[#404164]"
+              >
                 Email Address
               </p>
               <a-input
                 id="email"
-                class="input mt-4 mb-10"
+                class="input mt-2 mb-[24px]"
                 v-model:value="email"
                 :rules="[{ required: true, message: 'Please input Email' }]"
                 name="email"
@@ -44,19 +46,18 @@
                 :disabled="isDisabled()"
               />
             </a-form-item>
+            <p class="text-center m-0 p-0 text-sm text-txt_dark">
+              Don’t have an account?
+              <router-link to="/register">
+                <span
+                  class="text-[#404164] font-medium p-0 m-0 font-sf text-[14px] underline"
+                  >Create account.</span
+                >
+              </router-link>
+            </p>
           </form>
 
           <!-- Responsive Footer Text -->
-          <p
-            class="text-center mt-7 text-base sm:text-lg md:text-xl leading-6 text-txt_dark"
-          >
-            Don’t have an account?
-            <router-link to="/register">
-              <span class="text-primary font-bold font-sf"
-                >Create account.</span
-              >
-            </router-link>
-          </p>
         </div>
       </div>
     </div>
