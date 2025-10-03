@@ -69,7 +69,7 @@
             <div class="flex justify-end">
               <router-link
                 to="/forgot-password"
-                class="text-[#020332] w-fit mt-[16px] text-right sm:text-base leading-snug sm:leading-normal"
+                class="text-[#020332] w-fit mt-[16px] text-right text-sm leading-[100%] sm:leading-normal"
               >
                 Forgot password?
               </router-link>
@@ -78,8 +78,13 @@
               class="p-0 m-0 text-[#626262] text-[14px] leading-[21px] mb-[24px] mt-[24px]"
             >
               By proceeding you agree to your
-              <span class="text-[#020332] underline">Privacy Policy</span> and
-              <span class="text-[#020332] underline"> Terms & Conditions</span>
+              <span class="text-[#020332] underline cursor-pointer"
+                >Privacy Policy</span
+              >
+              and
+              <span class="text-[#020332] underline cursor-pointer">
+                Terms & Conditions</span
+              >
             </p>
             <button-component
               class="m-0 mt-[24px] rounded-[100px] text-base sm:text-lg btn_primary"
@@ -90,12 +95,13 @@
           </form>
 
           <!-- Responsive Footer Text -->
-          <p
-            class="text-center mt-7 text-sm leading-[100%] text-[#626262] font-inter"
-          >
+          <p class="text-center mt-[23px] p-0 text-sm leading-6 text-txt_dark">
             Don’t have an account?
             <router-link to="/register">
-              <span class="text-[#020332] font-medium font-sf">Sign Up</span>
+              <span
+                class="text-[#404164] font-medium font-sf text-[14px] underline"
+                >Sign Up</span
+              >
             </router-link>
           </p>
         </div>
