@@ -4,7 +4,9 @@
     <main class="bg-[#FAFCFF] flex-1 h-screen overflow-y-scroll">
       <div class="mx-auto h-full">
         <!-- Responsive Header Text -->
-        <div class="flex justify-center flex-col w-fit h-full mx-auto">
+        <div
+          class="flex justify-center flex-col w-fit h-full mx-auto px-4 md:px-0"
+        >
           <div>
             <img
               class="mr-auto mb-[24px] p-0 m-0"
@@ -14,14 +16,14 @@
             <p
               class="auth_header_text text-[24px] font-redwing mx-auto p-0 text-[#000000] m-0 md:text-4xl font-[500] text-left"
             >
-              Create an account
+              Signup as a Landlord
             </p>
 
             <!-- Responsive Subheader Text -->
             <p
-              class="text-[#626262] text-[14px] font-regular leading-[100%] mb-[24px]"
+              class="text-[#626262] mt-[4px] text-[14px] font-regular leading-[100%] mb-[24px]"
             >
-              Access your administrative account
+              Create an account as a landlord to manage your properties
             </p>
           </div>
           <a-form class="auth_form" :rules="rule" :model="modelForm">

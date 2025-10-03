@@ -4,7 +4,7 @@
     <main class="bg-[#FAFCFF] flex-1 h-screen overflow-y-scroll">
       <div class="mx-auto h-full">
         <div
-          class="flex justify-center flex-col w-fit h-full mx-auto bg-[#FAFCFF]"
+          class="flex justify-center flex-col w-fit h-full mx-auto bg-[#FAFCFF] px-4 md:px-0"
         >
           <div>
             <img
