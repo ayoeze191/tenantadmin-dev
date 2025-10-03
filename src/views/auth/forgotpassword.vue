@@ -1,21 +1,25 @@
 <template>
-  <main class="py-6 bg-[#FAFCFF] w-full h-screen overflow-y-scroll font-sf">
-    <div class="w-[90%] max-w-[800px] mx-auto py-4">
-      <img class="mx-auto w-21 mb-16" src="../../assets/logo.svg" alt="logo" />
+  <main class="w-full flex items-center">
+    <auth-hero />
 
-      <!-- Responsive Header -->
-      <p
-        class="auth_header_text text-2xl sm:text-3xl md:text-4xl font-semibold text-center"
-      >
-        Forgot Password
-      </p>
-
-      <!-- Responsive Subheader -->
-      <p
-        class="auth_subheader_text text-base sm:text-lg md:text-xl text-center text-txt_dark2 mt-2 mb-6"
-      >
-        Access your administrative account
-      </p>
+    <div class="bg-[#FAFCFF] flex-1 h-screen overflow-y-scroll">
+      <div>
+        <img
+          class="mr-auto mb-[24px] p-0 m-0"
+          src="../../assets/logo.svg"
+          alt="logo"
+        />
+        <p
+          class="auth_header_text mx-auto p-0 text-[#000000] m-0 md:text-4xl font-[500] text-left"
+        >
+          Forgot Password
+        </p>
+        <p
+          class="text-[#626262] text-[14px] font-regular leading-[100%] mb-[24px]"
+        >
+          Access your administrative account
+        </p>
+      </div>
 
       <form class="auth_form" @submit.prevent="handleForgottenPassword()">
         <a-form-item for="email" name="email">
@@ -58,6 +62,7 @@ import { LoginUser } from "@/api/auth";
 import Button from "@/components/Button.vue";
 import { useToast } from "vue-toast-notification";
 import { setCookie } from "@/utils/cookies";
+import AuthHero from "@/components/AuthHero.vue";
 import handleError from "@/utils/handleError";
 import { useUserStore } from "@/store";
 import { ForgottenPassword } from "@/api/auth";
@@ -76,6 +81,7 @@ export default {
     "view-password-icon": iconViewPassword,
     "hide-password-icon": iconHidePassword,
     "button-component": Button,
+    "auth-hero": AuthHero,
   },
   methods: {
     togglePassword() {
