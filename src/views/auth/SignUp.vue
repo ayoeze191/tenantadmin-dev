@@ -180,9 +180,9 @@ export default {
     },
     isDisabled() {
       const { emailAddress, firstname, lastname, phoneNumber } = this.modelForm;
-
       return (
         !emailAddress?.trim() ||
+        !emailAddress.includes("@") ||
         !firstname?.trim() ||
         !lastname?.trim() ||
         !phoneNumber?.trim() ||

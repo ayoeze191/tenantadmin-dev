@@ -55,6 +55,11 @@
             >View Properties</router-link
           >
         </a-menu-item>
+        <a-menu-item key="setup-properties">
+          <router-link :to="{ name: 'setup-properties' }"
+            >Setup Properties
+          </router-link>
+        </a-menu-item>
       </a-sub-menu>
       <a-sub-menu key="tenants" title="My Tenants">
         <template #icon><tenants-icon /></template>

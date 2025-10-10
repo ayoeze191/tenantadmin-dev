@@ -32,6 +32,8 @@ import RentPayment from "../views/payments/RentPayment.vue";
 import UtilityPayment from "../views/payments/UtilityPayment.vue";
 import Details from "../views/tenancy-applications/Details.vue";
 import Verification from "@/views/properties/Verification.vue";
+import SetUpProperties from "@/views/properties/SetUpProperties.vue";
+import Audit from "@/views/Logs/Audit.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -116,6 +118,11 @@ const router = createRouter({
           path: "/properties",
           name: "admin-properties",
           component: ViewProperties,
+        },
+        {
+          path: "/properties",
+          name: "setup-properties",
+          component: SetUpProperties,
         },
         {
           path: "/properties/:id",
@@ -206,6 +213,11 @@ const router = createRouter({
           path: "/notification",
           name: "admin-users-notification",
           component: Dashboard,
+        },
+        {
+          path: "/audit-logs",
+          name: "audit-logs",
+          component: Audit,
         },
       ],
     },

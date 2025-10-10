@@ -130,6 +130,7 @@ import IconHidePassword from "@/components/icons/IconHidePassword.vue";
 import Button from "@/components/Button.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useToast } from "vue-toast-notification";
+import { checkPasswordStrength } from "@/utils/helper";
 import { rule } from "postcss";
 
 export default {
@@ -144,6 +145,40 @@ export default {
       rules: {
         password: [
           { required: true, message: "Password is required", trigger: "blur" },
+        ],
+        confirmpassword: [
+          {
+            required: true,
+            message: "Please confirm your password",
+            trigger: "blur",
+          },
+          {
+            validator: (rule, value) => {
+              if (value !== this.modelForm.password) {
+                return Promise.reject("Passwords do not match");
+              }
+              return Promise.resolve();
+            },
+            trigger: "blur",
+          },
+        ],
+      },
+      rules: {
+        password: [
+          { required: true, message: "Password is required", trigger: "blur" },
+          {
+            validator: (rule, value) => {
+              if (!value) return Promise.resolve();
+
+              const { isStrong, message } = checkPasswordStrength(value);
+              if (!isStrong) {
+                return Promise.reject(message);
+              }
+
+              return Promise.resolve();
+            },
+            trigger: "blur",
+          },
         ],
         confirmpassword: [
           {
@@ -183,7 +218,8 @@ export default {
     disabled() {
       if (
         this.modelForm.password != this.modelForm.confirmpassword ||
-        this.modelForm.password.length == 0
+        this.modelForm.password.length == 0 ||
+        checkPasswordStrength(this.modelForm.password).isStrong !== true
       ) {
         return true;
       }
