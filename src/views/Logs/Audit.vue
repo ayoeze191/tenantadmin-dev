@@ -48,6 +48,7 @@ import { ref, computed, onMounted } from "vue";
 import { message } from "ant-design-vue";
 import axios from "axios";
 import { audit_mock } from "./data";
+import { auditsLogs } from "@/api/audits";
 
 const logs = ref([...audit_mock]);
 const loading = ref(false);
@@ -66,14 +67,9 @@ const columns = [
 const fetchLogs = async () => {
   try {
     loading.value = false;
-    const { data } = await axios.get("/api/audit-logs", {
-      params: {
-        search: search.value,
-        start_date: dateRange.value?.[0],
-        end_date: dateRange.value?.[1],
-      },
+    auditsLogs().then((data) => {
+      logs.value = data.items;
     });
-    logs.value = data;
   } catch (err) {
     message.error("Failed to fetch logs");
   } finally {

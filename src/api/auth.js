@@ -111,6 +111,35 @@ export const ResetAdminPassword = async (payload) => {
   }
 };
 
+export const CompleteOnboard = async (payload) => {
+  try {
+    const response = await putApi(`Account/CompleteOnboard`, payload);
+    return response.data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+export const ResendOtp = async (payload) => {
+  try {
+    const response = await getApi(
+      `Account/ResendOTP?emailAddress${payload.emailAddress}`
+    );
+    return response.data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+export const VerifyOtp = async (payload) => {
+  try {
+    const response = await postApi("api/Account/VerifyOTP", payload);
+    return response.data;
+  } catch (err) {
+    handleError(err);
+  }
+};
+
 export const ForgottenPassword = async (payload) => {
   try {
     const response = await postApi("AdminUser/ForgotPassword", payload);

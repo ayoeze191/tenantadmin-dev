@@ -135,7 +135,7 @@
   }
   .input,
   .vs__dropdown-toggle {
-    @apply py-4 px-4.5 w-full bg-white rounded-[10px] border border-br1 outline-none text-dark;
+    @apply py-[13px] px-[12px] w-full bg-white rounded-[10px] border border-br1 outline-none text-dark;
   }
   .tab {
     @apply w-full max-w-2xl mx-auto mt-10 flex justify-center;

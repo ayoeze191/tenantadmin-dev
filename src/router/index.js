@@ -34,6 +34,7 @@ import Details from "../views/tenancy-applications/Details.vue";
 import Verification from "@/views/properties/Verification.vue";
 import SetUpProperties from "@/views/properties/SetUpProperties.vue";
 import Audit from "@/views/Logs/Audit.vue";
+import Otp from "@/views/auth/otp.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -47,6 +48,11 @@ const router = createRouter({
       path: "/login",
       name: "login",
       component: LoginPage,
+    },
+    {
+      path: "/otp",
+      name: "otp",
+      component: () => Otp,
     },
     {
       path: "/forgot-password",
