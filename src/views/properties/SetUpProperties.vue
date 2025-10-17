@@ -32,7 +32,7 @@
   </a-upload-dragger>
                 </a-form-item>
 
-                <a-form-item
+                <!-- <a-form-item
                 name="amenities"
                 class="amenities-form"
                 :label-col="{
@@ -48,19 +48,19 @@
                 </li>
                 <a-checkbox-group class="grid grid-cols-2 gap-4">
                   <a-checkbox
-                   
+                     
+                    v-for="option in amenityOptions"
+                   :key="option.value"
+                    :value="option.value"
                     class="flex items-center gap-2"
                     
                   >
-                   <!-- :key="option.value"
-                    :value="option.value" -->
-                    <!-- <span class="text-[20px] text-[#808097]">{{
-                      option.label
-                    v-for="option in amenityOptions"
-                    }}</span> -->
+                     <span class="text-[20px] text-[#808097]">{{
+                   option.label
+                    }}</span> 
                   </a-checkbox>
                 </a-checkbox-group>
-              </a-form-item>
+              </a-form-item> -->
                 <p
                     class="flex gap-[20px] items-center cursor-pointer leading-[100%] text-[#C7C7C7]"
                   >
@@ -251,7 +251,10 @@
 
 <script setup>
 import { reactive } from 'vue';
-
+import { useOptionsStore } from "@/stores/options";
+import { ref } from 'vue';
+import { onMounted } from 'vue';
+const amenityOptions = ref([]);
 
 const form =  reactive({
   rental_unit: '',
@@ -270,4 +273,18 @@ const form =  reactive({
   propertyType: '',
   unitTypeCounts: [],
 }); 
+const optionsStore = useOptionsStore();
+
+onMounted(async () => {
+  await optionsStore.fetchAmenities();
+  // await optionsStore.fetchUnitTypes()
+  // await fetchLandlords();
+  // await fetchProvinces()
+  amenityOptions.value = optionsStore.amenities.map((a) => ({
+    label: a.name,
+    value: a.amenityId,
+    image: a.image || a.icon || null,
+  }));
+
+})
 </script>

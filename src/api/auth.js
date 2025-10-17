@@ -123,7 +123,7 @@ export const CompleteOnboard = async (payload) => {
 export const ResendOtp = async (payload) => {
   try {
     const response = await getApi(
-      `Account/ResendOTP?emailAddress${payload.emailAddress}`
+      `Account/ResendOTP?emailAddress=${payload.emailAddress}`
     );
     return response.data;
   } catch (error) {

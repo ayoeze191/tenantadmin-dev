@@ -9,7 +9,7 @@
           class="w-64"
           @change="fetchLogs"
         />
-        <a-range-picker v-model="dateRange" @change="fetchLogs" />
+        <!-- <a-range-picker v-model="dateRange" @change="fetchLogs" /> -->
       </div>
     </div>
 
@@ -26,13 +26,13 @@
           <span
             class="px-2 py-1 rounded text-white text-sm"
             :class="{
-              'bg-green-500': record.action === 'LOGIN',
-              'bg-yellow-500': record.action === 'UPDATE',
-              'bg-red-500': record.action === 'DELETE',
-              'bg-blue-500': record.action === 'CREATE',
+              'bg-green-500': record.function === 'LOGIN',
+              'bg-yellow-500': record.function === 'UPDATE',
+              'bg-red-500': record.function === 'DELETE',
+              'bg-blue-500': record.function === 'CREATE',
             }"
           >
-            {{ record.action }}
+            {{ record.function }}
           </span>
         </template>
         <template v-else>
@@ -50,18 +50,17 @@ import axios from "axios";
 import { audit_mock } from "./data";
 import { auditsLogs } from "@/api/audits";
 
-const logs = ref([...audit_mock]);
+const logs = ref([]);
 const loading = ref(false);
 const search = ref("");
 const dateRange = ref([]);
 const pagination = ref({ current: 1, pageSize: 10 });
 
 const columns = [
-  { title: "User", dataIndex: "user" },
-  { title: "Action", dataIndex: "action" },
+  { title: "User", dataIndex: "userId" },
+  { title: "function", dataIndex: "function" },
   { title: "Description", dataIndex: "description" },
-  { title: "IP Address", dataIndex: "ip" },
-  { title: "Date", dataIndex: "timestamp" },
+  { title: "Date", dataIndex: "createDate" },
 ];
 
 const fetchLogs = async () => {
@@ -78,10 +77,9 @@ const fetchLogs = async () => {
 };
 
 const filteredLogs = computed(() => {
-  return logs.value.filter(
-    (log) =>
-      log.user.toLowerCase().includes(search.value.toLowerCase()) ||
-      log.action.toLowerCase().includes(search.value.toLowerCase())
+  return logs.value.filter((log) =>
+    // log.userId.toLowerCase().includes(search.value.toLowerCase()) ||
+    log.function.toLowerCase().includes(search.value.toLowerCase())
   );
 });
 

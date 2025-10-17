@@ -143,6 +143,13 @@
           User Notification
         </router-link>
       </a-menu-item>
+
+      <a-menu-item key="audit-logs" v-if="userType == 'NN1'">
+        <router-link :to="{ name: 'audit-logs' }">
+          <template #icon><notification-icon /></template>
+          Audit Logs
+        </router-link>
+      </a-menu-item>
     </a-menu>
   </a-layout-sider>
 </template>
