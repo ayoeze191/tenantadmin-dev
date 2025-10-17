@@ -5,7 +5,7 @@
       <div class="mx-auto h-full">
         <!-- Responsive Header Text -->
         <div
-          class="flex justify-center flex-col w-fit h-full mx-auto px-4 md:px-0"
+          class="flex justify-center flex-col w-fit h-full mx-auto bg-[#FAFCFF] px-4 md:px-0"
         >
           <div>
             <img
@@ -38,7 +38,7 @@
               }}
             </p>
           </div>
-          <a-form class="auth_form" :rules="rule" :model="modelForm">
+          <a-form class="auth_form w-full" :rules="rule" :model="modelForm">
             <div v-if="step == 0">
               <a-form-item
                 name="emailAddress"

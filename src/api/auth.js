@@ -9,7 +9,6 @@ export const LoginUser = async (payload) => {
     handleError(error);
   }
 };
-
 export const CreateUser = async (payload) => {
   try {
     const response = await postApi("Account/CreateUser", payload);
@@ -25,7 +24,6 @@ export const CreateUser = async (payload) => {
     handleError(error);
   }
 };
-
 // export const CreateUser = async (payload) => {
 //   try {
 //     const response = await postApi("AdminUser/AddAdminUser");
@@ -43,7 +41,6 @@ export const AddAdminUser = async (payload) => {
     handleError(error);
   }
 };
-
 export const FetchLandlords = async (query) => {
   try {
     const response = await getApi(
@@ -54,7 +51,6 @@ export const FetchLandlords = async (query) => {
     handleError(error);
   }
 };
-
 export const FetchAdmins = async () => {
   try {
     const response = await getApi(`AdminUser/GetAllAdminUser`);
@@ -63,7 +59,6 @@ export const FetchAdmins = async () => {
     handleError(error);
   }
 };
-
 export const SignUpLandlord = async (id) => {
   try {
     const response = await postApi(`AdminUser/SignUpLandLord?LandlordID=${id}`);
@@ -72,7 +67,6 @@ export const SignUpLandlord = async (id) => {
     handleError(error);
   }
 };
-
 export const EditLandlordEmail = async (payload) => {
   try {
     const response = await postApi(`Account/UpdateLandlordEmail`, payload);
@@ -81,7 +75,6 @@ export const EditLandlordEmail = async (payload) => {
     handleError(error);
   }
 };
-
 export const EditAdmin = async (payload) => {
   try {
     const response = await putApi(`AdminUser/UpdateAdminUser`, payload);
@@ -90,7 +83,6 @@ export const EditAdmin = async (payload) => {
     handleError(error);
   }
 };
-
 export const UpdateAdminStatus = async (payload) => {
   try {
     const response = await putApi(
@@ -101,7 +93,6 @@ export const UpdateAdminStatus = async (payload) => {
     handleError(error);
   }
 };
-
 export const ResetAdminPassword = async (payload) => {
   try {
     const response = await postApi(`AdminUser/ResetPassword`, payload);
@@ -110,7 +101,6 @@ export const ResetAdminPassword = async (payload) => {
     handleError(error);
   }
 };
-
 export const CompleteOnboard = async (payload) => {
   try {
     const response = await putApi(`Account/CompleteOnboard`, payload);
@@ -119,7 +109,6 @@ export const CompleteOnboard = async (payload) => {
     handleError(error);
   }
 };
-
 export const ResendOtp = async (payload) => {
   try {
     const response = await getApi(
@@ -130,19 +119,25 @@ export const ResendOtp = async (payload) => {
     handleError(error);
   }
 };
-
 export const VerifyOtp = async (payload) => {
   try {
-    const response = await postApi("api/Account/VerifyOTP", payload);
+    const response = await postApi("Account/VerifyOTP", payload);
     return response.data;
   } catch (err) {
     handleError(err);
   }
 };
-
 export const ForgottenPassword = async (payload) => {
   try {
-    const response = await postApi("AdminUser/ForgotPassword", payload);
+    const response = await postApi("Account/ForgetPassword", payload);
+    return response.data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+export const ResetPassword = async (payload) => {
+  try {
+    const response = await postApi("Account/ResetPassword", payload);
     return response.data;
   } catch (error) {
     handleError(error);

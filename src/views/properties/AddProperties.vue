@@ -1257,7 +1257,6 @@
 import {  CreateNewProperty, FetchLandlords, getProvinces, uploadBulkexcelfile } from "@/api/properties";
 import { useUserStore } from "@/store";
 import { useOptionsStore } from "@/stores/options";
-// CreateNewProperty,
 // import { uploadImages } from "@/utils/helper";
 import { createAmenity } from "@/api/amenity";
 import { uploadImage } from "@/api/properties";

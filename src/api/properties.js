@@ -177,3 +177,12 @@ export const uploadBulkexcelfile = async (payload) => {
     console.log("Error uploading file:", error);
   }
 };
+
+export const migrateFromFile = async (payload) => {
+  try {
+    const response = await postApi("Migration/MigrateFromFile", payload);
+    return response.data;
+  } catch (error) {
+    console.log("Error uploading file:", error);
+  }
+};

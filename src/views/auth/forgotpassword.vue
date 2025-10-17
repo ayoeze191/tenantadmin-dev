@@ -24,27 +24,35 @@
               Access your administrative account
             </p>
           </div>
-
           <form class="auth_form" @submit.prevent="handleForgottenPassword()">
             <a-form-item for="email" name="email">
-              <p
-                class="text-sm md:text-base font-medium m-0 p-0 font-inter text-[#404164]"
-              >
-                Email Address
-              </p>
-              <a-input
-                id="email"
-                class="input mt-2 mb-[24px]"
-                v-model:value="email"
-                :rules="[{ required: true, message: 'Please input Email' }]"
-                name="email"
-              />
+              <div v-if="step == 0">
+                <p
+                  class="text-sm md:text-base font-medium m-0 p-0 font-inter text-[#404164]"
+                >
+                  Email Address
+                </p>
+                <a-input
+                  id="email"
+                  class="input mt-2 mb-[24px]"
+                  v-model:value="email"
+                  :rules="[{ required: true, message: 'Please input Email' }]"
+                  name="email"
+                />
+              </div>
 
-              <button-component
-                label="Login"
-                :loading="isLoading"
-                :disabled="isDisabled()"
-              />
+              <div v-if="step == 1" class="flex gap-4 mb-4">
+                <a-input
+                  v-for="(digit, index) in otp"
+                  :key="index"
+                  v-model:value="otp[index]"
+                  size="large"
+                  type="text"
+                  maxlength="1"
+                  class="w-12 text-center"
+                />
+              </div>
+              <button-component label="Continue" :loading="isLoading" />
             </a-form-item>
             <p class="text-center m-0 p-0 text-sm text-txt_dark">
               Don’t have an account?
@@ -72,17 +80,21 @@ import Button from "@/components/Button.vue";
 import { useToast } from "vue-toast-notification";
 import { setCookie } from "@/utils/cookies";
 import AuthHero from "@/components/AuthHero.vue";
+import { useRouter } from "vue-router";
 import handleError from "@/utils/handleError";
 import { useUserStore } from "@/store";
-import { ForgottenPassword } from "@/api/auth";
+import { ForgottenPassword, VerifyOtp } from "@/api/auth";
 export default {
   data() {
     return {
+      step: 0,
+      otp: ["", "", "", "", "", ""],
       viewPassword: false,
       isLoading: false,
       email: "",
       password: "",
       store: useUserStore(),
+      router: useRouter(),
     };
   },
   created() {},
@@ -108,15 +120,38 @@ export default {
       const payload = {
         email: this.email,
       };
-      ForgottenPassword(payload).then((response) => {
-        this.isLoading = false;
-        if (response.result.responseCode == "00") {
-          toast.success("Please check your mail");
-          this.email = "";
-        } else {
-          handleError(response);
-        }
-      });
+      if (this.step == 0) {
+        ForgottenPassword(payload).then((response) => {
+          this.isLoading = false;
+          console.log(response);
+          if (response.responseCode == "00") {
+            toast.success("Please check your mail");
+            this.step = 1;
+          } else {
+            handleError(response);
+          }
+        });
+        // Verify OTP logic here
+        return;
+      } else {
+        const otpCode = this.otp.join("");
+        const verifyPayload = {
+          emailAddress: this.email,
+          otp: otpCode,
+        };
+        VerifyOtp(verifyPayload).then((response) => {
+          this.isLoading = false;
+          if (response.responseCode == "00") {
+            toast.success("OTP verified successfully");
+            this.router.push({
+              name: "reset-forgot-password",
+              params: { userId: this.email, token: otpCode },
+            });
+          } else {
+            handleError(response);
+          }
+        });
+      }
     },
   },
 };
