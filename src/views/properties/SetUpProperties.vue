@@ -256,6 +256,28 @@
   </div>
 
   <a-modal
+    :visible="showErrorModal"
+    title="Upload Errors"
+    ok-text="Close"
+    :cancel-button-props="{ style: 'display: none' }"
+    @ok="showErrorModal = false"
+  >
+    <div v-if="errorList.length">
+      <a-alert
+        message="Some records could not be saved."
+        type="error"
+        show-icon
+        class="mb-4"
+      />
+      <ul class="list-disc ml-5 text-[14px] text-red-600">
+        <li v-for="(err, index) in errorList" :key="index">
+          {{ err }}
+        </li>
+      </ul>
+    </div>
+  </a-modal>
+
+  <a-modal
     :visible="showSuccessModal"
     :closable="false"
     :footer="null"
@@ -327,9 +349,10 @@ import { migrateFromFile } from "@/api/properties";
 import { useUserStore } from "@/store";
 import { FetchLandlords } from "@/api/properties";
 const showSuccessModal = ref(false);
-const amenityOptions = ref([]);
+const showErrorModal = ref(true);
 const landlordOptions = ref([]);
 const landlordLoading = ref(false);
+const errorList = ref([]);
 const form = reactive({
   rental_unit: "",
   name: "",
@@ -393,20 +416,28 @@ const handleuploadExcelFile = async (landlordId) => {
   const formData = new FormData();
   formData.append("LandlordId", landlordId);
   formData.append("ExcelFile", file);
-
+  console.log("Uploading file:", file);
   try {
     const res = await migrateFromFile(formData);
+    console.log("Upload response:", res);
+    if (res.responseCode == "00") {
+      console.log("Upload response: success", res);
+      const blob = new Blob([res], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "bulk-upload-response-document.xlsx";
+      link.click();
+      window.open(link.href, "_blank");
+      showSuccessModal.value = true;
+    } else {
+      errorList.value = [...res.errors] || ["An unknown error occurred."];
+      console.log("Errors:", errorList.value);
+      showErrorModal.value = true;
 
-    const blob = new Blob([res], {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    });
-
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "bulk-upload-response-document.xlsx";
-    link.click();
-    window.open(link.href, "_blank");
-    showSuccessModal.value = true;
+      console.log("Upload response: failed", res.errors);
+    }
   } catch (err) {
     console.error("Upload failed:", err);
   }
