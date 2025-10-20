@@ -359,7 +359,7 @@ const customIcon = h(LoadingOutlined, {
   },
 });
 const showSuccessModal = ref(false);
-const showErrorModal = ref(true);
+const showErrorModal = ref(false);
 const landlordOptions = ref([]);
 const landlordLoading = ref(false);
 const errorList = ref([]);
