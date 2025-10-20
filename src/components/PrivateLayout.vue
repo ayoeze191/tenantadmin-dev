@@ -10,7 +10,6 @@
   </main>
 </template>
 
-
 <script>
 import SideBar from "./SideBar.vue";
 import TopNav from "./TopNav.vue";
