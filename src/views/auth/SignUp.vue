@@ -65,6 +65,9 @@
                 type="text"
                 maxlength="1"
                 class="w-12 text-center"
+                @input="handleInput(index)"
+                @keydown.backspace="handleBackspace(index, $event)"
+                ref="otpInputs"
               />
             </div>
             <div v-if="step == 2">
@@ -113,6 +116,7 @@
                     v-model:value="modelForm.emailAddress"
                     size="large"
                     type="email"
+                    :disabled="true"
                   />
                 </a-form-item>
 
@@ -144,10 +148,18 @@
             </div>
 
             <button
-              class="py-[13px] w-full btn_primary rounded-[100px] text-sm sm:text-lg"
+              class="py-[13px] w-full btn_primary flex gap-2 justify-center rounded-[100px] text-sm sm:text-lg disabled:bg-[#bfbfbf] disabled:cursor-not-allowed"
               @click="handleSubmit"
               :disabled="isDisabled()"
             >
+              <a-spin
+                v-if="isLoading == true"
+                :tip="tip"
+                size="large"
+                :indicator="customIcon"
+              >
+                <slot />
+              </a-spin>
               Continue
             </button>
           </a-form>
@@ -178,6 +190,9 @@ import { useRouter } from "vue-router";
 import IconViewPassword from "@/components/icons/iconViewPassword.vue";
 import IconHidePassword from "@/components/icons/IconHidePassword.vue";
 import AuthHero from "@/components/AuthHero.vue";
+import { LoadingOutlined } from "@ant-design/icons-vue";
+import { h } from "vue";
+
 export default {
   data() {
     return {
@@ -188,6 +203,12 @@ export default {
       otp: ["", "", "", "", "", ""],
       router: useRouter(),
       isLoading: false,
+      customIcon: h(LoadingOutlined, {
+        style: {
+          fontSize: "15px",
+          color: "#1890ff",
+        },
+      }),
       modelForm: {
         emailAddress: "",
         firstname: "",
@@ -220,6 +241,16 @@ export default {
     "auth-hero": AuthHero,
   },
   methods: {
+    handleInput(index) {
+      if (this.otp[index].length === 1 && index < this.otp.length - 1) {
+        this.$refs.otpInputs[index + 1].focus();
+      }
+    },
+    handleBackspace(index, event) {
+      if (event.key === "Backspace" && this.otp[index] === "" && index > 0) {
+        this.$refs.otpInputs[index - 1].focus();
+      }
+    },
     togglePassword() {
       this.viewPassword = !this.viewPassword;
     },
@@ -227,16 +258,25 @@ export default {
       this.viewConfirmPassword = !this.viewConfirmPassword;
     },
     isDisabled() {
-      // const { emailAddress, firstname, lastname, phoneNumber } = this.modelForm;
-      // return (
-      //   !emailAddress?.trim() ||
-      //   !emailAddress.includes("@") ||
-      //   !firstname?.trim() ||
-      //   !lastname?.trim() ||
-      //   !phoneNumber?.trim() ||
-      //   !/^\d{7,15}$/.test(phoneNumber) // optional: validate phone format
-      // );
-      return false;
+      if (this.step == 0) {
+        return (
+          !this.modelForm.emailAddress?.trim() ||
+          this.isLoading ||
+          !this.modelForm.emailAddress.includes("@")
+        );
+      } else if (this.step == 1) {
+        return this.otp.join("").length < 6 || this.isLoading;
+      }
+      const { emailAddress, firstname, lastname, phoneNumber } = this.modelForm;
+      return (
+        !emailAddress?.trim() ||
+        !emailAddress.includes("@") ||
+        !firstname?.trim() ||
+        !lastname?.trim() ||
+        !phoneNumber?.trim() ||
+        !/^\d{7,15}$/.test(phoneNumber) ||
+        this.isLoading // optional: validate phone format
+      );
     },
     handleSignup() {
       const toast = useToast({ position: "top-right" });
@@ -264,6 +304,8 @@ export default {
         });
     },
     async handleSubmit(e) {
+      this.isLoading = true;
+
       e.preventDefault();
       if (this.step == 0) {
         const res = await ResendOtp({
@@ -272,6 +314,7 @@ export default {
         if (res.responseCode == "00") {
           this.received_otp = res.otp;
           this.step = 1;
+          this.isLoading = false;
           return;
         }
       } else if (this.step == 1) {
@@ -279,11 +322,14 @@ export default {
           if (this.otp.join("") !== this.received_otp) {
             const toast = useToast({ position: "top-right" });
             toast.error("Invalid OTP");
+            this.isLoading = false;
             return;
           } else {
             this.step = 2;
             const toast = useToast({ position: "top-right" });
             toast.success("Email Verified Successfully");
+            this.isLoading = false;
+
             return;
           }
         } else {
@@ -295,11 +341,14 @@ export default {
             this.step = 2;
             const toast = useToast({ position: "top-right" });
             toast.success("Email Verified Successfully");
+            this.isLoading = false;
+
             return;
           }
         }
       }
       this.handleSignup();
+      this.isLoading = false;
     },
   },
 };

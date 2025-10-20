@@ -3,12 +3,12 @@
     <div class="flex justify-between items-center mb-6">
       <h2 class="text-2xl font-semibold text-gray-800">Audit Logs</h2>
       <div class="flex gap-3">
-        <a-input
+        <!-- <a-input
           v-model="search"
           placeholder="Search by user or action"
           class="w-64"
           @change="fetchLogs"
-        />
+        /> -->
         <!-- <a-range-picker v-model="dateRange" @change="fetchLogs" /> -->
       </div>
     </div>
