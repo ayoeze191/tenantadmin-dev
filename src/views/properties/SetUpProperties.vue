@@ -93,8 +93,9 @@
       </a-form>
       <button
         @click="handleuploadExcelFile(form.landlordId)"
-        class="bg-[#000130] leading-[25px] font-inter py-[12px] w-full text-white"
+        class="bg-[#000130] leading-[25px] flex items-center justify-center gap-2 font-inter py-[12px] w-full text-white"
       >
+        <a-spin v-if="loading" :spinning="loading" :indicator="customIcon" />
         Submit
       </button>
     </div>
@@ -348,11 +349,21 @@ import { onMounted } from "vue";
 import { migrateFromFile } from "@/api/properties";
 import { useUserStore } from "@/store";
 import { FetchLandlords } from "@/api/properties";
+import { h } from "vue";
+import { LoadingOutlined } from "@ant-design/icons-vue";
+
+const customIcon = h(LoadingOutlined, {
+  style: {
+    fontSize: "15px",
+    color: "#1890ff",
+  },
+});
 const showSuccessModal = ref(false);
 const showErrorModal = ref(true);
 const landlordOptions = ref([]);
 const landlordLoading = ref(false);
 const errorList = ref([]);
+const loading = ref(false);
 const form = reactive({
   rental_unit: "",
   name: "",
@@ -412,6 +423,7 @@ const handleuploadExcelFile = async (landlordId) => {
     console.error("No file selected");
     return;
   }
+  loading.value = true;
   const file = bulkuploaddocumentfileList.value[0].originFileObj; // 👈 this is the real Excel file
   const formData = new FormData();
   formData.append("LandlordId", landlordId);
@@ -431,12 +443,13 @@ const handleuploadExcelFile = async (landlordId) => {
       link.click();
       window.open(link.href, "_blank");
       showSuccessModal.value = true;
+      loading.value = false;
     } else {
       errorList.value = [...res.errors] || ["An unknown error occurred."];
       console.log("Errors:", errorList.value);
       showErrorModal.value = true;
-
       console.log("Upload response: failed", res.errors);
+      loading.value = false;
     }
   } catch (err) {
     console.error("Upload failed:", err);
