@@ -74,7 +74,7 @@
                       class="font-medium text-[#808097] cursor-pointer text-base leading-5 py-[16px] px-[8px]"
                       @click="handleSignUpLandlord(landlord)"
                     >
-                      Sign up as Admin
+                      Verify Landlord
                     </li>
                   </a-menu-item>
                   <a-menu-divider />
@@ -136,7 +136,7 @@
 <script>
 // import { DownOutlined } from '@ant-design/icons-vue';
 
-import { FetchLandlords, SignUpLandlord } from "@/api/auth";
+import { FetchLandlords, SignUpLandlord, VerifyLandlord } from "@/api/auth";
 import IconEdit from "@/components/icons/IconEdit.vue";
 import Table from "@/components/Table.vue";
 import handleError from "@/utils/handleError";
@@ -192,6 +192,17 @@ export default {
         if (response.result.responseCode == "00") {
           handleToast("Success", "success");
           this.toggleTableDropdown("");
+        } else handleError(response);
+      });
+    },
+    handleVerifyLandlord(landlord) {
+      const payload = {
+        userId: landlord.accountId,
+      };
+      VerifyLandlord(payload).then((response) => {
+        if (response.result.responseCode == "00") {
+          handleToast("Landlord Verified Successfully", "success");
+          this.handleFetchLandlords();
         } else handleError(response);
       });
     },

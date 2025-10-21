@@ -143,3 +143,11 @@ export const ResetPassword = async (payload) => {
     handleError(error);
   }
 };
+export const VerifyLandlord = async (payload) => {
+  try {
+    const response = await postApi("AdminUser/VerifyUser", payload);
+    return response.data;
+  } catch (error) {
+    handleError(error);
+  }
+};
