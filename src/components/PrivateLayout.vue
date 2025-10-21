@@ -1,5 +1,5 @@
 <template>
-  <main class="flex w-full h-screen overflow-hidden bg-white">
+  <main class="flex w-full h-screen overflow-hidden bg-[#111921]">
     <side-bar />
     <section class="flex flex-col w-full h-full">
       <top-nav />
@@ -13,10 +13,16 @@
 <script>
 import SideBar from "./SideBar.vue";
 import TopNav from "./TopNav.vue";
+import { useUserStore } from "@/store";
 export default {
   components: {
     "top-nav": TopNav,
     "side-bar": SideBar,
+  },
+  data() {
+    return {
+      store: useUserStore(),
+    };
   },
 };
 </script>

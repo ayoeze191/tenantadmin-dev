@@ -1,6 +1,6 @@
 <template>
   <a-layout-header
-    class="w-full bg-white flex justify-between items-center px-10 py-3"
+    class="w-full bg-[#111921] flex justify-between items-center px-10 py-3"
   >
     <section class="flex items-center gap-4">
       <a-select
