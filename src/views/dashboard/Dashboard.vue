@@ -1,463 +1,463 @@
 <template>
-  <div
-    class="bg-neutral py-5 px-10 w-full overflow-y-scroll h-screen pb-40 font-sf"
-  >
-    <section
-      class="grid grid-cols-3 w-full mb-5 verySmallLaptop:grid-cols-2 tablet:grid-cols-1"
-    >
-      <div class="flex flex-col gap-[30px]">
-        <!-- Data Card -->
-        <div class="data_card h-full">
-          <section class="header mb-[16px] px-[14px]">
-            <p
-              class="card_title m-0 text-[14px] leading-[100%] md:text-[13px] sm:text-[12px]"
-            >
-              Application
-            </p>
-            <router-link
-              to="/applications"
-              class="flex items-center gap-[2px] font-sf font-medium text-[#252628] text-[14px] md:text-[13px] sm:text-[12px]"
-            >
-              See all
-              <span class="">
-                <right-arrow-icon />
-              </span>
-            </router-link>
-          </section>
-          <section class="px-[14px] md:px-[10px] sm:px-[6px]">
-            <p
-              class="flex gap-[4px] items-end font-medium text-dark text-sm h-fit text-[16px] md:text-[15px] sm:text-[14px]"
-            >
-              <span
-                class="h-full font-[600] font-sf leading-[100%] text-[24px] md:text-[20px] sm:text-[18px]"
-                >{{ AccomodationApplicationsCount.completed || 0 }}</span
-              >
+  <div>
+    <div class="flex gap-[10px] w-full">
+      <div class="px-4 mt-4 gap-[10px] flex-1 font-inter grid grid-cols-2">
+        <div
+          class="bg-[#F6F6F6] border-[0.75px] border-solid text-black border-[#36363633] rounded-[16px]"
+        >
+          <!-- 1 -->
 
-              <span
-                class="text-[14px] mb-[2px] leading-[100%] md:text-[13px] sm:text-[12px]"
-              >
-                Completed
-              </span>
-            </p>
-            <p
-              class="ml-auto w-fit credit_txt text-right gap-[2px] items-center text-dark flex py-1 px-2 text-[13px] md:text-[12px] sm:text-[11px]"
-            >
-              <span class=""><up-arrow-icon /></span>2.7%
-            </p>
-
-            <p
-              class="text-light_dark leading-[100%] font-sf text-right text-xs md:text-[11px] sm:text-[10px]"
-            >
-              More applications this week
-            </p>
-          </section>
-          <section
-            class="pt-[20px] px-[14px] border-t-[1px] border-[#E3E4E4] border-solid md:px-[10px] sm:px-[6px]"
+          <div
+            class="rounded-[16px] pb-[10px] px-[14px] bg-white border-b-[0.75px] border-solid border-[#36363633]"
           >
-            <li
-              class="text-[#25262880] font-[600] flex gap-[2px] items-center text-[14px] md:text-[13px] sm:text-[12px]"
+            <div
+              class="flex items-center justify-between text-black border-[#36363633] border-b-[0.75px] border-solid"
             >
-              Ongoing
-              <span
-                class="text-[#A31616] text-[12px] bg-[#FFE8EC] px-[5px] py-[2px] rounded-[15px] flex md:text-[11px] sm:text-[10px] md:px-[4px] md:py-[1.5px] sm:px-[3px] sm:py-[1px]"
-                >{{ AccomodationApplicationsCount.ongoing || 0 }}</span
-              >
-            </li>
-          </section>
-        </div>
-        <div class="data_card py-[25px] md:py-[18px] sm:py-[12px]">
-          <section class="header mb-[16px] px-[14px]">
-            <p
-              class="card_title m-0 text-[14px] leading-[100%] md:text-[13px] sm:text-[12px]"
-            >
-              My Tenants
-            </p>
-            <router-link
-              to="/tenants"
-              class="flex items-center gap-[2px] font-sf font-medium text-[#252628] text-[14px] md:text-[13px] sm:text-[12px]"
-            >
-              See all
-              <span class="">
-                <right-arrow-icon />
-              </span>
-            </router-link>
-          </section>
-          <section class="px-[14px] md:px-[10px] sm:px-[6px]">
-            <p
-              class="font-medium text-dark text-sm h-fit text-[16px] md:text-[15px] sm:text-[14px]"
-            >
-              <span
-                class="text-lrge font-[600] font-sf m-0 p-0 leading-[100%] text-[24px] md:text-[20px] sm:text-[18px]"
-                >{{ tenantsCounts || 0 }}</span
-              >
-            </p>
-          </section>
-          <section
-            class="pt-[20px] mb-0 px-[14px] border-t-[1px] border-[#E3E4E4] border-solid flex flex-col gap-[16px] md:px-[10px] sm:px-[6px]"
-          >
-            <div class="h-[10px] bg-[#E3E4E4] rounded-[6.32px]">
               <div
-                class="h-full bg-[#D7B360] rounded-[6.32px]"
-                :style="{ width: progress + '%' }"
+                class="flex items-center py-[10px] border-b-solid border-b-[#36363633] gap-3"
+              >
+                <div
+                  class="p-[12px] rounded-[8px] border-[#36363633] border-[0.75px] border-solid"
+                >
+                  <AppstoreOutlined />
+                </div>
+                <div class="flex flex-col gap-1 ml-[10px]">
+                  <span
+                    class="text-[#000000] font-medium text-[14px] font-inter leading-[100%]"
+                    >Application</span
+                  >
+                  <span
+                    class="text-[#25262899] leading-[100%] text-[12px] font-inter font-medium"
+                    >Tenancy Application Record</span
+                  >
+                </div>
+              </div>
+              <div class="bg-[#F2F2F2] rounded-[6px] px-2 py-1">0.0%</div>
+            </div>
+            <div class="flex justify-between py-[14px]">
+              <span
+                class="text-[#000000B2] text-[14px] font-inter leading-[100%]"
+                >Total Applications</span
+              >
+              <span>00</span>
+            </div>
+            <div class="flex gap-[2px] m-0 mb-[10px]">
+              <div
+                class="flex rounded-[4px] bg-[#67ABFF] h-[13px] w-full"
+              ></div>
+              <div
+                class="flex rounded-[4px] bg-[#FB8814] h-[13px] w-full"
+              ></div>
+              <div
+                class="flex rounded-[4px] bg-[#0FC36C] h-[13px] w-full"
               ></div>
             </div>
-            <li
-              class="text-[#25262880] text-[14px] leading-[100%] font-[600] flex gap-[2px] items-center md:text-[13px] sm:text-[12px]"
+
+            <div class="flex flex-col gap-2.5">
+              <div class="flex justify-between w-full">
+                <span class="flex gap-[8px] items-center">
+                  <span
+                    class="w-[13px] rounded-[4px] h-[13px] bg-[#67ABFF]"
+                  ></span>
+                  Ongoing</span
+                ><span> {{ AccomodationApplicationsCount.ongoing || 0 }} </span>
+              </div>
+
+              <div class="flex justify-between w-full">
+                <span class="flex gap-[8px] items-center">
+                  <span
+                    class="w-[13px] rounded-[4px] h-[13px] bg-[#FA922A]"
+                  ></span>
+                  Under Review</span
+                ><span> 00 </span>
+              </div>
+              <div class="flex justify-between w-full">
+                <span class="flex gap-[8px] items-center">
+                  <span
+                    class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
+                  ></span>
+                  Approved</span
+                ><span>
+                  {{ AccomodationApplicationsCount.completed || 0 }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center px-[10px] py-[14px]">
+            <span>View All Details</span>
+            <span
+              class="text-[#000000] bg-[#FFFFFF] rounded-[6px] px-[10px] py-[6px] border-[0.75px] border-solid border-[#36363633]"
             >
-              Target :
+              View
+            </span>
+          </div>
+        </div>
+        <div
+          class="bg-[#F6F6F6] w-full border-[0.75px] border-solid text-black border-[#36363633] rounded-[16px]"
+        >
+          <!-- 1 -->
+
+          <div
+            class="rounded-[16px] pb-[10px] px-[14px] bg-white border-b-[0.75px] border-solid border-[#36363633]"
+          >
+            <div
+              class="flex items-center justify-between text-black border-[#36363633] border-b-[0.75px] border-solid"
+            >
+              <div
+                class="flex items-center py-[10px] border-b-solid border-b-[#36363633] gap-3"
+              >
+                <div
+                  class="p-[12px] rounded-[8px] border-[#36363633] border-[0.75px] border-solid"
+                >
+                  <AppstoreOutlined />
+                </div>
+                <div class="flex flex-col gap-1 ml-[10px]">
+                  <span
+                    class="text-[#000000] font-medium text-[14px] font-inter leading-[100%]"
+                    >Service Request</span
+                  >
+                  <span
+                    class="text-[#25262899] leading-[100%] text-[12px] font-inter font-medium"
+                    >Service Request Record</span
+                  >
+                </div>
+              </div>
+              <div class="bg-[#F2F2F2] rounded-[6px] px-2 py-1">0.0%</div>
+            </div>
+            <div class="flex justify-between py-[14px]">
               <span
-                class="text-[14px] px-[5px] py-[2px] rounded-[15px] flex md:text-[13px] sm:text-[12px] md:px-[4px] md:py-[1.5px] sm:px-[3px] sm:py-[1px]"
+                class="text-[#000000B2] text-[14px] font-inter leading-[100%]"
+                >Total Applications</span
               >
-                {{ " " }}100 tenants (43% complete)</span
+              <span>00</span>
+            </div>
+            <div class="flex gap-[2px] m-0 mb-[10px]">
+              <div
+                class="flex rounded-[4px] bg-[#67ABFF] h-[13px] w-full"
+              ></div>
+              <div
+                class="flex rounded-[4px] bg-[#FB8814] h-[13px] w-full"
+              ></div>
+              <div
+                class="flex rounded-[4px] bg-[#0FC36C] h-[13px] w-full"
+              ></div>
+            </div>
+
+            <div class="flex flex-col gap-2.5">
+              <div class="flex justify-between w-full">
+                <span class="flex gap-[8px] items-center">
+                  <span
+                    class="w-[13px] rounded-[4px] h-[13px] bg-[#67ABFF]"
+                  ></span>
+                  Ongoing</span
+                ><span> 00 </span>
+              </div>
+
+              <div class="flex justify-between w-full">
+                <span class="flex gap-[8px] items-center">
+                  <span
+                    class="w-[13px] rounded-[4px] h-[13px] bg-[#FA922A]"
+                  ></span>
+                  Under Review</span
+                ><span> 00 </span>
+              </div>
+              <div class="flex justify-between w-full">
+                <span class="flex gap-[8px] items-center">
+                  <span
+                    class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
+                  ></span>
+                  Approved</span
+                ><span> 00 </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center px-[10px] py-[14px]">
+            <span>View All Details</span>
+            <span
+              class="text-[#000000] bg-[#FFFFFF] rounded-[6px] px-[10px] py-[6px] border-[0.75px] border-solid border-[#36363633]"
+            >
+              View
+            </span>
+          </div>
+        </div>
+        <div
+          class="bg-[#F6F6F6] w-full border-[0.75px] border-solid text-black border-[#36363633] rounded-[16px]"
+        >
+          <!-- 1 -->
+
+          <div
+            class="rounded-[16px] pb-[10px] px-[14px] bg-white border-b-[0.75px] border-solid border-[#36363633]"
+          >
+            <div
+              class="flex items-center justify-between text-black border-[#36363633] border-b-[0.75px] border-solid"
+            >
+              <div
+                class="flex items-center py-[10px] border-b-solid border-b-[#36363633] gap-3"
               >
-            </li>
-          </section>
+                <div
+                  class="p-[12px] rounded-[8px] border-[#36363633] border-[0.75px] border-solid"
+                >
+                  <AppstoreOutlined />
+                </div>
+                <div class="flex flex-col gap-1 ml-[10px]">
+                  <span
+                    class="text-[#000000] font-medium text-[14px] font-inter leading-[100%]"
+                    >Application</span
+                  >
+                  <span
+                    class="text-[#25262899] leading-[100%] text-[12px] font-inter font-medium"
+                    >Tenancy Application Record</span
+                  >
+                </div>
+              </div>
+              <div class="bg-[#F2F2F2] rounded-[6px] px-2 py-1">0.0%</div>
+            </div>
+            <div class="flex justify-between py-[14px]">
+              <span
+                class="text-[#000000B2] text-[14px] font-inter leading-[100%]"
+                >Total Applications</span
+              >
+              <span>00</span>
+            </div>
+            <div class="flex gap-[2px] m-0 mb-[10px]">
+              <div
+                class="flex rounded-[4px] bg-[#67ABFF] h-[13px] w-full"
+              ></div>
+              <div
+                class="flex rounded-[4px] bg-[#FB8814] h-[13px] w-full"
+              ></div>
+              <div
+                class="flex rounded-[4px] bg-[#0FC36C] h-[13px] w-full"
+              ></div>
+            </div>
+
+            <div class="flex flex-col gap-2.5">
+              <div class="flex justify-between w-full">
+                <span class="flex gap-[8px] items-center">
+                  <span
+                    class="w-[13px] rounded-[4px] h-[13px] bg-[#67ABFF]"
+                  ></span>
+                  Ongoing</span
+                ><span> 00 </span>
+              </div>
+
+              <div class="flex justify-between w-full">
+                <span class="flex gap-[8px] items-center">
+                  <span
+                    class="w-[13px] rounded-[4px] h-[13px] bg-[#FA922A]"
+                  ></span>
+                  Under Review</span
+                ><span> 00 </span>
+              </div>
+              <div class="flex justify-between w-full">
+                <span class="flex gap-[8px] items-center">
+                  <span
+                    class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
+                  ></span>
+                  Approved</span
+                ><span> 00 </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center px-[10px] py-[14px]">
+            <span>View All Details</span>
+            <span
+              class="text-[#000000] bg-[#FFFFFF] rounded-[6px] px-[10px] py-[6px] border-[0.75px] border-solid border-[#36363633]"
+            >
+              View
+            </span>
+          </div>
+        </div>
+        <div
+          class="bg-[#F6F6F6] w-full border-[0.75px] border-solid text-black border-[#36363633] rounded-[16px]"
+        >
+          <!-- 1 -->
+
+          <div
+            class="rounded-[16px] pb-[10px] px-[14px] bg-white border-b-[0.75px] border-solid border-[#36363633]"
+          >
+            <div
+              class="flex items-center justify-between text-black border-[#36363633] border-b-[0.75px] border-solid"
+            >
+              <div
+                class="flex items-center py-[10px] border-b-solid border-b-[#36363633] gap-3"
+              >
+                <div
+                  class="p-[12px] rounded-[8px] border-[#36363633] border-[0.75px] border-solid"
+                >
+                  <AppstoreOutlined />
+                </div>
+                <div class="flex flex-col gap-1 ml-[10px]">
+                  <span
+                    class="text-[#000000] font-medium text-[14px] font-inter leading-[100%]"
+                    >Application</span
+                  >
+                  <span
+                    class="text-[#25262899] leading-[100%] text-[12px] font-inter font-medium"
+                    >Tenancy Application Record</span
+                  >
+                </div>
+              </div>
+              <div class="bg-[#F2F2F2] rounded-[6px] px-2 py-1">0.0%</div>
+            </div>
+            <div class="flex justify-between py-[14px]">
+              <span
+                class="text-[#000000B2] text-[14px] font-inter leading-[100%]"
+                >Total Applications</span
+              >
+              <span>00</span>
+            </div>
+            <div class="flex gap-[2px] m-0 mb-[10px]">
+              <div
+                class="flex rounded-[4px] bg-[#67ABFF] h-[13px] w-full"
+              ></div>
+              <div
+                class="flex rounded-[4px] bg-[#FB8814] h-[13px] w-full"
+              ></div>
+              <div
+                class="flex rounded-[4px] bg-[#0FC36C] h-[13px] w-full"
+              ></div>
+            </div>
+
+            <div class="flex flex-col gap-2.5">
+              <div class="flex justify-between w-full">
+                <span class="flex gap-[8px] items-center">
+                  <span
+                    class="w-[13px] rounded-[4px] h-[13px] bg-[#67ABFF]"
+                  ></span>
+                  Ongoing</span
+                ><span> 00 </span>
+              </div>
+
+              <div class="flex justify-between w-full">
+                <span class="flex gap-[8px] items-center">
+                  <span
+                    class="w-[13px] rounded-[4px] h-[13px] bg-[#FA922A]"
+                  ></span>
+                  Under Review</span
+                ><span> 00 </span>
+              </div>
+              <div class="flex justify-between w-full">
+                <span class="flex gap-[8px] items-center">
+                  <span
+                    class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
+                  ></span>
+                  Approved</span
+                ><span> 00 </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center px-[10px] py-[14px]">
+            <span>View All Details</span>
+            <span
+              class="text-[#000000] bg-[#FFFFFF] rounded-[6px] px-[10px] py-[6px] border-[0.75px] border-solid border-[#36363633]"
+            >
+              View
+            </span>
+          </div>
         </div>
       </div>
       <div
-        class="flex flex-col gap-[30px] ml-[24px] mr-[24px] md:ml-[16px] md:mr-[16px] sm:ml-[8px] sm:mr-[8px]"
+        class="bg-[#F6F6F6] mr-[16px] border-[0.75px] rounded-[1rem] border-solid border-[#36363633] mt-[16px]"
       >
-        <div class="data_card">
-          <section class="header mb-[16px] px-[14px]">
-            <p
-              class="card_title m-0 text-[14px] leading-[100%] md:text-[13px] sm:text-[12px]"
+        <div
+          class="text-[black] bg-[#FFFFFF] rounded-[16px] border-[0.75px] border-solid border-[#36363633] p-[16px]"
+        >
+          <div class="flex items-center gap-2.5">
+            <div
+              class="border-[0.75px] border-solid border-[#36363633] rounded-[8px] p-2.5 w-fit"
             >
-              Service Requests
-            </p>
-            <router-link
-              to="/service-requests/all"
-              class="flex items-center gap-[2px] font-sf font-medium text-[#252628] text-[14px] md:text-[13px] sm:text-[12px]"
-            >
-              See all
-              <span class="">
-                <right-arrow-icon />
-              </span>
-            </router-link>
-          </section>
-          <section class="px-[14px] md:px-[10px] sm:px-[6px]">
-            <p
-              class="font-medium flex gap-1 items-end text-dark text-sm h-fit text-[16px] md:text-[15px] sm:text-[14px]"
-            >
-              <span
-                class="font-[600] font-sf m-0 p-0 leading-[100%] text-[24px] md:text-[20px] sm:text-[18px]"
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <a-spin
-                  :spinning="loading.serviceRequestCompleted"
-                  :indicator="customIcon"
+                <path
+                  d="M10.0013 18.3307C14.6037 18.3307 18.3346 14.5998 18.3346 9.9974C18.3346 5.39502 14.6037 1.66406 10.0013 1.66406C5.39893 1.66406 1.66797 5.39502 1.66797 9.9974C1.66797 14.5998 5.39893 18.3307 10.0013 18.3307Z"
+                  stroke="#1C274C"
+                  stroke-width="1.5"
                 />
-
-                <span v-if="!loading.serviceRequestCompleted">
-                  {{ pendingRequests.length }}</span
-                >
-              </span>
-              <span
-                class="mb-[2px] text-[14px] leading-[100%] md:text-[13px] sm:text-[12px]"
-              >
-                Pending
-              </span>
-            </p>
-            <p
-              class="ml-auto w-fit credit_txt bg-[#FFE8EC] text-right gap-[2px] items-center text-dark flex py-1 px-2 text-[13px] md:text-[12px] sm:text-[11px]"
-            >
-              <span class=""><up-arrow-icon /></span>2.7%
-            </p>
-
-            <p
-              class="text-light_dark leading-[100%] font-sf text-right text-xs md:text-[11px] sm:text-[10px]"
-            >
-              Less requests this week
-            </p>
-          </section>
-          <section
-            class="pt-[20px] px-[14px] border-t-[1px] border-[#E3E4E4] border-solid flex justify-between md:px-[10px] sm:px-[6px]"
-          >
-            <li
-              class="text-[#25262880] font-[600] flex gap-[2px] items-center text-[14px] md:text-[13px] sm:text-[12px]"
-            >
-              Ongoing
-              <span>
-                <a-spin
-                  :spinning="loading.serviceOngoingCompleted"
-                  :indicator="customIcon"
+                <path
+                  d="M10 14.1641V14.5807V14.9974"
+                  stroke="#1C274C"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
                 />
-              </span>
-              <span
-                v-if="!this.loading.serviceOngoingCompleted"
-                class="text-[#A31616] text-[12px] bg-[#FFE8EC] px-[5px] py-[2px] rounded-[15px] flex md:text-[11px] sm:text-[10px] md:px-[4px] md:py-[1.5px] sm:px-[3px] sm:py-[1px]"
-                >{{ ongoingRequests.length }}</span
+                <path
+                  d="M10 5V5.41667V5.83333"
+                  stroke="#1C274C"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M12.5 7.91927C12.5 6.76868 11.3807 5.83594 10 5.83594C8.61925 5.83594 7.5 6.76868 7.5 7.91927C7.5 9.06985 8.61925 10.0026 10 10.0026C11.3807 10.0026 12.5 10.9354 12.5 12.0859C12.5 13.2365 11.3807 14.1693 10 14.1693C8.61925 14.1693 7.5 13.2365 7.5 12.0859"
+                  stroke="#1C274C"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+            <div class="">
+              <p class="m-0 p-0 text-[14px] font-medium leading-[100%]">
+                Rent Inflow
+              </p>
+              <p
+                class="m-0 p-0 text-[#25262899] mt-[4px] text-[12px] font-medium leading-[100%]"
               >
-            </li>
-            <li
-              class="text-[#25262880] font-[600] flex gap-[2px] items-center text-[14px] md:text-[13px] sm:text-[12px]"
+                Income and Pending Rent Statistics
+              </p>
+            </div>
+          </div>
+          <div class="mt-[45px]">
+            <chart :data="chartData" :options="chartOptions" />
+          </div>
+
+          <div>
+            <div
+              class="flex justify-between mt-[45px] items-center pb-[1rem] border-b-[0.7px] border-solid border-[#D3D3D3B2]"
             >
-              Completed
               <span
-                class="text-[#A31616] text-[12px] bg-[#E0F5EB] px-[5px] py-[2px] rounded-[15px] flex md:text-[11px] sm:text-[10px] md:px-[4px] md:py-[1.5px] sm:px-[3px] sm:py-[1px]"
-                >{{ serviceRequests.length }}</span
-              >
-            </li>
-          </section>
+                class="text-[#000000B2] text-[14px] leading-[100%] font-inter"
+                >Expected Rent</span
+              ><span class="text-[18px] font-bold font-inter">C$00</span>
+            </div>
+            <div class="flex justify-between w-full mt-[16px]">
+              <span class="flex gap-[8px] items-center">
+                <span
+                  class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
+                ></span>
+                Incoming</span
+              ><span> C$00 </span>
+            </div>
+            <div class="flex justify-between w-full mt-[16px]">
+              <span class="flex gap-[8px] items-center">
+                <span
+                  class="w-[13px] rounded-[4px] h-[13px] bg-[#D9625A]"
+                ></span>
+                Pending</span
+              ><span> C$00 </span>
+            </div>
+          </div>
         </div>
-        <div class="data_card">
-          <section class="header mb-[16px] px-[14px]">
-            <p
-              class="card_title m-0 text-[14px] leading-[100%] md:text-[13px] sm:text-[12px]"
-            >
-              Maintenance Fee
-            </p>
-            <router-link
-              to="/payments/maintenance"
-              class="flex items-center gap-[2px] font-sf font-medium text-[#252628] text-[14px] md:text-[13px] sm:text-[12px]"
-            >
-              See all
-              <span class="">
-                <right-arrow-icon />
-              </span>
-            </router-link>
-          </section>
-          <section class="px-[14px] md:px-[10px] sm:px-[6px]">
-            <p
-              class="font-medium text-dark text-sm h-fit text-[16px] md:text-[15px] sm:text-[14px]"
-            >
-              <span
-                class="text-lrge font-[600] font-sf m-0 p-0 leading-[100%] text-[24px] md:text-[20px] sm:text-[18px]"
-                >C$55,530.45</span
-              >
-            </p>
-            <p
-              class="ml-auto w-fit credit_txt bg-[#FFE8EC] text-right gap-[2px] items-center text-dark flex py-1 px-2 text-[13px] md:text-[12px] sm:text-[11px]"
-            >
-              <span class=""><up-arrow-icon /></span>2.7%
-            </p>
-
-            <p
-              class="text-light_dark leading-[100%] font-sf text-right text-xs md:text-[11px] sm:text-[10px]"
-            >
-              Less cost this week
-            </p>
-          </section>
-          <section
-            class="pt-[20px] px-[14px] border-t-[1px] border-[#E3E4E4] border-solid flex justify-between md:px-[10px] sm:px-[6px]"
+        <div class="flex justify-between items-center px-[10px] py-[14px]">
+          <span>View All Details</span>
+          <span
+            class="text-[#000000] bg-[#FFFFFF] rounded-[6px] px-[10px] py-[6px] border-[0.75px] border-solid border-[#36363633]"
           >
-            <li
-              class="text-[#25262880] font-[600] flex gap-[2px] items-center text-[14px] md:text-[13px] sm:text-[12px]"
-            >
-              Owing
-              <span
-                class="text-[#A31616] text-[12px] bg-[#FFE8EC] px-[5px] py-[2px] rounded-[15px] flex md:text-[11px] sm:text-[10px] md:px-[4px] md:py-[1.5px] sm:px-[3px] sm:py-[1px]"
-                >8</span
-              >
-            </li>
-            <li
-              class="text-[#25262880] font-[600] flex gap-[2px] items-center text-[14px] md:text-[13px] sm:text-[12px]"
-            >
-              Paid
-              <span
-                class="text-[#A31616] text-[12px] bg-[#E0F5EB] px-[5px] py-[2px] rounded-[15px] flex md:text-[11px] sm:text-[10px] md:px-[4px] md:py-[1.5px] sm:px-[3px] sm:py-[1px]"
-                >5</span
-              >
-            </li>
-          </section>
+            View
+          </span>
         </div>
       </div>
-      <!--Rent inflow graph -->
-      <aside class="data_card h-auto">
-        <section
-          class="header flex items-center px-[16px] md:px-[10px] sm:px-[6px]"
-        >
-          <p
-            class="text-[#252628] m-0 font-sf text-sm leading-[100%] text-[16px] md:text-[15px] sm:text-[14px]"
-          >
-            Rent Inflow
-          </p>
-
-          <a
-            class="m-0 text-[#252628] text-xs leading-[100%] font-semibold text-[13px] md:text-[12px] sm:text-[11px]"
-          >
-            See all
-            <span class="ml-0.5 mt-1">
-              <right-arrow-icon />
-            </span>
-          </a>
-        </section>
-        <div class="h-72 flex w-full justify-center tablet:h-auto">
-          <chart :data="chartData" :options="chartOptions" />
-        </div>
-        <section
-          class="py-[16px] px-5 border-solid border-t-[#E3E4E4] border-t mt-[20px] md:px-[3px] sm:px-[2px]"
-        >
-          <p
-            class="text-[#25262880] font-semibold text-base leading-[100%] text-[16px] md:text-[15px] sm:text-[14px]"
-          >
-            Expected Rent : <span class="text-[#252628]">$10,000</span>
-          </p>
-          <ul class="flex justify-between">
-            <li
-              class="text-light_dark text-[12px] leading-[100%] md:text-[11px] sm:text-[10px]"
-            >
-              Collected Rent:
-              <span
-                class="text-[#0E3221] font-semibold bg-[#E0F5EB] rounded-[15px] px-[6px] py-[2px] leading-[100%] md:text-[11px] sm:text-[10px] md:px-[5px] md:py-[1.5px] sm:px-[4px] sm:py-[1px]"
-                >$7,500</span
-              >
-            </li>
-            <li
-              class="text-[#25262880] text-[12px] leading-[100%] md:text-[11px] sm:text-[10px]"
-            >
-              Pending Rent:
-              <span
-                class="debit_txt px-[6px] py-[2px] text-[12px] font-semibold md:text-[11px] sm:text-[10px] md:px-[5px] md:py-[1.5px] sm:px-[4px] sm:py-[1px]"
-                >$2,500</span
-              >
-            </li>
-          </ul>
-        </section>
-      </aside>
-    </section>
-    <!-- Table -->
-    <div
-      class="py-4 px-8 bg-white rounded-lg w-full overflow-x-scroll sm:px-4 md:px-6 lg:px-8"
-    >
-      <p
-        class="text-lg leading-[100%] text-[#000000] mb-5 font-[500] text-[18px] md:text-[16px] sm:text-[15px]"
-      >
-        Pending Rent Payment
-      </p>
-      <div>
-        <!-- Table header -->
-        <div
-          class="grid grid-cols-6 font-normal text-[#98A2B3] text-[16px] md:text-[15px] sm:text-[14px] font-[initial]"
-        >
-          <span> # </span>
-          <span> Name </span>
-          <span> Status </span>
-          <span> Property </span>
-          <span> Unit Number </span>
-          <span> Due Date </span>
-        </div>
-        <!-- End Table Header -->
-        <!-- Table body -->
-        <div
-          class="grid grid-cols-6 font-normal mb-[29px] text-[#404164] mt-4 text-[18px] font-[initial] md:text-[16px] sm:text-[15px]"
-        >
-          <span> 1 </span>
-          <span> Steph Sobim </span>
-          <span
-            class="text-[#E41919] px-[18px] py-[2.5px] rounded-[155px] bg-[#E4191940] w-fit md:px-[14px] sm:px-[10px] md:py-[2px] sm:py-[1.5px] md:text-[15px] sm:text-[14px]"
-          >
-            Overdue
-          </span>
-          <span> Wellington House </span>
-          <span> 1243 </span>
-          <span> 23/09/22 </span>
-        </div>
-
-        <div
-          class="grid grid-cols-6 font-normal mb-[29px] text-[#404164] mt-4 text-[18px] font-[initial] md:text-[16px] sm:text-[15px]"
-        >
-          <span> 2 </span>
-          <span> Steph Sobim </span>
-          <span
-            class="text-[#D68F02] px-[18px] py-[2.5px] rounded-[155px] bg-[#D68F0240] w-fit md:px-[14px] sm:px-[10px] md:py-[2px] sm:py-[1.5px] md:text-[15px] sm:text-[14px]"
-          >
-            Pending
-          </span>
-          <span> Wellington House </span>
-          <span> 1243 </span>
-          <span> 23/09/22 </span>
-        </div>
-
-        <div
-          class="grid grid-cols-6 font-normal mb-[29px] text-[#404164] mt-4 text-[18px] font-[initial] md:text-[16px] sm:text-[15px]"
-        >
-          <span> 3 </span>
-          <span> Steph Sobim </span>
-          <span
-            class="text-[#D68F02] px-[18px] py-[2.5px] rounded-[155px] bg-[#D68F0240] w-fit md:px-[14px] sm:px-[10px] md:py-[2px] sm:py-[1.5px] md:text-[15px] sm:text-[14px]"
-          >
-            Pending
-          </span>
-          <span> Wellington House </span>
-          <span> 1243 </span>
-          <span> 23/09/22 </span>
-        </div>
-
-        <div
-          class="grid grid-cols-6 font-normal mb-[29px] text-[#404164] mt-4 text-[18px] font-[initial] md:text-[16px] sm:text-[15px]"
-        >
-          <span> 4 </span>
-          <span> Steph Sobim </span>
-          <span
-            class="text-[#31A057] px-[18px] py-[2.5px] rounded-[155px] bg-[#31A05740] w-fit md:px-[14px] sm:px-[10px] md:py-[2px] sm:py-[1.5px] md:text-[15px] sm:text-[14px]"
-          >
-            Due
-          </span>
-          <span> Wellington House </span>
-          <span> 1243 </span>
-          <span> 23/09/22 </span>
-        </div>
-
-        <div
-          class="grid grid-cols-6 font-normal mb-[29px] text-[#404164] mt-4 text-[18px] font-[initial] md:text-[16px] sm:text-[15px]"
-        >
-          <span> 5 </span>
-          <span> Steph Sobim </span>
-          <span
-            class="text-[#E41919] px-[18px] py-[2.5px] rounded-[155px] bg-[#E4191940] w-fit md:px-[14px] sm:px-[10px] md:py-[2px] sm:py-[1.5px] md:text-[15px] sm:text-[14px]"
-          >
-            Overdue
-          </span>
-          <span> Wellington House </span>
-          <span> 1243 </span>
-          <span> 23/09/22 </span>
-        </div>
-
-        <div
-          class="grid grid-cols-6 font-normal mb-[29px] text-[#404164] mt-4 text-[18px] font-[initial] md:text-[16px] sm:text-[15px]"
-        >
-          <span> 6 </span>
-          <span> Steph Sobim </span>
-          <span
-            class="text-[#E41919] px-[18px] py-[2.5px] rounded-[155px] bg-[#E4191940] w-fit md:px-[14px] sm:px-[10px] md:py-[2px] sm:py-[1.5px] md:text-[15px] sm:text-[14px]"
-          >
-            Overdue
-          </span>
-          <span> Wellington House </span>
-          <span> 1243 </span>
-          <span> 23/09/22 </span>
-        </div>
-        <!-- End Table Body -->
-      </div>
-      <!-- <table-component :headers="headers" :data="tableData" type="dashboard">
-      <template #column0="{ entity }">
-        {{ entity.id }}
-      </template>
-      <template #column1="{ entity }">
-        {{ entity.name }}
-      </template>
-      <template #column2="{ entity }">
-        <div
-        class="status"
-        :class="{
-          status_pending: entity.status === 'Pending',
-          status_overdue: entity.status === 'Overdue',
-          status_due: entity.status === 'Due',
-        }"
-        >
-        {{ entity.status }}
-        </div>
-      </template>
-      <template #column3="{ entity }">
-        {{ entity.property }}
-      </template>
-      <template #column4="{ entity }">
-        {{ entity.unit }}
-      </template>
-      <template #column5="{ entity }">
-        {{ entity.date }}
-      </template>
-      </table-component> -->
     </div>
+
+    <!-- Second Main Div -->
+    <div></div>
   </div>
 </template>
 
