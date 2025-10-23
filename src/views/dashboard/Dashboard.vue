@@ -427,7 +427,67 @@
     </div>
 
     <!-- Second Main Div -->
-    <div></div>
+    <div
+      class="flex-1 mt-[15px] mx-4 border-t-[0.75px] border-x-[0.75px] border-solid border-[#36363633] rounded-[6px]"
+    >
+      <div
+        class="border-b-[0.75px] flex items-center justify-between border-solid border-[#36363633] rounded-t-[6px] p-2.5"
+      >
+        <div class="flex gap-2.5 items-center">
+          <div
+            class="border-solid p-3 border-[0.75px] rounded-[8px] w-fit border-[#36363633]"
+          >
+            <DollarCircleOutlined style="color: #1c274c" />
+          </div>
+          <div>
+            <p
+              class="p-0 m-0 text-[#000000] text-[14px] font-inter font-medium"
+            >
+              Pending Rent Payment
+            </p>
+            <p
+              class="p-0 m-0 text-[#25262899] mt-1 text-[14px] font-inter font-medium"
+            >
+              See all pending payments
+            </p>
+          </div>
+        </div>
+        <div class="flex gap-2.5 items-center">
+          <!-- <a-input-search placeholder="search" class="px-[12px] py-[6.5px]" /> -->
+          <a-dropdown>
+            <a
+              class="ant-dropdown-link border-[1px] rounded-[8px] flex border-[#D0D5DD] px-[12px] py-[6.5px] gap-[8px] items-center text-[#0000004D]"
+              @click.prevent
+            >
+              <Button
+                class="text-[14px] p-0 font-medium font-inter leading-[24px]"
+                >Status</Button
+              >
+              <DownOutlined />
+            </a>
+            <template #overlay>
+              <a-menu>
+                <a-menu-item>
+                  <a href="javascript:;">1st menu item</a>
+                </a-menu-item>
+                <a-menu-item>
+                  <a href="javascript:;">2nd menu item</a>
+                </a-menu-item>
+                <a-menu-item>
+                  <a href="javascript:;">3rd menu item</a>
+                </a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
+          <a-date-picker
+            v-model:value="value1"
+            placeholder="Sort by Date"
+            class="text-[14px] font-medium font-inter leading-[24px] px-[12px] py-[6.5px]"
+          />
+        </div>
+      </div>
+      asas
+    </div>
   </div>
 </template>
 
