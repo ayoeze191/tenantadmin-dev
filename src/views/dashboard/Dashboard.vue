@@ -1,9 +1,11 @@
 <template>
   <div>
     <div class="flex gap-[10px] w-full">
-      <div class="px-4 mt-4 gap-[10px] flex-1 font-inter grid grid-cols-2">
+      <div
+        class="px-4 mt-4 gap-[10px] h-fit flex-1 font-inter grid grid-cols-2"
+      >
         <div
-          class="bg-[#F6F6F6] border-[0.75px] border-solid text-black border-[#36363633] rounded-[16px]"
+          class="bg-[#F6F6F6] h-fit border-[0.75px] border-solid text-black border-[#36363633] rounded-[16px]"
         >
           <!-- 1 -->
 
@@ -34,14 +36,14 @@
               </div>
               <div class="bg-[#F2F2F2] rounded-[6px] px-2 py-1">0.0%</div>
             </div>
-            <div class="flex justify-between py-[14px]">
+            <div class="flex justify-between m-0 py-[14px]">
               <span
-                class="text-[#000000B2] text-[14px] font-inter leading-[100%]"
+                class="text-[#000000B2] m-0 p-0 text-[14px] font-inter leading-[100%]"
                 >Total Applications</span
               >
               <span>00</span>
             </div>
-            <div class="flex gap-[2px] m-0 mb-[10px]">
+            <div class="flex gap-[2px] m-0 mb-[10px] p-0">
               <div
                 class="flex rounded-[4px] bg-[#67ABFF] h-[13px] w-full"
               ></div>
@@ -94,7 +96,7 @@
           </div>
         </div>
         <div
-          class="bg-[#F6F6F6] w-full border-[0.75px] border-solid text-black border-[#36363633] rounded-[16px]"
+          class="bg-[#F6F6F6] h-fit w-full border-[0.75px] border-solid text-black border-[#36363633] rounded-[16px]"
         >
           <!-- 1 -->
 
@@ -128,16 +130,16 @@
             <div class="flex justify-between py-[14px]">
               <span
                 class="text-[#000000B2] text-[14px] font-inter leading-[100%]"
-                >Total Applications</span
+                >Total Service Request</span
               >
               <span>00</span>
             </div>
             <div class="flex gap-[2px] m-0 mb-[10px]">
               <div
-                class="flex rounded-[4px] bg-[#67ABFF] h-[13px] w-full"
+                class="flex rounded-[4px] bg-[#CF67FF] h-[13px] w-full"
               ></div>
               <div
-                class="flex rounded-[4px] bg-[#FB8814] h-[13px] w-full"
+                class="flex rounded-[4px] bg-[#312AFA] h-[13px] w-full"
               ></div>
               <div
                 class="flex rounded-[4px] bg-[#0FC36C] h-[13px] w-full"
@@ -151,7 +153,7 @@
                     class="w-[13px] rounded-[4px] h-[13px] bg-[#67ABFF]"
                   ></span>
                   Ongoing</span
-                ><span> 00 </span>
+                ><span> 0 </span>
               </div>
 
               <div class="flex justify-between w-full">
@@ -160,7 +162,7 @@
                     class="w-[13px] rounded-[4px] h-[13px] bg-[#FA922A]"
                   ></span>
                   Under Review</span
-                ><span> 00 </span>
+                ><span> 0 </span>
               </div>
               <div class="flex justify-between w-full">
                 <span class="flex gap-[8px] items-center">
@@ -168,7 +170,7 @@
                     class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
                   ></span>
                   Approved</span
-                ><span> 00 </span>
+                ><span> 0 </span>
               </div>
             </div>
           </div>
@@ -183,7 +185,7 @@
           </div>
         </div>
         <div
-          class="bg-[#F6F6F6] w-full border-[0.75px] border-solid text-black border-[#36363633] rounded-[16px]"
+          class="bg-[#F6F6F6] h-fit w-full border-[0.75px] border-solid text-black border-[#36363633] rounded-[16px]"
         >
           <!-- 1 -->
 
@@ -204,32 +206,22 @@
                 <div class="flex flex-col gap-1 ml-[10px]">
                   <span
                     class="text-[#000000] font-medium text-[14px] font-inter leading-[100%]"
-                    >Application</span
-                  >
-                  <span
-                    class="text-[#25262899] leading-[100%] text-[12px] font-inter font-medium"
-                    >Tenancy Application Record</span
+                    >My Tenants</span
                   >
                 </div>
               </div>
-              <div class="bg-[#F2F2F2] rounded-[6px] px-2 py-1">0.0%</div>
+              <div class="px-2 py-1 text-[18px] font-semibold">0</div>
             </div>
             <div class="flex justify-between py-[14px]">
               <span
                 class="text-[#000000B2] text-[14px] font-inter leading-[100%]"
-                >Total Applications</span
+                >Target</span
               >
               <span>00</span>
             </div>
             <div class="flex gap-[2px] m-0 mb-[10px]">
               <div
-                class="flex rounded-[4px] bg-[#67ABFF] h-[13px] w-full"
-              ></div>
-              <div
-                class="flex rounded-[4px] bg-[#FB8814] h-[13px] w-full"
-              ></div>
-              <div
-                class="flex rounded-[4px] bg-[#0FC36C] h-[13px] w-full"
+                class="flex rounded-[4px] bg-[#E4E5E5] h-[13px] w-full"
               ></div>
             </div>
 
@@ -237,27 +229,19 @@
               <div class="flex justify-between w-full">
                 <span class="flex gap-[8px] items-center">
                   <span
-                    class="w-[13px] rounded-[4px] h-[13px] bg-[#67ABFF]"
+                    class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
                   ></span>
-                  Ongoing</span
-                ><span> 00 </span>
+                  Complete</span
+                ><span> 0 </span>
               </div>
 
               <div class="flex justify-between w-full">
                 <span class="flex gap-[8px] items-center">
                   <span
-                    class="w-[13px] rounded-[4px] h-[13px] bg-[#FA922A]"
+                    class="w-[13px] rounded-[4px] h-[13px] bg-[#E5E6E6]"
                   ></span>
-                  Under Review</span
-                ><span> 00 </span>
-              </div>
-              <div class="flex justify-between w-full">
-                <span class="flex gap-[8px] items-center">
-                  <span
-                    class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
-                  ></span>
-                  Approved</span
-                ><span> 00 </span>
+                  To Complete</span
+                ><span> 0 </span>
               </div>
             </div>
           </div>
@@ -272,7 +256,7 @@
           </div>
         </div>
         <div
-          class="bg-[#F6F6F6] w-full border-[0.75px] border-solid text-black border-[#36363633] rounded-[16px]"
+          class="bg-[#F6F6F6] h-fit w-full border-[0.75px] border-solid text-black border-[#36363633] rounded-[16px]"
         >
           <!-- 1 -->
 
@@ -293,11 +277,11 @@
                 <div class="flex flex-col gap-1 ml-[10px]">
                   <span
                     class="text-[#000000] font-medium text-[14px] font-inter leading-[100%]"
-                    >Application</span
+                    >Maintenance Fee</span
                   >
                   <span
-                    class="text-[#25262899] leading-[100%] text-[12px] font-inter font-medium"
-                    >Tenancy Application Record</span
+                    class="text-[#25262899] bg-[#0000000D] px-[6px] mt-[3px] py-[4px] leading-[100%] text-[12px] font-inter font-medium"
+                    >Less cost this week</span
                   >
                 </div>
               </div>
@@ -312,13 +296,7 @@
             </div>
             <div class="flex gap-[2px] m-0 mb-[10px]">
               <div
-                class="flex rounded-[4px] bg-[#67ABFF] h-[13px] w-full"
-              ></div>
-              <div
-                class="flex rounded-[4px] bg-[#FB8814] h-[13px] w-full"
-              ></div>
-              <div
-                class="flex rounded-[4px] bg-[#0FC36C] h-[13px] w-full"
+                class="flex rounded-[4px] bg-[#E4E5E5] h-[13px] w-full"
               ></div>
             </div>
 
@@ -326,27 +304,19 @@
               <div class="flex justify-between w-full">
                 <span class="flex gap-[8px] items-center">
                   <span
-                    class="w-[13px] rounded-[4px] h-[13px] bg-[#67ABFF]"
+                    class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
                   ></span>
-                  Ongoing</span
-                ><span> 00 </span>
+                  Paid</span
+                ><span> 0 </span>
               </div>
 
               <div class="flex justify-between w-full">
                 <span class="flex gap-[8px] items-center">
                   <span
-                    class="w-[13px] rounded-[4px] h-[13px] bg-[#FA922A]"
+                    class="w-[13px] rounded-[4px] h-[13px] bg-[#E5E6E6]"
                   ></span>
-                  Under Review</span
-                ><span> 00 </span>
-              </div>
-              <div class="flex justify-between w-full">
-                <span class="flex gap-[8px] items-center">
-                  <span
-                    class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
-                  ></span>
-                  Approved</span
-                ><span> 00 </span>
+                  Owing</span
+                ><span> 0 </span>
               </div>
             </div>
           </div>
@@ -362,7 +332,7 @@
         </div>
       </div>
       <div
-        class="bg-[#F6F6F6] mr-[16px] border-[0.75px] rounded-[1rem] border-solid border-[#36363633] mt-[16px]"
+        class="bg-[#F6F6F6] h-fit mr-[16px] border-[0.75px] rounded-[1rem] border-solid border-[#36363633] mt-[16px]"
       >
         <div
           class="text-[black] bg-[#FFFFFF] rounded-[16px] border-[0.75px] border-solid border-[#36363633] p-[16px]"
@@ -414,7 +384,7 @@
               </p>
             </div>
           </div>
-          <div class="mt-[45px]">
+          <div class="mt-[45px] w-[200px] h-[200px]">
             <chart :data="chartData" :options="chartOptions" />
           </div>
 
