@@ -1,7 +1,9 @@
 <template>
   <main class="flex w-full h-screen overflow-hidden bg-[#111921]">
     <side-bar />
-    <section class="flex flex-col w-full h-full">
+    <section
+      class="flex flex-col w-full h-full bg-[#FFFFFF] mt-[1rem] rounded-[18px]"
+    >
       <top-nav />
       <div class="flex-1 overflow-y-auto">
         <router-view v-if="store.userProfile.isVerified == true"></router-view>
