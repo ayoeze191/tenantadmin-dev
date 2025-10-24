@@ -1,8 +1,52 @@
 <template>
   <div>
-    <div class="flex gap-[10px] w-full">
+    <div class="mt-4 px-4">
       <div
-        class="px-4 mt-4 gap-[10px] h-fit flex-1 font-inter grid grid-cols-2"
+        class="bg-[#2E544E] flex justify-between w-full px-[14px] py-[12.5px] rounded-[8px]"
+      >
+        <div
+          class="flex gap-2 items-center text-white font-inter text-[14px] font-medium"
+        >
+          <span
+            ><svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7.75 8.5V4.75M7.75 1C11.4779 1 14.5 4.02208 14.5 7.75C14.5 11.4779 11.4779 14.5 7.75 14.5C4.02208 14.5 1 11.4779 1 7.75C1 4.02208 4.02208 1 7.75 1ZM7.71265 10.75V10.675L7.78735 10.6749V10.75H7.71265Z"
+                stroke="white"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <span
+            >Enhance tenant satisfaction with a dedicated property manager!
+            Efficient lease tracking and prompt maintenance requests.</span
+          >
+        </div>
+
+        <div class="h-full">
+          <button
+            class="bg-[#FFFFFF33] h-full text-[#FFFFFF] text-[12px] font-inter font-medium px-[10px] py-[6px] rounded-[6px]"
+          >
+            Skip
+          </button>
+          <button
+            class="bg-[#FFFFFF] h-full text-[#000000] ml-[4px] text-[12px] font-inter font-medium px-[10px] py-[6px] rounded-[6px]"
+          >
+            Add Manager
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="flex gap-[10px] flex-col lg:flex-row items-center w-full pt-4">
+      <div
+        class="px-4 gap-[10px] h-fit flex-[0.9] w-full font-inter grid grid-cols-1 lg:grid-cols-2"
       >
         <div
           class="bg-[#F6F6F6] h-fit border-[0.75px] border-solid text-black border-[#36363633] rounded-[16px]"
@@ -332,7 +376,7 @@
         </div>
       </div>
       <div
-        class="bg-[#F6F6F6] h-fit mr-[16px] border-[0.75px] rounded-[1rem] border-solid border-[#36363633] mt-[16px]"
+        class="bg-[#F6F6F6] flex-[0.3] w-[fit] h-full mr-[16px] border-[0.75px] rounded-[1rem] border-solid border-[#36363633]"
       >
         <div
           class="text-[black] bg-[#FFFFFF] rounded-[16px] border-[0.75px] border-solid border-[#36363633] p-[16px]"
@@ -384,8 +428,14 @@
               </p>
             </div>
           </div>
-          <div class="mt-[45px] w-[200px] h-[200px]">
-            <chart :data="chartData" :options="chartOptions" />
+          <div class="mt-[45px]">
+            <chart
+              :data="chartData"
+              :width="180"
+              :height="180"
+              :options="chartOptions"
+              :plugins="plugins"
+            />
           </div>
 
           <div>
@@ -486,7 +536,31 @@
           />
         </div>
       </div>
-      asas
+      <!-- empty state -->
+      <div>
+        <div
+          class="border-solid mx-auto mt-[71px] p-3 border-[0.75px] rounded-[8px] w-fit border-[#36363633]"
+        >
+          <DollarCircleOutlined style="color: #1c274c" />
+        </div>
+        <div class="flex flex-col items-center">
+          <p
+            class="text-[#000000] mt-4 font-inter text-[14px] font-medium leading-[100%] text-center"
+          >
+            You have no pending payments
+          </p>
+          <p
+            class="text-[#25262899] text-[12px] text-center font-inter font-medium leading-[100%]"
+          >
+            There’s nothing to view, click the button below to add new tenants
+          </p>
+          <button
+            class="bg-[#000130] text-[#FFFFFF] font-inter font-medium px-4 py-4 rounded-[8px]"
+          >
+            + Add Tenant
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -540,25 +614,61 @@ export default {
       ongoingRequests: [],
       pendingRequests: [],
       chartData: {
-        labels: ["Collected", "Pending"],
+        labels: ["Income", "Pending"],
         datasets: [
           {
-            backgroundColor: ["#66DCA0", "#D9625A"],
             data: [63, 37],
+            backgroundColor: ["#26C779", "#D9625A"],
+            borderWidth: 0,
+            borderRadius: 6,
+            cutout: "75%",
+            spacing: 4,
           },
         ],
       },
+
       chartOptions: {
         responsive: true,
+        maintainAspectRatio: false,
+        cutout: "75%",
         plugins: {
           legend: {
-            position: "bottom",
-          },
-          title: {
             display: false,
+          },
+          tooltip: {
+            enabled: false,
           },
         },
       },
+
+      // ✅ Custom Plugin defined separately
+      plugins: [
+        {
+          id: "centerText",
+          beforeDraw(chart) {
+            const { ctx, width, height } = chart;
+            const text1 = "Total Revenue";
+            // const text2 = "₦1.2M";
+
+            ctx.save();
+
+            // Text 1
+            ctx.font = "bold 14px sans-serif";
+            ctx.fillStyle = "#555";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(text1, width / 2, height / 2 - 10);
+
+            // Text 2
+            ctx.font = "bold 18px sans-serif";
+            ctx.fillStyle = "#111";
+            // ctx.fillText(text2, width / 2, height / 2 + 12);
+
+            ctx.restore();
+          },
+        },
+      ],
+
       headers: ["#", "Name", "Status", "Property", "Unit Number", "Due Date"],
       tableData: [
         {
