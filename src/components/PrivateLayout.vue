@@ -11,7 +11,7 @@
           v-else
           class="flex flex-col items-center justify-center h-full text-center px-4"
         >
-          <img src="../assets/verification-required.svg" />
+          <!-- <img src="../assets/verification-required.svg" /> -->
           <h2 class="text-2xl font-semibold text-white mt-6">
             Verification Required
           </h2>

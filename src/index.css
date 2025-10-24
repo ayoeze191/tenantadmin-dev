@@ -30,7 +30,7 @@
 
   @font-face {
     font-family: 'SF Compact Text';
-    src: url('./assets/fonts/SFCompactText-Bold.otf') format('opentype');
+    /* src: url('./assets/fonts/SFCompactText-Bold.otf') format('opentype'); */
     font-weight: 700;
     font-style: normal;
   }
