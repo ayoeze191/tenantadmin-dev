@@ -39,3 +39,13 @@ export const MyTenants = async (landlordId) => {
     console.log(error);
   }
 };
+
+export const addPropertyManager = async (payload) => {
+  let response;
+  try {
+    response = await postApi(`AdminUser/AddPropertyManager`, payload);
+  } catch (err) {
+    console.log(err);
+  }
+  return response.data;
+};

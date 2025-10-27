@@ -1,49 +1,53 @@
 <template>
   <div>
-    <div class="mt-4 px-4">
-      <div
-        class="bg-[#2E544E] flex justify-between w-full px-[14px] py-[12.5px] rounded-[8px]"
-      >
+    <transition name="fade">
+      <div class="mt-4 px-4" v-if="showAds == true">
         <div
-          class="flex gap-2 items-center text-white font-inter text-[14px] font-medium"
+          class="bg-[#2E544E] flex justify-between w-full px-[14px] py-[12.5px] rounded-[8px]"
         >
-          <span
-            ><svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+          <div
+            class="flex gap-2 items-center text-white font-inter text-[14px] font-medium"
+          >
+            <span
+              ><svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.75 8.5V4.75M7.75 1C11.4779 1 14.5 4.02208 14.5 7.75C14.5 11.4779 11.4779 14.5 7.75 14.5C4.02208 14.5 1 11.4779 1 7.75C1 4.02208 4.02208 1 7.75 1ZM7.71265 10.75V10.675L7.78735 10.6749V10.75H7.71265Z"
+                  stroke="white"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+            <span
+              >Enhance tenant satisfaction with a dedicated property manager!
+              Efficient lease tracking and prompt maintenance requests.</span
             >
-              <path
-                d="M7.75 8.5V4.75M7.75 1C11.4779 1 14.5 4.02208 14.5 7.75C14.5 11.4779 11.4779 14.5 7.75 14.5C4.02208 14.5 1 11.4779 1 7.75C1 4.02208 4.02208 1 7.75 1ZM7.71265 10.75V10.675L7.78735 10.6749V10.75H7.71265Z"
-                stroke="white"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </span>
-          <span
-            >Enhance tenant satisfaction with a dedicated property manager!
-            Efficient lease tracking and prompt maintenance requests.</span
-          >
-        </div>
+          </div>
 
-        <div class="h-full">
-          <button
-            class="bg-[#FFFFFF33] h-full text-[#FFFFFF] text-[12px] font-inter font-medium px-[10px] py-[6px] rounded-[6px]"
-          >
-            Skip
-          </button>
-          <button
-            class="bg-[#FFFFFF] h-full text-[#000000] ml-[4px] text-[12px] font-inter font-medium px-[10px] py-[6px] rounded-[6px]"
-          >
-            Add Manager
-          </button>
+          <div class="h-full">
+            <button
+              @click="showAds = false"
+              class="bg-[#FFFFFF33] h-full text-[#FFFFFF] text-[12px] font-inter font-medium px-[10px] py-[6px] rounded-[6px]"
+            >
+              Skip
+            </button>
+            <button
+              @click="isAddManagerModalOpen = true"
+              class="bg-[#FFFFFF] h-full text-[#000000] ml-[4px] text-[12px] font-inter font-medium px-[10px] py-[6px] rounded-[6px]"
+            >
+              Add Manager
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </transition>
     <div class="flex gap-[10px] flex-col lg:flex-row items-center w-full pt-4">
       <div
         class="px-4 gap-[10px] h-fit flex-[0.9] w-full font-inter grid grid-cols-1 lg:grid-cols-2"
@@ -537,7 +541,7 @@
         </div>
       </div>
       <!-- empty state -->
-      <div>
+      <div v-if="tenants.length === 0" class="flex flex-col items-center p-4">
         <div
           class="border-solid mx-auto mt-[71px] p-3 border-[0.75px] rounded-[8px] w-fit border-[#36363633]"
         >
@@ -556,12 +560,142 @@
           </p>
           <button
             class="bg-[#000130] text-[#FFFFFF] font-inter font-medium px-4 py-4 rounded-[8px]"
+            @click="isAddTenantModalOpen = true"
           >
             + Add Tenant
           </button>
         </div>
       </div>
+      <div class="" v-else>
+        <dashboard-table-component :headers="headers" />
+      </div>
     </div>
+
+    <a-modal
+      v-model:visible="isAddTenantModalOpen"
+      :footer="null"
+      centered
+      :closable="false"
+    >
+      <template #title>
+        <div class="flex items-center justify-between">
+          <span class="font-redwing text-[24px] leading-[100%]"
+            >Invite Tenant</span
+          >
+          <span></span>
+          <button @click="() => (isAddTenantModalOpen = false)">
+            <CloseOutlined />
+          </button>
+        </div>
+      </template>
+      <div class="flex flex-col gap-4 mt-6">
+        <div>
+          <div
+            class="form-labels font-inter font-medium text-[14px] leading-[100%] mb-3"
+          >
+            Tenant First Name
+          </div>
+          <a-input
+            placeholder="Enter Name"
+            size="large"
+            v-model="tenantsPayload.email"
+          />
+        </div>
+        <div>
+          <div
+            class="form-labels font-inter font-medium text-sm leading-[100%] mb-3"
+          >
+            Tenant Email
+          </div>
+          <!-- v-model:value="form.name" -->
+          <a-input
+            placeholder="Enter Message"
+            size="large"
+            v-model="tenantsPayload.email"
+          />
+        </div>
+
+        <button
+          class="w-full bg-[#000130] py-2 leading-[100%] text-white font-inter font-medium rounded-lg"
+        >
+          Send Invite
+        </button>
+      </div>
+    </a-modal>
+
+    <a-modal
+      v-model:visible="isAddManagerModalOpen"
+      :footer="null"
+      centered
+      :closable="false"
+    >
+      <template #title>
+        <div class="flex items-center justify-between">
+          <span class="font-redwing text-[24px] leading-[100%]"></span>
+          <span></span>
+          <button
+            @click="() => (isAddManagerModalOpen = false)"
+            class="bg-[#FFFFFF] rouunded-[100px] p-2"
+          >
+            <CloseOutlined />
+          </button>
+        </div>
+      </template>
+      <div>
+        <p class="text-[#000000] m-0 p-0 font-redwing text-[24px]">
+          Add Property Manager
+        </p>
+        <p
+          class="text-[#000000B2] m-0 p-0 mt-2 text-[14px] font-inter font-regular leading-[20px]"
+        >
+          Do you work with a Property Manager? Add them now for easier tenancy
+          management.
+        </p>
+      </div>
+      <div class="flex flex-col gap-4 mt-4">
+        <div>
+          <a-input
+            placeholder="Enter First Name"
+            size="large"
+            v-model:value="managerPayloads.firstname"
+          />
+        </div>
+        <div>
+          <a-input
+            placeholder="Enter Last Name"
+            size="large"
+            v-model:value="managerPayloads.lastname"
+          />
+        </div>
+        <div class="flex-1 h-[43px]">
+          <a-input
+            placeholder="Enter Email"
+            class="h-full"
+            size="large"
+            v-model:value="managerPayloads.emailAddress"
+          />
+        </div>
+        <div class="flex items-center p-0 relative">
+          <div class="flex-1 h-[43px]">
+            <a-input
+              placeholder="Enter password"
+              class="h-full"
+              size="large"
+              type="password"
+              v-model:value="managerPayloads.password"
+            />
+          </div>
+
+          <button
+            type="button"
+            @click="handleAddPropertyManager"
+            class="w-fit m-0 px-3 bg-[#000130] h-[43px] leading-[100%] ml-[10px] text-[14px] text-white font-inter font-medium rounded-lg"
+          >
+            Add Manager
+          </button>
+        </div>
+      </div>
+    </a-modal>
   </div>
 </template>
 
@@ -572,12 +706,15 @@ import IconRightArrow from "../../components/icons/IconRightArrow.vue";
 import IconUpArrow from "../../components/icons/IconUpArrow.vue";
 import IconDownArrow from "../../components/icons/IconDownArrow.vue";
 import Table from "@/components/Table.vue";
+import dashboardTable from "@/components/icons/dashboardTable.vue";
 import { h } from "vue";
 import { LoadingOutlined } from "@ant-design/icons-vue";
 import { FetchServiceRequests } from "@/api/serviceRequest";
 import { AccomodationApplications, MyTenants } from "@/api/dashboard";
 import { useUserStore } from "@/store";
-
+import { AddTenants } from "@/api/properties";
+import { addPropertyManager } from "@/api/dashboard";
+import { useToast } from "vue-toast-notification";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default {
@@ -586,10 +723,49 @@ export default {
     "up-arrow-icon": IconUpArrow,
     "down-arrow-icon": IconDownArrow,
     "table-component": Table,
+    "dashboard-table-component": dashboardTable,
     chart: Pie,
   },
   data() {
     return {
+      tenants: [
+        // {
+        //   name: "Steph Sobim",
+        //   status: "Due",
+        //   property: "Thistlebrook Lane, Mistwood, Ontario, K8N 3P5",
+        //   unit: "12",
+        //   dueDate: "22-09-2025",
+        // },
+        // {
+        //   name: "John Doe",
+        //   status: "Pending",
+        //   property:
+        //     "Harborview Drive, Westport Falls, British Columbia, V6Z 1R2",
+        //   unit: "98",
+        //   dueDate: "22-09-2025",
+        // },
+        // {
+        //   name: "Francesa Dublin",
+        //   status: "Overdue",
+        //   property: "Snowberry Crescent, Pinefield, Nova Scotia, B3H 2M9",
+        //   unit: "77",
+        //   dueDate: "22-09-2025",
+        // },
+      ],
+      tenantsPayload: {},
+      managerPayloads: {
+        emailAddress: "",
+        firstname: "",
+        lastname: "",
+        phoneNumber: "",
+        password: "",
+        roleId: 0,
+        propertyRefNo: 0,
+      },
+      toast: useToast(),
+      isAddTenantModalOpen: false,
+      isAddManagerModalOpen: false,
+      showAds: true,
       store: useUserStore(),
       progress: 50,
       AccomodationApplicationsCount: {
@@ -640,7 +816,6 @@ export default {
           },
         },
       },
-
       // ✅ Custom Plugin defined separately
       plugins: [
         {
@@ -649,16 +824,13 @@ export default {
             const { ctx, width, height } = chart;
             const text1 = "Total Revenue";
             // const text2 = "₦1.2M";
-
             ctx.save();
-
             // Text 1
             ctx.font = "bold 14px sans-serif";
             ctx.fillStyle = "#555";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             ctx.fillText(text1, width / 2, height / 2 - 10);
-
             // Text 2
             ctx.font = "bold 18px sans-serif";
             ctx.fillStyle = "#111";
@@ -669,7 +841,7 @@ export default {
         },
       ],
 
-      headers: ["#", "Name", "Status", "Property", "Unit Number", "Due Date"],
+      headers: ["S/N", "Name", "Status", "Property", "Unit Number", "Due Date"],
       tableData: [
         {
           id: 1,
@@ -723,7 +895,22 @@ export default {
         } else handleError(response);
       });
     },
+    async handleAddTenant() {
+      await AddTenants({});
+    },
+    handleAddPropertyManager() {
+      const payloadCopy = { ...this.managerPayloads }; // clone to prevent mutation
 
+      addPropertyManager(payloadCopy).then((response) => {
+        console.log("After sending:", this.managerPayloads);
+        if (response.responseCode === "00") {
+          this.isAddManagerModalOpen = false;
+          this.toast.success("Property Manager added successfully");
+        } else {
+          console.log(response);
+        }
+      });
+    },
     handleAccomodationApplication() {
       AccomodationApplications(this.store.userProfile.referenceID)
         .then((response) => {
@@ -750,7 +937,7 @@ export default {
 // }
 </script>
 
-<style>
+<style scoped>
 .shell {
   height: 10px;
   width: 292px;

@@ -1352,7 +1352,7 @@ const createProperties = async () => {
     },
   };
   console.log(payload, "payload");
-  const response = await AddTenants(payload);
+  const response = await AddTenants(payload)
   console.log(response.result);
   if (response.result.responseCode == "00") {
     toast.success("Successfully created");
