@@ -18,6 +18,7 @@
       :data-source="filteredLogs"
       :loading="loading"
       :pagination="pagination"
+      @change="handleTableChange"
       row-key="id"
       bordered
     >
@@ -51,23 +52,29 @@ import { audit_mock } from "./data";
 import { auditsLogs } from "@/api/audits";
 
 const logs = ref([]);
-const loading = ref(false);
 const search = ref("");
 const dateRange = ref([]);
-const pagination = ref({ current: 1, pageSize: 10 });
+const loading = ref(false);
+const pagination = ref({ current: 1, pageSize: 10 , total: 0, showSizeChanger: false,});
 
 const columns = [
   { title: "User", dataIndex: "userId" },
+  { title: "Date", dataIndex: "createDate" },
   { title: "function", dataIndex: "function" },
   { title: "Description", dataIndex: "description" },
-  { title: "Date", dataIndex: "createDate" },
 ];
+
+const handleTableChange = async (paginationInfo) => {
+  pagination.value.current = paginationInfo.current
+  fetchLogs()
+}
 
 const fetchLogs = async () => {
   try {
-    loading.value = false;
-    auditsLogs().then((data) => {
+    loading.value = true;
+    auditsLogs(pagination.value.current).then((data) => {
       logs.value = data.items;
+      pagination.value.total = data.totalItemCount
     });
   } catch (err) {
     message.error("Failed to fetch logs");
