@@ -41,7 +41,7 @@
           </a-select>
         </a-form-item>
         <a
-          href="/template/10ants Apartmentsetuptemplate.xlsx"
+          href="/template/10antsApartmentbulkuploadtemplate.xlsx"
           class="underline text-[#404164] font-[500] leading-[100%] font-sf"
           >Download the Template</a
         >

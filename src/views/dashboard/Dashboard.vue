@@ -611,7 +611,7 @@
           <a-input
             placeholder="Enter Message"
             size="large"
-            v-model="tenantsPayload.email"
+            v-model="tenantsPayload"
           />
         </div>
 
@@ -752,7 +752,24 @@ export default {
         //   dueDate: "22-09-2025",
         // },
       ],
-      tenantsPayload: {},
+      tenantsPayload: {
+        emailAddress: "string",
+        firstname: "string",
+        lastname: "string",
+        dob: "2025-10-27T09:15:40.301Z",
+        phoneNumber: "string",
+        accountType: 0,
+        accountRefNumber: "string",
+        password: "string",
+        photo: "string",
+        contractRequest: {
+          unitId: 0,
+          isActive: true,
+          startDate: "2025-10-27T09:15:40.301Z",
+          endDate: "2025-10-27T09:15:40.301Z",
+          rentRate: 0,
+        },
+      },
       managerPayloads: {
         emailAddress: "",
         firstname: "",
@@ -895,8 +912,15 @@ export default {
         } else handleError(response);
       });
     },
-    async handleAddTenant() {
-      await AddTenants({});
+    handleAddTenant() {
+      AddTenants(this.tenantsPayload).then((response) => {
+        if (response.responseCode === "00") {
+          this.isAddTenantModalOpen = false;
+          this.toast.success("Tenant added successfully");
+        } else {
+          console.log(response);
+        }
+      });
     },
     handleAddPropertyManager() {
       const payloadCopy = { ...this.managerPayloads }; // clone to prevent mutation
