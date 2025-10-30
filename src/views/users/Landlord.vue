@@ -124,7 +124,7 @@
                     <a-menu-item key="0">
                       <li
                         class="font-medium text-[#808097] cursor-pointer text-base leading-5 py-[16px] px-[8px]"
-                        @click="VerifyLandlord(landlord)"
+                        @click="handleVerifyLandlord(landlord)"
                       >
                         Verify Landlord
                       </li>
@@ -322,7 +322,7 @@ export default {
     },
     handleVerifyLandlord(landlord) {
       const payload = {
-        userId: landlord.accountId,
+        AdminUserID: landlord.accountId,
       };
       VerifyLandlord(payload).then((response) => {
         if (response.result.responseCode == "00") {

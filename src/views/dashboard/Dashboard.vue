@@ -1,15 +1,15 @@
 <template>
-  <div>
+  <div class="flex-1">
     <transition name="fade">
-      <div class="mt-4 px-4" v-if="showAds == true">
+      <div class="px-4" v-if="showAds == true">
         <div
           class="bg-[#2E544E] flex justify-between w-full px-[14px] py-[12.5px] rounded-[8px]"
         >
           <div
             class="flex gap-2 items-center text-white font-inter text-[14px] font-medium"
           >
-            <span
-              ><svg
+            <span>
+              <svg
                 width="16"
                 height="16"
                 viewBox="0 0 16 16"
@@ -48,441 +48,449 @@
         </div>
       </div>
     </transition>
-    <div class="flex gap-[10px] flex-col lg:flex-row items-center w-full pt-4">
+    <div class="pt-4 h-full">
       <div
-        class="px-4 gap-[10px] h-fit flex-[0.9] w-full font-inter grid grid-cols-1 lg:grid-cols-2"
+        class="flex p-0 m-0 gap-[10px] flex-col lg:flex-row items-stretch w-full h-full"
       >
         <div
-          class="bg-[#F6F6F6] h-fit border-[0.75px] border-solid text-black border-[#36363633] rounded-[16px]"
+          class="px-4 gap-[10px] h-full flex-[0.9] w-full font-inter grid grid-cols-1 lg:grid-cols-2"
         >
-          <!-- 1 -->
-
           <div
-            class="rounded-[16px] pb-[10px] px-[14px] bg-white border-b-[0.75px] border-solid border-[#36363633]"
+            class="bg-[#F6F6F6] h-fit border-[0.75px] border-solid text-black border-[#36363633] rounded-[16px]"
           >
+            <!-- 1 -->
+
             <div
-              class="flex items-center justify-between text-black border-[#36363633] border-b-[0.75px] border-solid"
+              class="rounded-[16px] pb-[10px] px-[14px] bg-white border-b-[0.75px] border-solid border-[#36363633]"
             >
               <div
-                class="flex items-center py-[10px] border-b-solid border-b-[#36363633] gap-3"
+                class="flex items-center justify-between text-black border-[#36363633] border-b-[0.75px] border-solid"
               >
                 <div
-                  class="p-[12px] rounded-[8px] border-[#36363633] border-[0.75px] border-solid"
+                  class="flex items-center py-[10px] border-b-solid border-b-[#36363633] gap-3"
                 >
-                  <AppstoreOutlined />
-                </div>
-                <div class="flex flex-col gap-1 ml-[10px]">
-                  <span
-                    class="text-[#000000] font-medium text-[14px] font-inter leading-[100%]"
-                    >Application</span
+                  <div
+                    class="p-[12px] rounded-[8px] border-[#36363633] border-[0.75px] border-solid"
                   >
-                  <span
-                    class="text-[#25262899] leading-[100%] text-[12px] font-inter font-medium"
-                    >Tenancy Application Record</span
-                  >
+                    <AppstoreOutlined />
+                  </div>
+                  <div class="flex flex-col gap-1 ml-[10px]">
+                    <span
+                      class="text-[#000000] font-medium text-[14px] font-inter leading-[100%]"
+                      >Application</span
+                    >
+                    <span
+                      class="text-[#25262899] leading-[100%] text-[12px] font-inter font-medium"
+                      >Tenancy Application Record</span
+                    >
+                  </div>
                 </div>
+                <div class="bg-[#F2F2F2] rounded-[6px] px-2 py-1">0.0%</div>
               </div>
-              <div class="bg-[#F2F2F2] rounded-[6px] px-2 py-1">0.0%</div>
-            </div>
-            <div class="flex justify-between m-0 py-[14px]">
-              <span
-                class="text-[#000000B2] m-0 p-0 text-[14px] font-inter leading-[100%]"
-                >Total Applications</span
-              >
-              <span>00</span>
-            </div>
-            <div class="flex gap-[2px] m-0 mb-[10px] p-0">
-              <div
-                class="flex rounded-[4px] bg-[#67ABFF] h-[13px] w-full"
-              ></div>
-              <div
-                class="flex rounded-[4px] bg-[#FB8814] h-[13px] w-full"
-              ></div>
-              <div
-                class="flex rounded-[4px] bg-[#0FC36C] h-[13px] w-full"
-              ></div>
-            </div>
-
-            <div class="flex flex-col gap-2.5">
-              <div class="flex justify-between w-full">
-                <span class="flex gap-[8px] items-center">
-                  <span
-                    class="w-[13px] rounded-[4px] h-[13px] bg-[#67ABFF]"
-                  ></span>
-                  Ongoing</span
-                ><span> {{ AccomodationApplicationsCount.ongoing || 0 }} </span>
-              </div>
-
-              <div class="flex justify-between w-full">
-                <span class="flex gap-[8px] items-center">
-                  <span
-                    class="w-[13px] rounded-[4px] h-[13px] bg-[#FA922A]"
-                  ></span>
-                  Under Review</span
-                ><span> 00 </span>
-              </div>
-              <div class="flex justify-between w-full">
-                <span class="flex gap-[8px] items-center">
-                  <span
-                    class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
-                  ></span>
-                  Approved</span
-                ><span>
-                  {{ AccomodationApplicationsCount.completed || 0 }}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex justify-between items-center px-[10px] py-[14px]">
-            <span>View All Details</span>
-            <span
-              class="text-[#000000] bg-[#FFFFFF] rounded-[6px] px-[10px] py-[6px] border-[0.75px] border-solid border-[#36363633]"
-            >
-              View
-            </span>
-          </div>
-        </div>
-        <div
-          class="bg-[#F6F6F6] h-fit w-full border-[0.75px] border-solid text-black border-[#36363633] rounded-[16px]"
-        >
-          <!-- 1 -->
-
-          <div
-            class="rounded-[16px] pb-[10px] px-[14px] bg-white border-b-[0.75px] border-solid border-[#36363633]"
-          >
-            <div
-              class="flex items-center justify-between text-black border-[#36363633] border-b-[0.75px] border-solid"
-            >
-              <div
-                class="flex items-center py-[10px] border-b-solid border-b-[#36363633] gap-3"
-              >
-                <div
-                  class="p-[12px] rounded-[8px] border-[#36363633] border-[0.75px] border-solid"
-                >
-                  <AppstoreOutlined />
-                </div>
-                <div class="flex flex-col gap-1 ml-[10px]">
-                  <span
-                    class="text-[#000000] font-medium text-[14px] font-inter leading-[100%]"
-                    >Service Request</span
-                  >
-                  <span
-                    class="text-[#25262899] leading-[100%] text-[12px] font-inter font-medium"
-                    >Service Request Record</span
-                  >
-                </div>
-              </div>
-              <div class="bg-[#F2F2F2] rounded-[6px] px-2 py-1">0.0%</div>
-            </div>
-            <div class="flex justify-between py-[14px]">
-              <span
-                class="text-[#000000B2] text-[14px] font-inter leading-[100%]"
-                >Total Service Request</span
-              >
-              <span>00</span>
-            </div>
-            <div class="flex gap-[2px] m-0 mb-[10px]">
-              <div
-                class="flex rounded-[4px] bg-[#CF67FF] h-[13px] w-full"
-              ></div>
-              <div
-                class="flex rounded-[4px] bg-[#312AFA] h-[13px] w-full"
-              ></div>
-              <div
-                class="flex rounded-[4px] bg-[#0FC36C] h-[13px] w-full"
-              ></div>
-            </div>
-
-            <div class="flex flex-col gap-2.5">
-              <div class="flex justify-between w-full">
-                <span class="flex gap-[8px] items-center">
-                  <span
-                    class="w-[13px] rounded-[4px] h-[13px] bg-[#67ABFF]"
-                  ></span>
-                  Ongoing</span
-                ><span> 0 </span>
-              </div>
-
-              <div class="flex justify-between w-full">
-                <span class="flex gap-[8px] items-center">
-                  <span
-                    class="w-[13px] rounded-[4px] h-[13px] bg-[#FA922A]"
-                  ></span>
-                  Under Review</span
-                ><span> 0 </span>
-              </div>
-              <div class="flex justify-between w-full">
-                <span class="flex gap-[8px] items-center">
-                  <span
-                    class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
-                  ></span>
-                  Approved</span
-                ><span> 0 </span>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex justify-between items-center px-[10px] py-[14px]">
-            <span>View All Details</span>
-            <span
-              class="text-[#000000] bg-[#FFFFFF] rounded-[6px] px-[10px] py-[6px] border-[0.75px] border-solid border-[#36363633]"
-            >
-              View
-            </span>
-          </div>
-        </div>
-        <div
-          class="bg-[#F6F6F6] h-fit w-full border-[0.75px] border-solid text-black border-[#36363633] rounded-[16px]"
-        >
-          <!-- 1 -->
-
-          <div
-            class="rounded-[16px] pb-[10px] px-[14px] bg-white border-b-[0.75px] border-solid border-[#36363633]"
-          >
-            <div
-              class="flex items-center justify-between text-black border-[#36363633] border-b-[0.75px] border-solid"
-            >
-              <div
-                class="flex items-center py-[10px] border-b-solid border-b-[#36363633] gap-3"
-              >
-                <div
-                  class="p-[12px] rounded-[8px] border-[#36363633] border-[0.75px] border-solid"
-                >
-                  <AppstoreOutlined />
-                </div>
-                <div class="flex flex-col gap-1 ml-[10px]">
-                  <span
-                    class="text-[#000000] font-medium text-[14px] font-inter leading-[100%]"
-                    >My Tenants</span
-                  >
-                </div>
-              </div>
-              <div class="px-2 py-1 text-[18px] font-semibold">0</div>
-            </div>
-            <div class="flex justify-between py-[14px]">
-              <span
-                class="text-[#000000B2] text-[14px] font-inter leading-[100%]"
-                >Target</span
-              >
-              <span>00</span>
-            </div>
-            <div class="flex gap-[2px] m-0 mb-[10px]">
-              <div
-                class="flex rounded-[4px] bg-[#E4E5E5] h-[13px] w-full"
-              ></div>
-            </div>
-
-            <div class="flex flex-col gap-2.5">
-              <div class="flex justify-between w-full">
-                <span class="flex gap-[8px] items-center">
-                  <span
-                    class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
-                  ></span>
-                  Complete</span
-                ><span> 0 </span>
-              </div>
-
-              <div class="flex justify-between w-full">
-                <span class="flex gap-[8px] items-center">
-                  <span
-                    class="w-[13px] rounded-[4px] h-[13px] bg-[#E5E6E6]"
-                  ></span>
-                  To Complete</span
-                ><span> 0 </span>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex justify-between items-center px-[10px] py-[14px]">
-            <span>View All Details</span>
-            <span
-              class="text-[#000000] bg-[#FFFFFF] rounded-[6px] px-[10px] py-[6px] border-[0.75px] border-solid border-[#36363633]"
-            >
-              View
-            </span>
-          </div>
-        </div>
-        <div
-          class="bg-[#F6F6F6] h-fit w-full border-[0.75px] border-solid text-black border-[#36363633] rounded-[16px]"
-        >
-          <!-- 1 -->
-
-          <div
-            class="rounded-[16px] pb-[10px] px-[14px] bg-white border-b-[0.75px] border-solid border-[#36363633]"
-          >
-            <div
-              class="flex items-center justify-between text-black border-[#36363633] border-b-[0.75px] border-solid"
-            >
-              <div
-                class="flex items-center py-[10px] border-b-solid border-b-[#36363633] gap-3"
-              >
-                <div
-                  class="p-[12px] rounded-[8px] border-[#36363633] border-[0.75px] border-solid"
-                >
-                  <AppstoreOutlined />
-                </div>
-                <div class="flex flex-col gap-1 ml-[10px]">
-                  <span
-                    class="text-[#000000] font-medium text-[14px] font-inter leading-[100%]"
-                    >Maintenance Fee</span
-                  >
-                  <span
-                    class="text-[#25262899] bg-[#0000000D] px-[6px] mt-[3px] py-[4px] leading-[100%] text-[12px] font-inter font-medium"
-                    >Less cost this week</span
-                  >
-                </div>
-              </div>
-              <div class="bg-[#F2F2F2] rounded-[6px] px-2 py-1">0.0%</div>
-            </div>
-            <div class="flex justify-between py-[14px]">
-              <span
-                class="text-[#000000B2] text-[14px] font-inter leading-[100%]"
-                >Total Applications</span
-              >
-              <span>00</span>
-            </div>
-            <div class="flex gap-[2px] m-0 mb-[10px]">
-              <div
-                class="flex rounded-[4px] bg-[#E4E5E5] h-[13px] w-full"
-              ></div>
-            </div>
-
-            <div class="flex flex-col gap-2.5">
-              <div class="flex justify-between w-full">
-                <span class="flex gap-[8px] items-center">
-                  <span
-                    class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
-                  ></span>
-                  Paid</span
-                ><span> 0 </span>
-              </div>
-
-              <div class="flex justify-between w-full">
-                <span class="flex gap-[8px] items-center">
-                  <span
-                    class="w-[13px] rounded-[4px] h-[13px] bg-[#E5E6E6]"
-                  ></span>
-                  Owing</span
-                ><span> 0 </span>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex justify-between items-center px-[10px] py-[14px]">
-            <span>View All Details</span>
-            <span
-              class="text-[#000000] bg-[#FFFFFF] rounded-[6px] px-[10px] py-[6px] border-[0.75px] border-solid border-[#36363633]"
-            >
-              View
-            </span>
-          </div>
-        </div>
-      </div>
-      <div
-        class="bg-[#F6F6F6] flex-[0.3] w-[fit] h-full mr-[16px] border-[0.75px] rounded-[1rem] border-solid border-[#36363633]"
-      >
-        <div
-          class="text-[black] bg-[#FFFFFF] rounded-[16px] border-[0.75px] border-solid border-[#36363633] p-[16px]"
-        >
-          <div class="flex items-center gap-2.5">
-            <div
-              class="border-[0.75px] border-solid border-[#36363633] rounded-[8px] p-2.5 w-fit"
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M10.0013 18.3307C14.6037 18.3307 18.3346 14.5998 18.3346 9.9974C18.3346 5.39502 14.6037 1.66406 10.0013 1.66406C5.39893 1.66406 1.66797 5.39502 1.66797 9.9974C1.66797 14.5998 5.39893 18.3307 10.0013 18.3307Z"
-                  stroke="#1C274C"
-                  stroke-width="1.5"
-                />
-                <path
-                  d="M10 14.1641V14.5807V14.9974"
-                  stroke="#1C274C"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                />
-                <path
-                  d="M10 5V5.41667V5.83333"
-                  stroke="#1C274C"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                />
-                <path
-                  d="M12.5 7.91927C12.5 6.76868 11.3807 5.83594 10 5.83594C8.61925 5.83594 7.5 6.76868 7.5 7.91927C7.5 9.06985 8.61925 10.0026 10 10.0026C11.3807 10.0026 12.5 10.9354 12.5 12.0859C12.5 13.2365 11.3807 14.1693 10 14.1693C8.61925 14.1693 7.5 13.2365 7.5 12.0859"
-                  stroke="#1C274C"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                />
-              </svg>
-            </div>
-            <div class="">
-              <p class="m-0 p-0 text-[14px] font-medium leading-[100%]">
-                Rent Inflow
-              </p>
-              <p
-                class="m-0 p-0 text-[#25262899] mt-[4px] text-[12px] font-medium leading-[100%]"
-              >
-                Income and Pending Rent Statistics
-              </p>
-            </div>
-          </div>
-          <div class="mt-[45px]">
-            <chart
-              :data="chartData"
-              :width="180"
-              :height="180"
-              :options="chartOptions"
-              :plugins="plugins"
-            />
-          </div>
-
-          <div>
-            <div
-              class="flex justify-between mt-[45px] items-center pb-[1rem] border-b-[0.7px] border-solid border-[#D3D3D3B2]"
-            >
-              <span
-                class="text-[#000000B2] text-[14px] leading-[100%] font-inter"
-                >Expected Rent</span
-              ><span class="text-[18px] font-bold font-inter">C$00</span>
-            </div>
-            <div class="flex justify-between w-full mt-[16px]">
-              <span class="flex gap-[8px] items-center">
+              <div class="flex justify-between m-0 py-[14px]">
                 <span
-                  class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
-                ></span>
-                Incoming</span
-              ><span> C$00 </span>
+                  class="text-[#000000B2] m-0 p-0 text-[14px] font-inter leading-[100%]"
+                  >Total Applications</span
+                >
+                <span>00</span>
+              </div>
+              <div class="flex gap-[2px] m-0 mb-[10px] p-0">
+                <div
+                  class="flex rounded-[4px] bg-[#67ABFF] h-[13px] w-full"
+                ></div>
+                <div
+                  class="flex rounded-[4px] bg-[#FB8814] h-[13px] w-full"
+                ></div>
+                <div
+                  class="flex rounded-[4px] bg-[#0FC36C] h-[13px] w-full"
+                ></div>
+              </div>
+
+              <div class="flex flex-col gap-2.5">
+                <div class="flex justify-between w-full">
+                  <span class="flex gap-[8px] items-center">
+                    <span
+                      class="w-[13px] rounded-[4px] h-[13px] bg-[#67ABFF]"
+                    ></span>
+                    Ongoing</span
+                  ><span>
+                    {{ AccomodationApplicationsCount.ongoing || 0 }}
+                  </span>
+                </div>
+
+                <div class="flex justify-between w-full">
+                  <span class="flex gap-[8px] items-center">
+                    <span
+                      class="w-[13px] rounded-[4px] h-[13px] bg-[#FA922A]"
+                    ></span>
+                    Under Review</span
+                  ><span> 00 </span>
+                </div>
+                <div class="flex justify-between w-full">
+                  <span class="flex gap-[8px] items-center">
+                    <span
+                      class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
+                    ></span>
+                    Approved</span
+                  ><span>
+                    {{ AccomodationApplicationsCount.completed || 0 }}
+                  </span>
+                </div>
+              </div>
             </div>
-            <div class="flex justify-between w-full mt-[16px]">
-              <span class="flex gap-[8px] items-center">
+
+            <div class="flex justify-between items-center px-[10px] py-[14px]">
+              <span>View All Details</span>
+              <span
+                class="text-[#000000] bg-[#FFFFFF] rounded-[6px] px-[10px] py-[6px] border-[0.75px] border-solid border-[#36363633]"
+              >
+                View
+              </span>
+            </div>
+          </div>
+          <div
+            class="bg-[#F6F6F6] h-fit w-full border-[0.75px] border-solid text-black border-[#36363633] rounded-[16px]"
+          >
+            <!-- 1 -->
+
+            <div
+              class="rounded-[16px] pb-[10px] px-[14px] bg-white border-b-[0.75px] border-solid border-[#36363633]"
+            >
+              <div
+                class="flex items-center justify-between text-black border-[#36363633] border-b-[0.75px] border-solid"
+              >
+                <div
+                  class="flex items-center py-[10px] border-b-solid border-b-[#36363633] gap-3"
+                >
+                  <div
+                    class="p-[12px] rounded-[8px] border-[#36363633] border-[0.75px] border-solid"
+                  >
+                    <AppstoreOutlined />
+                  </div>
+                  <div class="flex flex-col gap-1 ml-[10px]">
+                    <span
+                      class="text-[#000000] font-medium text-[14px] font-inter leading-[100%]"
+                      >Service Request</span
+                    >
+                    <span
+                      class="text-[#25262899] leading-[100%] text-[12px] font-inter font-medium"
+                      >Service Request Record</span
+                    >
+                  </div>
+                </div>
+                <div class="bg-[#F2F2F2] rounded-[6px] px-2 py-1">0.0%</div>
+              </div>
+              <div class="flex justify-between py-[14px]">
                 <span
-                  class="w-[13px] rounded-[4px] h-[13px] bg-[#D9625A]"
-                ></span>
-                Pending</span
-              ><span> C$00 </span>
+                  class="text-[#000000B2] text-[14px] font-inter leading-[100%]"
+                  >Total Service Request</span
+                >
+                <span>00</span>
+              </div>
+              <div class="flex gap-[2px] m-0 mb-[10px]">
+                <div
+                  class="flex rounded-[4px] bg-[#CF67FF] h-[13px] w-full"
+                ></div>
+                <div
+                  class="flex rounded-[4px] bg-[#312AFA] h-[13px] w-full"
+                ></div>
+                <div
+                  class="flex rounded-[4px] bg-[#0FC36C] h-[13px] w-full"
+                ></div>
+              </div>
+
+              <div class="flex flex-col gap-2.5">
+                <div class="flex justify-between w-full">
+                  <span class="flex gap-[8px] items-center">
+                    <span
+                      class="w-[13px] rounded-[4px] h-[13px] bg-[#67ABFF]"
+                    ></span>
+                    Ongoing</span
+                  ><span> 0 </span>
+                </div>
+
+                <div class="flex justify-between w-full">
+                  <span class="flex gap-[8px] items-center">
+                    <span
+                      class="w-[13px] rounded-[4px] h-[13px] bg-[#FA922A]"
+                    ></span>
+                    Under Review</span
+                  ><span> 0 </span>
+                </div>
+                <div class="flex justify-between w-full">
+                  <span class="flex gap-[8px] items-center">
+                    <span
+                      class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
+                    ></span>
+                    Approved</span
+                  ><span> 0 </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center px-[10px] py-[14px]">
+              <span>View All Details</span>
+              <span
+                class="text-[#000000] bg-[#FFFFFF] rounded-[6px] px-[10px] py-[6px] border-[0.75px] border-solid border-[#36363633]"
+              >
+                View
+              </span>
+            </div>
+          </div>
+          <div
+            class="bg-[#F6F6F6] h-fit w-full border-[0.75px] border-solid text-black border-[#36363633] rounded-[16px]"
+          >
+            <!-- 1 -->
+
+            <div
+              class="rounded-[16px] pb-[10px] px-[14px] bg-white border-b-[0.75px] border-solid border-[#36363633]"
+            >
+              <div
+                class="flex items-center justify-between text-black border-[#36363633] border-b-[0.75px] border-solid"
+              >
+                <div
+                  class="flex items-center py-[10px] border-b-solid border-b-[#36363633] gap-3"
+                >
+                  <div
+                    class="p-[12px] rounded-[8px] border-[#36363633] border-[0.75px] border-solid"
+                  >
+                    <AppstoreOutlined />
+                  </div>
+                  <div class="flex flex-col gap-1 ml-[10px]">
+                    <span
+                      class="text-[#000000] font-medium text-[14px] font-inter leading-[100%]"
+                      >My Tenants</span
+                    >
+                  </div>
+                </div>
+                <div class="px-2 py-1 text-[18px] font-semibold">0</div>
+              </div>
+              <div class="flex justify-between py-[14px]">
+                <span
+                  class="text-[#000000B2] text-[14px] font-inter leading-[100%]"
+                  >Target</span
+                >
+                <span>00</span>
+              </div>
+              <div class="flex gap-[2px] m-0 mb-[10px]">
+                <div
+                  class="flex rounded-[4px] bg-[#E4E5E5] h-[13px] w-full"
+                ></div>
+              </div>
+
+              <div class="flex flex-col gap-2.5">
+                <div class="flex justify-between w-full">
+                  <span class="flex gap-[8px] items-center">
+                    <span
+                      class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
+                    ></span>
+                    Complete</span
+                  ><span> 0 </span>
+                </div>
+
+                <div class="flex justify-between w-full">
+                  <span class="flex gap-[8px] items-center">
+                    <span
+                      class="w-[13px] rounded-[4px] h-[13px] bg-[#E5E6E6]"
+                    ></span>
+                    To Complete</span
+                  ><span> 0 </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center px-[10px] py-[14px]">
+              <span>View All Details</span>
+              <span
+                class="text-[#000000] bg-[#FFFFFF] rounded-[6px] px-[10px] py-[6px] border-[0.75px] border-solid border-[#36363633]"
+              >
+                View
+              </span>
+            </div>
+          </div>
+          <div
+            class="bg-[#F6F6F6] h-fit w-full border-[0.75px] border-solid text-black border-[#36363633] rounded-[16px]"
+          >
+            <!-- 1 -->
+
+            <div
+              class="rounded-[16px] pb-[10px] px-[14px] bg-white border-b-[0.75px] border-solid border-[#36363633]"
+            >
+              <div
+                class="flex items-center justify-between text-black border-[#36363633] border-b-[0.75px] border-solid"
+              >
+                <div
+                  class="flex items-center py-[10px] border-b-solid border-b-[#36363633] gap-3"
+                >
+                  <div
+                    class="p-[12px] rounded-[8px] border-[#36363633] border-[0.75px] border-solid"
+                  >
+                    <AppstoreOutlined />
+                  </div>
+                  <div class="flex flex-col gap-1 ml-[10px]">
+                    <span
+                      class="text-[#000000] font-medium text-[14px] font-inter leading-[100%]"
+                      >Maintenance Fee</span
+                    >
+                    <span
+                      class="text-[#25262899] bg-[#0000000D] px-[6px] mt-[3px] py-[4px] leading-[100%] text-[12px] font-inter font-medium"
+                      >Less cost this week</span
+                    >
+                  </div>
+                </div>
+                <div class="bg-[#F2F2F2] rounded-[6px] px-2 py-1">0.0%</div>
+              </div>
+              <div class="flex justify-between py-[14px]">
+                <span
+                  class="text-[#000000B2] text-[14px] font-inter leading-[100%]"
+                  >Total Applications</span
+                >
+                <span>00</span>
+              </div>
+              <div class="flex gap-[2px] m-0 mb-[10px]">
+                <div
+                  class="flex rounded-[4px] bg-[#E4E5E5] h-[13px] w-full"
+                ></div>
+              </div>
+
+              <div class="flex flex-col gap-2.5">
+                <div class="flex justify-between w-full">
+                  <span class="flex gap-[8px] items-center">
+                    <span
+                      class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
+                    ></span>
+                    Paid</span
+                  ><span> 0 </span>
+                </div>
+
+                <div class="flex justify-between w-full">
+                  <span class="flex gap-[8px] items-center">
+                    <span
+                      class="w-[13px] rounded-[4px] h-[13px] bg-[#E5E6E6]"
+                    ></span>
+                    Owing</span
+                  ><span> 0 </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center px-[10px] py-[14px]">
+              <span>View All Details</span>
+              <span
+                class="text-[#000000] bg-[#FFFFFF] rounded-[6px] px-[10px] py-[6px] border-[0.75px] border-solid border-[#36363633]"
+              >
+                View
+              </span>
             </div>
           </div>
         </div>
-        <div class="flex justify-between items-center px-[10px] py-[14px]">
-          <span>View All Details</span>
-          <span
-            class="text-[#000000] bg-[#FFFFFF] rounded-[6px] px-[10px] py-[6px] border-[0.75px] border-solid border-[#36363633]"
+        <div
+          class="bg-[#F6F6F6] flex flex-col flex-[0.3] w-fit mr-[16px] border-[0.75px] rounded-[1rem] border-solid border-[#36363633]"
+        >
+          <div
+            class="text-[black] bg-[#FFFFFF] rounded-[16px] border-[0.75px] border-solid border-[#36363633] p-[16px]"
           >
-            View
-          </span>
+            <div class="flex items-center gap-2.5">
+              <div
+                class="border-[0.75px] border-solid border-[#36363633] rounded-[8px] p-2.5 w-fit"
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M10.0013 18.3307C14.6037 18.3307 18.3346 14.5998 18.3346 9.9974C18.3346 5.39502 14.6037 1.66406 10.0013 1.66406C5.39893 1.66406 1.66797 5.39502 1.66797 9.9974C1.66797 14.5998 5.39893 18.3307 10.0013 18.3307Z"
+                    stroke="#1C274C"
+                    stroke-width="1.5"
+                  />
+                  <path
+                    d="M10 14.1641V14.5807V14.9974"
+                    stroke="#1C274C"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M10 5V5.41667V5.83333"
+                    stroke="#1C274C"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M12.5 7.91927C12.5 6.76868 11.3807 5.83594 10 5.83594C8.61925 5.83594 7.5 6.76868 7.5 7.91927C7.5 9.06985 8.61925 10.0026 10 10.0026C11.3807 10.0026 12.5 10.9354 12.5 12.0859C12.5 13.2365 11.3807 14.1693 10 14.1693C8.61925 14.1693 7.5 13.2365 7.5 12.0859"
+                    stroke="#1C274C"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </div>
+              <div class="">
+                <p class="m-0 p-0 text-[14px] font-medium leading-[100%]">
+                  Rent Inflow
+                </p>
+                <p
+                  class="m-0 p-0 text-[#25262899] mt-[4px] text-[12px] font-medium leading-[100%]"
+                >
+                  Income and Pending Rent Statistics
+                </p>
+              </div>
+            </div>
+            <div class="mt-[45px]">
+              <chart
+                :data="chartData"
+                :width="180"
+                :height="180"
+                :options="chartOptions"
+                :plugins="plugins"
+              />
+            </div>
+
+            <div>
+              <div
+                class="flex justify-between mt-[45px] items-center pb-[1rem] border-b-[0.7px] border-solid border-[#D3D3D3B2]"
+              >
+                <span
+                  class="text-[#000000B2] text-[14px] leading-[100%] font-inter"
+                  >Expected Rent</span
+                ><span class="text-[18px] font-bold font-inter">C$00</span>
+              </div>
+              <div class="flex justify-between w-full mt-[16px]">
+                <span class="flex gap-[8px] items-center">
+                  <span
+                    class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
+                  ></span>
+                  Incoming</span
+                ><span> C$00 </span>
+              </div>
+              <div class="flex justify-between w-full mt-[16px]">
+                <span class="flex gap-[8px] items-center">
+                  <span
+                    class="w-[13px] rounded-[4px] h-[13px] bg-[#D9625A]"
+                  ></span>
+                  Pending</span
+                ><span> C$00 </span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="flex flex-1 justify-between items-center px-[10px] py-[14px]"
+          >
+            <span>View All Details</span>
+            <span
+              class="text-[#000000] bg-[#FFFFFF] rounded-[6px] px-[10px] py-[6px] border-[0.75px] border-solid border-[#36363633]"
+            >
+              View
+            </span>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Second Main Div -->
     <div
-      class="flex-1 mt-[15px] mx-4 border-t-[0.75px] border-x-[0.75px] border-solid border-[#36363633] rounded-[6px]"
+      class="flex-1 h-full mt-[15px] mx-4 border-t-[0.75px] border-x-[0.75px] border-solid border-[#36363633] rounded-[6px]"
     >
       <div
         class="border-b-[0.75px] flex items-center justify-between border-solid border-[#36363633] rounded-t-[6px] p-2.5"
@@ -541,33 +549,38 @@
         </div>
       </div>
       <!-- empty state -->
-      <div v-if="tenants.length === 0" class="flex flex-col items-center p-4">
+      <div class="h-full flex justify-center py-8">
         <div
-          class="border-solid mx-auto mt-[71px] p-3 border-[0.75px] rounded-[8px] w-fit border-[#36363633]"
+          v-if="tenants.length === 0"
+          class="flex flex-col items-center h-fit"
         >
-          <DollarCircleOutlined style="color: #1c274c" />
+          <div
+            class="border-solid mx-auto p-3 border-[0.75px] rounded-[8px] w-fit border-[#36363633]"
+          >
+            <DollarCircleOutlined style="color: #1c274c" />
+          </div>
+          <div class="flex flex-col items-center">
+            <p
+              class="text-[#000000] mt-4 font-inter text-[14px] font-medium leading-[100%] text-center"
+            >
+              You have no pending payments
+            </p>
+            <p
+              class="text-[#25262899] text-[12px] text-center font-inter font-medium leading-[100%]"
+            >
+              There’s nothing to view, click the button below to add new tenants
+            </p>
+            <button
+              class="bg-[#000130] text-[#FFFFFF] font-inter font-medium px-4 py-4 rounded-[8px]"
+              @click="isAddTenantModalOpen = true"
+            >
+              + Add Tenant
+            </button>
+          </div>
         </div>
-        <div class="flex flex-col items-center">
-          <p
-            class="text-[#000000] mt-4 font-inter text-[14px] font-medium leading-[100%] text-center"
-          >
-            You have no pending payments
-          </p>
-          <p
-            class="text-[#25262899] text-[12px] text-center font-inter font-medium leading-[100%]"
-          >
-            There’s nothing to view, click the button below to add new tenants
-          </p>
-          <button
-            class="bg-[#000130] text-[#FFFFFF] font-inter font-medium px-4 py-4 rounded-[8px]"
-            @click="isAddTenantModalOpen = true"
-          >
-            + Add Tenant
-          </button>
+        <div class="" v-else>
+          <dashboard-table-component :headers="headers" />
         </div>
-      </div>
-      <div class="" v-else>
-        <dashboard-table-component :headers="headers" />
       </div>
     </div>
 
@@ -753,11 +766,11 @@ export default {
         // },
       ],
       tenantsPayload: {
-        emailAddress: "string",
-        firstname: "string",
-        lastname: "string",
-        dob: "2025-10-27T09:15:40.301Z",
-        phoneNumber: "string",
+        emailAddress: "",
+        firstname: "",
+        lastname: "",
+        dob: "",
+        phoneNumber: "",
         accountType: 0,
         accountRefNumber: "string",
         password: "string",
@@ -765,8 +778,8 @@ export default {
         contractRequest: {
           unitId: 0,
           isActive: true,
-          startDate: "2025-10-27T09:15:40.301Z",
-          endDate: "2025-10-27T09:15:40.301Z",
+          startDate: "",
+          endDate: "",
           rentRate: 0,
         },
       },
@@ -819,7 +832,6 @@ export default {
           },
         ],
       },
-
       chartOptions: {
         responsive: true,
         maintainAspectRatio: false,
@@ -944,7 +956,6 @@ export default {
           console.log(err);
         });
     },
-
     handleTenants() {
       MyTenants(this.store.userProfile.referenceID)
         .then((response) => {

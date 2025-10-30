@@ -5,7 +5,7 @@
       class="flex flex-col w-full h-full bg-[#FFFFFF] mt-[1rem] rounded-[18px]"
     >
       <top-nav />
-      <div class="flex-1 overflow-y-auto">
+      <div class="flex-1 pt-4 h-full">
         <router-view v-if="store.userProfile.isVerified == true"></router-view>
         <div
           v-else
