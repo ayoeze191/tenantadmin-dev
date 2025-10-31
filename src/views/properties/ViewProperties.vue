@@ -1,5 +1,7 @@
 <template>
-  <div class="mx-auto bg-neutral px-[50px] w-full h-full pb-4 font-sf">
+  <div
+    class="mx-auto bg-neutral px-[50px] w-full h-full pb-4 font-sf overflow-y-scroll"
+  >
     <div class="mx-auto">
       <p
         class="text-txt_dark font-semibold text-[24px] pt-[50px] leading-7 uppercase"
