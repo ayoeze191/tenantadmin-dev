@@ -388,11 +388,11 @@ const bulkuploaddocumentfileList = ref([]);
 onMounted(async () => {
   await fetchLandlords();
   await optionsStore.fetchAmenities();
-  amenityOptions.value = optionsStore.amenities.map((a) => ({
-    label: a.name,
-    value: a.amenityId,
-    image: a.image || a.icon || null,
-  }));
+  // amenityOptions.value = optionsStore.amenities.map((a) => ({
+  //   label: a.name,
+  //   value: a.amenityId,
+  //   image: a.image || a.icon || null,
+  // }));
 });
 
 const fetchLandlords = async (searchName = "", page = 1) => {

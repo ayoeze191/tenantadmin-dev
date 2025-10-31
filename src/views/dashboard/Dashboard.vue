@@ -285,7 +285,7 @@
                       class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
                     ></span>
                     Complete</span
-                  ><span> 0 </span>
+                  ><span> {{ tenantsCounts }} </span>
                 </div>
 
                 <div class="flex justify-between w-full">
