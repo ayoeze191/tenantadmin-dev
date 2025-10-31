@@ -44,6 +44,16 @@ export const AddAdminUser = async (payload) => {
 export const FetchLandlords = async (query) => {
   try {
     const response = await getApi(
+      `Account/GetAllAccount?PageSize=${query.size}&CurrentPage=${query.page}&AccountType=1&SearchTerm=${query.query}`
+    );
+    return response.data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+export const FetchTenants = async (query) => {
+  try {
+    const response = await getApi(
       `Account/GetAllAccount?PageSize=${query.size}&CurrentPage=${query.page}&AccountType=0&SearchTerm=${query.query}`
     );
     return response.data;

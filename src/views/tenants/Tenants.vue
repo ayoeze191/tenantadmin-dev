@@ -450,7 +450,7 @@
 </template>
 
 <script>
-import { FetchLandlords, SignUpLandlord, VerifyLandlord } from "@/api/auth";
+import { FetchTenants, SignUpLandlord, VerifyLandlord } from "@/api/auth";
 import IconEdit from "@/components/icons/IconEdit.vue";
 import Table from "@/components/Table.vue";
 import handleError from "@/utils/handleError";
@@ -533,7 +533,7 @@ export default {
         page: page,
         query: "",
       };
-      FetchLandlords(query).then((response) => {
+      FetchTenants(query).then((response) => {
         if (response.accountList) {
           this.landlordList = response.accountList.items.map(
             (landlord) =>
