@@ -124,7 +124,7 @@
                       class="w-[13px] rounded-[4px] h-[13px] bg-[#FA922A]"
                     ></span>
                     Under Review</span
-                  ><span> 00 </span>
+                  ><span> {{ pendingRequests.length }} </span>
                 </div>
                 <div class="flex justify-between w-full">
                   <span class="flex gap-[8px] items-center">
