@@ -284,6 +284,14 @@ export default {
 
       selectedKey: this.$route.name,
       openKeys: [],
+      rootSubmenuKeys: [
+        "service-requests",
+        "properties",
+        "tenants",
+        "payments",
+        "users",
+        "roles",
+      ],
     };
   },
   watch: {
@@ -292,8 +300,13 @@ export default {
     },
   },
   methods: {
-    onOpenChange(openKeys) {
-      this.openKeys = openKeys;
+    onOpenChange(keys) {
+      const latestOpenKey = keys.find((key) => !this.openKeys.includes(key));
+      if (!this.rootSubmenuKeys.includes(latestOpenKey)) {
+        this.openKeys = keys;
+      } else {
+        this.openKeys = latestOpenKey ? [latestOpenKey] : [];
+      }
     },
   },
 };
