@@ -574,7 +574,7 @@
               class="bg-[#000130] text-[#FFFFFF] font-inter font-medium px-4 py-4 rounded-[8px]"
               @click="isAddTenantModalOpen = true"
             >
-              + Add Tenant
+              + Invite user
             </button>
           </div>
         </div>
@@ -596,9 +596,9 @@
             >Invite Tenant</span
           >
           <span></span>
-          <button @click="() => (isAddTenantModalOpen = false)">
+          <a-button disabled @click="() => (isAddTenantModalOpen = false)">
             <CloseOutlined />
-          </button>
+          </a-button>
         </div>
       </template>
       <div class="flex flex-col gap-4 mt-6">
@@ -606,33 +606,26 @@
           <div
             class="form-labels font-inter font-medium text-[14px] leading-[100%] mb-3"
           >
-            Tenant First Name
+            User Email
           </div>
           <a-input
-            placeholder="Enter Name"
+            type="mail"
+            placeholder="Enter Mail"
             size="large"
-            v-model="tenantsPayload.email"
-          />
-        </div>
-        <div>
-          <div
-            class="form-labels font-inter font-medium text-sm leading-[100%] mb-3"
-          >
-            Tenant Email
-          </div>
-          <!-- v-model:value="form.name" -->
-          <a-input
-            placeholder="Enter Message"
-            size="large"
-            v-model="tenantsPayload"
+            v-model:value="tenantsPayload.emailAddress"
           />
         </div>
 
-        <button
+        <a-button
+          @click="sendInvite"
+          :loading="loadingInvite"
+          :disabled="
+            loadingInvite == true || !tenantsPayload.emailAddress.includes('@')
+          "
           class="w-full bg-[#000130] py-2 leading-[100%] text-white font-inter font-medium rounded-lg"
         >
           Send Invite
-        </button>
+        </a-button>
       </div>
     </a-modal>
 
@@ -728,6 +721,7 @@ import { useUserStore } from "@/store";
 import { AddTenants } from "@/api/properties";
 import { addPropertyManager } from "@/api/dashboard";
 import { useToast } from "vue-toast-notification";
+import { inviteUsers } from "@/api/dashboard";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default {
@@ -741,6 +735,7 @@ export default {
   },
   data() {
     return {
+      loadingInvite: false,
       tenants: [
         // {
         //   name: "Steph Sobim",
@@ -767,21 +762,6 @@ export default {
       ],
       tenantsPayload: {
         emailAddress: "",
-        firstname: "",
-        lastname: "",
-        dob: "",
-        phoneNumber: "",
-        accountType: 0,
-        accountRefNumber: "string",
-        password: "string",
-        photo: "string",
-        contractRequest: {
-          unitId: 0,
-          isActive: true,
-          startDate: "",
-          endDate: "",
-          rentRate: 0,
-        },
       },
       managerPayloads: {
         emailAddress: "",
@@ -905,6 +885,19 @@ export default {
     this.handleTenants();
   },
   methods: {
+    sendInvite() {
+      this.loadingInvite = false;
+      inviteUsers(this.tenantsPayload.emailAddress)
+        .then((response) => {
+          this.loadingInvite = false;
+          if (response.responseCode == "00") {
+            this.toast.success("Users Successfully Invited");
+            this.tenantsPayload.emailAddress = "";
+            this.isAddTenantModalOpen = false;
+          }
+        })
+        .catch();
+    },
     handleFetchServiceRequest() {
       this.loading.serviceRequestCompleted = true;
       this.loading.serviceOngoingCompleted = true;

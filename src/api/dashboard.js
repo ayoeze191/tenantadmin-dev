@@ -49,3 +49,13 @@ export const addPropertyManager = async (payload) => {
   }
   return response.data;
 };
+
+export const inviteUsers = async (mail) => {
+  let response;
+  try {
+    response = await getApi(`AdminUser/InviteNewUser?emailAddress=${mail}`);
+  } catch (err) {
+    console.log(err);
+  }
+  return response.data;
+};
