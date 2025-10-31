@@ -146,8 +146,7 @@ export const ResetPassword = async (payload) => {
 export const VerifyLandlord = async (payload) => {
   try {
     const response = await putApi(
-      `AdminUser/VerifyUser?AdminUserID=${payload.AdminUserID}`,
-      payload
+      `AdminUser/VerifyUser?AdminUserID=${payload.AdminUserID}`
     );
     return response.data;
   } catch (error) {

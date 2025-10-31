@@ -106,7 +106,7 @@
                       <a-menu-item key="0">
                         <li
                           class="font-medium text-[#808097] cursor-pointer text-base leading-5 py-[16px] px-[8px]"
-                          @click="handleVerifyLandlord(landlord)"
+                          @click="() => handleVerifyLandlord(record.accountId)"
                         >
                           Verify Landlord
                         </li>
@@ -115,7 +115,7 @@
                       <a-menu-item key="1">
                         <li
                           class="cursor-pointer font-medium text-[#808097] text-base leading-5 py-[16px] px-[8px]"
-                          @click="editLandlord(landlord)"
+                          @click="editLandlord(record.accountId)"
                         >
                           Edit Email
                         </li>
@@ -388,6 +388,7 @@ export default {
                 email: landlord.emailAddress,
                 isVerified: landlord.isVerified ? "Yes" : "No",
                 lastLoginDate: this.formatDate(landlord.lastLoginDate),
+                accountId: landlord.accountId,
               }
           );
           this.totalItemCount = response.accountList.totalItemCount;
@@ -421,14 +422,14 @@ export default {
         } else handleError(response);
       });
     },
-    handleVerifyLandlord(landlord) {
+    handleVerifyLandlord(accountId) {
       const payload = {
-        AdminUserID: landlord.accountId,
+        AdminUserID: accountId,
       };
       VerifyLandlord(payload).then((response) => {
         if (response.result.responseCode == "00") {
           handleToast("Landlord Verified Successfully", "success");
-          this.handleFetchLandlords();
+          this.handleFetchLandlords(this.currentPage);
         } else handleError(response);
       });
     },
