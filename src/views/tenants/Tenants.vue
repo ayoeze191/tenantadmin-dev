@@ -591,4 +591,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+:deep(.ant-table-thead) > tr > th {
+  text-align: center !important;
+}
+</style>
