@@ -118,6 +118,10 @@
   .btn {
     @apply outline-none rounded-[10px] text-center px-4 py-1.5 cursor-pointer hover:opacity-90 leading-7;
   }
+  .btn_grow {
+    @apply w-full;
+  }
+
   .btn_primary {
     @apply bg-primary text-white;
   }
