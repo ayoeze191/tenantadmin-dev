@@ -3,6 +3,7 @@
     :class="[
       'btn',
       {
+        btn_grow: size == 'grow',
         btn_primary: type == 'primary',
         btn_secondary: type == 'secondary',
         btn_dng: type == 'danger',
@@ -44,6 +45,10 @@ export default {
     role: {
       type: String,
       default: "submit",
+    },
+    size: {
+      type: String,
+      default: "fit",
     },
   },
   methods: {
