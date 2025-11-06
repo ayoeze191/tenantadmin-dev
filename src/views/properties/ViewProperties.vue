@@ -172,7 +172,7 @@
 import { FetchProperties, FetchUnitTypes } from "@/api/properties";
 import Button from "@/components/Button.vue";
 import IconEdit from "@/components/icons/IconEdit.vue";
-import Table from "@/components/Table.vue";
+
 import { useUserStore } from "@/store";
 import handleError from "@/utils/handleError";
 import { handleToast } from "@/utils/helper";
@@ -183,7 +183,6 @@ import { useRouter } from "vue-router";
 
 export default {
   components: {
-    "table-component": Table,
     "edit-icon": IconEdit,
     Button,
     "a-pagination": Pagination,
