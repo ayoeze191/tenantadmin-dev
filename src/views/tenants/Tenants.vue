@@ -20,7 +20,7 @@
             <div class="relative flex justify-center items-center group">
               <!-- Hidden div -->
               <div
-                class="absolute z-10 right-2 top-0 p-5 border-[0.75px] border-solid rounded-[16px] bg-white opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300"
+                class="absolute text-[12px] z-10 right-2 top-0 p-5 border-[0.75px] border-solid rounded-[16px] bg-white opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300"
               >
                 <div
                   class="flex items-center gap-[8px] p-[10px] rounded-[10px] border-[0.75px] border-solid border-[#36363633]"
@@ -29,7 +29,7 @@
                     <img src="/src/assets/TenantImage.svg" />
                   </div>
                   <div>
-                    <p class="m-0 p-0">
+                    <p class="m-0 p-0 text-[]">
                       {{ record.name }}
                     </p>
                     <p class="m-0 p-0 mt-[2px]">{{ record.email }}</p>
@@ -63,7 +63,7 @@
                 </div>
 
                 <a-button
-                  class="py-[8px] w-full flex items-center justify-center bg-[#000130] text-white mt-6 rounded-[8px]"
+                  class="py-[8px] w-full flex items-center justify-center bg-[#000130] text-white mt-6 text-[14px] rounded-[8px]"
                 >
                   Send notification to Tenant
                 </a-button>
@@ -88,6 +88,41 @@
         />
       </div>
     </div>
+
+    <a-modal
+      :footer="null"
+      width="768px"
+      :visible="true"
+      centered
+      :bodyStyle="{ padding: '0' }"
+      class=""
+      :closable="false"
+    >
+      <template #title>
+        <div
+          class="flex items-center justify-between border-b border-[#C7C7C7] py-[12px]"
+        >
+          <span class="font-redwing text-2 leading-[100%] font-medium"
+            >Tenant information</span
+          >
+
+          <span>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z"
+                fill="#323232"
+              />
+            </svg>
+          </span>
+        </div>
+      </template>
+    </a-modal>
   </div>
 </template>
 
