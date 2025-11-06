@@ -35,7 +35,7 @@
                     <p class="m-0 p-0 mt-[2px]">{{ record.email }}</p>
                   </div>
                 </div>
-
+                <!-- asa -->
                 <div class="mt-4 m-0">
                   <p class="text-[#000000]">
                     <span
