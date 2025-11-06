@@ -1,35 +1,33 @@
 <template>
-  <div class="bg-neutral py-5 px-10 w-full overflow-y-scroll h-screen pb-40">
-    <h1 class="text-[24px] font-semibold text-txt_dark font-sf">ALL REQUEST</h1>
-    <section class="list_container mt-[20px] text-secondary" style="color: red">
-      <div
-        class="flex w-full justify-between text-secondary border-b border-br1 pb-3 mb-4"
-        style="color: red"
-      >
-        <p
-          class="font-medium text-[20px] text-secondary mr-0.5"
-          style="color: #808097 !important"
-        >
-          {{ selected_tab == "all" ? "All" : selected_tab }} Service Requests
-          <span
-            class="text-primary font-semibold text-[18px]"
-            style="color: #404164 !important"
-            >({{
-              selected_tab == "all"
-                ? serviceRequests.length
-                : serviceRequests.filter(
-                    (serv) =>
-                      serviceLiterals[serv.serviceStatus] == selected_tab
-                  ).length
-            }})</span
-          >
-        </p>
-        <aside class="flex gap-3.5">
-          <search-icon />
-          <div class="pl-3.5 flex border-l border-br1">
-            <!-- <status-select :label="'Update All:'"></status-select> -->
+<div class="p-3 h-[100%]">
+  <div class= "border-sleek text-primary size-full overflow-hidden page box-border">
+      <div class="flex w-full justify-between border-b border-br1 p-3 text-[14px]">
+        <div class="flex gap-3">
+          <span class="size-[45px] border-sleek flex justify-center items-center">
+            <service-req-icon class="icon" />
+          </span>
+          <div class="flex flex-col justify-center gap-1">
+            <p class="font-medium text-[1rem] m-0">All Requests</p>
+
+            <p class="text-secondary m-0">
+              Total Number of Tenants:
+              <span class="text-primary">{{ serviceRequests.length }}</span>
+            </p>
           </div>
-        </aside>
+        </div>
+        <div class="flex gap-3 items-center text-[1rem] max-w-[470px] flex-1">
+          <div class="border-sleek flex w-full h-[45px] items-center px-2 gap-2">
+            <search-icon class="icon"/>
+            <input class="h-full" type="text" placeholder="search">
+            
+          </div>
+          <select class="border-sleek h-[45px] py-3" name="service-req-filter text[.75rem]" id="service-req-filter" :disabled="!serviceRequests.length">
+            <option value="" :selected="!serviceRequests.length" disabled hidden>Status</option>
+            <option value="all" :selected="serviceRequests.length">All</option>
+            <option value="completed">Completed</option>
+            <option value="pending">Pending</option>
+          </select>
+        </div>
       </div>
       <ul
         v-if="
@@ -67,58 +65,21 @@
             >View full details</a
           >
         </li>
-
-        <!-- <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
-                <section class="flex w-full justify-between mb-4">
-                    <p class="font-medium leading-6 text-txt_dark">Broken Toilet <span class="text-secondary ml-1">Apt T-69, Sean Apartments </span> </p>
-                    <status-select
-                     :label="'Update Status:'"
-                    ></status-select>
-
-                </section>
-                <a class="text-sm leading-6 text-txt_dark cursor-pointer underline" @click="openModal({})">View full details</a>
-                
-            </li>
-            <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
-                <section class="flex w-full justify-between mb-4">
-                    <p class="font-medium leading-6 text-txt_dark">Broken Toilet <span class="text-secondary ml-1">Apt T-69, Sean Apartments </span> </p>
-                    <status-select
-                     :label="'Update Status:'"
-                    ></status-select>
-
-                </section>
-                <a class="text-sm leading-6 text-txt_dark cursor-pointer underline" @click="openModal({})">View full details</a>
-                
-            </li>
-            <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
-                <section class="flex w-full justify-between mb-4">
-                    <p class="font-medium leading-6 text-txt_dark">Broken Toilet <span class="text-secondary ml-1">Apt T-69, Sean Apartments </span> </p>
-                    <status-select
-                     :label="'Update Status:'"
-                    ></status-select>
-
-                </section>
-                <a class="text-sm leading-6 text-txt_dark cursor-pointer underline" @click="openModal({})">View full details</a>
-                
-            </li>
-            <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
-                <section class="flex w-full justify-between mb-4">
-                    <p class="font-medium leading-6 text-txt_dark">Broken Toilet <span class="text-secondary ml-1">Apt T-69, Sean Apartments </span> </p>
-                    <status-select
-                     :label="'Update Status:'"
-                    ></status-select>
-
-                </section>
-                <a class="text-sm leading-6 text-txt_dark cursor-pointer underline" @click="openModal({})">View full details</a>
-                
-            </li> -->
       </ul>
-      <div v-else class="mx-auto">
-        <p class="text-black w-fit mx-auto">
-          No service request has been made yet
-        </p>
+
+      <div v-else class="size-full flex justify-center items-center">
+        <div class="size-fit flex flex-col gap-4 justify-center items-center">
+          <span class="size-[45px] border-sleek flex justify-center items-center">
+            <service-req-icon class="icon" />
+
+          </span>
+          <p class="flex flex-col items-center gap-1 text-[1rem]">
+            You have no Service Requests
+            <span class="text-14px text-secondary">You have nothing to view</span>
+          </p>
+        </div>
       </div>
-    </section>
+    </div>
   </div>
 
   <modal-component
@@ -229,9 +190,12 @@ import {
 } from "@/api/serviceRequest";
 import StatusDropdown from "@/components/StatusDropdown.vue";
 import IconSearch from "../../components/icons/IconSearch.vue";
+import IconServiceRequests from "@/components/icons/IconServiceRequests2.vue";
 import Modal from "@/components/Modal.vue";
 import { useToast } from "vue-toast-notification";
 import { useUserStore } from "@/store";
+
+import Button from "@/components/Button/Button.vue";
 
 export default {
   data() {
@@ -261,6 +225,8 @@ export default {
   },
   components: {
     "search-icon": IconSearch,
+    "service-req-icon": IconServiceRequests,
+    btn: Button,
     "status-select": StatusSelect,
     "modal-component": Modal,
     StatusDropdown,
@@ -338,4 +304,19 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+/* TODO: see if we can move this to index.css */
+.border-sleek {
+  border: 0.75px solid rgba(54, 54, 54, 0.2);
+  border-radius: .75rem;
+}
+
+.page {
+  background-color: white;
+}
+
+.icon {
+  width: 25px;
+  height: fit-content;
+}
+</style>

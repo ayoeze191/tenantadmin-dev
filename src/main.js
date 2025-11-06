@@ -18,6 +18,17 @@ import "ant-design-vue/dist/reset.css";
 import * as AntIcons from "@ant-design/icons-vue";
 
 const vuetify = createVuetify({
+   theme: {
+    defaultTheme: 'light',
+    themes: {
+      light: {
+        colors: {
+          primary: '#000130',
+          secondary: '#808097',
+        },
+      },
+    },
+  },
   components,
   directives,
 });

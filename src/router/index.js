@@ -12,8 +12,6 @@ import Applications from "@/views/tenancy-applications/Applications.vue";
 import Tenants from "@/views/tenants/Tenants.vue";
 import Payments from "@/views/payments/PaymentsDue.vue";
 import nprogress from "nprogress";
-import PendingServiceRequest from "@/views/service-requests/PendingServiceRequest.vue";
-import CompletedServiceRequest from "@/views/service-requests/CompletedServiceRequest.vue";
 import AddProperties from "@/views/properties/AddProperties.vue";
 import ViewProperties from "@/views/properties/ViewProperties.vue";
 import LeaseManagement from "@/views/tenants/LeaseManagement.vue";

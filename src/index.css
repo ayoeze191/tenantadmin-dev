@@ -266,3 +266,12 @@
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
+
+
+/* added by ademide */
+/* start */
+:disabled,::placeholder {
+  color: rgba(0, 0, 0, 0.3);
+}
+/* end */
+
