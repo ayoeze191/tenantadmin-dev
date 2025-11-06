@@ -35,9 +35,7 @@
     >
       <a-menu-item key="dashboard">
         <template #icon><overview-icon /></template>
-        <router-link :to="{ name: 'admin-dashboard' }">
-          Overview
-        </router-link>
+        <router-link :to="{ name: 'admin-dashboard' }"> Overview </router-link>
       </a-menu-item>
       <a-menu-item key="service-requests" title="Service Requests">
         <template #icon><request-icon /></template>
@@ -152,22 +150,21 @@
         </router-link>
       </a-menu-item>
 
-        <a-menu-item
-          key="audit-logs"
-          v-if="userType == 'NN1'"
-          class="text-[#FFFFFF8C]"
-        >
-          <router-link :to="{ name: 'audit-logs' }">
-            <template #icon><notification-icon /></template>
-            <p
-              class="m-0 p-0 text-[14px] text-[#FFFFFF8C] leading-[20px] font-[500] font-inter"
-            >
-              Audit Logs
-            </p>
-          </router-link>
-        </a-menu-item>
-      </a-menu>
-    </div>
+      <a-menu-item
+        key="audit-logs"
+        v-if="userType == 'NN1'"
+        class="text-[#FFFFFF8C]"
+      >
+        <router-link :to="{ name: 'audit-logs' }">
+          <template #icon><notification-icon /></template>
+          <p
+            class="m-0 p-0 text-[14px] text-[#FFFFFF8C] leading-[20px] font-[500] font-inter"
+          >
+            Audit Logs
+          </p>
+        </router-link>
+      </a-menu-item>
+    </a-menu>
   </a-layout-sider>
 </template>
 
