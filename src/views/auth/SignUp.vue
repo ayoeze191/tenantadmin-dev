@@ -132,7 +132,7 @@
                     class="input w-full mt-2"
                     v-model:value="modelForm.phoneNumber"
                     size="large"
-                    type="number"
+                    type="tel"
                   />
                 </a-form-item>
               </div>

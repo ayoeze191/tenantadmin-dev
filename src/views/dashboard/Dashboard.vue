@@ -694,8 +694,14 @@
 
           <button
             type="button"
+            :disabled="
+              managerPayloads.firstname == '' ||
+              managerPayloads.lastname == '' ||
+              managerPayloads.emailAddress == '' ||
+              managerPayloads.password == ''
+            "
             @click="handleAddPropertyManager"
-            class="w-fit m-0 px-3 bg-[#000130] h-[43px] leading-[100%] ml-[10px] text-[14px] text-white font-inter font-medium rounded-lg"
+            class="w-fit m-0 px-3 disabled:cursor-not-allowed disabled:bg-[#bfbfbf] bg-[#000130] h-[43px] leading-[100%] ml-[10px] text-[14px] text-white font-inter font-medium rounded-lg"
           >
             Add Manager
           </button>
