@@ -1,5 +1,6 @@
 <template>
   <a-table
+    v-if="dataSource.length"
     :columns="computedColumns"
     :data-source="dataSource"
     bordered
@@ -32,10 +33,15 @@
       </template>
     </template>
   </a-table>
+
+  <div v-else>
+    <IsEmpty :title="title" />
+  </div>
 </template>
 
 <script setup>
 import { computed } from "vue";
+import IsEmpty from "./IsEmpty.vue";
 
 const props = defineProps({
   columns: {
@@ -45,6 +51,10 @@ const props = defineProps({
   dataSource: {
     type: Array,
     required: true,
+  },
+  title: {
+    type: String,
+    required: false,
   },
 });
 
@@ -63,3 +73,12 @@ const computedColumns = computed(() => {
   ];
 });
 </script>
+
+<style scoped>
+:deep(.ant-table-thead) > tr > th {
+  text-align: center !important;
+}
+:deep(.ant-table) {
+  height: 100% !important;
+}
+</style>
