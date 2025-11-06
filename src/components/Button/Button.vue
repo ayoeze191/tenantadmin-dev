@@ -5,6 +5,7 @@
       {
         btn_primary: type == 'primary',
         btn_secondary: type == 'secondary',
+        btn_dng: type == 'danger',
         disabled,
       },
     ]"
@@ -12,7 +13,7 @@
     :role="role"
     @click="handleClick"
   >
-    <span>{{ label }}</span>
+    {{ label }}
   </button>
 </template>
 

@@ -116,10 +116,16 @@
     @apply  max-w-[450px]  rounded-[10px];
   }
   .btn {
-    @apply outline-none w-full rounded-[10px] text-center px-4 py-4.5 cursor-pointer hover:opacity-90 text-2xl leading-7;
+    @apply outline-none rounded-[10px] text-center px-4 py-1.5 cursor-pointer hover:opacity-90 leading-7;
   }
   .btn_primary {
     @apply bg-primary text-white;
+  }
+  .btn_secondary {
+    @apply border-2 border-secondary text-primary;
+  }
+  .btn_dng {
+    @apply bg-dng text-white;
   }
   .btn_danger {
     @apply bg-dng3 border border-dng2 text-dng2;
