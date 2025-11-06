@@ -1,9 +1,19 @@
 <template>
   <div class="px-4 font-inter">
+    <a-modal :visible="true" :width="334">
+      <div class="p-4">
+        <div>
+          <div>
+            <p class="m-0 p-0">Seph Soibim</p>
+            <p class="m-0 p-0 mt-[2px]">stephsoibim@mail.com</p>
+          </div>
+        </div>
+      </div>
+    </a-modal>
     <div
-      class="rounded-[16px] p-2.5 mt-4 font-inter border-[#36363633] border-[0.75px] border-solid"
+      class="rounded-[16px] mt-4 font-inter border-[#36363633] border-[0.75px] border-solid"
     >
-      <div class="flex gap-2.5 items-center">
+      <div class="flex gap-2.5 p-2.5 items-center">
         <div
           class="border-solid border-[0.75px] border-[#36363633] rounded-[8px] p-2.5 w-fit"
         >
@@ -47,412 +57,99 @@
           </p>
         </div>
       </div>
-    </div>
 
-    <div class="w-full mt-4">
-      <a-table
-        :columns="headers"
-        :data-source="landlordList"
-        bordered
-        :pagination="false"
-      >
-        <template #bodyCell="{ column, text, record }">
-          <template
-            v-if="
-              ['name', 'email', 'isVerified', 'lastLoginDate'].includes(
-                column.dataIndex
-              )
-            "
-          >
-            <div class="text-center mx-auto">
-              {{ text }}
-            </div>
-          </template>
-
-          <template v-else-if="column.dataIndex === 'action'">
-            <div class="mx-auto w-fit">
-              <a-dropdown :trigger="['click']">
-                <a
-                  class="ant-dropdown-link cursor-pointer text-[#808097] flex items-center gap-[4px]"
-                  @click.prevent
+      <div class="w-full mt-4">
+        <table-component :columns="headers" :data-source="landlordList">
+          <template #action="{ record }">
+            <a-dropdown :trigger="['click']">
+              <a
+                class="ant-dropdown-link cursor-pointer text-[#808097] flex items-center gap-[4px]"
+                @click.prevent
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 14 14"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 14 14"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M3.0625 4.16667H2.39583C2.04221 4.16667 1.70307 4.30714 1.45302 4.55719C1.20298 4.80724 1.0625 5.14638 1.0625 5.5V11.5C1.0625 11.8536 1.20298 12.1928 1.45302 12.4428C1.70307 12.6929 2.04221 12.8333 2.39583 12.8333H8.39583C8.74946 12.8333 9.08859 12.6929 9.33864 12.4428C9.58869 12.1928 9.72917 11.8536 9.72917 11.5V10.8333M9.0625 2.83333L11.0625 4.83333M11.9858 3.89007C12.2484 3.62751 12.3959 3.27139 12.3959 2.90007C12.3959 2.52875 12.2484 2.17264 11.9858 1.91007C11.7233 1.64751 11.3672 1.5 10.9958 1.5C10.6245 1.5 10.2684 1.64751 10.0058 1.91007L4.39583 7.50007V9.50007H6.39583L11.9858 3.89007Z"
-                      stroke="#808097"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                  Edit
-                  <DownOutlined />
-                </a>
-                <template #overlay>
-                  <a-menu>
-                    <a-menu-item key="0">
-                      <li
-                        class="font-medium text-[#808097] cursor-pointer text-base leading-5 py-[16px] px-[8px]"
-                        @click="() => handleVerifyLandlord(record.accountId)"
-                      >
-                        Verify Landlord
-                      </li>
-                    </a-menu-item>
-                    <a-menu-divider />
-                    <a-menu-item key="1">
-                      <li
-                        class="cursor-pointer font-medium text-[#808097] text-base leading-5 py-[16px] px-[8px]"
-                        @click="editLandlord(record.accountId)"
-                      >
-                        Edit Email
-                      </li>
-                    </a-menu-item>
-                  </a-menu>
-                </template>
-              </a-dropdown>
-            </div>
+                  <path
+                    d="M3.0625 4.16667H2.39583C2.04221 4.16667 1.70307 4.30714 1.45302 4.55719C1.20298 4.80724 1.0625 5.14638 1.0625 5.5V11.5C1.0625 11.8536 1.20298 12.1928 1.45302 12.4428C1.70307 12.6929 2.04221 12.8333 2.39583 12.8333H8.39583C8.74946 12.8333 9.08859 12.6929 9.33864 12.4428C9.58869 12.1928 9.72917 11.8536 9.72917 11.5V10.8333M9.0625 2.83333L11.0625 4.83333M11.9858 3.89007C12.2484 3.62751 12.3959 3.27139 12.3959 2.90007C12.3959 2.52875 12.2484 2.17264 11.9858 1.91007C11.7233 1.64751 11.3672 1.5 10.9958 1.5C10.6245 1.5 10.2684 1.64751 10.0058 1.91007L4.39583 7.50007V9.50007H6.39583L11.9858 3.89007Z"
+                    stroke="#808097"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                Edit
+                <DownOutlined />
+              </a>
+
+              <template #overlay>
+                <a-menu>
+                  <a-menu-item key="0">
+                    <li
+                      class="font-medium text-[#808097] cursor-pointer text-base leading-5 py-[16px] px-[8px]"
+                      @click="() => handleVerifyLandlord(record.accountId)"
+                    >
+                      Verify Landlord
+                    </li>
+                  </a-menu-item>
+                  <a-menu-divider />
+                  <a-menu-item key="1">
+                    <li
+                      class="cursor-pointer font-medium text-[#808097] text-base leading-5 py-[16px] px-[8px]"
+                      @click="editLandlord(record.accountId)"
+                    >
+                      Edit Email
+                    </li>
+                  </a-menu-item>
+                </a-menu>
+              </template>
+            </a-dropdown>
           </template>
-        </template>
-      </a-table>
-      <div class="flex items-center gap-3 justify-end p-2.5">
-        <span
-          class="text-[#000000] font-inter font-semibold text-[12px] leading-[20px]"
-          >{{ currentPage }} of {{ totalPages }} pages</span
-        >
-
-        <button
-          class="px-3 py-2 border rounded-lg text-[#1E1E1E] disabled:text-[#1E1E1E4D] disabled:opacity-50"
-          :disabled="currentPage === 1"
-          @click="onPrev"
-        >
-          Previous
-        </button>
-
-        <button
-          class="px-3 py-2 border rounded-lg text-[#1E1E1E] disabled:text-[#1E1E1E4D] disabled:opacity-50"
-          :disabled="currentPage === totalPages"
-          @click="onNext"
-        >
-          Next
-        </button>
-
-        <!-- Hidden pagination to keep Ant's logic if you still want it -->
-        <a-pagination
-          v-show="false"
-          :current="currentPage"
-          :pageSize="pageSize"
-          :total="total"
-          @change="onPageChange"
-        />
-      </div>
-      <!-- Table Header -->
-      <!-- <div class="grid grid-cols-5 bg-[#F8F8F8] w-full">
+        </table-component>
+        <div class="flex items-center gap-3 justify-end p-2.5">
           <span
-            v-for="header in headers"
-            class="text-[#00000080] uppercase text-[14px] font-medium font-inter border-[0.5px] border-[#36363633] text-center py-[14px] px-[24px]"
+            class="text-[#000000] font-inter font-semibold text-[12px] leading-[20px]"
+            >{{ currentPage }} of {{ totalPages }} pages</span
           >
-            {{ header }}
-          </span>
-        </div> -->
-      <!-- End Table Header -->
 
-      <!-- Table Body -->
-      <!-- <div>
-          <div
-            class="grid grid-cols-5 p-6 border-b border-[#E2EAEB]"
-            v-for="landlord in landlordList"
+          <button
+            class="px-3 py-2 border rounded-lg text-[#1E1E1E] disabled:text-[#1E1E1E4D] disabled:opacity-50"
+            :disabled="currentPage === 1"
+            @click="onPrev"
           >
-            <div
-              class="flex items-center h-full text-[#585858] text-[14px] font-sf"
-            >
-              {{ landlord.firstname }} {{ landlord.lastname }}
-            </div>
-            <div class="flex items-center text-[#585858] text-[14px] font-sf">
-              {{ landlord.emailAddress }}
-            </div>
-            <div
-              class="flex items-center text-[#585858] justify-center text-[14px] font-sf w-fit px-[6px] py-[2px] rounded-[5px]"
-              :class="{
-                status_overdue: !landlord.isVerified,
-                status_due: landlord.isVerified,
-              }"
-            >
-              {{ landlord.isVerified ? "Yes" : "No" }}
-            </div>
-            
-            <div
-              class="flex items-center text-[#585858] text-[14px] font-sf pl-7"
-            >
-              {{ formatDate(landlord.lastLoginDate) }}
-            </div>
+            Previous
+          </button>
 
-            <div>
-              <a-dropdown :trigger="['click']">
-                <a
-                  class="ant-dropdown-link cursor-pointer text-[#808097] flex items-center gap-[4px] pl-7"
-                  @click.prevent
-                >
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 14 14"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M3.0625 4.16667H2.39583C2.04221 4.16667 1.70307 4.30714 1.45302 4.55719C1.20298 4.80724 1.0625 5.14638 1.0625 5.5V11.5C1.0625 11.8536 1.20298 12.1928 1.45302 12.4428C1.70307 12.6929 2.04221 12.8333 2.39583 12.8333H8.39583C8.74946 12.8333 9.08859 12.6929 9.33864 12.4428C9.58869 12.1928 9.72917 11.8536 9.72917 11.5V10.8333M9.0625 2.83333L11.0625 4.83333M11.9858 3.89007C12.2484 3.62751 12.3959 3.27139 12.3959 2.90007C12.3959 2.52875 12.2484 2.17264 11.9858 1.91007C11.7233 1.64751 11.3672 1.5 10.9958 1.5C10.6245 1.5 10.2684 1.64751 10.0058 1.91007L4.39583 7.50007V9.50007H6.39583L11.9858 3.89007Z"
-                      stroke="#808097"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                  Edit
-                  <DownOutlined />
-                </a>
-                <template #overlay>
-                  <a-menu>
-                    <a-menu-item key="0">
-                      <li
-                        class="font-medium text-[#808097] cursor-pointer text-base leading-5 py-[16px] px-[8px]"
-                        @click="handleVerifyLandlord(landlord)"
-                      >
-                        Verify Landlord
-                      </li>
-                    </a-menu-item>
-                    <a-menu-divider />
-                    <a-menu-item key="1">
-                      <li
-                        class="cursor-pointer font-medium text-[#808097] text-base leading-5 py-[16px] px-[8px]"
-                        @click="editLandlord(landlord)"
-                      >
-                        Edit Email
-                      </li>
-                    </a-menu-item>
-                  </a-menu>
-                </template>
-              </a-dropdown>
-            </div>
-          </div>
-        </div> -->
+          <button
+            class="px-3 py-2 border rounded-lg text-[#1E1E1E] disabled:text-[#1E1E1E4D] disabled:opacity-50"
+            :disabled="currentPage === totalPages"
+            @click="onNext"
+          >
+            Next
+          </button>
+
+          <!-- Hidden pagination to keep Ant's logic if you still want it -->
+          <a-pagination
+            v-show="false"
+            :current="currentPage"
+            :pageSize="pageSize"
+            :total="total"
+            @change="onPageChange"
+          />
+        </div>
+      </div>
     </div>
   </div>
-
-  <!-- <div class="bg-neutral px-10 w-full overflow-y-scroll h-screen pb-40">
-    <div class="flex m-0 mt-[40px] justify-between items-center mb-[30px]">
-      <p class="text-txt_dark text-[24px] font-sf font-semibold m-0">
-        TENANTS OVERVIEW
-      </p>
-      <button
-        class="bg-[#000130] py-[9px] px-[32px] m-0 text-white leading-[25px] font-semibold rounded-[4px]"
-      >
-        + Add Tenant
-      </button>
-    </div>
-    <section class="list_container">
-      <div class="flex w-full justify-between border-b border-br1 pb-3 mb-4">
-        <p
-          class="font-medium text-[14px] md:text-[16px] lg:text-[18px] mr-0.5 text-[#808097]"
-        >
-          Total Number of Tenants:
-          <span class="font-[700] font-sf text-[18px]">(43)</span>
-        </p>
-      </div>
-      <ul>
-        <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
-          <section class="flex w-full justify-between m-0">
-            <p class="font-medium text-lg leading-6 text-txt_dark">
-              Steph Orkuma
-              <span class="text-[#808097] font-sf font-[600]"
-                >Apt T-69, Sean Apartments
-              </span>
-            </p>
-
-            <div class="flex gap-2 items-center font-sf">
-              <p class="text-[#808097] font-semibold leading-7 m-0 font-sf">
-                Rent Due:
-              </p>
-
-              <p
-                class="text-txt_dark items-center flex px-2 py-[2px] rounded-[26px] m-0"
-              >
-                21/12/21
-              </p>
-            </div>
-          </section>
-          <a
-            class="text-sm m-0 font-sf text-[#404164] cursor-pointer underline"
-            @click="openModal({})"
-            >View tenant information</a
-          >
-        </li>
-        <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
-          <section class="flex w-full justify-between m-0">
-            <p class="font-medium text-lg leading-6 text-txt_dark">
-              Steph Orkuma
-              <span class="text-[#808097] font-sf font-[600]"
-                >Apt T-69, Sean Apartments
-              </span>
-            </p>
-
-            <div class="flex gap-2 items-center font-sf">
-              <p class="text-[#808097] font-semibold leading-7 m-0 font-sf">
-                Rent Due:
-              </p>
-
-              <p
-                class="text-txt_dark bg-bg1 items-center flex px-2 py-[2px] rounded-[26px] m-0"
-              >
-                21/12/21
-              </p>
-            </div>
-          </section>
-          <a
-            class="text-sm m-0 font-sf text-[#404164] cursor-pointer underline"
-            @click="openModal({})"
-            >View tenant information</a
-          >
-        </li>
-        <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
-          <section class="flex w-full justify-between m-0">
-            <p class="font-medium text-lg leading-6 text-txt_dark">
-              Steph Orkuma
-              <span class="text-[#808097] font-sf font-[600]"
-                >Apt T-69, Sean Apartments
-              </span>
-            </p>
-
-            <div class="flex gap-2 items-center font-sf">
-              <p class="text-[#808097] font-semibold leading-7 m-0 font-sf">
-                Rent Due:
-              </p>
-
-              <p
-                class="text-txt_dark bg-bg1 items-center flex px-2 py-[2px] rounded-[26px] m-0"
-              >
-                21/12/21
-              </p>
-            </div>
-          </section>
-          <a
-            class="text-sm m-0 font-sf text-[#404164] cursor-pointer underline"
-            @click="openModal({})"
-            >View tenant information</a
-          >
-        </li>
-        <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
-          <section class="flex w-full justify-between m-0">
-            <p class="font-medium text-lg leading-6 text-txt_dark">
-              Steph Orkuma
-              <span class="text-[#808097] font-sf font-[600]">Apt T-69, </span>
-            </p>
-
-            <div class="flex gap-2 items-center font-sf">
-              <p class="text-[#808097] font-semibold leading-7 m-0 font-sf">
-                Rent Due:
-              </p>
-
-              <p
-                class="text-txt_dark bg-bg1 items-center flex px-2 py-[2px] rounded-[26px] m-0"
-              >
-                21/12/21
-              </p>
-            </div>
-          </section>
-          <a
-            class="text-sm m-0 font-sf text-[#404164] cursor-pointer underline"
-            @click="openModal({})"
-            >View tenant information</a
-          >
-        </li>
-        <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
-          <section class="flex w-full justify-between m-0">
-            <p class="font-medium text-lg leading-6 text-txt_dark">
-              Steph Orkuma
-              <span class="text-[#808097] font-sf font-[600]"
-                >Apt T-69, Sean Apartments
-              </span>
-            </p>
-
-            <div class="flex gap-2 items-center font-sf">
-              <p class="text-[#808097] font-semibold leading-7 m-0 font-sf">
-                Rent Due:
-              </p>
-
-              <p
-                class="text-txt_dark bg-bg1 items-center flex px-2 py-[2px] rounded-[26px] m-0"
-              >
-                21/12/21
-              </p>
-            </div>
-          </section>
-          <a
-            class="text-sm m-0 font-sf text-[#404164] cursor-pointer underline"
-            @click="openModal({})"
-            >View tenant information</a
-          >
-        </li>
-      </ul>
-    </section>
-  </div> -->
-
-  <!-- <modal-component
-    ref="viewRequestModal"
-    title="B-29 Brina Apartments"
-    @close="onModalClose"
-    :button_label="'Send Notifications to tenant'"
-  >
-    <ul class="grid gap-11 w-full max-w-[691px] mx-auto">
-      <li>
-        <div class="flex gap-2">
-          <p class="text-[#404164] font-medium leading-7">Email Address</p>
-          <p class="text-txt_dark leading-7">Steph Orkuma, Derek Jones</p>
-        </div>
-      </li>
-      <li class="w-full">
-        <div class="flex gap-2">
-          <p class="text-[#404164] font-medium leading-7">Apartment:</p>
-          <p class="text-txt_dark leading-7">B-29, Brina Apartments</p>
-        </div>
-      </li>
-      <li>
-        <div class="flex gap-2">
-          <p class="text-[#404164] font-medium leading-7">Rent Amount:</p>
-          <p class="text-txt_dark leading-7">700</p>
-        </div>
-      </li>
-      <li>
-        <div class="flex gap-2">
-          <p class="text-[#404164] font-medium leading-7">Rent Due:</p>
-          <div class="rounded-md py-1.5 px-5 flex gap-2 justify-center">
-            <p class="font-medium text-sm leading-6 text-txt_dark">21/12/21</p>
-          </div>
-        </div>
-        <div class="flex gap-2">
-          <p class="text-[#404164] font-medium leading-7">Lease Expires:</p>
-          <div class="rounded-md py-1.5 px-5 flex gap-2 justify-center">
-            <p class="font-medium text-sm leading-6 text-txt_dark underline">
-              View tenant lease
-            </p>
-          </div>
-        </div>
-      </li>
-      <li>
-      </li>
-    </ul>
-  </modal-component> -->
 </template>
 
 <script>
 import { FetchTenants, SignUpLandlord, VerifyLandlord } from "@/api/auth";
 import IconEdit from "@/components/icons/IconEdit.vue";
 import Table from "@/components/Table.vue";
+import V2Table from "@/components/V2Table.vue";
 import handleError from "@/utils/handleError";
 import { handleToast } from "@/utils/helper";
 import dayjs from "dayjs";
@@ -460,7 +157,7 @@ import dayjs from "dayjs";
 import { h } from "vue";
 export default {
   components: {
-    "table-component": Table,
+    "table-component": V2Table,
     "edit-icon": IconEdit,
   },
   created() {
@@ -477,6 +174,11 @@ export default {
           dataIndex: "name",
         },
         {
+          title: "Properties",
+          dataIndex: "properties",
+          className: "properties",
+        },
+        {
           title: "email",
           className: "email",
           dataIndex: "email",
@@ -489,7 +191,7 @@ export default {
           title: "Last Login",
           dataIndex: "lastLoginDate",
         },
-        { title: "action", dataIndex: "action" },
+        { title: "action", dataIndex: "action", slotName: "action" },
       ],
       landlordList: [],
       tableDropdown: "",
