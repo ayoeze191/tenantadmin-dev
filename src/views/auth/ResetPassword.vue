@@ -74,7 +74,7 @@ import AuthHero from "@/components/AuthHero.vue";
 import { ResetPassword } from "@/api/auth";
 import IconViewPassword from "@/components/icons/iconViewPassword.vue";
 import IconHidePassword from "@/components/icons/IconHidePassword.vue";
-import Button from "@/components/Button.vue";
+import Button from "@/components/Button/Button.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useToast } from "vue-toast-notification";
 import { checkPasswordStrength } from "@/utils/helper";

@@ -27,206 +27,130 @@
         10Ants
       </p>
     </div>
-    <div class="px-[16px]">
-      <a-menu
-        mode="inline"
-        :selectedKeys="[selectedKey]"
-        :openKeys="openKeys"
-        @openChange="onOpenChange"
-        class="bg-[#111921] pt-[20px] border-t-[1px] border-t-[#D3D3D340] h-fit w-full"
-      >
-        <a-menu-item key="dashboard" class="text-[#FFFFFF8C]">
-          <router-link :to="{ name: 'admin-dashboard' }">
-            <template #icon><application-icon /></template>
-            <p
-              class="p-0 text-[#FFFFFF8C] m-0 text-[14px] leading-[20px] font-[500] font-inter"
-            >
-              Overview
-            </p>
+    <a-menu
+      mode="inline"
+      :selectedKeys="[selectedKey]"
+      :openKeys="openKeys"
+      @openChange="onOpenChange"
+    >
+      <a-menu-item key="dashboard">
+        <template #icon><overview-icon /></template>
+        <router-link :to="{ name: 'admin-dashboard' }">
+          Overview
+        </router-link>
+      </a-menu-item>
+      <a-menu-item key="service-requests" title="Service Requests">
+        <template #icon><request-icon /></template>
+        <router-link :to="{ name: 'service-requests' }"
+          >Service Request</router-link
+        >
+      </a-menu-item>
+      <a-menu-item key="admin-applications">
+        <router-link :to="{ name: 'admin-applications' }">
+          <template #icon><application-icon /></template>
+          Tenancy Applications
+        </router-link>
+      </a-menu-item>
+      <a-sub-menu key="properties" title="My Properties">
+        <template #icon><properties-icon /></template>
+        <a-menu-item key="add-admin-properties">
+          <router-link :to="{ name: 'add-admin-properties' }"
+            >Add Properties</router-link
+          >
+        </a-menu-item>
+        <a-menu-item key="admin-properties">
+          <router-link :to="{ name: 'admin-properties' }"
+            >View Properties</router-link
+          >
+        </a-menu-item>
+        <a-menu-item key="setup-properties">
+          <router-link :to="{ name: 'setup-properties' }"
+            >Setup Properties
           </router-link>
         </a-menu-item>
-
-        <a-sub-menu key="service-requests" class="text-[#FFFFFF8C]">
-          <template #icon> <request-icon /></template>
-          <template #title
-            ><span
-              class="p-0 m-0 text-[#FFFFFF8C] text-[14px] leading-[20px] font-[500] font-inter"
-            >
-              Service Requests
-            </span>
-          </template>
-          <a-menu-item key="pending-service-requests">
-            <router-link :to="{ name: 'pending-service-requests' }"
-              >Pending Request</router-link
-            >
-          </a-menu-item>
-          <a-menu-item key="completed-service-requests">
-            <router-link :to="{ name: 'completed-service-requests' }"
-              >Completed Request</router-link
-            >
-          </a-menu-item>
-          <a-menu-item key="all-service-requests">
-            <router-link :to="{ name: 'all-service-requests' }"
-              >All Request</router-link
-            >
-          </a-menu-item>
-        </a-sub-menu>
-        <a-menu-item key="admin-applications" class="text-[#FFFFFF8C]">
-          <router-link :to="{ name: 'admin-applications' }">
-            <template #icon><application-icon /></template>
-            <p
-              class="p-0 text-[#FFFFFF8C] m-0 text-[14px] leading-[20px] font-[500] font-inter"
-            >
-              Tenancy Applications
-            </p>
-          </router-link>
+      </a-sub-menu>
+      <a-sub-menu key="tenants" title="My Tenants">
+        <template #icon><tenants-icon /></template>
+        <a-menu-item key="admin-tenants">
+          <router-link :to="{ name: 'admin-tenants' }"
+            >Tenant Overview</router-link
+          >
         </a-menu-item>
-        <a-sub-menu key="properties" class="text-[#FFFFFF8C]">
-          <template #icon> <properties-icon /></template>
-          <template #title>
-            <p
-              class="p-0 text-[#FFFFFF8C] m-0 text-[14px] leading-[20px] font-[500] font-inter"
-            >
-              My Properties
-            </p>
-          </template>
-
-          <a-menu-item key="add-admin-properties">
-            <router-link :to="{ name: 'add-admin-properties' }"
-              >Add Properties</router-link
-            >
-          </a-menu-item>
-          <a-menu-item key="admin-properties">
-            <router-link :to="{ name: 'admin-properties' }"
-              >View Properties</router-link
-            >
-          </a-menu-item>
-          <a-menu-item key="setup-properties">
-            <router-link :to="{ name: 'setup-properties' }"
-              >Setup Properties
-            </router-link>
-          </a-menu-item>
-        </a-sub-menu>
-        <a-sub-menu key="tenants" class="text-[#FFFFFF8C]">
-          <template #icon> <tenants-icon /></template>
-          <template #title>
-            <p
-              class="p-0 text-[#FFFFFF8C] m-0 text-[14px] leading-[20px] font-[500] font-inter"
-            >
-              My Tenants
-            </p>
-          </template>
-          <a-menu-item key="admin-tenants">
-            <router-link :to="{ name: 'admin-tenants' }"
-              >Tenant Overview</router-link
-            >
-          </a-menu-item>
-          <a-menu-item key="admin-tenants-lease">
-            <router-link :to="{ name: 'admin-tenants-lease' }"
-              >Lease Management</router-link
-            >
-          </a-menu-item>
-        </a-sub-menu>
-        <a-sub-menu key="payments" class="text-[#FFFFFF8C]">
-          <template #icon> <payments-icon /></template>
-          <template #title>
-            <p
-              class="p-0 text-[#FFFFFF8C] m-0 text-[14px] leading-[20px] font-[500] font-inter"
-            >
-              My Payments
-            </p>
-          </template>
-          <a-menu-item key="admin-payments-due">
-            <router-link :to="{ name: 'admin-payments-due' }"
-              >Payment Due</router-link
-            >
-          </a-menu-item>
-          <a-menu-item key="admin-payments-rent">
-            <router-link :to="{ name: 'admin-payments-rent' }"
-              >Rent Payment</router-link
-            >
-          </a-menu-item>
-          <a-menu-item key="admin-payments-utility">
-            <router-link :to="{ name: 'admin-payments-utility' }"
-              >Utility</router-link
-            >
-          </a-menu-item>
-          <a-menu-item key="admin-payments-deposit">
-            <router-link :to="{ name: 'admin-payments-deposit' }"
-              >Security Deposit</router-link
-            >
-          </a-menu-item>
-          <a-menu-item key="admin-payments-maintenance">
-            <router-link :to="{ name: 'admin-payments-maintenance' }"
-              >Maintenance Fee</router-link
-            >
-          </a-menu-item>
-        </a-sub-menu>
-        <a-sub-menu
-          key="users"
-          v-if="userType == 'NN1'"
-          class="text-[#FFFFFF8C]"
-        >
-          <template #icon> <users-icon /></template>
-          <template #title>
-            <p
-              class="p-0 text-[#FFFFFF8C] m-0 text-[14px] leading-[20px] font-[500] font-inter"
-            >
-              Users
-            </p>
-          </template>
-          <a-menu-item key="admin-users-landlord">
-            <router-link :to="{ name: 'admin-users-landlord' }"
-              >Landlord</router-link
-            >
-          </a-menu-item>
-          <a-menu-item key="admin-users-admin">
-            <router-link :to="{ name: 'admin-users-admin' }">Admin</router-link>
-          </a-menu-item>
-          <a-menu-item key="admin-users-register">
-            <router-link :to="{ name: 'admin-users-register' }"
-              >Register Admin User</router-link
-            >
-          </a-menu-item>
-        </a-sub-menu>
-        <a-sub-menu
-          key="roles"
-          class="text-[#FFFFFF8C]"
-          v-if="userType == 'NN1'"
-        >
-          <template #title>
-            <p
-              class="p-0 text-[#FFFFFF8C] m-0 text-[14px] leading-[20px] font-[500] font-inter"
-            >
-              Roles
-            </p>
-          </template>
-          <template #icon> <roles-icon /></template>
-          <a-menu-item key="admin-users-roles">
-            <router-link :to="{ name: 'admin-users-roles' }"
-              >View Roles</router-link
-            >
-          </a-menu-item>
-          <a-menu-item key="admin-users-add-roles">
-            <router-link :to="{ name: 'admin-users-add-roles' }"
-              >Add Roles</router-link
-            >
-          </a-menu-item>
-        </a-sub-menu>
-        <a-menu-item
-          key="admin-users-notification"
-          v-if="userType == 'NN1'"
-          class="text-[#FFFFFF8C]"
-        >
-          <router-link :to="{ name: 'admin-users-notification' }">
-            <template #icon><notification-icon /></template>
-            <p
-              class="p-0 m-0 text-[14px] text-[#FFFFFF8C] leading-[20px] font-[500] font-inter"
-            >
-              User Notification
-            </p>
-          </router-link>
+        <a-menu-item key="admin-tenants-lease">
+          <router-link :to="{ name: 'admin-tenants-lease' }"
+            >Lease Management</router-link
+          >
         </a-menu-item>
+      </a-sub-menu>
+      <a-sub-menu key="payments" title="My Payments">
+        <template #icon><payments-icon /></template>
+        <a-menu-item key="admin-payments-due">
+          <router-link :to="{ name: 'admin-payments-due' }"
+            >Payment Due</router-link
+          >
+        </a-menu-item>
+        <a-menu-item key="admin-payments-rent">
+          <router-link :to="{ name: 'admin-payments-rent' }"
+            >Rent Payment</router-link
+          >
+        </a-menu-item>
+        <a-menu-item key="admin-payments-utility">
+          <router-link :to="{ name: 'admin-payments-utility' }"
+            >Utility</router-link
+          >
+        </a-menu-item>
+        <a-menu-item key="admin-payments-deposit">
+          <router-link :to="{ name: 'admin-payments-deposit' }"
+            >Security Deposit</router-link
+          >
+        </a-menu-item>
+        <a-menu-item key="admin-payments-maintenance">
+          <router-link :to="{ name: 'admin-payments-maintenance' }"
+            >Maintenance Fee</router-link
+          >
+        </a-menu-item>
+      </a-sub-menu>
+      <a-sub-menu key="users" title="Users" v-if="userType == 'NN1'">
+        <template #icon><users-icon /></template>
+        <a-menu-item key="admin-users-landlord">
+          <router-link :to="{ name: 'admin-users-landlord' }"
+            >Landlord</router-link
+          >
+        </a-menu-item>
+        <a-menu-item key="admin-users-admin">
+          <router-link :to="{ name: 'admin-users-admin' }">Admin</router-link>
+        </a-menu-item>
+        <a-menu-item key="admin-users-register">
+          <router-link :to="{ name: 'admin-users-register' }"
+            >Register Admin User</router-link
+          >
+        </a-menu-item>
+      </a-sub-menu>
+      <a-sub-menu key="roles" title="Roles" v-if="userType == 'NN1'">
+        <template #icon><roles-icon /></template>
+        <a-menu-item key="admin-users-roles">
+          <router-link :to="{ name: 'admin-users-roles' }"
+            >View Roles</router-link
+          >
+        </a-menu-item>
+        <a-menu-item key="admin-users-add-roles">
+          <router-link :to="{ name: 'admin-users-add-roles' }"
+            >Add Roles</router-link
+          >
+        </a-menu-item>
+      </a-sub-menu>
+      <!-- <a-menu-item key="amenities">
+        <router-link :to="{ name: 'amenities' }">
+          <template #icon><amenities-icon /></template>
+          Amenities
+        </router-link>
+      </a-menu-item> -->
+      <a-menu-item key="admin-users-notification" v-if="userType == 'NN1'">
+        <router-link :to="{ name: 'admin-users-notification' }">
+          <template #icon><notification-icon /></template>
+          User Notification
+        </router-link>
+      </a-menu-item>
 
         <a-menu-item
           key="audit-logs"

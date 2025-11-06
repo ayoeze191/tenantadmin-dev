@@ -79,7 +79,7 @@
 import iconViewPassword from "../../components/icons/iconViewPassword.vue";
 import iconHidePassword from "../../components/icons/IconHidePassword.vue";
 import { LoginUser } from "@/api/auth";
-import Button from "@/components/Button.vue";
+import Button from "@/components/Button/Button.vue";
 import { useToast } from "vue-toast-notification";
 import { setCookie } from "@/utils/cookies";
 import AuthHero from "@/components/AuthHero.vue";

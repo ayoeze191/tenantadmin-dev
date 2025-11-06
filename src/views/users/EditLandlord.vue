@@ -36,7 +36,7 @@
 
 <script>
 import { EditLandlordEmail } from '@/api/auth';
-import Button from '@/components/Button.vue';
+import Button from '@/components/Button/Button.vue';
 import handleError from '@/utils/handleError';
 import { handleToast } from '@/utils/helper';
 

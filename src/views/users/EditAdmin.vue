@@ -53,7 +53,7 @@
 <script>
 import { EditAdmin } from '@/api/auth';
 import { FetchRoles } from '@/api/role';
-import Button from '@/components/Button.vue';
+import Button from '@/components/Button/Button.vue';
 import handleError from '@/utils/handleError';
 import { handleToast } from '@/utils/helper';
 import vueSelect from 'vue-select';
