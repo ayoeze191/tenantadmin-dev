@@ -54,6 +54,12 @@
   select {
     @apply outline-none;
   }
+
+  #app {
+    width: 100%;
+    height: 100%;
+  }
+
   ul {
     @apply list-none;
   }

@@ -1,8 +1,8 @@
 <template>
-  <main class="flex w-full h-screen overflow-hidden bg-[#111921]">
+  <main class="flex w-full h-full overflow-hidden bg-primary p-[1rem] gap-3 box-border">
     <side-bar />
     <section
-      class="flex flex-col w-full h-full bg-[#FFFFFF] mt-[1rem] rounded-[18px]"
+      class="flex flex-col w-full h-full bg-[#FFFFFF] rounded-[18px] box-border"
     >
       <top-nav />
       <div class="flex-1 pt-4 h-full">
