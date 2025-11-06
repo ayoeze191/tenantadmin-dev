@@ -33,7 +33,6 @@ import Verification from "@/views/properties/Verification.vue";
 import SetUpProperties from "@/views/properties/SetUpProperties.vue";
 import Audit from "@/views/Logs/Audit.vue";
 import Otp from "@/views/auth/otp.vue";
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [

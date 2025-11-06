@@ -1,463 +1,713 @@
 <template>
-  <div
-    class="bg-neutral py-5 px-10 w-full overflow-y-scroll h-screen pb-40 font-sf"
-  >
-    <section
-      class="grid grid-cols-3 w-full mb-5 verySmallLaptop:grid-cols-2 tablet:grid-cols-1"
-    >
-      <div class="flex flex-col gap-[30px]">
-        <!-- Data Card -->
-        <div class="data_card h-full">
-          <section class="header mb-[16px] px-[14px]">
-            <p
-              class="card_title m-0 text-[14px] leading-[100%] md:text-[13px] sm:text-[12px]"
-            >
-              Application
-            </p>
-            <router-link
-              to="/applications"
-              class="flex items-center gap-[2px] font-sf font-medium text-[#252628] text-[14px] md:text-[13px] sm:text-[12px]"
-            >
-              See all
-              <span class="">
-                <right-arrow-icon />
-              </span>
-            </router-link>
-          </section>
-          <section class="px-[14px] md:px-[10px] sm:px-[6px]">
-            <p
-              class="flex gap-[4px] items-end font-medium text-dark text-sm h-fit text-[16px] md:text-[15px] sm:text-[14px]"
-            >
-              <span
-                class="h-full font-[600] font-sf leading-[100%] text-[24px] md:text-[20px] sm:text-[18px]"
-                >{{ AccomodationApplicationsCount.completed || 0 }}</span
-              >
-
-              <span
-                class="text-[14px] mb-[2px] leading-[100%] md:text-[13px] sm:text-[12px]"
-              >
-                Completed
-              </span>
-            </p>
-            <p
-              class="ml-auto w-fit credit_txt text-right gap-[2px] items-center text-dark flex py-1 px-2 text-[13px] md:text-[12px] sm:text-[11px]"
-            >
-              <span class=""><up-arrow-icon /></span>2.7%
-            </p>
-
-            <p
-              class="text-light_dark leading-[100%] font-sf text-right text-xs md:text-[11px] sm:text-[10px]"
-            >
-              More applications this week
-            </p>
-          </section>
-          <section
-            class="pt-[20px] px-[14px] border-t-[1px] border-[#E3E4E4] border-solid md:px-[10px] sm:px-[6px]"
-          >
-            <li
-              class="text-[#25262880] font-[600] flex gap-[2px] items-center text-[14px] md:text-[13px] sm:text-[12px]"
-            >
-              Ongoing
-              <span
-                class="text-[#A31616] text-[12px] bg-[#FFE8EC] px-[5px] py-[2px] rounded-[15px] flex md:text-[11px] sm:text-[10px] md:px-[4px] md:py-[1.5px] sm:px-[3px] sm:py-[1px]"
-                >{{ AccomodationApplicationsCount.ongoing || 0 }}</span
-              >
-            </li>
-          </section>
-        </div>
-        <div class="data_card py-[25px] md:py-[18px] sm:py-[12px]">
-          <section class="header mb-[16px] px-[14px]">
-            <p
-              class="card_title m-0 text-[14px] leading-[100%] md:text-[13px] sm:text-[12px]"
-            >
-              My Tenants
-            </p>
-            <router-link
-              to="/tenants"
-              class="flex items-center gap-[2px] font-sf font-medium text-[#252628] text-[14px] md:text-[13px] sm:text-[12px]"
-            >
-              See all
-              <span class="">
-                <right-arrow-icon />
-              </span>
-            </router-link>
-          </section>
-          <section class="px-[14px] md:px-[10px] sm:px-[6px]">
-            <p
-              class="font-medium text-dark text-sm h-fit text-[16px] md:text-[15px] sm:text-[14px]"
-            >
-              <span
-                class="text-lrge font-[600] font-sf m-0 p-0 leading-[100%] text-[24px] md:text-[20px] sm:text-[18px]"
-                >{{ tenantsCounts || 0 }}</span
-              >
-            </p>
-          </section>
-          <section
-            class="pt-[20px] mb-0 px-[14px] border-t-[1px] border-[#E3E4E4] border-solid flex flex-col gap-[16px] md:px-[10px] sm:px-[6px]"
-          >
-            <div class="h-[10px] bg-[#E3E4E4] rounded-[6.32px]">
-              <div
-                class="h-full bg-[#D7B360] rounded-[6.32px]"
-                :style="{ width: progress + '%' }"
-              ></div>
-            </div>
-            <li
-              class="text-[#25262880] text-[14px] leading-[100%] font-[600] flex gap-[2px] items-center md:text-[13px] sm:text-[12px]"
-            >
-              Target :
-              <span
-                class="text-[14px] px-[5px] py-[2px] rounded-[15px] flex md:text-[13px] sm:text-[12px] md:px-[4px] md:py-[1.5px] sm:px-[3px] sm:py-[1px]"
-              >
-                {{ " " }}100 tenants (43% complete)</span
-              >
-            </li>
-          </section>
-        </div>
-      </div>
-      <div
-        class="flex flex-col gap-[30px] ml-[24px] mr-[24px] md:ml-[16px] md:mr-[16px] sm:ml-[8px] sm:mr-[8px]"
-      >
-        <div class="data_card">
-          <section class="header mb-[16px] px-[14px]">
-            <p
-              class="card_title m-0 text-[14px] leading-[100%] md:text-[13px] sm:text-[12px]"
-            >
-              Service Requests
-            </p>
-            <router-link
-              to="/service-requests/all"
-              class="flex items-center gap-[2px] font-sf font-medium text-[#252628] text-[14px] md:text-[13px] sm:text-[12px]"
-            >
-              See all
-              <span class="">
-                <right-arrow-icon />
-              </span>
-            </router-link>
-          </section>
-          <section class="px-[14px] md:px-[10px] sm:px-[6px]">
-            <p
-              class="font-medium flex gap-1 items-end text-dark text-sm h-fit text-[16px] md:text-[15px] sm:text-[14px]"
-            >
-              <span
-                class="font-[600] font-sf m-0 p-0 leading-[100%] text-[24px] md:text-[20px] sm:text-[18px]"
-              >
-                <a-spin
-                  :spinning="loading.serviceRequestCompleted"
-                  :indicator="customIcon"
-                />
-
-                <span v-if="!loading.serviceRequestCompleted">
-                  {{ pendingRequests.length }}</span
-                >
-              </span>
-              <span
-                class="mb-[2px] text-[14px] leading-[100%] md:text-[13px] sm:text-[12px]"
-              >
-                Pending
-              </span>
-            </p>
-            <p
-              class="ml-auto w-fit credit_txt bg-[#FFE8EC] text-right gap-[2px] items-center text-dark flex py-1 px-2 text-[13px] md:text-[12px] sm:text-[11px]"
-            >
-              <span class=""><up-arrow-icon /></span>2.7%
-            </p>
-
-            <p
-              class="text-light_dark leading-[100%] font-sf text-right text-xs md:text-[11px] sm:text-[10px]"
-            >
-              Less requests this week
-            </p>
-          </section>
-          <section
-            class="pt-[20px] px-[14px] border-t-[1px] border-[#E3E4E4] border-solid flex justify-between md:px-[10px] sm:px-[6px]"
-          >
-            <li
-              class="text-[#25262880] font-[600] flex gap-[2px] items-center text-[14px] md:text-[13px] sm:text-[12px]"
-            >
-              Ongoing
-              <span>
-                <a-spin
-                  :spinning="loading.serviceOngoingCompleted"
-                  :indicator="customIcon"
-                />
-              </span>
-              <span
-                v-if="!this.loading.serviceOngoingCompleted"
-                class="text-[#A31616] text-[12px] bg-[#FFE8EC] px-[5px] py-[2px] rounded-[15px] flex md:text-[11px] sm:text-[10px] md:px-[4px] md:py-[1.5px] sm:px-[3px] sm:py-[1px]"
-                >{{ ongoingRequests.length }}</span
-              >
-            </li>
-            <li
-              class="text-[#25262880] font-[600] flex gap-[2px] items-center text-[14px] md:text-[13px] sm:text-[12px]"
-            >
-              Completed
-              <span
-                class="text-[#A31616] text-[12px] bg-[#E0F5EB] px-[5px] py-[2px] rounded-[15px] flex md:text-[11px] sm:text-[10px] md:px-[4px] md:py-[1.5px] sm:px-[3px] sm:py-[1px]"
-                >{{ serviceRequests.length }}</span
-              >
-            </li>
-          </section>
-        </div>
-        <div class="data_card">
-          <section class="header mb-[16px] px-[14px]">
-            <p
-              class="card_title m-0 text-[14px] leading-[100%] md:text-[13px] sm:text-[12px]"
-            >
-              Maintenance Fee
-            </p>
-            <router-link
-              to="/payments/maintenance"
-              class="flex items-center gap-[2px] font-sf font-medium text-[#252628] text-[14px] md:text-[13px] sm:text-[12px]"
-            >
-              See all
-              <span class="">
-                <right-arrow-icon />
-              </span>
-            </router-link>
-          </section>
-          <section class="px-[14px] md:px-[10px] sm:px-[6px]">
-            <p
-              class="font-medium text-dark text-sm h-fit text-[16px] md:text-[15px] sm:text-[14px]"
-            >
-              <span
-                class="text-lrge font-[600] font-sf m-0 p-0 leading-[100%] text-[24px] md:text-[20px] sm:text-[18px]"
-                >C$55,530.45</span
-              >
-            </p>
-            <p
-              class="ml-auto w-fit credit_txt bg-[#FFE8EC] text-right gap-[2px] items-center text-dark flex py-1 px-2 text-[13px] md:text-[12px] sm:text-[11px]"
-            >
-              <span class=""><up-arrow-icon /></span>2.7%
-            </p>
-
-            <p
-              class="text-light_dark leading-[100%] font-sf text-right text-xs md:text-[11px] sm:text-[10px]"
-            >
-              Less cost this week
-            </p>
-          </section>
-          <section
-            class="pt-[20px] px-[14px] border-t-[1px] border-[#E3E4E4] border-solid flex justify-between md:px-[10px] sm:px-[6px]"
-          >
-            <li
-              class="text-[#25262880] font-[600] flex gap-[2px] items-center text-[14px] md:text-[13px] sm:text-[12px]"
-            >
-              Owing
-              <span
-                class="text-[#A31616] text-[12px] bg-[#FFE8EC] px-[5px] py-[2px] rounded-[15px] flex md:text-[11px] sm:text-[10px] md:px-[4px] md:py-[1.5px] sm:px-[3px] sm:py-[1px]"
-                >8</span
-              >
-            </li>
-            <li
-              class="text-[#25262880] font-[600] flex gap-[2px] items-center text-[14px] md:text-[13px] sm:text-[12px]"
-            >
-              Paid
-              <span
-                class="text-[#A31616] text-[12px] bg-[#E0F5EB] px-[5px] py-[2px] rounded-[15px] flex md:text-[11px] sm:text-[10px] md:px-[4px] md:py-[1.5px] sm:px-[3px] sm:py-[1px]"
-                >5</span
-              >
-            </li>
-          </section>
-        </div>
-      </div>
-      <!--Rent inflow graph -->
-      <aside class="data_card h-auto">
-        <section
-          class="header flex items-center px-[16px] md:px-[10px] sm:px-[6px]"
+  <div class="flex-1">
+    <transition name="fade">
+      <div class="px-4" v-if="showAds == true">
+        <div
+          class="bg-[#2E544E] flex justify-between w-full px-[14px] py-[12.5px] rounded-[8px]"
         >
-          <p
-            class="text-[#252628] m-0 font-sf text-sm leading-[100%] text-[16px] md:text-[15px] sm:text-[14px]"
+          <div
+            class="flex gap-2 items-center text-white font-inter text-[14px] font-medium"
           >
-            Rent Inflow
-          </p>
-
-          <a
-            class="m-0 text-[#252628] text-xs leading-[100%] font-semibold text-[13px] md:text-[12px] sm:text-[11px]"
-          >
-            See all
-            <span class="ml-0.5 mt-1">
-              <right-arrow-icon />
+            <span>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.75 8.5V4.75M7.75 1C11.4779 1 14.5 4.02208 14.5 7.75C14.5 11.4779 11.4779 14.5 7.75 14.5C4.02208 14.5 1 11.4779 1 7.75C1 4.02208 4.02208 1 7.75 1ZM7.71265 10.75V10.675L7.78735 10.6749V10.75H7.71265Z"
+                  stroke="white"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
             </span>
-          </a>
-        </section>
-        <div class="h-72 flex w-full justify-center tablet:h-auto">
-          <chart :data="chartData" :options="chartOptions" />
-        </div>
-        <section
-          class="py-[16px] px-5 border-solid border-t-[#E3E4E4] border-t mt-[20px] md:px-[3px] sm:px-[2px]"
-        >
-          <p
-            class="text-[#25262880] font-semibold text-base leading-[100%] text-[16px] md:text-[15px] sm:text-[14px]"
-          >
-            Expected Rent : <span class="text-[#252628]">$10,000</span>
-          </p>
-          <ul class="flex justify-between">
-            <li
-              class="text-light_dark text-[12px] leading-[100%] md:text-[11px] sm:text-[10px]"
+            <span
+              >Enhance tenant satisfaction with a dedicated property manager!
+              Efficient lease tracking and prompt maintenance requests.</span
             >
-              Collected Rent:
-              <span
-                class="text-[#0E3221] font-semibold bg-[#E0F5EB] rounded-[15px] px-[6px] py-[2px] leading-[100%] md:text-[11px] sm:text-[10px] md:px-[5px] md:py-[1.5px] sm:px-[4px] sm:py-[1px]"
-                >$7,500</span
-              >
-            </li>
-            <li
-              class="text-[#25262880] text-[12px] leading-[100%] md:text-[11px] sm:text-[10px]"
+          </div>
+
+          <div class="h-full">
+            <button
+              @click="showAds = false"
+              class="bg-[#FFFFFF33] h-full text-[#FFFFFF] text-[12px] font-inter font-medium px-[10px] py-[6px] rounded-[6px]"
             >
-              Pending Rent:
-              <span
-                class="debit_txt px-[6px] py-[2px] text-[12px] font-semibold md:text-[11px] sm:text-[10px] md:px-[5px] md:py-[1.5px] sm:px-[4px] sm:py-[1px]"
-                >$2,500</span
-              >
-            </li>
-          </ul>
-        </section>
-      </aside>
-    </section>
-    <!-- Table -->
-    <div
-      class="py-4 px-8 bg-white rounded-lg w-full overflow-x-scroll sm:px-4 md:px-6 lg:px-8"
-    >
-      <p
-        class="text-lg leading-[100%] text-[#000000] mb-5 font-[500] text-[18px] md:text-[16px] sm:text-[15px]"
-      >
-        Pending Rent Payment
-      </p>
-      <div>
-        <!-- Table header -->
-        <div
-          class="grid grid-cols-6 font-normal text-[#98A2B3] text-[16px] md:text-[15px] sm:text-[14px] font-[initial]"
-        >
-          <span> # </span>
-          <span> Name </span>
-          <span> Status </span>
-          <span> Property </span>
-          <span> Unit Number </span>
-          <span> Due Date </span>
+              Skip
+            </button>
+            <button
+              @click="isAddManagerModalOpen = true"
+              class="bg-[#FFFFFF] h-full text-[#000000] ml-[4px] text-[12px] font-inter font-medium px-[10px] py-[6px] rounded-[6px]"
+            >
+              Add Manager
+            </button>
+          </div>
         </div>
-        <!-- End Table Header -->
-        <!-- Table body -->
-        <div
-          class="grid grid-cols-6 font-normal mb-[29px] text-[#404164] mt-4 text-[18px] font-[initial] md:text-[16px] sm:text-[15px]"
-        >
-          <span> 1 </span>
-          <span> Steph Sobim </span>
-          <span
-            class="text-[#E41919] px-[18px] py-[2.5px] rounded-[155px] bg-[#E4191940] w-fit md:px-[14px] sm:px-[10px] md:py-[2px] sm:py-[1.5px] md:text-[15px] sm:text-[14px]"
-          >
-            Overdue
-          </span>
-          <span> Wellington House </span>
-          <span> 1243 </span>
-          <span> 23/09/22 </span>
-        </div>
-
-        <div
-          class="grid grid-cols-6 font-normal mb-[29px] text-[#404164] mt-4 text-[18px] font-[initial] md:text-[16px] sm:text-[15px]"
-        >
-          <span> 2 </span>
-          <span> Steph Sobim </span>
-          <span
-            class="text-[#D68F02] px-[18px] py-[2.5px] rounded-[155px] bg-[#D68F0240] w-fit md:px-[14px] sm:px-[10px] md:py-[2px] sm:py-[1.5px] md:text-[15px] sm:text-[14px]"
-          >
-            Pending
-          </span>
-          <span> Wellington House </span>
-          <span> 1243 </span>
-          <span> 23/09/22 </span>
-        </div>
-
-        <div
-          class="grid grid-cols-6 font-normal mb-[29px] text-[#404164] mt-4 text-[18px] font-[initial] md:text-[16px] sm:text-[15px]"
-        >
-          <span> 3 </span>
-          <span> Steph Sobim </span>
-          <span
-            class="text-[#D68F02] px-[18px] py-[2.5px] rounded-[155px] bg-[#D68F0240] w-fit md:px-[14px] sm:px-[10px] md:py-[2px] sm:py-[1.5px] md:text-[15px] sm:text-[14px]"
-          >
-            Pending
-          </span>
-          <span> Wellington House </span>
-          <span> 1243 </span>
-          <span> 23/09/22 </span>
-        </div>
-
-        <div
-          class="grid grid-cols-6 font-normal mb-[29px] text-[#404164] mt-4 text-[18px] font-[initial] md:text-[16px] sm:text-[15px]"
-        >
-          <span> 4 </span>
-          <span> Steph Sobim </span>
-          <span
-            class="text-[#31A057] px-[18px] py-[2.5px] rounded-[155px] bg-[#31A05740] w-fit md:px-[14px] sm:px-[10px] md:py-[2px] sm:py-[1.5px] md:text-[15px] sm:text-[14px]"
-          >
-            Due
-          </span>
-          <span> Wellington House </span>
-          <span> 1243 </span>
-          <span> 23/09/22 </span>
-        </div>
-
-        <div
-          class="grid grid-cols-6 font-normal mb-[29px] text-[#404164] mt-4 text-[18px] font-[initial] md:text-[16px] sm:text-[15px]"
-        >
-          <span> 5 </span>
-          <span> Steph Sobim </span>
-          <span
-            class="text-[#E41919] px-[18px] py-[2.5px] rounded-[155px] bg-[#E4191940] w-fit md:px-[14px] sm:px-[10px] md:py-[2px] sm:py-[1.5px] md:text-[15px] sm:text-[14px]"
-          >
-            Overdue
-          </span>
-          <span> Wellington House </span>
-          <span> 1243 </span>
-          <span> 23/09/22 </span>
-        </div>
-
-        <div
-          class="grid grid-cols-6 font-normal mb-[29px] text-[#404164] mt-4 text-[18px] font-[initial] md:text-[16px] sm:text-[15px]"
-        >
-          <span> 6 </span>
-          <span> Steph Sobim </span>
-          <span
-            class="text-[#E41919] px-[18px] py-[2.5px] rounded-[155px] bg-[#E4191940] w-fit md:px-[14px] sm:px-[10px] md:py-[2px] sm:py-[1.5px] md:text-[15px] sm:text-[14px]"
-          >
-            Overdue
-          </span>
-          <span> Wellington House </span>
-          <span> 1243 </span>
-          <span> 23/09/22 </span>
-        </div>
-        <!-- End Table Body -->
       </div>
-      <!-- <table-component :headers="headers" :data="tableData" type="dashboard">
-      <template #column0="{ entity }">
-        {{ entity.id }}
-      </template>
-      <template #column1="{ entity }">
-        {{ entity.name }}
-      </template>
-      <template #column2="{ entity }">
+    </transition>
+    <div class="pt-4 h-full">
+      <div
+        class="flex p-0 m-0 gap-[10px] flex-col lg:flex-row items-stretch w-full h-full"
+      >
         <div
-        class="status"
-        :class="{
-          status_pending: entity.status === 'Pending',
-          status_overdue: entity.status === 'Overdue',
-          status_due: entity.status === 'Due',
-        }"
+          class="px-4 gap-[10px] h-full flex-[0.9] w-full font-inter grid grid-cols-1 lg:grid-cols-2"
         >
-        {{ entity.status }}
+          <div
+            class="bg-[#F6F6F6] h-fit border-[0.75px] border-solid text-black border-[#36363633] rounded-[16px]"
+          >
+            <!-- 1 -->
+
+            <div
+              class="rounded-[16px] pb-[10px] px-[14px] bg-white border-b-[0.75px] border-solid border-[#36363633]"
+            >
+              <div
+                class="flex items-center justify-between text-black border-[#36363633] border-b-[0.75px] border-solid"
+              >
+                <div
+                  class="flex items-center py-[10px] border-b-solid border-b-[#36363633] gap-3"
+                >
+                  <div
+                    class="p-[12px] rounded-[8px] border-[#36363633] border-[0.75px] border-solid"
+                  >
+                    <AppstoreOutlined />
+                  </div>
+                  <div class="flex flex-col gap-1 ml-[10px]">
+                    <span
+                      class="text-[#000000] font-medium text-[14px] font-inter leading-[100%]"
+                      >Application</span
+                    >
+                    <span
+                      class="text-[#25262899] leading-[100%] text-[12px] font-inter font-medium"
+                      >Tenancy Application Record</span
+                    >
+                  </div>
+                </div>
+                <div class="bg-[#F2F2F2] rounded-[6px] px-2 py-1">0.0%</div>
+              </div>
+              <div class="flex justify-between m-0 py-[14px]">
+                <span
+                  class="text-[#000000B2] m-0 p-0 text-[14px] font-inter leading-[100%]"
+                  >Total Applications</span
+                >
+                <span>00</span>
+              </div>
+              <div class="flex gap-[2px] m-0 mb-[10px] p-0">
+                <div
+                  class="flex rounded-[4px] bg-[#67ABFF] h-[13px] w-full"
+                ></div>
+                <div
+                  class="flex rounded-[4px] bg-[#FB8814] h-[13px] w-full"
+                ></div>
+                <div
+                  class="flex rounded-[4px] bg-[#0FC36C] h-[13px] w-full"
+                ></div>
+              </div>
+
+              <div class="flex flex-col gap-2.5">
+                <div class="flex justify-between w-full">
+                  <span class="flex gap-[8px] items-center">
+                    <span
+                      class="w-[13px] rounded-[4px] h-[13px] bg-[#67ABFF]"
+                    ></span>
+                    Ongoing</span
+                  ><span>
+                    {{ AccomodationApplicationsCount.ongoing || 0 }}
+                  </span>
+                </div>
+
+                <div class="flex justify-between w-full">
+                  <span class="flex gap-[8px] items-center">
+                    <span
+                      class="w-[13px] rounded-[4px] h-[13px] bg-[#FA922A]"
+                    ></span>
+                    Under Review</span
+                  ><span> {{ pendingRequests.length }} </span>
+                </div>
+                <div class="flex justify-between w-full">
+                  <span class="flex gap-[8px] items-center">
+                    <span
+                      class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
+                    ></span>
+                    Approved</span
+                  ><span>
+                    {{ AccomodationApplicationsCount.completed || 0 }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center px-[10px] py-[14px]">
+              <span>View All Details</span>
+              <span
+                class="text-[#000000] bg-[#FFFFFF] rounded-[6px] px-[10px] py-[6px] border-[0.75px] border-solid border-[#36363633]"
+              >
+                View
+              </span>
+            </div>
+          </div>
+          <div
+            class="bg-[#F6F6F6] h-fit w-full border-[0.75px] border-solid text-black border-[#36363633] rounded-[16px]"
+          >
+            <!-- 1 -->
+
+            <div
+              class="rounded-[16px] pb-[10px] px-[14px] bg-white border-b-[0.75px] border-solid border-[#36363633]"
+            >
+              <div
+                class="flex items-center justify-between text-black border-[#36363633] border-b-[0.75px] border-solid"
+              >
+                <div
+                  class="flex items-center py-[10px] border-b-solid border-b-[#36363633] gap-3"
+                >
+                  <div
+                    class="p-[12px] rounded-[8px] border-[#36363633] border-[0.75px] border-solid"
+                  >
+                    <AppstoreOutlined />
+                  </div>
+                  <div class="flex flex-col gap-1 ml-[10px]">
+                    <span
+                      class="text-[#000000] font-medium text-[14px] font-inter leading-[100%]"
+                      >Service Request</span
+                    >
+                    <span
+                      class="text-[#25262899] leading-[100%] text-[12px] font-inter font-medium"
+                      >Service Request Record</span
+                    >
+                  </div>
+                </div>
+                <div class="bg-[#F2F2F2] rounded-[6px] px-2 py-1">0.0%</div>
+              </div>
+              <div class="flex justify-between py-[14px]">
+                <span
+                  class="text-[#000000B2] text-[14px] font-inter leading-[100%]"
+                  >Total Service Request</span
+                >
+                <span>00</span>
+              </div>
+              <div class="flex gap-[2px] m-0 mb-[10px]">
+                <div
+                  class="flex rounded-[4px] bg-[#CF67FF] h-[13px] w-full"
+                ></div>
+                <div
+                  class="flex rounded-[4px] bg-[#312AFA] h-[13px] w-full"
+                ></div>
+                <div
+                  class="flex rounded-[4px] bg-[#0FC36C] h-[13px] w-full"
+                ></div>
+              </div>
+
+              <div class="flex flex-col gap-2.5">
+                <div class="flex justify-between w-full">
+                  <span class="flex gap-[8px] items-center">
+                    <span
+                      class="w-[13px] rounded-[4px] h-[13px] bg-[#67ABFF]"
+                    ></span>
+                    Ongoing</span
+                  ><span> 0 </span>
+                </div>
+
+                <div class="flex justify-between w-full">
+                  <span class="flex gap-[8px] items-center">
+                    <span
+                      class="w-[13px] rounded-[4px] h-[13px] bg-[#FA922A]"
+                    ></span>
+                    Under Review</span
+                  ><span> 0 </span>
+                </div>
+                <div class="flex justify-between w-full">
+                  <span class="flex gap-[8px] items-center">
+                    <span
+                      class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
+                    ></span>
+                    Approved</span
+                  ><span> 0 </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center px-[10px] py-[14px]">
+              <span>View All Details</span>
+              <span
+                class="text-[#000000] bg-[#FFFFFF] rounded-[6px] px-[10px] py-[6px] border-[0.75px] border-solid border-[#36363633]"
+              >
+                View
+              </span>
+            </div>
+          </div>
+          <div
+            class="bg-[#F6F6F6] h-fit w-full border-[0.75px] border-solid text-black border-[#36363633] rounded-[16px]"
+          >
+            <!-- 1 -->
+
+            <div
+              class="rounded-[16px] pb-[10px] px-[14px] bg-white border-b-[0.75px] border-solid border-[#36363633]"
+            >
+              <div
+                class="flex items-center justify-between text-black border-[#36363633] border-b-[0.75px] border-solid"
+              >
+                <div
+                  class="flex items-center py-[10px] border-b-solid border-b-[#36363633] gap-3"
+                >
+                  <div
+                    class="p-[12px] rounded-[8px] border-[#36363633] border-[0.75px] border-solid"
+                  >
+                    <AppstoreOutlined />
+                  </div>
+                  <div class="flex flex-col gap-1 ml-[10px]">
+                    <span
+                      class="text-[#000000] font-medium text-[14px] font-inter leading-[100%]"
+                      >My Tenants</span
+                    >
+                  </div>
+                </div>
+                <div class="px-2 py-1 text-[18px] font-semibold">0</div>
+              </div>
+              <div class="flex justify-between py-[14px]">
+                <span
+                  class="text-[#000000B2] text-[14px] font-inter leading-[100%]"
+                  >Target</span
+                >
+                <span>00</span>
+              </div>
+              <div class="flex gap-[2px] m-0 mb-[10px]">
+                <div
+                  class="flex rounded-[4px] bg-[#E4E5E5] h-[13px] w-full"
+                ></div>
+              </div>
+
+              <div class="flex flex-col gap-2.5">
+                <div class="flex justify-between w-full">
+                  <span class="flex gap-[8px] items-center">
+                    <span
+                      class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
+                    ></span>
+                    Complete</span
+                  ><span> {{ tenantsCounts }} </span>
+                </div>
+
+                <div class="flex justify-between w-full">
+                  <span class="flex gap-[8px] items-center">
+                    <span
+                      class="w-[13px] rounded-[4px] h-[13px] bg-[#E5E6E6]"
+                    ></span>
+                    To Complete</span
+                  ><span> 0 </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center px-[10px] py-[14px]">
+              <span>View All Details</span>
+              <span
+                class="text-[#000000] bg-[#FFFFFF] rounded-[6px] px-[10px] py-[6px] border-[0.75px] border-solid border-[#36363633]"
+              >
+                View
+              </span>
+            </div>
+          </div>
+          <div
+            class="bg-[#F6F6F6] h-fit w-full border-[0.75px] border-solid text-black border-[#36363633] rounded-[16px]"
+          >
+            <!-- 1 -->
+
+            <div
+              class="rounded-[16px] pb-[10px] px-[14px] bg-white border-b-[0.75px] border-solid border-[#36363633]"
+            >
+              <div
+                class="flex items-center justify-between text-black border-[#36363633] border-b-[0.75px] border-solid"
+              >
+                <div
+                  class="flex items-center py-[10px] border-b-solid border-b-[#36363633] gap-3"
+                >
+                  <div
+                    class="p-[12px] rounded-[8px] border-[#36363633] border-[0.75px] border-solid"
+                  >
+                    <AppstoreOutlined />
+                  </div>
+                  <div class="flex flex-col gap-1 ml-[10px]">
+                    <span
+                      class="text-[#000000] font-medium text-[14px] font-inter leading-[100%]"
+                      >Maintenance Fee</span
+                    >
+                    <span
+                      class="text-[#25262899] bg-[#0000000D] px-[6px] mt-[3px] py-[4px] leading-[100%] text-[12px] font-inter font-medium"
+                      >Less cost this week</span
+                    >
+                  </div>
+                </div>
+                <div class="bg-[#F2F2F2] rounded-[6px] px-2 py-1">0.0%</div>
+              </div>
+              <div class="flex justify-between py-[14px]">
+                <span
+                  class="text-[#000000B2] text-[14px] font-inter leading-[100%]"
+                  >Total Applications</span
+                >
+                <span>00</span>
+              </div>
+              <div class="flex gap-[2px] m-0 mb-[10px]">
+                <div
+                  class="flex rounded-[4px] bg-[#E4E5E5] h-[13px] w-full"
+                ></div>
+              </div>
+
+              <div class="flex flex-col gap-2.5">
+                <div class="flex justify-between w-full">
+                  <span class="flex gap-[8px] items-center">
+                    <span
+                      class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
+                    ></span>
+                    Paid</span
+                  ><span> 0 </span>
+                </div>
+
+                <div class="flex justify-between w-full">
+                  <span class="flex gap-[8px] items-center">
+                    <span
+                      class="w-[13px] rounded-[4px] h-[13px] bg-[#E5E6E6]"
+                    ></span>
+                    Owing</span
+                  ><span> 0 </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center px-[10px] py-[14px]">
+              <span>View All Details</span>
+              <span
+                class="text-[#000000] bg-[#FFFFFF] rounded-[6px] px-[10px] py-[6px] border-[0.75px] border-solid border-[#36363633]"
+              >
+                View
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bg-[#F6F6F6] flex flex-col flex-[0.3] w-fit mr-[16px] border-[0.75px] rounded-[1rem] border-solid border-[#36363633]"
+        >
+          <div
+            class="text-[black] bg-[#FFFFFF] rounded-[16px] border-[0.75px] border-solid border-[#36363633] p-[16px]"
+          >
+            <div class="flex items-center gap-2.5">
+              <div
+                class="border-[0.75px] border-solid border-[#36363633] rounded-[8px] p-2.5 w-fit"
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M10.0013 18.3307C14.6037 18.3307 18.3346 14.5998 18.3346 9.9974C18.3346 5.39502 14.6037 1.66406 10.0013 1.66406C5.39893 1.66406 1.66797 5.39502 1.66797 9.9974C1.66797 14.5998 5.39893 18.3307 10.0013 18.3307Z"
+                    stroke="#1C274C"
+                    stroke-width="1.5"
+                  />
+                  <path
+                    d="M10 14.1641V14.5807V14.9974"
+                    stroke="#1C274C"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M10 5V5.41667V5.83333"
+                    stroke="#1C274C"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M12.5 7.91927C12.5 6.76868 11.3807 5.83594 10 5.83594C8.61925 5.83594 7.5 6.76868 7.5 7.91927C7.5 9.06985 8.61925 10.0026 10 10.0026C11.3807 10.0026 12.5 10.9354 12.5 12.0859C12.5 13.2365 11.3807 14.1693 10 14.1693C8.61925 14.1693 7.5 13.2365 7.5 12.0859"
+                    stroke="#1C274C"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </div>
+              <div class="">
+                <p class="m-0 p-0 text-[14px] font-medium leading-[100%]">
+                  Rent Inflow
+                </p>
+                <p
+                  class="m-0 p-0 text-[#25262899] mt-[4px] text-[12px] font-medium leading-[100%]"
+                >
+                  Income and Pending Rent Statistics
+                </p>
+              </div>
+            </div>
+            <div class="mt-[45px]">
+              <chart
+                :data="chartData"
+                :width="180"
+                :height="180"
+                :options="chartOptions"
+                :plugins="plugins"
+              />
+            </div>
+
+            <div>
+              <div
+                class="flex justify-between mt-[45px] items-center pb-[1rem] border-b-[0.7px] border-solid border-[#D3D3D3B2]"
+              >
+                <span
+                  class="text-[#000000B2] text-[14px] leading-[100%] font-inter"
+                  >Expected Rent</span
+                ><span class="text-[18px] font-bold font-inter">C$00</span>
+              </div>
+              <div class="flex justify-between w-full mt-[16px]">
+                <span class="flex gap-[8px] items-center">
+                  <span
+                    class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
+                  ></span>
+                  Incoming</span
+                ><span> C$00 </span>
+              </div>
+              <div class="flex justify-between w-full mt-[16px]">
+                <span class="flex gap-[8px] items-center">
+                  <span
+                    class="w-[13px] rounded-[4px] h-[13px] bg-[#D9625A]"
+                  ></span>
+                  Pending</span
+                ><span> C$00 </span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="flex flex-1 justify-between items-center px-[10px] py-[14px]"
+          >
+            <span>View All Details</span>
+            <span
+              class="text-[#000000] bg-[#FFFFFF] rounded-[6px] px-[10px] py-[6px] border-[0.75px] border-solid border-[#36363633]"
+            >
+              View
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Second Main Div -->
+    <div
+      class="flex-1 h-full mt-[15px] mx-4 border-t-[0.75px] border-x-[0.75px] border-solid border-[#36363633] rounded-[6px]"
+    >
+      <div
+        class="border-b-[0.75px] flex items-center justify-between border-solid border-[#36363633] rounded-t-[6px] p-2.5"
+      >
+        <div class="flex gap-2.5 items-center">
+          <div
+            class="border-solid p-3 border-[0.75px] rounded-[8px] w-fit border-[#36363633]"
+          >
+            <DollarCircleOutlined style="color: #1c274c" />
+          </div>
+          <div>
+            <p
+              class="p-0 m-0 text-[#000000] text-[14px] font-inter font-medium"
+            >
+              Pending Rent Payment
+            </p>
+            <p
+              class="p-0 m-0 text-[#25262899] mt-1 text-[14px] font-inter font-medium"
+            >
+              See all pending payments
+            </p>
+          </div>
+        </div>
+        <div class="flex gap-2.5 items-center">
+          <!-- <a-input-search placeholder="search" class="px-[12px] py-[6.5px]" /> -->
+          <a-dropdown>
+            <a
+              class="ant-dropdown-link border-[1px] rounded-[8px] flex border-[#D0D5DD] px-[12px] py-[6.5px] gap-[8px] items-center text-[#0000004D]"
+              @click.prevent
+            >
+              <Button
+                class="text-[14px] p-0 font-medium font-inter leading-[24px]"
+                >Status</Button
+              >
+              <DownOutlined />
+            </a>
+            <template #overlay>
+              <a-menu>
+                <a-menu-item>
+                  <a href="javascript:;">1st menu item</a>
+                </a-menu-item>
+                <a-menu-item>
+                  <a href="javascript:;">2nd menu item</a>
+                </a-menu-item>
+                <a-menu-item>
+                  <a href="javascript:;">3rd menu item</a>
+                </a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
+          <a-date-picker
+            v-model:value="value1"
+            placeholder="Sort by Date"
+            class="text-[14px] font-medium font-inter leading-[24px] px-[12px] py-[6.5px]"
+          />
+        </div>
+      </div>
+      <!-- empty state -->
+      <div class="h-full flex justify-center py-8">
+        <div
+          v-if="tenants.length === 0"
+          class="flex flex-col items-center h-fit"
+        >
+          <div
+            class="border-solid mx-auto p-3 border-[0.75px] rounded-[8px] w-fit border-[#36363633]"
+          >
+            <DollarCircleOutlined style="color: #1c274c" />
+          </div>
+          <div class="flex flex-col items-center">
+            <p
+              class="text-[#000000] mt-4 font-inter text-[14px] font-medium leading-[100%] text-center"
+            >
+              You have no pending payments
+            </p>
+            <p
+              class="text-[#25262899] text-[12px] text-center font-inter font-medium leading-[100%]"
+            >
+              There’s nothing to view, click the button below to add new tenants
+            </p>
+            <button
+              class="bg-[#000130] text-[#FFFFFF] font-inter font-medium px-4 py-4 rounded-[8px]"
+              @click="isAddTenantModalOpen = true"
+            >
+              + Invite user
+            </button>
+          </div>
+        </div>
+        <div class="" v-else>
+          <dashboard-table-component :headers="headers" />
+        </div>
+      </div>
+    </div>
+
+    <a-modal
+      v-model:visible="isAddTenantModalOpen"
+      :footer="null"
+      centered
+      :closable="false"
+    >
+      <template #title>
+        <div class="flex items-center justify-between">
+          <span class="font-redwing text-[24px] leading-[100%]"
+            >Invite Tenant</span
+          >
+          <span></span>
+          <a-button disabled @click="() => (isAddTenantModalOpen = false)">
+            <CloseOutlined />
+          </a-button>
         </div>
       </template>
-      <template #column3="{ entity }">
-        {{ entity.property }}
+      <div class="flex flex-col gap-4 mt-6">
+        <div>
+          <div
+            class="form-labels font-inter font-medium text-[14px] leading-[100%] mb-3"
+          >
+            User Email
+          </div>
+          <a-input
+            type="mail"
+            placeholder="Enter Mail"
+            size="large"
+            v-model:value="tenantsPayload.emailAddress"
+          />
+        </div>
+
+        <a-button
+          @click="sendInvite"
+          :loading="loadingInvite"
+          :disabled="
+            loadingInvite == true || !tenantsPayload.emailAddress.includes('@')
+          "
+          class="w-full bg-[#000130] py-2 leading-[100%] text-white font-inter font-medium rounded-lg"
+        >
+          Send Invite
+        </a-button>
+      </div>
+    </a-modal>
+
+    <a-modal
+      v-model:visible="isAddManagerModalOpen"
+      :footer="null"
+      centered
+      :closable="false"
+    >
+      <template #title>
+        <div class="flex items-center justify-between">
+          <span class="font-redwing text-[24px] leading-[100%]"></span>
+          <span></span>
+          <button
+            @click="() => (isAddManagerModalOpen = false)"
+            class="bg-[#FFFFFF] rouunded-[100px] p-2"
+          >
+            <CloseOutlined />
+          </button>
+        </div>
       </template>
-      <template #column4="{ entity }">
-        {{ entity.unit }}
-      </template>
-      <template #column5="{ entity }">
-        {{ entity.date }}
-      </template>
-      </table-component> -->
-    </div>
+      <div>
+        <p class="text-[#000000] m-0 p-0 font-redwing text-[24px]">
+          Add Property Manager
+        </p>
+        <p
+          class="text-[#000000B2] m-0 p-0 mt-2 text-[14px] font-inter font-regular leading-[20px]"
+        >
+          Do you work with a Property Manager? Add them now for easier tenancy
+          management.
+        </p>
+      </div>
+      <div class="flex flex-col gap-4 mt-4">
+        <div>
+          <a-input
+            placeholder="Enter First Name"
+            size="large"
+            v-model:value="managerPayloads.firstname"
+          />
+        </div>
+        <div>
+          <a-input
+            placeholder="Enter Last Name"
+            size="large"
+            v-model:value="managerPayloads.lastname"
+          />
+        </div>
+        <div class="flex-1 h-[43px]">
+          <a-input
+            placeholder="Enter Email"
+            class="h-full"
+            size="large"
+            v-model:value="managerPayloads.emailAddress"
+          />
+        </div>
+        <div class="flex items-center p-0 relative">
+          <div class="flex-1 h-[43px]">
+            <a-input
+              placeholder="Enter password"
+              class="h-full"
+              size="large"
+              type="password"
+              v-model:value="managerPayloads.password"
+            />
+          </div>
+
+          <button
+            type="button"
+            :disabled="
+              managerPayloads.firstname == '' ||
+              managerPayloads.lastname == '' ||
+              managerPayloads.emailAddress == '' ||
+              managerPayloads.password == ''
+            "
+            @click="handleAddPropertyManager"
+            class="w-fit m-0 px-3 disabled:cursor-not-allowed disabled:bg-[#bfbfbf] bg-[#000130] h-[43px] leading-[100%] ml-[10px] text-[14px] text-white font-inter font-medium rounded-lg"
+          >
+            Add Manager
+          </button>
+        </div>
+      </div>
+    </a-modal>
   </div>
 </template>
 
@@ -468,12 +718,16 @@ import IconRightArrow from "../../components/icons/IconRightArrow.vue";
 import IconUpArrow from "../../components/icons/IconUpArrow.vue";
 import IconDownArrow from "../../components/icons/IconDownArrow.vue";
 import Table from "@/components/Table.vue";
+import dashboardTable from "@/components/icons/dashboardTable.vue";
 import { h } from "vue";
 import { LoadingOutlined } from "@ant-design/icons-vue";
 import { FetchServiceRequests } from "@/api/serviceRequest";
 import { AccomodationApplications, MyTenants } from "@/api/dashboard";
 import { useUserStore } from "@/store";
-
+import { AddTenants } from "@/api/properties";
+import { addPropertyManager } from "@/api/dashboard";
+import { useToast } from "vue-toast-notification";
+import { inviteUsers } from "@/api/dashboard";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default {
@@ -482,10 +736,52 @@ export default {
     "up-arrow-icon": IconUpArrow,
     "down-arrow-icon": IconDownArrow,
     "table-component": Table,
+    "dashboard-table-component": dashboardTable,
     chart: Pie,
   },
   data() {
     return {
+      loadingInvite: false,
+      tenants: [
+        // {
+        //   name: "Steph Sobim",
+        //   status: "Due",
+        //   property: "Thistlebrook Lane, Mistwood, Ontario, K8N 3P5",
+        //   unit: "12",
+        //   dueDate: "22-09-2025",
+        // },
+        // {
+        //   name: "John Doe",
+        //   status: "Pending",
+        //   property:
+        //     "Harborview Drive, Westport Falls, British Columbia, V6Z 1R2",
+        //   unit: "98",
+        //   dueDate: "22-09-2025",
+        // },
+        // {
+        //   name: "Francesa Dublin",
+        //   status: "Overdue",
+        //   property: "Snowberry Crescent, Pinefield, Nova Scotia, B3H 2M9",
+        //   unit: "77",
+        //   dueDate: "22-09-2025",
+        // },
+      ],
+      tenantsPayload: {
+        emailAddress: "",
+      },
+      managerPayloads: {
+        emailAddress: "",
+        firstname: "",
+        lastname: "",
+        phoneNumber: "",
+        password: "",
+        roleId: 0,
+        propertyRefNo: 0,
+      },
+      toast: useToast(),
+      isAddTenantModalOpen: false,
+      isAddManagerModalOpen: false,
+      showAds: true,
       store: useUserStore(),
       progress: 50,
       AccomodationApplicationsCount: {
@@ -510,26 +806,57 @@ export default {
       ongoingRequests: [],
       pendingRequests: [],
       chartData: {
-        labels: ["Collected", "Pending"],
+        labels: ["Income", "Pending"],
         datasets: [
           {
-            backgroundColor: ["#66DCA0", "#D9625A"],
             data: [63, 37],
+            backgroundColor: ["#26C779", "#D9625A"],
+            borderWidth: 0,
+            borderRadius: 6,
+            cutout: "75%",
+            spacing: 4,
           },
         ],
       },
       chartOptions: {
         responsive: true,
+        maintainAspectRatio: false,
+        cutout: "75%",
         plugins: {
           legend: {
-            position: "bottom",
-          },
-          title: {
             display: false,
+          },
+          tooltip: {
+            enabled: false,
           },
         },
       },
-      headers: ["#", "Name", "Status", "Property", "Unit Number", "Due Date"],
+      // ✅ Custom Plugin defined separately
+      plugins: [
+        {
+          id: "centerText",
+          beforeDraw(chart) {
+            const { ctx, width, height } = chart;
+            const text1 = "Total Revenue";
+            // const text2 = "₦1.2M";
+            ctx.save();
+            // Text 1
+            ctx.font = "bold 14px sans-serif";
+            ctx.fillStyle = "#555";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(text1, width / 2, height / 2 - 10);
+            // Text 2
+            ctx.font = "bold 18px sans-serif";
+            ctx.fillStyle = "#111";
+            // ctx.fillText(text2, width / 2, height / 2 + 12);
+
+            ctx.restore();
+          },
+        },
+      ],
+
+      headers: ["S/N", "Name", "Status", "Property", "Unit Number", "Due Date"],
       tableData: [
         {
           id: 1,
@@ -564,6 +891,19 @@ export default {
     this.handleTenants();
   },
   methods: {
+    sendInvite() {
+      this.loadingInvite = false;
+      inviteUsers(this.tenantsPayload.emailAddress)
+        .then((response) => {
+          this.loadingInvite = false;
+          if (response.responseCode == "00") {
+            this.toast.success("Users Successfully Invited");
+            this.tenantsPayload.emailAddress = "";
+            this.isAddTenantModalOpen = false;
+          }
+        })
+        .catch();
+    },
     handleFetchServiceRequest() {
       this.loading.serviceRequestCompleted = true;
       this.loading.serviceOngoingCompleted = true;
@@ -583,7 +923,29 @@ export default {
         } else handleError(response);
       });
     },
+    handleAddTenant() {
+      AddTenants(this.tenantsPayload).then((response) => {
+        if (response.responseCode === "00") {
+          this.isAddTenantModalOpen = false;
+          this.toast.success("Tenant added successfully");
+        } else {
+          console.log(response);
+        }
+      });
+    },
+    handleAddPropertyManager() {
+      const payloadCopy = { ...this.managerPayloads }; // clone to prevent mutation
 
+      addPropertyManager(payloadCopy).then((response) => {
+        console.log("After sending:", this.managerPayloads);
+        if (response.responseCode === "00") {
+          this.isAddManagerModalOpen = false;
+          this.toast.success("Property Manager added successfully");
+        } else {
+          console.log(response);
+        }
+      });
+    },
     handleAccomodationApplication() {
       AccomodationApplications(this.store.userProfile.referenceID)
         .then((response) => {
@@ -593,7 +955,6 @@ export default {
           console.log(err);
         });
     },
-
     handleTenants() {
       MyTenants(this.store.userProfile.referenceID)
         .then((response) => {
@@ -610,7 +971,7 @@ export default {
 // }
 </script>
 
-<style>
+<style scoped>
 .shell {
   height: 10px;
   width: 292px;

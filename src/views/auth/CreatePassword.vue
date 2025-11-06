@@ -131,7 +131,6 @@ import Button from "@/components/Button/Button.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useToast } from "vue-toast-notification";
 import { checkPasswordStrength } from "@/utils/helper";
-import { rule } from "postcss";
 
 export default {
   data() {

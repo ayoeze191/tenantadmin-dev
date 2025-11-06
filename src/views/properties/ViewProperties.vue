@@ -1,5 +1,7 @@
 <template>
-  <div class="mx-auto bg-neutral px-[50px] w-full h-full pb-4 font-sf">
+  <div
+    class="mx-auto bg-neutral px-[50px] w-full h-full pb-4 font-sf overflow-y-scroll"
+  >
     <div class="mx-auto">
       <p
         class="text-txt_dark font-semibold text-[24px] pt-[50px] leading-7 uppercase"
@@ -170,7 +172,7 @@
 import { FetchProperties, FetchUnitTypes } from "@/api/properties";
 import Button from "@/components/Button/Button.vue";
 import IconEdit from "@/components/icons/IconEdit.vue";
-import Table from "@/components/Table.vue";
+
 import { useUserStore } from "@/store";
 import handleError from "@/utils/handleError";
 import { handleToast } from "@/utils/helper";
@@ -181,7 +183,6 @@ import { useRouter } from "vue-router";
 
 export default {
   components: {
-    "table-component": Table,
     "edit-icon": IconEdit,
     Button,
     "a-pagination": Pagination,

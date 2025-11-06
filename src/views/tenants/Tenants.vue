@@ -1,250 +1,244 @@
 <template>
-  <div class="bg-neutral px-10 w-full overflow-y-scroll h-screen pb-40">
-    <div class="flex m-0 mt-[40px] justify-between items-center mb-[30px]">
-      <p class="text-txt_dark text-[24px] font-sf font-semibold m-0">
-        TENANTS OVERVIEW
-      </p>
-      <button
-        class="bg-[#000130] py-[9px] px-[32px] m-0 text-white leading-[25px] font-semibold rounded-[4px]"
-      >
-        + Add Tenant
-      </button>
-    </div>
-    <section class="list_container">
-      <div class="flex w-full justify-between border-b border-br1 pb-3 mb-4">
-        <p
-          class="font-medium text-[14px] md:text-[16px] lg:text-[18px] mr-0.5 text-[#808097]"
-        >
-          Total Number of Tenants:
-          <span class="font-[700] font-sf text-[18px]">(43)</span>
-        </p>
-        <!-- <aside class="flex gap-3.5">
-          <search-icon />
-          <div class="pl-3.5 flex border-l border-br1">
-            <status-select
-              :label="'Filter By:'"
-              :mode="'filter'"
-              :filterOptions="filterOptions"
-            ></status-select>
-          </div>
-        </aside> -->
+  <div class="px-4 font-inter">
+    <div
+      class="rounded-[16px] mt-4 font-inter border-[#36363633] border-[0.75px] border-solid"
+    >
+      <div class="flex gap-2.5 p-2.5 items-center">
+        <table-header
+          :total-item-count="totalItemCount"
+          title="Tenants"
+        ></table-header>
       </div>
-      <ul>
-        <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
-          <section class="flex w-full justify-between m-0">
-            <p class="font-medium text-lg leading-6 text-txt_dark">
-              Steph Orkuma
-              <span class="text-[#808097] font-sf font-[600]"
-                >Apt T-69, Sean Apartments
-              </span>
-            </p>
 
-            <div class="flex gap-2 items-center font-sf">
-              <p class="text-[#808097] font-semibold leading-7 m-0 font-sf">
-                Rent Due:
-              </p>
-
-              <p
-                class="text-txt_dark items-center flex px-2 py-[2px] rounded-[26px] m-0"
+      <div class="w-full mt-4 h-full">
+        <table-component
+          :title="tenants"
+          :columns="headers"
+          :data-source="landlordList"
+        >
+          <template #action="{ record }">
+            <div class="relative flex justify-center items-center group">
+              <!-- Hidden div -->
+              <div
+                class="absolute z-10 right-2 top-0 p-5 border-[0.75px] border-solid rounded-[16px] bg-white opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300"
               >
-                21/12/21
-              </p>
-            </div>
-          </section>
-          <a
-            class="text-sm m-0 font-sf text-[#404164] cursor-pointer underline"
-            @click="openModal({})"
-            >View tenant information</a
-          >
-        </li>
-        <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
-          <section class="flex w-full justify-between m-0">
-            <p class="font-medium text-lg leading-6 text-txt_dark">
-              Steph Orkuma
-              <span class="text-[#808097] font-sf font-[600]"
-                >Apt T-69, Sean Apartments
-              </span>
-            </p>
+                <div
+                  class="flex items-center gap-[8px] p-[10px] rounded-[10px] border-[0.75px] border-solid border-[#36363633]"
+                >
+                  <div class="flex h-[34px] w-[34px]">
+                    <img src="/src/assets/TenantImage.svg" />
+                  </div>
+                  <div>
+                    <p class="m-0 p-0">
+                      {{ record.name }}
+                    </p>
+                    <p class="m-0 p-0 mt-[2px]">{{ record.email }}</p>
+                  </div>
+                </div>
+                <!-- asa -->
+                <div class="mt-4 m-0">
+                  <p class="text-[#000000]">
+                    <span
+                      class="text-[#00000099] text-[12px] font-medium leading-[20px]"
+                      >Apartment:</span
+                    >
+                    {{ record.properties || "nill" }}
+                  </p>
+                  <p>
+                    <span class="text-[#00000099]">Rent Amount:</span> ${{
+                      record.bills
+                    }}
+                  </p>
+                  <p>
+                    <span class="text-[#00000099]">Rent Due:</span>
+                    {{ record.due || "nill" }}
+                  </p>
+                  <p>
+                    <span class="text-[#00000099]">Lease Expires:</span>
+                    {{ record.rent || "nill" }}
+                  </p>
+                  <div>
+                    <span class="text-[#00000099]">Lease:</span> View Tenant
+                  </div>
+                </div>
 
-            <div class="flex gap-2 items-center font-sf">
-              <p class="text-[#808097] font-semibold leading-7 m-0 font-sf">
-                Rent Due:
-              </p>
+                <a-button
+                  class="py-[8px] w-full flex items-center justify-center bg-[#000130] text-white mt-6 rounded-[8px]"
+                >
+                  Send notification to Tenant
+                </a-button>
+              </div>
 
-              <p
-                class="text-txt_dark bg-bg1 items-center flex px-2 py-[2px] rounded-[26px] m-0"
+              <!-- Trigger button -->
+              <a-button
+                class="bg-[#000130] bg-inherit text-black cursor-pointer"
+                >View Info</a-button
               >
-                21/12/21
-              </p>
             </div>
-          </section>
-          <a
-            class="text-sm m-0 font-sf text-[#404164] cursor-pointer underline"
-            @click="openModal({})"
-            >View tenant information</a
-          >
-        </li>
-        <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
-          <section class="flex w-full justify-between m-0">
-            <p class="font-medium text-lg leading-6 text-txt_dark">
-              Steph Orkuma
-              <span class="text-[#808097] font-sf font-[600]"
-                >Apt T-69, Sean Apartments
-              </span>
-            </p>
-
-            <div class="flex gap-2 items-center font-sf">
-              <p class="text-[#808097] font-semibold leading-7 m-0 font-sf">
-                Rent Due:
-              </p>
-
-              <p
-                class="text-txt_dark bg-bg1 items-center flex px-2 py-[2px] rounded-[26px] m-0"
-              >
-                21/12/21
-              </p>
-            </div>
-          </section>
-          <a
-            class="text-sm m-0 font-sf text-[#404164] cursor-pointer underline"
-            @click="openModal({})"
-            >View tenant information</a
-          >
-        </li>
-        <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
-          <section class="flex w-full justify-between m-0">
-            <p class="font-medium text-lg leading-6 text-txt_dark">
-              Steph Orkuma
-              <span class="text-[#808097] font-sf font-[600]">Apt T-69, </span>
-            </p>
-
-            <div class="flex gap-2 items-center font-sf">
-              <p class="text-[#808097] font-semibold leading-7 m-0 font-sf">
-                Rent Due:
-              </p>
-
-              <p
-                class="text-txt_dark bg-bg1 items-center flex px-2 py-[2px] rounded-[26px] m-0"
-              >
-                21/12/21
-              </p>
-            </div>
-          </section>
-          <a
-            class="text-sm m-0 font-sf text-[#404164] cursor-pointer underline"
-            @click="openModal({})"
-            >View tenant information</a
-          >
-        </li>
-        <li class="w-full rounded-md px-4 py-2 bg-grey mb-4">
-          <section class="flex w-full justify-between m-0">
-            <p class="font-medium text-lg leading-6 text-txt_dark">
-              Steph Orkuma
-              <span class="text-[#808097] font-sf font-[600]"
-                >Apt T-69, Sean Apartments
-              </span>
-            </p>
-
-            <div class="flex gap-2 items-center font-sf">
-              <p class="text-[#808097] font-semibold leading-7 m-0 font-sf">
-                Rent Due:
-              </p>
-
-              <p
-                class="text-txt_dark bg-bg1 items-center flex px-2 py-[2px] rounded-[26px] m-0"
-              >
-                21/12/21
-              </p>
-            </div>
-          </section>
-          <a
-            class="text-sm m-0 font-sf text-[#404164] cursor-pointer underline"
-            @click="openModal({})"
-            >View tenant information</a
-          >
-        </li>
-      </ul>
-    </section>
+          </template>
+        </table-component>
+        <BasePagination
+          :currentPage="currentPage"
+          :totalPages="totalPages"
+          :total="total"
+          :pageSize="pageSize"
+          @prev="onPrev"
+          @next="onNext"
+          @change="onPageChange"
+        />
+      </div>
+    </div>
   </div>
-
-  <modal-component
-    ref="viewRequestModal"
-    title="B-29 Brina Apartments"
-    @close="onModalClose"
-    :button_label="'Send Notifications to tenant'"
-  >
-    <ul class="grid gap-11 w-full max-w-[691px] mx-auto">
-      <li>
-        <div class="flex gap-2">
-          <p class="text-[#404164] font-medium leading-7">Email Address</p>
-          <p class="text-txt_dark leading-7">Steph Orkuma, Derek Jones</p>
-        </div>
-      </li>
-      <li class="w-full">
-        <div class="flex gap-2">
-          <p class="text-[#404164] font-medium leading-7">Apartment:</p>
-          <p class="text-txt_dark leading-7">B-29, Brina Apartments</p>
-        </div>
-      </li>
-      <li>
-        <div class="flex gap-2">
-          <p class="text-[#404164] font-medium leading-7">Rent Amount:</p>
-          <p class="text-txt_dark leading-7">700</p>
-        </div>
-      </li>
-      <li>
-        <div class="flex gap-2">
-          <p class="text-[#404164] font-medium leading-7">Rent Due:</p>
-          <div class="rounded-md py-1.5 px-5 flex gap-2 justify-center">
-            <p class="font-medium text-sm leading-6 text-txt_dark">21/12/21</p>
-          </div>
-        </div>
-        <div class="flex gap-2">
-          <p class="text-[#404164] font-medium leading-7">Lease Expires:</p>
-          <div class="rounded-md py-1.5 px-5 flex gap-2 justify-center">
-            <p class="font-medium text-sm leading-6 text-txt_dark underline">
-              View tenant lease
-            </p>
-          </div>
-        </div>
-      </li>
-      <li>
-        <!-- <status-select :label="'Service Request Status:'" /> -->
-      </li>
-    </ul>
-  </modal-component>
 </template>
 
 <script>
-import StatusSelect from "@/components/StatusSelect.vue";
-import IconSearch from "../../components/icons/IconSearch.vue";
-import Modal from "@/components/Modal.vue";
+import { FetchTenants, SignUpLandlord, VerifyLandlord } from "@/api/auth";
+import IconEdit from "@/components/icons/IconEdit.vue";
+import Table from "@/components/Table.vue";
+import V2Table from "@/components/V2Table.vue";
+import handleError from "@/utils/handleError";
+import { handleToast } from "@/utils/helper";
+import dayjs from "dayjs";
+import TableHeader from "@/components/TableHeader.vue";
+import BasePagination from "@/components/BasePagination.vue";
+
+import { h } from "vue";
 export default {
+  components: {
+    "table-component": V2Table,
+    "table-header": TableHeader,
+    "edit-icon": IconEdit,
+    BasePagination: BasePagination,
+  },
+  created() {
+    this.handleFetchLandlords();
+  },
   data() {
     return {
-      selected_tab: "tenants",
-      selected_Request: {},
-      filterOptions: ["Show All"],
+      totalItemCount: 0,
+      currentPage: 1,
+      pageSize: 9,
+      headers: [
+        {
+          title: "Name",
+          dataIndex: "name",
+        },
+        {
+          title: "Properties",
+          dataIndex: "properties",
+          className: "properties",
+        },
+        {
+          title: "email",
+          className: "email",
+          dataIndex: "email",
+        },
+        {
+          title: "verified",
+          dataIndex: "isVerified",
+        },
+        {
+          title: "Last Login",
+          dataIndex: "lastLoginDate",
+        },
+        { title: "action", dataIndex: "action", slotName: "action" },
+      ],
+      landlordList: [],
+      tableDropdown: "",
     };
   },
-  components: {
-    "search-icon": IconSearch,
-    "status-select": StatusSelect,
-    "modal-component": Modal,
+  computed: {
+    totalPages() {
+      return Math.ceil(this.totalItemCount / this.pageSize);
+    },
   },
   methods: {
-    toggleTabs(value) {
-      this.selected_tab = value;
+    onPrev() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+        this.onPageChange(this.currentPage);
+      }
     },
-    openModal(request) {
-      this.$refs.viewRequestModal.openModal();
-      this.selected_Request = request;
+    onNext() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+        this.onPageChange(this.currentPage);
+      }
     },
-    onModalClose() {
-      console.log("Modal was closed");
+    onPageChange(page) {
+      this.currentPage = page;
+      // You can trigger API call or data refresh here
+    },
+    isActive(data) {
+      if (this.tableDropdown == data) {
+        return true;
+      } else return false;
+    },
+    toggleTableDropdown(data) {
+      if (this.isActive(data)) {
+        this.tableDropdown = "";
+      } else this.tableDropdown = data;
+    },
+    handleFetchLandlords(page = 1) {
+      const query = {
+        size: this.pageSize,
+        page: page,
+        query: "",
+      };
+      FetchTenants(query).then((response) => {
+        if (response.accountList) {
+          this.landlordList = response.accountList.items.map(
+            (landlord) =>
+              landlord && {
+                name: landlord.firstname + " " + landlord.lastname,
+                email: landlord.emailAddress,
+                isVerified: landlord.isVerified ? "Yes" : "No",
+                lastLoginDate: this.formatDate(landlord.lastLoginDate),
+                accountId: landlord.accountId,
+              }
+          );
+          this.totalItemCount = response.accountList.totalItemCount;
+        } else handleError(response);
+      });
+    },
+    formatDate(date) {
+      return dayjs(date).format("DD MMM,YYYY");
+    },
+    editLandlord(item) {
+      this.$router.push({ name: "edit-users-landlord", query: item });
+    },
+    itemRender(current, type, originalElement) {
+      if (type === "prev") {
+        return h("a", "Previous");
+      }
+      if (type === "next") {
+        return h("a", "Next");
+      }
+      return originalElement;
+    },
+    onPageChange(page) {
+      this.currentPage = page;
+      this.handleFetchLandlords(page);
+    },
+    handleSignUpLandlord(landlord) {
+      SignUpLandlord(landlord.accountId).then((response) => {
+        if (response.result.responseCode == "00") {
+          handleToast("Success", "success");
+          this.toggleTableDropdown("");
+        } else handleError(response);
+      });
+    },
+    handleVerifyLandlord(accountId) {
+      const payload = {
+        AdminUserID: accountId,
+      };
+      VerifyLandlord(payload).then((response) => {
+        if (response.result.responseCode == "00") {
+          handleToast("Landlord Verified Successfully", "success");
+          this.handleFetchLandlords(this.currentPage);
+        } else handleError(response);
+      });
     },
   },
 };
 </script>
-
-<style></style>

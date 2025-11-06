@@ -1,8 +1,13 @@
 <template>
   <a-layout-header
-    class="w-full bg-white flex justify-between items-center px-10 py-3"
+    class="w-full flex justify-between items-center px-[16px] pt-[16px] bg-[]"
   >
-    <section class="flex items-center gap-4">
+    <div
+      class="text-[#000000] bg-[#F7F7F7] px-[16px] py-2 w-full border-[#36363633] border-[0.75px] rounded-[8px] font-redwing text-[18px] font-medium leading-[100%]"
+    >
+      {{ routeName }}
+    </div>
+    <!-- <section class="flex items-center gap-4">
       <a-select
         v-if="isCurrentRoute('/dashboard')"
         class="mr-4"
@@ -161,7 +166,7 @@
           </a-menu>
         </template>
       </a-dropdown>
-    </div>
+    </div> -->
   </a-layout-header>
 </template>
 

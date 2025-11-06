@@ -51,6 +51,16 @@ export const FetchLandlords = async (query) => {
     handleError(error);
   }
 };
+export const FetchTenants = async (query) => {
+  try {
+    const response = await getApi(
+      `Account/GetAllAccount?PageSize=${query.size}&CurrentPage=${query.page}&AccountType=0&SearchTerm=${query.query}`
+    );
+    return response.data;
+  } catch (error) {
+    handleError(error);
+  }
+};
 export const FetchAdmins = async () => {
   try {
     const response = await getApi(`AdminUser/GetAllAdminUser`);
@@ -138,6 +148,16 @@ export const ForgottenPassword = async (payload) => {
 export const ResetPassword = async (payload) => {
   try {
     const response = await postApi("Account/ResetPassword", payload);
+    return response.data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+export const VerifyLandlord = async (payload) => {
+  try {
+    const response = await putApi(
+      `AdminUser/VerifyUser?AdminUserID=${payload.AdminUserID}`
+    );
     return response.data;
   } catch (error) {
     handleError(error);

@@ -5,9 +5,9 @@
     <div class="bg-[#FAFCFF] flex-1 h-screen overflow-y-scroll">
       <div class="mx-auto h-full">
         <div
-          class="flex justify-center flex-col w-fit h-full mx-auto px-4 md:px-0"
+          class="flex justify-center flex-col w-fit h-full mx-auto bg-[#FAFCFF] px-4 md:px-0"
         >
-          <div>
+          <div class="">
             <img
               class="mr-auto mb-[24px] p-0 m-0"
               src="../../assets/logo.svg"
@@ -24,9 +24,12 @@
               Access your administrative account
             </p>
           </div>
-          <form class="auth_form" @submit.prevent="handleForgottenPassword()">
+          <form
+            class="auth_form w-full"
+            @submit.prevent="handleForgottenPassword()"
+          >
             <a-form-item for="email" name="email">
-              <div v-if="step == 0">
+              <div v-if="step == 0" class="w-full">
                 <p
                   class="text-sm md:text-base font-medium m-0 p-0 font-inter text-[#404164]"
                 >
@@ -34,7 +37,7 @@
                 </p>
                 <a-input
                   id="email"
-                  class="input mt-2 mb-[24px]"
+                  class="input mt-2 mb-[24px] w-full"
                   v-model:value="email"
                   :rules="[{ required: true, message: 'Please input Email' }]"
                   name="email"

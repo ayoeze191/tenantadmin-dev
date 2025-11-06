@@ -132,7 +132,7 @@
                     class="input w-full mt-2"
                     v-model:value="modelForm.phoneNumber"
                     size="large"
-                    type="number"
+                    type="tel"
                   />
                 </a-form-item>
               </div>
@@ -305,7 +305,6 @@ export default {
     },
     async handleSubmit(e) {
       this.isLoading = true;
-
       e.preventDefault();
       if (this.step == 0) {
         const res = await ResendOtp({
@@ -329,7 +328,6 @@ export default {
             const toast = useToast({ position: "top-right" });
             toast.success("Email Verified Successfully");
             this.isLoading = false;
-
             return;
           }
         } else {
