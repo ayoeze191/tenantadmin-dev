@@ -184,7 +184,7 @@
 // import { AddAdminUser } from "@/api/auth";
 import { CreateUser, ResendOtp, VerifyOtp } from "@/api/auth";
 import { useUserStore } from "@/store";
-import Button from "@/components/Button.vue";
+import Button from "@/components/Button/Button.vue";
 import { useToast } from "vue-toast-notification";
 import { useRouter } from "vue-router";
 import IconViewPassword from "@/components/icons/iconViewPassword.vue";

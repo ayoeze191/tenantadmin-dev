@@ -91,18 +91,8 @@ const router = createRouter({
           component: Dashboard,
         },
         {
-          path: "/service-requests/pending",
-          name: "pending-service-requests",
-          component: PendingServiceRequest,
-        },
-        {
-          path: "/service-requests/completed",
-          name: "completed-service-requests",
-          component: CompletedServiceRequest,
-        },
-        {
-          path: "/service-requests/all",
-          name: "all-service-requests",
+          path: "/service-requests",
+          name: "service-requests",
           component: ServiceRequest,
         },
         {

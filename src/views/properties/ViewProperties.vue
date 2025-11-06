@@ -168,7 +168,7 @@
 
 <script>
 import { FetchProperties, FetchUnitTypes } from "@/api/properties";
-import Button from "@/components/Button.vue";
+import Button from "@/components/Button/Button.vue";
 import IconEdit from "@/components/icons/IconEdit.vue";
 import Table from "@/components/Table.vue";
 import { useUserStore } from "@/store";

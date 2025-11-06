@@ -379,7 +379,7 @@ import { useRouter } from "vue-router";
 import { FetchTenant, ApproveTenant } from "@/api/tenancy";
 import { openDB } from "idb";
 import { useUserStore } from "@/store";
-import Button from "@/components/Button.vue";
+import Button from "@/components/Button/Button.vue";
 import { useRoute } from "vue-router";
 import { AccomodationApplications } from "@/api/dashboard";
 export default {

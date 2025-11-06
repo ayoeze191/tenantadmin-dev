@@ -14,29 +14,17 @@
       @openChange="onOpenChange"
     >
       <a-menu-item key="dashboard">
+        <template #icon><overview-icon /></template>
         <router-link :to="{ name: 'admin-dashboard' }">
-          <template #icon><overview-icon /></template>
           Overview
         </router-link>
       </a-menu-item>
-      <a-sub-menu key="service-requests" title="Service Requests">
+      <a-menu-item key="service-requests" title="Service Requests">
         <template #icon><request-icon /></template>
-        <a-menu-item key="pending-service-requests">
-          <router-link :to="{ name: 'pending-service-requests' }"
-            >Pending Request</router-link
-          >
-        </a-menu-item>
-        <a-menu-item key="completed-service-requests">
-          <router-link :to="{ name: 'completed-service-requests' }"
-            >Completed Request</router-link
-          >
-        </a-menu-item>
-        <a-menu-item key="all-service-requests">
-          <router-link :to="{ name: 'all-service-requests' }"
-            >All Request</router-link
-          >
-        </a-menu-item>
-      </a-sub-menu>
+        <router-link :to="{ name: 'service-requests' }"
+          >Service Request</router-link
+        >
+      </a-menu-item>
       <a-menu-item key="admin-applications">
         <router-link :to="{ name: 'admin-applications' }">
           <template #icon><application-icon /></template>
