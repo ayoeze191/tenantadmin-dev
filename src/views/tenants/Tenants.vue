@@ -63,13 +63,17 @@
                 </div>
 
                 <a-button
+                  @click="
+                    () => {
+                      selectedTenant = record;
+                      showModal = true;
+                    }
+                  "
                   class="py-[8px] w-full flex items-center justify-center bg-[#000130] text-white mt-6 text-[14px] rounded-[8px]"
                 >
                   Send notification to Tenant
                 </a-button>
               </div>
-
-              <!-- Trigger button -->
               <a-button
                 class="bg-[#000130] bg-inherit text-black cursor-pointer"
                 >View Info</a-button
@@ -91,21 +95,18 @@
 
     <a-modal
       :footer="null"
-      width="768px"
-      :visible="true"
+      width="437px"
+      :visible="showModal"
       centered
       :bodyStyle="{ padding: '0' }"
       class=""
       :closable="false"
     >
       <template #title>
-        <div
-          class="flex items-center justify-between border-b border-[#C7C7C7] py-[12px]"
-        >
+        <div class="flex items-center justify-between py-[12px]">
           <span class="font-redwing text-2 leading-[100%] font-medium"
             >Tenant information</span
           >
-
           <span>
             <svg
               width="14"
@@ -122,6 +123,33 @@
           </span>
         </div>
       </template>
+
+      <div
+        class="border-[#36363633] border-[0.75px] bg-[#FFFFFF] py-[10px] gap-2.5 flex items-center rounded-[16px] border-solid border-b-[0.75px] px-[14px]"
+      >
+        <div><img src="/src/assets/TenantImage.svg" /></div>
+        <div class="h-full">
+          <p
+            class="m-0 p-0 text-[#000000] font-inter font-medium leading-[100%]"
+          >
+            {{ selectedTenant?.name }}
+          </p>
+          <p
+            class="m-0 p-0 text-[#00000066] text-[10px] font-inter font-medium leading-[100%] mt-[4px]"
+          >
+            Thristlebrook Lane, Mistwood, Ontario, K8N 3P5
+          </p>
+        </div>
+      </div>
+      <p
+        class="m-0 p-0 text-[#000000] text-[14px] font-inter font-medium leading-[100%] mt-4 mb-3"
+      >
+        Send Notification
+      </p>
+      <div><BaseInput type="email" placeholder="Email address" /></div>
+      <div class="mt-4">
+        <BaseInput type="textarea" placeholder="Enter Message" :rows="5" />
+      </div>
     </a-modal>
   </div>
 </template>
@@ -136,7 +164,7 @@ import { handleToast } from "@/utils/helper";
 import dayjs from "dayjs";
 import TableHeader from "@/components/TableHeader.vue";
 import BasePagination from "@/components/BasePagination.vue";
-
+import BaseInput from "@/components/BaseInput.vue";
 import { h } from "vue";
 export default {
   components: {
@@ -144,15 +172,18 @@ export default {
     "table-header": TableHeader,
     "edit-icon": IconEdit,
     BasePagination: BasePagination,
+    BaseInput: BaseInput,
   },
   created() {
     this.handleFetchLandlords();
   },
   data() {
     return {
+      showModal: false,
       totalItemCount: 0,
       currentPage: 1,
       pageSize: 9,
+      selectedTenant: null,
       headers: [
         {
           title: "Name",
