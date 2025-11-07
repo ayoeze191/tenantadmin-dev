@@ -1,7 +1,10 @@
 <template>
-  <a-layout-sider width="260" class="h-full min-h-screen overflow-y-auto">
+  <a-layout-sider
+    width="260"
+    class="h-full min-h-screen overflow-y-auto bg-[#111921]"
+  >
     <div
-      class="flex gap-2.5 items-center justify-center w-full mt-[16px] py-[6px] px-[10px]"
+      class="flex gap-2.5 items-center justify-center w-full mt-[16px] py-[6px] px-[10px] bg-[#111921]"
     >
       <div class="m-0 p-0">
         <svg
@@ -32,6 +35,7 @@
       :selectedKeys="[selectedKey]"
       :openKeys="openKeys"
       @openChange="onOpenChange"
+      class="bg-[#111921] text-[#FFFFFF8C]"
     >
       <a-menu-item key="dashboard">
         <template #icon><overview-icon /></template>
@@ -235,7 +239,7 @@ export default {
 
 <style scoped>
 .a-layout-sider {
-  background: #fff;
+  background: red !important;
   min-height: 100vh;
   overflow-y: auto;
   box-shadow: 2px 0 8px #f0f1f2;
