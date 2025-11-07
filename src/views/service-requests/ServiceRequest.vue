@@ -34,6 +34,7 @@
             <div class="relative flex justify-center items-center group">
               <!-- Hidden div -->
               <a-button
+                @click="showModal = true"
                 class="bg-[#000130] bg-inherit text-black cursor-pointer"
                 >view details</a-button
               >
@@ -46,7 +47,7 @@
   <a-modal
     :footer="null"
     width="437px"
-    :visible="true"
+    :visible="showModal"
     centered
     :bodyStyle="{ padding: '0' }"
     class=""
@@ -109,7 +110,7 @@
     </div>
     <div>
       <a-button
-        class="bg-[#000130] py-[8px] flex items-center justify-center text-white w-full mt-4 rounded-[8px]"
+        class="bg-[#000130] py-[8px] flex font-inter items-center justify-center text-white w-full mt-4 rounded-[8px]"
       >
         Set to Completed
       </a-button>
@@ -130,7 +131,6 @@ export default {
     "table-component": V2Table,
     DropdownButton: V2ServiceRequestsDropDown,
     "table-header": TableHeader,
-
     TenantCard,
   },
   created() {
@@ -164,7 +164,7 @@ export default {
   data() {
     return {
       store: useUserStore(),
-
+      showModal: false,
       selectedStatus: "All",
       data: [],
       serviceLiterals: [
