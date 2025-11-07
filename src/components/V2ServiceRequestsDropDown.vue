@@ -48,5 +48,10 @@ function onSelect({ key }) {
 .ant-btn {
   border-radius: 8px;
   font-weight: 500;
+  background-color: #f4f4f4;
+  font-size: 14px;
+  font-family: "Inter", sans-serif;
+
+  padding: 8px 12px;
 }
 </style>

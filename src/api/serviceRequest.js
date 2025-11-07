@@ -6,12 +6,13 @@ export const FetchServiceRequests = async (landlordId) => {
   try {
     if (landlordId == "NN1") {
       response = await getApi(`ServiceRequest/AllServiceRequest`);
+      // console.log("Fetching all service requests for admin", response.data);
     } else {
       response = await getApi(
         `ServiceRequest/AllServiceRequest?LandLordId=${landlordId}`
       );
-      return response.data;
     }
+    return response.data;
   } catch (error) {
     handleError(error);
   }

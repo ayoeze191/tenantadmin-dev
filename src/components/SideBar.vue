@@ -47,6 +47,22 @@
           >Service Request</router-link
         >
       </a-menu-item>
+      <!-- <a-sub-menu key="service-request" title="Service Request">
+        <template #icon><request-icon /></template>
+        <a-menu-item key="service-requests">
+          <router-link :to="{ name: 'add-admin-properties' }"
+            >Service Requests</router-link
+          >
+        </a-menu-item>
+        <a-menu-item key="pending-requests">
+          <router-link :to="{ name: 'pending-requests' }">Pending</router-link>
+        </a-menu-item>
+        <a-menu-item key="approved-requests">
+          <router-link :to="{ name: 'approved-requests' }"
+            >Approved
+          </router-link>
+        </a-menu-item>
+      </a-sub-menu> -->
       <a-menu-item key="admin-applications">
         <router-link :to="{ name: 'admin-applications' }">
           <template #icon><application-icon /></template>
