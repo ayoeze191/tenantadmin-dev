@@ -77,7 +77,8 @@
             <span class="text-14px text-secondary">You have nothing to view</span>
           </p>
 
-          <btn type="danger" label="tester for sdjfldjflkdj"/>
+          <StatusBadge label="Success" type="pending"/>
+
         </div>
       </div>
     </div>
@@ -189,6 +190,7 @@ import {
   FetchServiceRequests,
   updateServiceRequest,
 } from "@/api/serviceRequest";
+import StatusBadge from "@/components/StatusBadge/StatusBadge.vue";
 import StatusDropdown from "@/components/StatusDropdown.vue";
 import IconSearch from "../../components/icons/IconSearch.vue";
 import IconServiceRequests from "@/components/icons/IconServiceRequests2.vue";
@@ -231,6 +233,7 @@ export default {
     "status-select": StatusSelect,
     "modal-component": Modal,
     StatusDropdown,
+    StatusBadge
   },
   created() {
     this.handleFetchServiceRequest();

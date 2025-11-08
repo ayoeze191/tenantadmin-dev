@@ -131,12 +131,7 @@
   .btn_primary {
     @apply bg-primary text-white;
   }
-  .btn_secondary {
-    @apply border-2 border-secondary text-primary;
-  }
-  .btn_dng {
-    @apply bg-dng text-white;
-  }
+
   .btn_danger {
     @apply bg-dng3 border border-dng2 text-dng2;
   }
@@ -289,5 +284,23 @@
 :disabled,::placeholder {
   color: rgba(0, 0, 0, 0.3);
 }
+  .btn_secondary {
+    @apply border-2 border-secondary text-primary;
+  }
+  .btn_dng {
+    @apply bg-dng text-white;
+  }
+
+  .badge {
+    @apply text-white rounded-lg px-2 py-1;
+  }
+
+  .badge-success {
+    @apply bg-due;
+  }
+
+  .badge-pending {
+    @apply bg-pending_strong;
+  }
 /* end */
 
