@@ -34,7 +34,12 @@
             <div class="relative flex justify-center items-center group">
               <!-- Hidden div -->
               <a-button
-                @click="showModal = true"
+                @click="
+                  () => {
+                    showModal = true;
+                    selectedTenant = record;
+                  }
+                "
                 class="bg-[#000130] bg-inherit text-black cursor-pointer"
                 >view details</a-button
               >
@@ -99,7 +104,7 @@
       <div><img src="/src/assets/TenantImage.svg" /></div>
       <div class="h-full">
         <p class="m-0 p-0 text-[#000000] font-inter font-medium leading-[100%]">
-          {{ selectedTenant?.tenant || "Frank Thomas" }}
+          {{ selectedTenant.tenant || "Frank Thomas" }}
         </p>
         <p
           class="m-0 p-0 text-[#00000066] text-[10px] font-inter font-medium leading-[100%] mt-[4px]"
@@ -110,29 +115,92 @@
     </div>
     <div class="flex flex-col mt-4">
       <p>
-        <span class="text-[#00000099] p-0 m-0">Apartment</span>:Thistlebrook
-        Lane, Mistwood, Ontario, K8N 3P5
+        <span class="text-[#00000099] p-0 m-0">Apartment: </span
+        >{{
+          selectedTenant.accommodationName ||
+          "Thistlebrook Lane, Mistwood, Ontario, K8N 3P5"
+        }}
       </p>
-      <p><span class="text-[#00000099] p-0 m-0">Category:</span>Plumbing</p>
       <p>
-        <span class="text-[#00000099] p-0 m-0">Description:</span>The faucet in
-        the kitchen is leaking and needs immediate repair.
+        <span class="text-[#00000099] p-0 m-0">Category:</span
+        >{{ selectedTenant.serviceType }}
+      </p>
+      <p>
+        <span class="text-[#00000099] p-0 m-0">Description:</span
+        >{{
+          selectedTenant.description ||
+          "The faucet in the kitchen is leaking and needs immediate repair."
+        }}
       </p>
       <p>
         <span class="text-[#00000099] p-0 m-0">Issue:</span>The faucet in the
         kitchen is leaking and needs immediate repair.
       </p>
       <p>
-        <span class="text-[#00000099] p-0 m-0">Urgency:</span
-        ><button>Pending</button>
+        <span class="text-[#00000099] p-0 m-0">Urgency:</span>
       </p>
+      <p>
+        <span class="text-[#00000099] p-0 m-0 mr-[15px]"
+          >Service Requests Status:</span
+        ><button
+          class="px-3 py-1 rounded-[8px] text-[12px] font-medium"
+          :class="{
+            'bg-[#C38201] text-[#FFFFFF]':
+              selectedTenant.serviceStatus === 'Pending',
+            'bg-[#31A057] text-[#FFFFFF]':
+              selectedTenant.serviceStatus === 'Completed',
+            'bg-[#E5F6FF] text-[#FFFFFF]':
+              selectedTenant.serviceStatus === 'Ongoing',
+            'bg-[#5f16a4] text-[#FFFFFF]':
+              selectedTenant.serviceStatus === 'Requested',
+            'bg-[#9f0f0f] text-[#FFFFFF]':
+              selectedTenant.serviceStatus === 'Terminate',
+          }"
+        >
+          {{ selectedTenant.serviceStatus }}
+        </button>
+      </p>
+      <div v-if="selectedTenant.serviceStatus == 'Completed'">
+        <p
+          class="m-0 p-0 text-[#000000] text-[14px] font-inter font-medium leading-[100%] mt-4 mb-3"
+        >
+          Send Notification
+        </p>
+        <div>
+          <BaseInput v-model="form.message" placeholder="Enter Message" />
+        </div>
+        <p class="m-0 p-0 mt-4 mb-3">Choose saved messages</p>
+
+        <div class="flex flex-wrap gap-2.5">
+          <a-button
+            @click="form.message = value"
+            v-for="value in messages"
+            class="py-[12px] flex rounded-[100px] items-center hover:bg-[#F0F0F0] bg-[#FFFFFF] px-[15px] font-inter font-medium text-[12px]"
+          >
+            {{ value }}
+          </a-button>
+        </div>
+      </div>
     </div>
-    <div>
+    <div class="border-t-[0.75px] border-[#36363533] mt-4 flex">
       <a-button
+        v-if="selectedTenant.serviceStatus !== 'Completed'"
         class="bg-[#000130] py-[8px] flex font-inter items-center justify-center text-white w-full mt-4 rounded-[8px]"
       >
         Set to Completed
       </a-button>
+      <div class="flex" v-else>
+        <a-button
+          class="bg-[#000130] py-[8px] flex font-inter items-center justify-center text-white w-full mt-4 rounded-[8px]"
+        >
+          Revert to Pending
+        </a-button>
+        <a-button
+          class="bg-[#000130] py-[8px] flex font-inter items-center justify-center text-white w-full mt-4 rounded-[8px]"
+        >
+          Send Message
+        </a-button>
+      </div>
     </div>
   </a-modal>
 </template>
@@ -145,12 +213,13 @@ import V2ServiceRequestsDropDown from "@/components/V2ServiceRequestsDropDown.vu
 import { FetchServiceRequests } from "@/api/serviceRequest";
 import { useUserStore } from "@/store";
 import BasePagination from "@/components/BasePagination.vue";
-
+import BaseInput from "@/components/BaseInput.vue";
 export default {
   components: {
     "table-component": V2Table,
     DropdownButton: V2ServiceRequestsDropDown,
     "table-header": TableHeader,
+    BaseInput,
     TenantCard,
   },
   created() {
@@ -180,6 +249,7 @@ export default {
               accommodationName: request.accommodationName,
               unitId: request.unitId,
               serviceType: request.serviceType,
+              description: request.description,
               serviceStatus:
                 this.serviceLiterals[request.serviceStatus] || "Unknown",
               action: request, // Pass the entire request object for action slot
@@ -193,9 +263,13 @@ export default {
   },
   data() {
     return {
+      messages: ["Your service request has been sorted"],
       store: useUserStore(),
       showModal: false,
       selectedStatus: "All",
+      form: {
+        message: "",
+      },
       data: [],
       selectedTenant: {},
       serviceLiterals: [
