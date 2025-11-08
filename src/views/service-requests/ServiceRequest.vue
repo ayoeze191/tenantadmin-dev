@@ -9,10 +9,10 @@
           title="All Requests"
         >
           <DropdownButton
-            :label="selectedStatus"
+            :label="serviceLiterals[selectedStatus]"
             :options="[
-              { label: 'Pending', value: 'Pending' },
-              { label: 'Completed', value: 'Completed' },
+              { label: 'Pending', value: '1' },
+              { label: 'Completed', value: '3' },
               { label: 'All', value: 'All' },
             ]"
             @select="handleSelect"
@@ -28,7 +28,7 @@
         <table-component
           title="Service Requests"
           :columns="headers"
-          :data-source="data"
+          :data-source="computedData"
         >
           <template #action="{ record }">
             <div class="relative flex justify-center items-center group">
@@ -40,7 +40,26 @@
               >
             </div>
           </template>
+          <template #status="{ text, record }">
+            <div class="flex justify-center">
+              <button
+                :class="{
+                  'bg-[#C38201] text-[#FFFFFF]': text === 'Pending',
+                  'bg-[#31A057] text-[#FFFFFF]': text === 'Completed',
+                  'bg-[#E5F6FF] text-[#FFFFFF]': text === 'Ongoing',
+                  'bg-[#5f16a4] text-[#FFFFFF]': text === 'Requested',
+                  'bg-[#9f0f0f] text-[#FFFFFF]': text === 'Terminate',
+                }"
+                class="px-3 py-1 rounded-[8px] text-[12px] font-medium"
+              >
+                {{ text }}
+              </button>
+            </div>
+          </template>
         </table-component>
+        <!-- <BasePagination 
+        
+        /> -->
       </div>
     </div>
   </div>
@@ -80,7 +99,7 @@
       <div><img src="/src/assets/TenantImage.svg" /></div>
       <div class="h-full">
         <p class="m-0 p-0 text-[#000000] font-inter font-medium leading-[100%]">
-          {{ selectedTenant?.name || "Frank Thomas" }}
+          {{ selectedTenant?.tenant || "Frank Thomas" }}
         </p>
         <p
           class="m-0 p-0 text-[#00000066] text-[10px] font-inter font-medium leading-[100%] mt-[4px]"
@@ -125,6 +144,7 @@ import V2Table from "@/components/V2Table.vue";
 import V2ServiceRequestsDropDown from "@/components/V2ServiceRequestsDropDown.vue";
 import { FetchServiceRequests } from "@/api/serviceRequest";
 import { useUserStore } from "@/store";
+import BasePagination from "@/components/BasePagination.vue";
 
 export default {
   components: {
@@ -135,6 +155,15 @@ export default {
   },
   created() {
     this.fetchData();
+  },
+  computed: {
+    computedData() {
+      return this.selectedStatus == "All"
+        ? this.data
+        : this.data.filter(
+            (item) => item.serviceStatus === this.selectedStatus
+          );
+    },
   },
   methods: {
     handleSelect(option) {
@@ -150,6 +179,7 @@ export default {
               tenant: request.tenant,
               accommodationName: request.accommodationName,
               unitId: request.unitId,
+              serviceType: request.serviceType,
               serviceStatus:
                 this.serviceLiterals[request.serviceStatus] || "Unknown",
               action: request, // Pass the entire request object for action slot
@@ -167,6 +197,7 @@ export default {
       showModal: false,
       selectedStatus: "All",
       data: [],
+      selectedTenant: {},
       serviceLiterals: [
         "Requested",
         "Pending",
@@ -192,8 +223,14 @@ export default {
         {
           title: "Status",
           dataIndex: "serviceStatus",
+          slotName: "status",
         },
-        { title: "action", dataIndex: "action", slotName: "action" },
+        {
+          title: "Service Type",
+          dataIndex: "serviceType",
+          className: "serviceType",
+        },
+        { title: "", dataIndex: "action", slotName: "action" },
       ],
     };
   },

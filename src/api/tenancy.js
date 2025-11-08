@@ -79,3 +79,12 @@ export const GenerateLease = async (applicationId) => {
     console.log(err);
   }
 };
+
+export const sendEmailToTenant = async (body) => {
+  try {
+    const response = await postApi(`email/send-notification`, body);
+    return response.data;
+  } catch (err) {
+    console.log(err);
+  }
+};

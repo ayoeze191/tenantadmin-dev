@@ -73,6 +73,7 @@
                     () => {
                       selectedTenant = record;
                       showModal = true;
+                      form.email = record.email;
                     }
                   "
                   class="py-[8px] w-full flex items-center justify-center bg-[#000130] text-white mt-6 text-[14px] rounded-[8px]"
@@ -113,7 +114,16 @@
           <span class="font-redwing text-2 leading-[100%] font-medium"
             >Tenant information</span
           >
-          <span @click="showModal = false" class="cursor-pointer">
+          <span
+            @click="
+              () => {
+                form.email = '';
+                form.message = '';
+                showModal = false;
+              }
+            "
+            class="cursor-pointer"
+          >
             <svg
               width="14"
               height="14"
@@ -129,7 +139,6 @@
           </span>
         </div>
       </template>
-
       <div
         class="border-[#36363633] border-[0.75px] bg-[#FFFFFF] py-[10px] gap-2.5 flex items-center rounded-[16px] border-solid border-b-[0.75px] px-[14px]"
       >
@@ -180,12 +189,9 @@
         class="pt-[16px] border-t-[0.75px] text-[14px] flex gap-[10px] mt-[16px]"
       >
         <a-button
-          class="w-full py-[8px] flex items-center justify-center bg-[#000130] text-white rounded-[8px]"
-        >
-          Send to Unit
-        </a-button>
-        <a-button
-          class="w-full py-[8px] flex items-center justify-center text-black rounded-[8px]"
+          :loading="sendingmailtoteneant"
+          @click="handleSendEmail"
+          class="w-full py-[8px] flex items-center hover:bg-[#000130] hover:text-white justify-center text-black rounded-[8px]"
         >
           Send to Tenant
         </a-button>
@@ -197,7 +203,6 @@
 <script>
 import { FetchTenants, SignUpLandlord, VerifyLandlord } from "@/api/auth";
 import IconEdit from "@/components/icons/IconEdit.vue";
-import Table from "@/components/Table.vue";
 import V2Table from "@/components/V2Table.vue";
 import handleError from "@/utils/handleError";
 import { handleToast } from "@/utils/helper";
@@ -206,7 +211,7 @@ import TableHeader from "@/components/TableHeader.vue";
 import BasePagination from "@/components/BasePagination.vue";
 import BaseInput from "@/components/BaseInput.vue";
 import { h } from "vue";
-import { message } from "ant-design-vue";
+import { sendEmailToTenant } from "@/api/tenancy";
 import FilterButton from "@/components/icons/FilterButton.vue";
 export default {
   components: {
@@ -222,6 +227,7 @@ export default {
   },
   data() {
     return {
+      sendingmailtoteneant: false,
       messages: [
         "Your lease Would Expire Soon",
         "A noise complain has b...",
@@ -295,6 +301,25 @@ export default {
       if (this.isActive(data)) {
         this.tableDropdown = "";
       } else this.tableDropdown = data;
+    },
+    handleSendEmail() {
+      this.sendingmailtoteneant = true;
+      const body = {
+        toEmail: this.form.email,
+        toName: this.selectedTenant.name,
+        body: this.form.message,
+        subject: "Notification from Property Management",
+        fromName: "Property Management 10Nants Admin",
+      };
+      sendEmailToTenant(body).then((response) => {
+        this.sendingmailtoteneant = false;
+        if (response.success == true) {
+          handleToast("Email Sent Successfully", "success");
+          this.form.email = "";
+          this.form.message = "";
+          this.showModal = false;
+        } else handleError(response);
+      });
     },
     handleFetchLandlords(page = 1) {
       const query = {
