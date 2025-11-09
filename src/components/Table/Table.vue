@@ -8,7 +8,10 @@
     class="border-border_lightgray h-full"
   >
     <template #bodyCell="{ column, record }">
-      <template v-if="column.key !== 'action'">
+      <template v-if="column.key === 'Status'">
+            <StatusBadge :label="record[column.dataIndex]" :type="record[column.dataIndex]=='Completed' ? 'success' : 'pending'"/>
+      </template>
+      <template v-else-if="column.key !== 'action'">
         <span class="">
           {{ record[column.dataIndex] }}
         </span>
@@ -25,12 +28,14 @@
 
 <script setup>
 import { computed } from "vue";
+import StatusBadge from "@/components/StatusBadge/StatusBadge.vue";
 
 const props = defineProps({
   headers: { type: Array, required: true },
   data: { type: Array, required: true },
   button_label: { type: String, default: "View Details" },
 });
+
 const dataAttributes = ["id", "name", "property", "unitNumber", "status"];
 
 // Convert headers into AntD column definitions

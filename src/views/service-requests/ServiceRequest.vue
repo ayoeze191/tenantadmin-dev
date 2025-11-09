@@ -6,7 +6,7 @@
       <div class="flex w-full justify-between p-3 text-[14px]">
         <div class="flex gap-3">
           <span
-            class="size-[45px] border-sleek flex justify-center items-center"
+            class="size-[40px] border-sleek flex justify-center items-center"
           >
             <service-req-icon class="icon" />
           </span>
@@ -21,36 +21,30 @@
         </div>
         <div class="flex gap-3 items-center text-[1rem] max-w-[470px] flex-1">
           <div
-            class="border-sleek flex w-full h-[45px] items-center px-2 gap-2"
+            class="border-sleek flex w-full h-[40px] items-center px-2 gap-2"
           >
             <search-icon class="icon" />
             <input class="h-full" type="text" placeholder="search" />
           </div>
-          <select
-            class="border-sleek h-[45px] py-3"
-            name="service-req-filter text[.75rem]"
-            id="service-req-filter"
+          <a-select
+            v-model="selectedFilter"
+            class="service-req-filter"
             :disabled="!serviceRequests.length"
-          >
-            <option
-              value=""
-              :selected="!serviceRequests.length"
-              disabled
-              hidden
-            >
-              Status
-            </option>
-            <option value="all" :selected="serviceRequests.length">All</option>
-            <option value="completed">Completed</option>
-            <option value="pending">Pending</option>
-          </select>
+            :onChange="handleFilterSelected"
+            defaultValue="all"
+            :options="[
+              { label: 'All', value: 'all' },
+              { label: 'Completed', value: 'completed' },
+              { label: 'Pending', value: 'pending' },
+            ]"
+          />
         </div>
       </div>
 
       <Table
         v-if="serviceRequests.length > 0"
         :headers="serviceRequestHeaders"
-        :data="serviceRequests"
+        :data="serviceRequestsFiltered"
       />
 
       <div v-else class="size-full flex justify-center items-center">
@@ -66,8 +60,6 @@
               >You have nothing to view</span
             >
           </p>
-
-          <StatusBadge label="Success" type="pending" />
         </div>
       </div>
     </div>
@@ -179,7 +171,6 @@ import {
   FetchServiceRequests,
   updateServiceRequest,
 } from "@/api/serviceRequest";
-import StatusBadge from "@/components/StatusBadge/StatusBadge.vue";
 import StatusDropdown from "@/components/StatusDropdown.vue";
 import IconSearch from "../../components/icons/IconSearch.vue";
 import IconServiceRequests from "@/components/icons/IconServiceRequests2.vue";
@@ -307,6 +298,7 @@ export default {
           status: "Completed",
         },
       ],
+      serviceRequestsFiltered: [],
       serviceRequestHeaders: [
         "S/N",
         "Name",
@@ -339,7 +331,6 @@ export default {
     "status-select": StatusSelect,
     "modal-component": Modal,
     StatusDropdown,
-    StatusBadge,
     Table,
   },
   created() {
@@ -351,14 +342,15 @@ export default {
       return this.serviceLiterals[service.serviceStatus];
     },
     handleFetchServiceRequest() {
-      FetchServiceRequests(this.store.userProfile.referenceID).then(
-        (response) => {
-          console.log(response);
-          if (response.responseCode == "00") {
-            this.serviceRequests = response.serviceRequests;
-          } else handleError(response);
-        }
-      );
+      this.serviceRequestsFiltered = this.serviceRequests;
+      // FetchServiceRequests(this.store.userProfile.referenceID).then(
+      //   (response) => {
+      //     console.log(response);
+      //     if (response.responseCode == "00") {
+      //       this.serviceRequests = response.serviceRequests;
+      //     } else handleError(response);
+      //   }
+      // );
     },
     toggleTabs(value) {
       this.selected_tab = value;
@@ -386,8 +378,8 @@ export default {
       }).then((response) => {
         console.log(response, "reciprocal");
         if (response.responseCode == "00") {
-          console.log("successfull");
-          toast.success("Successfull");
+          console.log("successful");
+          toast.success("Successful");
         }
       });
     },
@@ -403,19 +395,28 @@ export default {
       }).then((response) => {
         console.log(response, "reciprocal");
         if (response.responseCode == "00") {
-          console.log("successfull");
-          toast.success("Successfull");
+          console.log("successful");
+          toast.success("Successful");
         } else {
           toast.error(response.responseDescription);
         }
         console.log(response);
       });
     },
+    handleFilterSelected(val, option) {
+      if(val=="all")
+        return this.serviceRequestsFiltered = this.serviceRequests;
+      console.log(val)
+      return this.serviceRequestsFiltered = this.serviceRequests.filter((req) => {
+        console.log(req.status, option)
+        return req.status == option.label
+    })
+    }
   },
 };
 </script>
 
-<style>
+<style scoped>
 /* TODO: see if we can move this to index.css */
 .border-sleek {
   border: 0.75px solid rgba(54, 54, 54, 0.2);
