@@ -58,6 +58,7 @@
   #app {
     width: 100%;
     height: 100%;
+    overflow-y: auto;
   }
 
   ul {
@@ -336,4 +337,10 @@
    /* left: inherit !important;
    right: 2% !important; */
   }
+
+  .no-scrol-table {
+  width: 100%;
+  table-layout: auto !important;
+  overflow: hidden !important;
+}
 /* end */

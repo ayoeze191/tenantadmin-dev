@@ -1,7 +1,7 @@
 <template>
   <div class="p-3 h-[100%]">
     <div
-      class="flex flex-col border-sleek text-primary size-full overflow-hidden page box-border"
+      class="flex flex-col border-sleek text-primary size-full page box-border"
     >
       <div class="flex w-full justify-between p-3 text-[14px]">
         <div class="flex gap-3">

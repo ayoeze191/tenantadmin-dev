@@ -5,7 +5,7 @@
     bordered
     :pagination="{ pageSize: 10 }"
     rowKey="id"
-    class="border-border_lightgray h-full"
+    class="border-border_lightgray h-full no-scroll-table"
   >
     <template #bodyCell="{ column, record }">
       <template v-if="column.key === 'Status'">
