@@ -325,10 +325,10 @@
     @apply px-3 h-[40px] flex items-center !important
   }
 
-  .service-req-filter > .ant-select-selector:hover {
-    border-color: rgba(54, 54, 54, 0.2);
-    background-color: #fafafa;
-    outline: none
+  .service-req-filter > .ant-select-selector:hover, .service-req-filter > .ant-select-selector:focus {
+    border-color: rgba(54, 54, 54, 0.2) !important;
+    background-color: #fafafa !important;
+    outline: none !important;
   }
 
   .ant-select-dropdown {

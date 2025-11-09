@@ -3,7 +3,7 @@
     :columns="columns"
     :data-source="data"
     bordered
-    :pagination="{ pageSize: 12 }"
+    :pagination="{ pageSize: 10 }"
     rowKey="id"
     class="border-border_lightgray h-full"
   >
@@ -18,7 +18,7 @@
       </template>
 
       <template v-else>
-        <button class="">
+        <button class="border-[1px] border-border_lightgray rounded-lg py-1 px-2">
           {{ button_label }}
         </button>
       </template>
