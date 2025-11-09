@@ -302,5 +302,20 @@
   .badge-pending {
     @apply bg-pending_strong;
   }
+
+  .ant-table-thead th {
+    font-weight: normal !important;
+    color: #0000007F !important;
+  }
+
+  .ant-spin-nested-loading, .ant-spin-container {
+    height: 100%;
+  }
+
+  .ant-spin-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
 /* end */
 

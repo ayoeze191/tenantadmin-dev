@@ -1,9 +1,13 @@
 <template>
-<div class="p-3 h-[100%]">
-  <div class= "border-sleek text-primary size-full overflow-hidden page box-border">
-      <div class="flex w-full justify-between border-b border-br1 p-3 text-[14px]">
+  <div class="p-3 h-[100%]">
+    <div
+      class="flex flex-col border-sleek text-primary size-full overflow-hidden page box-border"
+    >
+      <div class="flex w-full justify-between p-3 text-[14px]">
         <div class="flex gap-3">
-          <span class="size-[45px] border-sleek flex justify-center items-center">
+          <span
+            class="size-[45px] border-sleek flex justify-center items-center"
+          >
             <service-req-icon class="icon" />
           </span>
           <div class="flex flex-col justify-center gap-1">
@@ -16,69 +20,54 @@
           </div>
         </div>
         <div class="flex gap-3 items-center text-[1rem] max-w-[470px] flex-1">
-          <div class="border-sleek flex w-full h-[45px] items-center px-2 gap-2">
-            <search-icon class="icon"/>
-            <input class="h-full" type="text" placeholder="search">
-            
+          <div
+            class="border-sleek flex w-full h-[45px] items-center px-2 gap-2"
+          >
+            <search-icon class="icon" />
+            <input class="h-full" type="text" placeholder="search" />
           </div>
-          <select class="border-sleek h-[45px] py-3" name="service-req-filter text[.75rem]" id="service-req-filter" :disabled="!serviceRequests.length">
-            <option value="" :selected="!serviceRequests.length" disabled hidden>Status</option>
+          <select
+            class="border-sleek h-[45px] py-3"
+            name="service-req-filter text[.75rem]"
+            id="service-req-filter"
+            :disabled="!serviceRequests.length"
+          >
+            <option
+              value=""
+              :selected="!serviceRequests.length"
+              disabled
+              hidden
+            >
+              Status
+            </option>
             <option value="all" :selected="serviceRequests.length">All</option>
             <option value="completed">Completed</option>
             <option value="pending">Pending</option>
           </select>
         </div>
       </div>
-      <ul
-        v-if="
-          selected_tab == 'all'
-            ? serviceRequests.length > 0
-            : serviceRequests.filter(
-                (serv) => serviceLiterals[serv.serviceStatus] == selected_tab
-              ).length
-        "
-      >
-        <li
-          class="w-full rounded-md px-4 py-2 bg-grey mb-4"
-          v-for="service in selected_tab == 'all'
-            ? serviceRequests
-            : serviceRequests.filter(
-                (serv) => serviceLiterals[serv.serviceStatus] == selected_tab
-              )"
-        >
-          <section class="flex w-full justify-between mb-4">
-            <p class="font-medium leading-6 text-txt_dark font-sf">
-              {{ service.subject }}
-              <!-- <span class="text-secondary ml-1">{{service.properties[0].name || 'nill' }} </span>  -->
-            </p>
 
-            <StatusDropdown
-              :modelValue="getStatusLabel(service)"
-              @update:modelValue="
-                (newStatus) => onStatusChange(service, newStatus)
-              "
-            />
-          </section>
-          <a
-            class="text-sm leading-6 text-txt_dark cursor-pointer underline"
-            @click="openModal(service)"
-            >View full details</a
-          >
-        </li>
-      </ul>
+      <Table
+        v-if="serviceRequests.length > 0"
+        :headers="serviceRequestHeaders"
+        :data="serviceRequests"
+      />
 
       <div v-else class="size-full flex justify-center items-center">
         <div class="size-fit flex flex-col gap-4 justify-center items-center">
-          <span class="size-[45px] border-sleek flex justify-center items-center">
+          <span
+            class="size-[45px] border-sleek flex justify-center items-center"
+          >
             <service-req-icon class="icon" />
           </span>
           <p class="flex flex-col items-center gap-1 text-[1rem]">
             You have no Service Requests
-            <span class="text-14px text-secondary">You have nothing to view</span>
+            <span class="text-14px text-secondary"
+              >You have nothing to view</span
+            >
           </p>
 
-          <StatusBadge label="Success" type="pending"/>
-
+          <StatusBadge label="Success" type="pending" />
         </div>
       </div>
     </div>
@@ -199,6 +188,7 @@ import { useToast } from "vue-toast-notification";
 import { useUserStore } from "@/store";
 
 import Button from "@/components/Button/Button.vue";
+import Table from "@/components/Table/Table.vue";
 
 export default {
   data() {
@@ -207,7 +197,123 @@ export default {
       selected_tab: "all",
       userSelectedOption: "",
       selected_Request: {},
-      serviceRequests: [],
+      serviceRequests: [
+        {
+          id: 1,
+          name: "Steph Sobim",
+          property: "Thistlebrook Lane, Mistwood, Ontario, K8N 3P5",
+          unitNumber: 12,
+          status: "Completed",
+        },
+        {
+          id: 2,
+          name: "John Doe",
+          property:
+            "Harborview Drive, Westport Falls, British Columbia, V6Z 1R2",
+          unitNumber: 98,
+          status: "Completed",
+        },
+        {
+          id: 3,
+          name: "Francesa Dublin",
+          property: "Snowberry Crescent, Pinefield, Nova Scotia, B3H 2M9",
+          unitNumber: 77,
+          status: "Pending",
+        },
+        {
+          id: 4,
+          name: "Marvelous Jin",
+          property: "Lot 14, 9 Boreal Path, Northreach, Saskatchewan, S7K 4V1",
+          unitNumber: 14,
+          status: "Completed",
+        },
+        {
+          id: 5,
+          name: "Chukwuemeka Daniel",
+          property: "Lighthouse Way, Argent Isle, Newfoundland and Labrador",
+          unitNumber: 24,
+          status: "Pending",
+        },
+        {
+          id: 6,
+          name: "Marvelous Jin",
+          property: "Lighthouse Way, Argent Isle, Newfoundland and Labrador",
+          unitNumber: 24,
+          status: "Completed",
+        },
+        {
+          id: 7,
+          name: "Francesa Dublin",
+          property: "Snowberry Crescent, Pinefield, Nova Scotia, B3H 2M9",
+          unitNumber: 11,
+          status: "Pending",
+        },
+        {
+          id: 8,
+          name: "Marvelous Jin",
+          property: "Lot 14, 9 Boreal Path, Northreach, Saskatchewan, S7K 4V1",
+          unitNumber: 11,
+          status: "Completed",
+        },
+        {
+          id: 9,
+          name: "Francesa Dublin",
+          property: "Snowberry Crescent, Pinefield, Nova Scotia, B3H 2M9",
+          unitNumber: 52,
+          status: "Pending",
+        },
+        {
+          id: 10,
+          name: "Chukwuemeka Daniel",
+          property: "Lot 14, 9 Boreal Path, Northreach, Saskatchewan, S7K 4V1",
+          unitNumber: 30,
+          status: "Pending",
+        },
+        {
+          id: 11,
+          name: "John Doe",
+          property: "Thistlebrook Lane, Mistwood, Ontario, K8N 3P5",
+          unitNumber: 1,
+          status: "Completed",
+        },
+        {
+          id: 12,
+          name: "Gaal Dornick",
+          property: "Lighthouse Way, Argent Isle, Newfoundland and Labrador",
+          unitNumber: 1,
+          status: "Completed",
+        },
+        {
+          id: 13,
+          name: "Chukwuemeka Daniel",
+          property:
+            "Harborview Drive, Westport Falls, British Columbia, V6Z 1R2",
+          unitNumber: 24,
+          status: "Pending",
+        },
+        {
+          id: 14,
+          name: "Gaal Dornick",
+          property:
+            "Prairie Gate, Sunset Plains, Prince Edward Island, C1A 4L6",
+          unitNumber: 33,
+          status: "Completed",
+        },
+        {
+          id: 15,
+          name: "Steph Sobim",
+          property: "Thistlebrook Lane, Mistwood, Ontario, K8N 3P5",
+          unitNumber: 12,
+          status: "Completed",
+        },
+      ],
+      serviceRequestHeaders: [
+        "S/N",
+        "Name",
+        "Property",
+        "Unit Number",
+        "Status",
+      ],
       serviceLiterals: [
         "Requested",
         "Pending",
@@ -233,7 +339,8 @@ export default {
     "status-select": StatusSelect,
     "modal-component": Modal,
     StatusDropdown,
-    StatusBadge
+    StatusBadge,
+    Table,
   },
   created() {
     this.handleFetchServiceRequest();
@@ -312,7 +419,7 @@ export default {
 /* TODO: see if we can move this to index.css */
 .border-sleek {
   border: 0.75px solid rgba(54, 54, 54, 0.2);
-  border-radius: .75rem;
+  border-radius: 0.75rem;
 }
 
 .page {
