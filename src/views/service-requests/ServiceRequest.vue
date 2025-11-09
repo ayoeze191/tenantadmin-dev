@@ -1,7 +1,7 @@
 <template>
   <div class="px-4 font-inter">
     <div
-      class="rounded-[16px] p-2.5 mt-4 font-inter border-[#36363633] border-[0.75px] border-solid"
+      class="rounded-[16px] mt-4 font-inter border-[#36363633] border-[0.75px] border-solid"
     >
       <div class="flex justify-between">
         <table-header
@@ -184,10 +184,17 @@
     </div>
     <div class="border-t-[0.75px] border-[#36363533] mt-4 flex">
       <a-button
-        v-if="selectedTenant.serviceStatus !== 'Completed'"
+        @click=""
+        v-if="selectedTenant.serviceStatus == 'Pending'"
         class="bg-[#000130] py-[8px] flex font-inter items-center justify-center text-white w-full mt-4 rounded-[8px]"
       >
         Set to Completed
+      </a-button>
+      <a-button
+        v-if="selectedTenant.serviceStatus == 'Terminate'"
+        class="bg-[#000130] py-[8px] flex font-inter items-center justify-center text-white w-full mt-4 rounded-[8px]"
+      >
+        Renew Request
       </a-button>
       <div class="flex" v-else>
         <a-button
