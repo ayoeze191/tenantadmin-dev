@@ -290,26 +290,31 @@ export default {
         {
           title: "Tenant Name",
           dataIndex: "tenant",
+          align: "left",
         },
         {
           title: "Property",
           dataIndex: "accommodationName",
           className: "accommodationName",
+          align: "left",
         },
         {
           title: "Unit Number",
           className: "unitId",
           dataIndex: "unitId",
+          align: "center",
         },
         {
           title: "Status",
           dataIndex: "serviceStatus",
           slotName: "status",
+          align: "center",
         },
         {
           title: "Service Type",
           dataIndex: "serviceType",
           className: "serviceType",
+          align: "center",
         },
         { title: "", dataIndex: "action", slotName: "action" },
       ],
