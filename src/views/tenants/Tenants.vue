@@ -3,7 +3,7 @@
     <div
       class="rounded-[16px] mt-4 font-inter border-[#36363633] border-[0.75px] border-solid"
     >
-      <div class="flex gap-2.5 p-2.5 items-center">
+      <div class="flex gap-2.5 items-center">
         <table-header :total-item-count="totalItemCount" title="Tenants">
           <div class="flex gap-[10px]">
             <a-button
@@ -245,26 +245,36 @@ export default {
         {
           title: "Name",
           dataIndex: "name",
+          align: "left",
         },
         {
-          title: "Properties",
+          title: "Property",
           dataIndex: "properties",
           className: "properties",
+          align: "left",
         },
         {
           title: "email",
           className: "email",
           dataIndex: "email",
+          align: "center",
         },
         {
           title: "verified",
           dataIndex: "isVerified",
+          align: "center",
         },
         {
           title: "Last Login",
           dataIndex: "lastLoginDate",
+          align: "center",
         },
-        { title: "action", dataIndex: "action", slotName: "action" },
+        {
+          title: "action",
+          dataIndex: "action",
+          align: "center",
+          slotName: "action",
+        },
       ],
       landlordList: [],
       tableDropdown: "",
