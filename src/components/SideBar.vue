@@ -31,11 +31,11 @@
       </p>
     </div>
     <a-menu
+      class="bg-inherit text-white"
       mode="inline"
       :selectedKeys="[selectedKey]"
       :openKeys="openKeys"
       @openChange="onOpenChange"
-      class="bg-[#111921] text-[#FFFFFF8C]"
     >
       <a-menu-item key="dashboard">
         <template #icon><overview-icon /></template>
@@ -225,14 +225,6 @@ export default {
 
       selectedKey: this.$route.name,
       openKeys: [],
-      rootSubmenuKeys: [
-        "service-requests",
-        "properties",
-        "tenants",
-        "payments",
-        "users",
-        "roles",
-      ],
     };
   },
   watch: {
@@ -241,13 +233,8 @@ export default {
     },
   },
   methods: {
-    onOpenChange(keys) {
-      const latestOpenKey = keys.find((key) => !this.openKeys.includes(key));
-      if (!this.rootSubmenuKeys.includes(latestOpenKey)) {
-        this.openKeys = keys;
-      } else {
-        this.openKeys = latestOpenKey ? [latestOpenKey] : [];
-      }
+    onOpenChange(openKeys) {
+      this.openKeys = openKeys;
     },
   },
 };
@@ -263,8 +250,7 @@ export default {
 
 /* Custom styling for active menu items */
 :deep(.ant-menu-item-selected) {
-  background-color: #ffffff66 !important;
-  color: #ffffff !important;
+  background-color: var(--vt-c-text-dark-2) !important;
 }
 
 :deep(.ant-menu-item:hover) {
