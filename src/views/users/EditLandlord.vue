@@ -29,7 +29,7 @@
             </label>
             <input id="email" name="email" class="input mt-4 mb-7" v-model="email"  />
 
-            <button-component label="Update" :disabled="isDisabled()"></button-component>
+            <Button label="Update" :disabled="isDisabled()" />
         </form>
     </div>
 </template>
@@ -42,7 +42,7 @@ import { handleToast } from '@/utils/helper';
 
 export default {
     components:{
-        'button-component': Button,
+        Button,
 
     },
     created() {
