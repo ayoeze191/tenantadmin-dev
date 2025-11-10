@@ -8,12 +8,12 @@
       <div><img src="/src/assets/TenantImage.svg" /></div>
       <div class="h-full">
         <p class="m-0 p-0 text-[#000000] font-inter font-medium leading-[100%]">
-          Steph soibim
+          {{ name }}
         </p>
         <p
           class="m-0 p-0 text-[#464646] text-[10px] font-inter font-medium leading-[100%] mt-[4px]"
         >
-          Thristlebrook Lane, Mistwood, Ontario, K8N 3P5
+          {{ address || "Thristlebrook Lane, Mistwood, Ontario, K8N 3P5" }}
         </p>
       </div>
       <button class="bg-[#31A057] text-[#FFFFFF] py-[4px] px-2 rounded-[4px]">
@@ -33,3 +33,39 @@
     </div>
   </div>
 </template>
+
+<script setup>
+const props = defineProps({
+  columns: {
+    type: Array,
+    required: true,
+  },
+  dataSource: {
+    type: Array,
+    required: true,
+  },
+  name: {
+    type: String,
+    required: false,
+  },
+  address: {
+    type: String,
+    required: false,
+  },
+});
+
+defineEmits(["edit", "verify"]);
+
+// 👇 Prepend S/N column automatically
+const computedColumns = computed(() => {
+  return [
+    {
+      title: "S/N",
+      dataIndex: "serial",
+      align: "center",
+      width: 70,
+    },
+    ...props.columns,
+  ];
+});
+</script>

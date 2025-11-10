@@ -1,6 +1,6 @@
 <template>
-  <div class="flex justify-between w-full items-center">
-    <div class="flex gap-2.5 p-2.5 items-center">
+  <div class="flex justify-between p-2.5 w-full items-center">
+    <div class="flex gap-2.5 items-center">
       <div
         class="border-solid border-[0.75px] border-[#36363633] rounded-[8px] p-2.5 w-fit"
       >
