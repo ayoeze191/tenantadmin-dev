@@ -1,7 +1,7 @@
 <template>
-  <div class="px-4 font-inter">
+  <div class="px-4 h-full font-inter">
     <div
-      class="rounded-[16px] p-2.5 mt-4 font-inter border-[#36363633] border-[0.75px] border-solid"
+      class="rounded-[16px] h-full p-2.5 mt-4 font-inter border-[#36363633] border-[0.75px] border-solid"
     >
       <div class="flex justify-between">
         <table-header

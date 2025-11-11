@@ -6,6 +6,7 @@
     bordered
     :pagination="false"
     rowKey="id"
+    :scroll="{ y: '400px' }"
   >
     <template #bodyCell="{ column, text, record, index }">
       <!-- Auto Serial Number -->

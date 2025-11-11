@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mt-4 w-fit bg-[#F6F6F6] flex flex-col gap-4 rounded-[16px] border-solid border-[0.75px]"
+    class="mt-4 w-fit bg-[#F6F6F6] flex flex-col gap-4 rounded-[16px] border-solid h-fit border-[0.75px]"
   >
     <div
       class="border-[#F6F6F6] bg-[#FFFFFF] py-[10px] gap-2.5 flex items-center rounded-[16px] border-solid border-b-[0.75px] px-[14px]"
