@@ -22,7 +22,12 @@
     v-for="value in waitingLeases.slice(0, 5)"
     :key="value.id"
     :lease="value"
-    @view="() => console.log('Sure')"
+    @view="
+                  () => {
+                    showModal = true;
+                    selectedTenant = record;
+                  }
+                "
   />
 </div>
 
@@ -214,6 +219,7 @@ import FilterButton from "@/components/icons/FilterButton.vue";
 import { FetchLeases, fetchWaitingLeases } from "@/api/lease";
 import { useUserStore } from "@/store";
 import DocumentIcon from "@/components/icons/DocumentIcon.vue";
+import BasePagination from "@/components/BasePagination.vue";
 export default {
   components: {
     "table-component": V2Table,
@@ -222,6 +228,7 @@ export default {
     FilterButton,
     DocumentIcon,
     TenantCard,
+    Pagination: BasePagination,
   },
   created() {
     this.fetchData();
