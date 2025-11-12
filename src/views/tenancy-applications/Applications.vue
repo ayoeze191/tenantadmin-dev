@@ -3,7 +3,7 @@
     <div
       class="rounded-[16px] mt-4 h-full font-inter border-[#36363633] border-[0.75px] border-solid"
     >
-      <div class="flex gap-2.5 items-center">
+      <div class="flex items-center">
         <table-header :total-item-count="totalItemCount" title="Applications">
           <div class="flex justify-between w-full items-center">
             <a-input
@@ -39,10 +39,10 @@
         </table-header>
       </div>
       <div
-        class="px-2.5 gap-4 grid grid-cols-4 mb-4"
+        class="px-2.5 mt-2 gap-4 grid grid-cols-4 mb-4"
         v-if="selectedDisplayType == 'Grid'"
       >
-        <applicationCard v-for="value in computedData" />
+        <applicationCard v-for="value in computedData" :app="value" />
       </div>
       <table-component
         v-if="selectedDisplayType == 'List'"
@@ -226,6 +226,10 @@ export default {
                 propertyName: app.propertyName,
                 unitId: app.unitId,
                 status: this.AccommodationApplicationStatus[app.status],
+                email: this.email,
+                gender: this.gender,
+                phoneNo: this.phoneNo,
+                nationality: this.nationality,
               };
             });
           }
