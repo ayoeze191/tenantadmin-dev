@@ -1,17 +1,21 @@
 <template>
-  <main class="flex w-full h-full overflow-hidden bg-primary p-[1rem] gap-3 box-border">
+  <main
+    class="flex w-full h-full overflow-hidden bg-primary p-[1rem] gap-3 box-border"
+  >
     <side-bar />
     <section
       class="flex flex-col w-full h-full bg-[#FFFFFF] rounded-[18px] box-border"
     >
       <top-nav />
       <div class="flex-1 pt-4 h-full">
-        <router-view v-if="store.userProfile.isVerified == true"></router-view>
+        <div class="" v-if="store.userProfile.isVerified == true">
+          <router-view></router-view>
+        </div>
+        <!--  -->
         <div
           v-else
           class="flex flex-col items-center justify-center h-full text-center px-4"
         >
-          <!-- <img src="../assets/verification-required.svg" /> -->
           <h2 class="text-2xl font-semibold text-black mt-6">
             Verification Required
           </h2>
