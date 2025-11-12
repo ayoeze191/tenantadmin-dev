@@ -1,5 +1,5 @@
 <template>
-    <span :class="['badge', `badge-${type}`]">{{ label }}</span>
+    <span class='badge'>{{ label }}</span>
 </template>
 
 
@@ -10,10 +10,6 @@ export default {
     label: {
       type: String,
       required: true,
-    },
-    type: {
-      type: String,
-      default: "success",
     },
   },
 };

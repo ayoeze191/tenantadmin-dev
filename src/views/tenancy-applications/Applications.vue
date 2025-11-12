@@ -1,6 +1,9 @@
 <template>
   <div
-    class="bg-neutral py-5 px-10 w-full overflow-y-scroll h-screen pb-40 font-sf"
+    :class="[
+      'bg-neutral py-5 px-10 w-full h-screen pb-40 font-sf',
+      modalOpen ? 'overflow-hidden' : 'overflow-y-scroll',
+    ]"
   >
     <section class="flex justify-between w-full border-b border-br1">
       <p class="text-[#808097] font-[500] font-sf text-[18px]">
@@ -333,7 +336,8 @@
               AccommodationApplicationStatus[value.status] === 'Failed',
           }"
           :disabled="AccommodationApplicationStatus[value.status] === 'Failed'"
-          @click="() => goto(value)"
+          @click="() => showModal(value)"
+          :key="index"
           class="bg-[#FFFFFF] flex justify-start text-[#404164] border-gray-100 border-y-[1px] px-[24px] py-[24px]"
         >
           <EyeOutlined
@@ -365,16 +369,149 @@
         :pageSize="pageSize"
         :total="total"
         @change="onPageChange"
-        :itemRender="itemRender"
       />
+      <!-- :itemRender="itemRender" -->
     </div>
   </div>
+
+  <a-modal
+    v-model:open="modalOpen"
+    :title="`Stage ${stage} • ${stages[stage - 1]}`"
+    @ok="handleOk"
+    @cancel="handleCancel"
+    :centered="true"
+    wrapClassName="application-page-modal"
+  >
+      <div
+        v-if="selectedApplication"
+        class="border-gray-200 border-[1.5px] rounded-xl p-2 flex gap-1.5"
+      >
+        <img
+          :src="dummyList[0]"
+          alt="profile picture"
+          class="size-[40px] object-cover rounded-lg"
+        />
+        <div class="flex flex-col">
+          <span>{{ selectedApplication.applicantName }}</span>
+          <span>{{ selectedApplication.email }}</span>
+        </div>
+      </div>
+
+      <a-tabs tabPosition="left" class="mt-3">
+        <a-tab-pane
+          v-for="tab in stagesTabDetails[stage - 1]"
+          :key="tab.tabTitle"
+          :tab="tab.tabTitle"
+        >
+          <h2 class="font-medium uppercase text-[1rem] font-redwing">
+            {{ tab.tabTitle }}
+          </h2>
+          <div
+            v-if="
+              ['Document Uploaded', 'Additional Documents'].includes(
+                tab.tabTitle
+              )
+            "
+            class="flex gap-x-3 gap-y-0 size-full flex-wrap"
+          >
+            <div
+              v-for="doc in tab.tabDetails"
+              class="bg-[#1e1e1e10] w-[30%] h-[9rem] p-2 flex flex-col flex-shrink-0 justify-center items-center rounded-lg mb-1.5"
+            >
+              <IconPDFDoc />
+              <span>{{ doc.name }}</span>
+            </div>
+          </div>
+          <div v-for="item in tab.tabDetails" v-else>
+            <p class="font-bold">{{ item.label }}</p>
+            <div class="mb-2">
+              <div v-for="key in item.keys">
+                <p
+                  v-if="
+                    [
+                      'phoneNo',
+                      'whatsAppNo',
+                      'workSupervisorPhoneNo',
+                      'emergencyPhoneNo',
+                      'guarantor1PhoneNo',
+                      'guarantor2PhoneNo',
+                    ].includes(key)
+                  "
+                >
+                  {{ formatPhoneNum(selectedApplication[key]) || "N/A" }}
+                </p>
+                <p v-else-if="key == 'intendedMoveInDate'">
+                  {{ formatDate(selectedApplication[key]) || "N/A" }}
+                </p>
+                <p
+                  v-else-if="
+                    ['apprMonthlyIncome', 'budgetForAccommodation'].includes(
+                      key
+                    )
+                  "
+                >
+                  {{
+                    selectedApplication[key]
+                      ? `CA\$${selectedApplication[key]}`
+                      : "N/A"
+                  }}
+                </p>
+                <p v-else>
+                  {{
+                    selectedApplication[key] == true
+                      ? "Yes"
+                      : selectedApplication[key] == false
+                      ? "No"
+                      : selectedApplication[key] || "N/A"
+                  }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </a-tab-pane>
+      </a-tabs>
+    <template #footer>
+      <div v-if="stage == 1" class="mt-3 flex justify-end gap-3">
+        <Button @click="handleNext">Next</Button>
+        <Button type="danger">Decline</Button>
+        <Button type="custom" class="border-gray-200 border-[1.5px] box-border"
+          >Request Additional Document</Button
+        >
+      </div>
+      <div v-if="stage == 2" class="mt-3 flex justify-end gap-3">
+        <Button
+          type="custom"
+          class="border-gray-200 border-[1.5px] box-border"
+          @click="handleBack"
+          >Back</Button
+        >
+        <div>
+          <Button @click="handleNext">Next</Button>
+          <Button type="danger">Decline</Button>
+        </div>
+      </div>
+      <div v-if="stage == 3" class="mt-3 flex justify-end gap-3">
+        <Button
+          type="custom"
+          class="border-gray-200 border-[1.5px] box-border"
+          @click="handleBack"
+          >Back</Button
+        >
+        <div>
+          <Button @click="handleNext">Confirm Date</Button>
+          <Button type="danger">Decline</Button>
+        </div>
+      </div>
+    </template>
+  </a-modal>
 </template>
 
 <script>
 import StatusSelect from "@/components/StatusSelect.vue";
 import IconSearch from "../../components/icons/IconSearch.vue";
-import Modal from "@/components/Modal.vue";
+import IconPDFDoc from "@/components/icons/IconPDFDoc.vue";
+// import Modal from "@/components/Modal.vue";
+// import { Modal } from 'ant-design-vue';
 import { useRouter } from "vue-router";
 import { FetchTenant, ApproveTenant } from "@/api/tenancy";
 import { openDB } from "idb";
@@ -382,6 +519,11 @@ import { useUserStore } from "@/store";
 import Button from "@/components/Button/Button.vue";
 import { useRoute } from "vue-router";
 import { AccomodationApplications } from "@/api/dashboard";
+// import { component } from "vue/types/umd";
+import parsePhoneNumber from "libphonenumber-js";
+import moment from "moment";
+import { ref } from "vue";
+
 export default {
   name: "Applications",
   data() {
@@ -417,6 +559,163 @@ export default {
         8: "Application has been declined by landlord or tenant",
         9: "Application has been cancelled by tenant",
       },
+      stages: ["Review", "Document Approval", "Set Move-In Date"],
+      // [TODO: Responsible Rent in personal information attribute, what do we do if the property is null, not display or display n/a], no guarantor relationship just occupation, no occupation for the applicant, document uploaded information missing. Need backend api for upload signed lease pdf, how to know whether security deposit has been paid currently using doYouHaveTotalMoveinAmount
+      stagesTabDetails: [
+        [
+          {
+            tabTitle: "Personal Information",
+            tabDetails: [
+              { keys: ["phoneNo"], label: "Phone" },
+              { keys: ["intendedMoveInDate"], label: "Intended Move-In Date" },
+              { keys: ["currentAddress"], label: "Current Address" },
+              { keys: ["gender"], label: "Gender" },
+              { keys: ["whatsAppNo"], label: "WhatsApp Number" },
+            ],
+          },
+          {
+            tabTitle: "Professional Information",
+            tabDetails: [
+              { keys: ["nameOfEmployer"], label: "Name of Employer" },
+              {
+                keys: ["currentLandLordName"],
+                label: "Current Landlord's Name",
+              },
+              {
+                keys: ["currentLandLordEmail"],
+                label: "Current Landlord's Email",
+              },
+              {
+                keys: ["apprMonthlyIncome"],
+                label: "Approximate Monthly Income",
+              },
+              {
+                keys: ["lengthOfTimeWithEmployer"],
+                label: "Length of Time with Employer",
+              },
+              {
+                keys: ["workSupervisorPhoneNo"],
+                label: "Work Supervisor's Number",
+              },
+              {
+                keys: ["workSupervisorEmail"],
+                label: "Work Supervisor's Email",
+              },
+              {
+                keys: ["budgetForAccommodation"],
+                label: "Budget for Accommodation",
+              },
+              { keys: ["carModel"], label: "Car Make, Model" },
+              { keys: ["carLicenseNumber"], label: "Car License Number" },
+            ],
+          },
+          {
+            tabTitle: "Emergency Information",
+            tabDetails: [
+              {
+                label: "Emergency Contact",
+                keys: [
+                  "emergencyFullName",
+                  "emergencyPhoneNo",
+                  "emergencyEmail",
+                  "emergencyRelationship",
+                ],
+              },
+              {
+                label: "Guarantor Information 1",
+                keys: [
+                  "guarantor1FullName",
+                  "guarantor1PhoneNo",
+                  "guarantor1Email",
+                  "guarantor1Occupation",
+                ],
+              },
+              {
+                label: "Guarantor Information 2",
+                keys: [
+                  "guarantor2FullName",
+                  "guarantor2PhoneNo",
+                  "guarantor2Email",
+                  "guarantor2Occupation",
+                ],
+              },
+            ],
+          },
+          {
+            tabTitle: "Personal Behavior",
+            tabDetails: [
+              {
+                keys: ["haveYoubeenToCourtByLandLord"],
+                label: "Brought to court by a Landlord?",
+              },
+              {
+                keys: ["haveYoueverDamageApartmentOrMovestillowning"],
+                label: "Moved still owing Rent?",
+              },
+              {
+                keys: ["doYouHaveTotalMoveinAmount"],
+                label: "Total Move-in amount available?",
+              },
+              { keys: ["doYouHavePets"], label: "Have pets?" },
+              { keys: ["doYouSmoke"], label: "Smoke?" },
+              {
+                keys: ["isYourCurrentRentUpToDate"],
+                label: "Current rent up to date?",
+              },
+              {
+                keys: ["haveYoueverDamageApartmentOrMovestillowning"],
+                label: "Damaged an apartment?",
+              },
+              {
+                keys: ["haveYouEverBeenEvicted"],
+                label: "Been evicted as a tenant?",
+              },
+            ],
+          },
+          {
+            tabTitle: "Document Uploaded",
+            tabDetails: [
+              { name: "Proof of Ownership doc.", docType: "PDF" },
+              { name: "Government-Issued ID doc.", docType: "PDF" },
+              { name: "Lease Agreement Template doc.", docType: "PDF" },
+              { name: "House Rules doc.", docType: "PDF" },
+            ],
+          },
+        ],
+        [
+          {
+            tabTitle: "Additional Documents",
+            tabDetails: [
+              { name: "Proof of Ownership doc.", docType: "PDF" },
+              { name: "Government-Issued ID doc.", docType: "PDF" },
+              { name: "Lease Agreement Template doc.", docType: "PDF" },
+              { name: "House Rules doc.", docType: "PDF" },
+            ],
+          },
+          {
+            tabTitle: "Applicant's Information",
+            tabDetails: [
+              { keys: ["phoneNo"], label: "Phone" },
+              { keys: ["nameOfEmployer"], label: "Name Of Employer" },
+              { keys: ["apprMonthlyIncome"], label: "Monthly Income" },
+            ],
+          },
+        ],
+        [
+          {
+            tabTitle: "Move-In Date Information",
+            tabDetails: [
+              { keys: ["propertyName"], label: "Property Name" },
+              { keys: ["unitName"], label: "Unit" },
+              {
+                keys: ["intendedMoveInDate"],
+                label: "Tenants Intended Move-In date",
+              },
+              { keys: ["apprMonthlyIncome"], label: "Monthly Income" },
+            ],
+          },
+        ],
+      ],
       selected_tab: "pending",
       selected_Request: {},
       status: "Status",
@@ -441,6 +740,38 @@ export default {
       Applications: [],
     };
   },
+  setup() {
+    const stage = ref(1);
+    const modalOpen = ref(false);
+    const selectedApplication = ref(null);
+
+    function showModal(app) {
+      selectedApplication.value = app;
+      modalOpen.value = true;
+    }
+
+    const handleOk = () => {
+      console.log("oked");
+      modalOpen.value = false;
+      stage.value = 1;
+    };
+
+    const handleCancel = () => {
+      console.log("cancelled");
+      modalOpen.value = false;
+      stage.value = 1;
+    };
+
+    return {
+      modalOpen,
+      stage,
+      selectedApplication,
+      moment,
+      showModal,
+      handleOk,
+      handleCancel,
+    };
+  },
   computed: {
     filteredApplications() {
       if (!this.searchQuery) return this.Applications;
@@ -458,7 +789,8 @@ export default {
   components: {
     "search-icon": IconSearch,
     "status-select": StatusSelect,
-    "modal-component": Modal,
+    IconPDFDoc,
+    Button,
   },
   methods: {
     TurnCamelCaseToWords(str) {
@@ -491,13 +823,6 @@ export default {
     toggleTabs(value) {
       this.selected_tab = value;
     },
-    openModal(request) {
-      this.$refs.viewRequestModal.openModal();
-      this.selected_Request = request;
-    },
-    onModalClose() {
-      console.log("Modal was closed");
-    },
     onPageChange(page) {
       this.currentPage = page;
       this.fetchData(page);
@@ -522,6 +847,37 @@ export default {
     },
 
     handleSearch(value) {},
+
+    handleNext(event) {
+      this.stage = this.stage + 1;
+    },
+    handleBack(event) {
+      this.stage = this.stage - 1;
+    },
+
+    formatPhoneNum(num) {
+      if (!num) return num;
+      const phoneNum = parsePhoneNumber(num);
+      let res = phoneNum?.formatInternational();
+      if (!res) return num;
+      res = res.split(" ");
+      if (res.length != 4) return num;
+      res = res
+        .map((n, i) => {
+          if (i == 1) return ` (${n}) `;
+          else if (i == 2) return `${n}-`;
+          else return n;
+        })
+        .join("");
+      return res;
+    },
+    formatDate(ts) {
+      if (ts) {
+        const res = moment(ts);
+        return res.format("DD MMMM YYYY");
+      }
+      return "";
+    },
   },
   created() {
     this.fetchData();
@@ -529,9 +885,46 @@ export default {
 };
 </script>
 
-<style scoped>
-:deep(.ant-pagination-item) {
-  /* background: #000130 !important; */
-  /* color: white !important; */
+<style>
+/* Only affects modals wrapped in .application-page-modal */
+.ant-modal-root > .application-page-modal .ant-modal-content {
+  box-shadow: none !important;
+  /* box-shadow: 0px 2px 7px 3px rgba(30,30,30,0.09); */
+}
+
+.ant-modal-root > .application-page-modal .ant-modal-mask {
+  background: rgba(30, 30, 30, 0.06) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.ant-modal-root > .application-page-modal .ant-tabs-content-holder {
+  border-left: none !important;
+}
+
+.ant-modal-root > .application-page-modal .ant-tabs-ink-bar {
+  display: none !important;
+}
+
+.ant-modal-root > .application-page-modal .ant-tabs-tab-active {
+  background-color: rgba(30, 30, 30, 0.06) !important;
+  border-radius: 0.625rem !important;
+}
+
+.ant-modal-root > .application-page-modal .ant-modal {
+  width: 50vw !important;
+  height: fit-content !important;
+}
+
+.ant-modal-root > .application-page-modal p {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.ant-modal-root > .application-page-modal .ant-modal-title {
+  font-family: redwing, ui-sans-serif, system-ui, sans-serif !important;
+  font-weight: 500 !important;
+  font-size: 24px !important;
 }
 </style>
+

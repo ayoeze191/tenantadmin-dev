@@ -1,467 +1,415 @@
 <template>
-  <div class="p-3 h-[100%]">
-    <div
-      class="flex flex-col border-sleek text-primary size-full page box-border"
-    >
-      <div class="flex w-full justify-between p-3 text-[14px]">
-        <div class="flex gap-3">
-          <span
-            class="size-[40px] border-sleek flex justify-center items-center"
-          >
-            <service-req-icon class="icon" />
-          </span>
-          <div class="flex flex-col justify-center gap-1">
-            <p class="font-medium text-[1rem] m-0">All Requests</p>
-
-            <p class="text-secondary m-0">
-              Total Number of Tenants:
-              <span class="text-primary">{{ serviceRequests.length }}</span>
-            </p>
-          </div>
-        </div>
-        <div class="flex gap-3 items-center text-[1rem] max-w-[470px] flex-1">
-          <div
-            class="border-sleek flex w-full h-[40px] items-center px-2 gap-2"
-          >
-            <search-icon class="icon" />
-            <input class="h-full" type="text" placeholder="search" />
-          </div>
-          <a-select
-            v-model="selectedFilter"
-            class="service-req-filter"
-            :disabled="!serviceRequests.length"
-            :onChange="handleFilterSelected"
-            defaultValue="all"
-            :options="[
-              { label: 'All', value: 'all' },
-              { label: 'Completed', value: 'completed' },
-              { label: 'Pending', value: 'pending' },
-            ]"
-          />
-        </div>
+  <div class="bg-neutral py-5 px-4 w-full min-h-screen">
+    <a-card class="!bg-white !rounded-2xl !border-0 max-w-5xl mx-auto">
+      <div class="pb-2 border-b border-gray-100 mb-4">
+        <a-tabs v-model:activeKey="selected_tab" class="!mb-0 tab-tight-gap">
+          <a-tab-pane key="all">
+            <template #tab>
+              <span class="flex items-center text-base font-medium">
+                All
+                <a-badge
+                  :count="(store.requests || []).length"
+                  class="bg-gray-100 text-[#23234a] rounded-md text-xs font-medium px-2 ml-1"
+                />
+              </span>
+            </template>
+          </a-tab-pane>
+          <a-tab-pane v-for="status in serviceLiterals" :key="status">
+            <template #tab>
+              <span class="flex items-center text-base font-medium">
+                {{ status }}
+                <a-badge
+                  :count="
+                    (store.getByStatus(status, serviceLiterals) || []).length
+                  "
+                  class="bg-gray-100 text-[#23234a] rounded-md text-xs font-medium px-2 ml-1"
+                />
+              </span>
+            </template>
+          </a-tab-pane>
+        </a-tabs>
       </div>
-
-      <Table
-        v-if="serviceRequests.length > 0"
-        :headers="serviceRequestHeaders"
-        :data="serviceRequestsFiltered"
-      />
-
-      <div v-else class="size-full flex justify-center items-center">
-        <div class="size-fit flex flex-col gap-4 justify-center items-center">
-          <span
-            class="size-[45px] border-sleek flex justify-center items-center"
-          >
-            <service-req-icon class="icon" />
-          </span>
-          <p class="flex flex-col items-center gap-1 text-[1rem]">
-            You have no Service Requests
-            <span class="text-14px text-secondary"
-              >You have nothing to view</span
+      <div>
+        <a-spin
+          v-if="loading"
+          size="large"
+          class="flex justify-center items-center min-h-[300px]"
+        />
+        <template v-else-if="filteredRequests.length > 0">
+          <div class="grid gap-4">
+            <a-card
+              v-for="service in filteredRequests"
+              :key="service.serviceRequestId"
+              class="!rounded-xl !border !border-gray-100 !shadow-sm"
+              :bodyStyle="{ padding: '1.25rem' }"
             >
-          </p>
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-3">
+                  <a-avatar
+                    :src="getServiceImage(service)"
+                    shape="square"
+                    size="large"
+                    class="!w-16 !h-16 !rounded-lg !bg-gray-200 object-cover"
+                  />
+                  <div>
+                    <div class="text-base font-semibold text-[#23234a]">
+                      {{ service.subject }}
+                    </div>
+                    <div class="text-xs text-gray-400">
+                      {{ service.tenant }}
+                    </div>
+                  </div>
+                </div>
+                <a-select
+                  v-model:value="service.serviceStatus"
+                  class="w-36"
+                  :options="statusOptions"
+                  :dropdownMatchSelectWidth="false"
+                  @change="
+                    (val) => onStatusChange(service, statusLiterals[val])
+                  "
+                  :suffixIcon="dropdownIcon()"
+                  :disabled="
+                    updatingStatusLoading &&
+                    updatingStatusId === service.serviceRequestId
+                  "
+                >
+                  <template #option="{ value, label }">
+                    <a-tag :color="statusTagColor(value)" class="capitalize">{{
+                      label
+                    }}</a-tag>
+                  </template>
+                  <template #tagRender="{ label, value }">
+                    <a-tag :color="statusTagColor(value)" class="capitalize">{{
+                      label
+                    }}</a-tag>
+                  </template>
+                </a-select>
+              </div>
+              <div class="flex items-center gap-2 mb-2">
+                <a-tag
+                  :color="statusTagColor(service.serviceStatus)"
+                  class="capitalize"
+                  >{{ getStatusLabel(service) }}</a-tag
+                >
+              </div>
+              <div class="text-sm text-[#6b6b8a] mb-2">
+                {{ service.description }}
+              </div>
+              <div class="flex items-center gap-2">
+                <a-button
+                  type="link"
+                  class="p-0 text-primary underline text-xs"
+                  @click="openModal(service)"
+                  >View full details</a-button
+                >
+              </div>
+            </a-card>
+          </div>
+        </template>
+        <a-empty v-else description="No service requests found" class="my-10" />
         </div>
-      </div>
-    </div>
+    </a-card>
+
+    <a-modal
+      ref="viewRequestModal"
+      v-model:visible="modalVisible"
+      :title="modalTitle"
+      :footer="null"
+      :width="800"
+      :centered="true"
+      class="!rounded-2xl"
+      @cancel="onModalClose"
+    >
+      <div class="space-y-6 max-h-[70vh] overflow-y-auto pr-2">
+        <!-- Header Section -->
+        <div class="bg-gray-50 rounded-lg p-4 mb-6">
+          <div class="flex items-center gap-4">
+            <a-avatar
+              :src="getServiceImage(selected_Request)"
+              shape="square"
+              size="large"
+              class="!w-20 !h-20 !rounded-xl !bg-gray-200 object-cover"
+            />
+            <div class="flex-1">
+              <h3 class="text-lg font-semibold text-[#23234a] mb-1">
+                {{ selected_Request.subject || "N/A" }}
+              </h3>
+              <p class="text-sm text-gray-500 mb-2">
+                {{ selected_Request.tenant || "N/A" }}
+              </p>
+              <a-tag
+                :color="statusTagColor(selected_Request.serviceStatus)"
+                class="capitalize text-sm font-medium"
+                >{{ getStatusLabel(selected_Request) }}</a-tag
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Details Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Left Column -->
+          <div class="space-y-4">
+            <div class="bg-white border border-gray-100 rounded-lg p-4">
+              <h4
+                class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2"
+              >
+                <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                Basic Information
+              </h4>
+              <div class="space-y-3">
+                <div class="flex justify-between items-center">
+                  <span class="text-sm text-gray-600 font-medium"
+                    >Reference:</span
+                  >
+                  <span class="text-sm text-[#23234a] font-semibold">
+                    {{ selected_Request.serviceReference || "N/A" }}
+                  </span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-sm text-gray-600 font-medium">Type:</span>
+                  <span class="text-sm text-[#23234a]">{{
+                    selected_Request.serviceType || "N/A"
+                  }}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-sm text-gray-600 font-medium"
+                    >Unit Type:</span
+                  >
+                  <span class="text-sm text-[#23234a]">{{
+                    selected_Request.unitType || "N/A"
+                  }}</span>
+                </div>
+              </div>
   </div>
 
-  <modal-component
-    ref="viewRequestModal"
-    title="B-29 Brina Apartments"
-    @close="onModalClose"
-    :button_label="'Save Changes'"
-    @submit="handleSubmit"
-  >
-    <ul class="grid grid-cols-2 gap-11 w-full max-w-[691px] mx-auto">
-      <li>
-        <div class="flex gap-2">
-          <p class="text-secondary font-medium leading-7">Tenant(s):</p>
-          <p class="text-txt_dark leading-7">{{ selected_Request.tenant }}</p>
+            <div class="bg-white border border-gray-100 rounded-lg p-4">
+              <h4
+                class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2"
+              >
+                <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                Contact Information
+              </h4>
+              <div class="space-y-3">
+                <div class="flex justify-between items-center">
+                  <span class="text-sm text-gray-600 font-medium"
+                    >Tenant(s):</span
+                  >
+                  <span class="text-sm text-[#23234a]">{{
+                    selected_Request.tenant || "N/A"
+                  }}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-sm text-gray-600 font-medium"
+                    >Professional:</span
+                  >
+                  <span class="text-sm text-[#23234a]">
+                    {{
+                      selected_Request.professional &&
+                      selected_Request.professional.trim()
+                        ? selected_Request.professional
+                        : "N/A"
+                    }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column -->
+          <div class="space-y-4">
+            <div class="bg-white border border-gray-100 rounded-lg p-4">
+              <h4
+                class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2"
+              >
+                <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                Timeline
+              </h4>
+              <div class="space-y-3">
+                <div class="flex justify-between items-center">
+                  <span class="text-sm text-gray-600 font-medium"
+                    >Created:</span
+                  >
+                  <span class="text-sm text-[#23234a]">{{
+                    formatDate(selected_Request.dateCreated)
+                  }}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-sm text-gray-600 font-medium"
+                    >Updated:</span
+                  >
+                  <span class="text-sm text-[#23234a]">{{
+                    formatDate(selected_Request.dateUpdated)
+                  }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white border border-gray-100 rounded-lg p-4">
+              <h4
+                class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2"
+              >
+                <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
+                Current Status
+              </h4>
+              <div class="flex items-center justify-between">
+                <span class="text-sm text-gray-600 font-medium">Status:</span>
+                <a-tag
+                  :color="statusTagColor(selected_Request.serviceStatus)"
+                  class="capitalize text-sm font-medium"
+                  >{{ getStatusLabel(selected_Request) }}</a-tag
+                >
+              </div>
+            </div>
+          </div>
         </div>
-      </li>
-      <li class="w-full">
-        <div class="flex gap-2">
-          <p class="text-secondary font-medium leading-7">Category</p>
-          <p class="text-txt_dark leading-7">
-            {{ selected_Request.serviceType }}
+
+        <!-- Description Section -->
+        <div class="bg-white border border-gray-100 rounded-lg p-4">
+          <h4
+            class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2"
+          >
+            <span class="w-2 h-2 bg-red-500 rounded-full"></span>
+            Description
+          </h4>
+          <p class="text-sm text-[#23234a] leading-relaxed">
+            {{ selected_Request.description || "No description provided" }}
           </p>
         </div>
-      </li>
 
-      <li>
-        <div class="flex gap-2">
-          <p class="text-secondary font-medium leading-7">Issue:</p>
-          <p class="text-txt_dark leading-7">{{ selected_Request.subject }}</p>
+        <!-- Images Section -->
+        <div class="bg-white border border-gray-100 rounded-lg p-4">
+          <h4
+            class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2"
+          >
+            <span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
+            Attached Images
+          </h4>
+          <div class="flex gap-3 flex-wrap">
+            <template
+              v-if="
+                selected_Request.imageUrls &&
+                selected_Request.imageUrls.filter((img) => img).length
+              "
+            >
+              <div
+                v-for="(img, idx) in selected_Request.imageUrls"
+                :key="idx"
+                v-if="img"
+                class="relative group"
+              >
+                <img
+                  :src="img"
+                  class="w-24 h-24 object-cover rounded-lg border border-gray-200 hover:border-blue-300 transition-colors cursor-pointer"
+                  @click="previewImage(img)"
+                />
+                <div
+                  class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all rounded-lg flex items-center justify-center"
+                >
+                  <span
+                    class="text-white opacity-0 group-hover:opacity-100 text-xs font-medium"
+                  >
+                    Click to view
+                  </span>
+                </div>
+                    </div>
+            </template>
+            <div v-else class="flex items-center justify-center w-full py-8">
+              <div class="text-center">
+                <div
+                  class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-2"
+                >
+                  <svg
+                    class="w-6 h-6 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    ></path>
+                  </svg>
+                </div>
+                <p class="text-sm text-gray-500">No images attached</p>
+              </div>
+            </div>
+          </div>
         </div>
-      </li>
-      <li>
-        <div class="flex gap-2">
-          <p class="text-secondary font-medium leading-7">Urgency:</p>
-          <p class="text-txt_dark leading-7">
-            {{ urgencyLevel[selected_Request] || urgencyLevel[0] }} -
-            {{
-              Math.floor(
-                (new Date() - new Date(selected_Request.dateCreated)) /
-                  (1000 * 60 * 60 * 24)
-              )
-            }}
-            days
-          </p>
-        </div>
-      </li>
-      <li>
-        <StatusDropdown
-          :modelValue="getStatusLabel(selected_Request)"
-          @update:modelValue="(newStatus) => onStatusChangeModal(newStatus)"
-          append-to-body
-        />
-      </li>
 
-      <li class="w-full">
-        <div class="flex gap-2">
-          <p class="text-secondary font-medium leading-7">Description(s):</p>
-          <p class="text-txt_dark leading-7">
-            {{ selected_Request.description }}
-          </p>
-        </div>
-      </li>
-
-      <li>
-        <div class="flex gap-2">
-          <p class="text-secondary font-medium leading-7">Image:</p>
-=======
-  <div class="px-4 font-inter">
-    <div
-      class="rounded-[16px] p-2.5 mt-4 font-inter border-[#36363633] border-[0.75px] border-solid"
-    >
-      <div class="flex justify-between">
-        <div class="flex gap-2.5 items-center">
->>>>>>> main
-          <div
-            class="border-solid border-[0.75px] border-[#36363633] rounded-[8px] p-2.5 w-fit"
-          ></div>
-          <p class="m-0 p-0 text-[#000000]">Approval Request</p>
-        </div>
-        <button
-          class="border-solid border-[1px] px-[12px] py-[8px] text-[#000000B2] leading-[24px] font-inter rounded-[8px]"
-        >
-          See all requests
-        </button>
-      </div>
-      <div class="flex gap-[10px]">
+        <!-- Notification Section (for completed requests) -->
         <div
-          class="mt-4 w-fit bg-[#F6F6F6] flex flex-col gap-4 rounded-[16px] border-solid border-[0.75px]"
+          v-if="selected_Request.serviceStatus == 3"
+          class="bg-blue-50 border border-blue-200 rounded-lg p-4"
         >
-          <div
-            class="border-[#F6F6F6] bg-[#FFFFFF] py-[10px] gap-2.5 flex items-center rounded-[16px] border-solid border-b-[0.75px] px-[14px]"
+          <h4
+            class="text-sm font-semibold text-blue-800 mb-3 flex items-center gap-2"
           >
-            <div><img src="/src/assets/TenantImage.svg" /></div>
-            <div class="h-full">
-              <p
-                class="m-0 p-0 text-[#000000] font-inter font-medium leading-[100%]"
-              >
-                Steph soibim
-              </p>
-              <p
-                class="m-0 p-0 text-[#464646] text-[10px] font-inter font-medium leading-[100%] mt-[4px]"
-              >
-                Thristlebrook Lane, Mistwood, Ontario, K8N 3P5
-              </p>
-            </div>
-            <button
-              class="bg-[#31A057] text-[#FFFFFF] py-[4px] px-2 rounded-[4px]"
-            >
-              Renewal
-            </button>
-          </div>
-
-          <div class="flex justify-between px-[10px] items-center pb-4">
-            <div class="text-[#00000099] font-inter text-[12px] font-medium">
-              View Requests
-            </div>
-            <div
-              class="text-[#000000] font-inter font-medium bg-[#FFFFFF] border-[0.75px] border-solid rounded-[6px] px-[10px] py-[6px]"
-            >
-              View
-            </div>
-          </div>
-        </div>
-        <div
-          class="mt-4 w-fit bg-[#F6F6F6] flex flex-col gap-4 rounded-[16px] border-solid border-[0.75px]"
-        >
-          <div
-            class="border-[#F6F6F6] bg-[#FFFFFF] py-[10px] gap-2.5 flex items-center rounded-[16px] border-solid border-b-[0.75px] px-[14px]"
-          >
-            <div><img src="/src/assets/TenantImage.svg" /></div>
-            <div class="h-full">
-              <p
-                class="m-0 p-0 text-[#000000] font-inter font-medium leading-[100%]"
-              >
-                Steph soibim
-              </p>
-              <p
-                class="m-0 p-0 text-[#464646] text-[10px] font-inter font-medium leading-[100%] mt-[4px]"
-              >
-                Thristlebrook Lane, Mistwood, Ontario, K8N 3P5
-              </p>
-            </div>
-            <button
-              class="bg-[#31A057] text-[#FFFFFF] py-[4px] px-2 rounded-[4px]"
-            >
-              Renewal
-            </button>
-          </div>
-
-          <div class="flex justify-between px-[10px] items-center pb-4">
-            <div class="text-[#00000099] font-inter text-[12px] font-medium">
-              View Requests
-            </div>
-            <div
-              class="text-[#000000] font-inter font-medium bg-[#FFFFFF] border-[0.75px] border-solid rounded-[6px] px-[10px] py-[6px]"
-            >
-              View
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div
-      class="rounded-[16px] p-2.5 mt-4 font-inter border-[#36363633] border-[0.75px] border-solid"
-    >
-      <div class="flex gap-2.5 items-center">
-        <div
-          class="border-solid border-[0.75px] border-[#36363633] rounded-[8px] p-2.5 w-fit"
-        >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M7.5013 8.33073C9.34225 8.33073 10.8346 6.83835 10.8346 4.9974C10.8346 3.15645 9.34225 1.66406 7.5013 1.66406C5.66035 1.66406 4.16797 3.15645 4.16797 4.9974C4.16797 6.83835 5.66035 8.33073 7.5013 8.33073Z"
-              stroke="#1C274C"
-              stroke-width="1.5"
+            <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+            Send Notification
+          </h4>
+          <div class="space-y-3">
+            <a-textarea
+              v-model:value="notificationMessage"
+              rows="3"
+              class="w-full text-sm"
+              placeholder="Enter notification message..."
             />
-            <path
-              d="M12.5 7.5C13.8808 7.5 15 6.38071 15 5C15 3.61929 13.8808 2.5 12.5 2.5"
-              stroke="#1C274C"
-              stroke-width="1.5"
-              stroke-linecap="round"
-            />
-            <path
-              d="M7.5013 17.5026C10.723 17.5026 13.3346 16.0102 13.3346 14.1693C13.3346 12.3283 10.723 10.8359 7.5013 10.8359C4.27964 10.8359 1.66797 12.3283 1.66797 14.1693C1.66797 16.0102 4.27964 17.5026 7.5013 17.5026Z"
-              stroke="#1C274C"
-              stroke-width="1.5"
-            />
-            <path
-              d="M15 11.6641C16.4618 11.9846 17.5 12.7965 17.5 13.7474C17.5 14.6051 16.6552 15.3498 15.4167 15.7227"
-              stroke="#1C274C"
-              stroke-width="1.5"
-              stroke-linecap="round"
-            />
-          </svg>
-        </div>
-        <div>
-          <p class="m-0 p-0 text-[#000000] font-medium text-[14px]">
-            All Requests
-          </p>
-          <p
-            class="m-0 p-0 text-[#25262899] font-medium text-[12px] leading-[100%]"
-          >
-            Total Number of Tenants: 25
-          </p>
+            <div class="flex gap-3">
+              <a-button
+                type="primary"
+                class="px-6"
+                :loading="updatingStatusLoading"
+                :disabled="updatingStatusLoading"
+              >
+                    Send notification
+              </a-button>
+              <a-button
+                class="border-blue-300 text-blue-700 px-6"
+                :disabled="updatingStatusLoading"
+              >
+                Send to unit
+              </a-button>
+            </div>
+            </div>
         </div>
       </div>
-    </div>
+    </a-modal>
   </div>
 </template>
 
 <script>
-import TenantCard from "@/components/TenantCard.vue";
-import TableHeader from "@/components/TableHeader.vue";
-import V2Table from "@/components/V2Table.vue";
-import V2ServiceRequestsDropDown from "@/components/V2ServiceRequestsDropDown.vue";
-import { FetchServiceRequests } from "@/api/serviceRequest";
-import { useUserStore } from "@/store";
-
-import Button from "@/components/Button/Button.vue";
-import Table from "@/components/Table/Table.vue";
-
+import { updateServiceRequest } from "@/api/serviceRequest";
+import StatusDropdown from "@/components/StatusDropdown.vue";
+import StatusSelect from "@/components/StatusSelect.vue";
+import { useServiceRequestStore } from "@/stores/serviceRequests";
+import { DownOutlined, ExclamationCircleOutlined } from "@ant-design/icons-vue";
+import { message } from "ant-design-vue";
+import {
+  Avatar,
+  Badge,
+  Button,
+  Card,
+  Empty,
+  Input,
+  Modal,
+  Select,
+  Spin,
+  Tabs,
+  Tag,
+} from "ant-design-vue";
+import { h } from "vue";
+import IconSearch from "../../components/icons/IconSearch.vue";
 export default {
-  components: {
-    "table-component": V2Table,
-    DropdownButton: V2ServiceRequestsDropDown,
-    "table-header": TableHeader,
-    BaseInput,
-    TenantCard,
-  },
-  created() {
-    this.fetchData();
-  },
-  computed: {
-    computedData() {
-      return this.selectedStatus == "All"
-        ? this.data
-        : this.data.filter(
-            (item) => item.serviceStatus === this.selectedStatus
-          );
-    },
-  },
-  methods: {
-    handleSelect(option) {
-      this.selectedStatus = option.value;
-      // console.log("Selected:", option);
-    },
-    fetchData() {
-      FetchServiceRequests(this.store.userProfile.referenceID)
-        .then((response) => {
-          console.log("Service Requests Response:", response);
-          this.data = response.serviceRequests.map((request) => {
-            return {
-              tenant: request.tenant,
-              accommodationName: request.accommodationName,
-              unitId: request.unitId,
-              serviceType: request.serviceType,
-              description: request.description,
-              serviceStatus:
-                this.serviceLiterals[request.serviceStatus] || "Unknown",
-              action: request, // Pass the entire request object for action slot
-            };
-          });
-        })
-        .catch((error) => {
-          console.error("Error fetching service requests:", error);
-        });
-    },
-  },
-  data() {
-    return {
-      messages: ["Your service request has been sorted"],
-      store: useUserStore(),
+    data() {
+        return {
       selected_tab: "all",
       userSelectedOption: "",
-      selected_Request: {},
-      serviceRequests: [
-        {
-          id: 1,
-          name: "Steph Sobim",
-          property: "Thistlebrook Lane, Mistwood, Ontario, K8N 3P5",
-          unitNumber: 12,
-          status: "Completed",
-        },
-        {
-          id: 2,
-          name: "John Doe",
-          property:
-            "Harborview Drive, Westport Falls, British Columbia, V6Z 1R2",
-          unitNumber: 98,
-          status: "Completed",
-        },
-        {
-          id: 3,
-          name: "Francesa Dublin",
-          property: "Snowberry Crescent, Pinefield, Nova Scotia, B3H 2M9",
-          unitNumber: 77,
-          status: "Pending",
-        },
-        {
-          id: 4,
-          name: "Marvelous Jin",
-          property: "Lot 14, 9 Boreal Path, Northreach, Saskatchewan, S7K 4V1",
-          unitNumber: 14,
-          status: "Completed",
-        },
-        {
-          id: 5,
-          name: "Chukwuemeka Daniel",
-          property: "Lighthouse Way, Argent Isle, Newfoundland and Labrador",
-          unitNumber: 24,
-          status: "Pending",
-        },
-        {
-          id: 6,
-          name: "Marvelous Jin",
-          property: "Lighthouse Way, Argent Isle, Newfoundland and Labrador",
-          unitNumber: 24,
-          status: "Completed",
-        },
-        {
-          id: 7,
-          name: "Francesa Dublin",
-          property: "Snowberry Crescent, Pinefield, Nova Scotia, B3H 2M9",
-          unitNumber: 11,
-          status: "Pending",
-        },
-        {
-          id: 8,
-          name: "Marvelous Jin",
-          property: "Lot 14, 9 Boreal Path, Northreach, Saskatchewan, S7K 4V1",
-          unitNumber: 11,
-          status: "Completed",
-        },
-        {
-          id: 9,
-          name: "Francesa Dublin",
-          property: "Snowberry Crescent, Pinefield, Nova Scotia, B3H 2M9",
-          unitNumber: 52,
-          status: "Pending",
-        },
-        {
-          id: 10,
-          name: "Chukwuemeka Daniel",
-          property: "Lot 14, 9 Boreal Path, Northreach, Saskatchewan, S7K 4V1",
-          unitNumber: 30,
-          status: "Pending",
-        },
-        {
-          id: 11,
-          name: "John Doe",
-          property: "Thistlebrook Lane, Mistwood, Ontario, K8N 3P5",
-          unitNumber: 1,
-          status: "Completed",
-        },
-        {
-          id: 12,
-          name: "Gaal Dornick",
-          property: "Lighthouse Way, Argent Isle, Newfoundland and Labrador",
-          unitNumber: 1,
-          status: "Completed",
-        },
-        {
-          id: 13,
-          name: "Chukwuemeka Daniel",
-          property:
-            "Harborview Drive, Westport Falls, British Columbia, V6Z 1R2",
-          unitNumber: 24,
-          status: "Pending",
-        },
-        {
-          id: 14,
-          name: "Gaal Dornick",
-          property:
-            "Prairie Gate, Sunset Plains, Prince Edward Island, C1A 4L6",
-          unitNumber: 33,
-          status: "Completed",
-        },
-        {
-          id: 15,
-          name: "Steph Sobim",
-          property: "Thistlebrook Lane, Mistwood, Ontario, K8N 3P5",
-          unitNumber: 12,
-          status: "Completed",
-        },
-      ],
-      serviceRequestsFiltered: [],
-      serviceRequestHeaders: [
-        "S/N",
-        "Name",
-        "Property",
-        "Unit Number",
-        "Status",
-      ],
+            selected_Request: {},
+      notificationMessage: "",
       serviceLiterals: [
         "Requested",
         "Pending",
@@ -471,122 +419,183 @@ export default {
       ],
       urgencyLevel: ["Low", "Medium", "High", "Emergency"],
       statusToIndex: {
-        // Maps status strings to their numeric values
         Requested: 0,
         Pending: 1,
         Ongoing: 2,
         Completed: 3,
         Terminate: 4,
       },
+      modalVisible: false,
+      updatingStatusId: null,
+      updatingStatusLoading: false,
     };
-  },
-  components: {
+    },
+    components: {
     "search-icon": IconSearch,
-    "service-req-icon": IconServiceRequests,
-    btn: Button,
     "status-select": StatusSelect,
-    "modal-component": Modal,
     StatusDropdown,
-    Table,
+    "a-card": Card,
+    "a-tabs": Tabs,
+    "a-tab-pane": Tabs.TabPane,
+    "a-badge": Badge,
+    "a-button": Button,
+    "a-empty": Empty,
+    "a-avatar": Avatar,
+    "a-modal": Modal,
+    "a-textarea": Input.TextArea,
+    "a-select": Select,
+    "a-tag": Tag,
+    "a-spin": Spin,
+    "down-outlined": DownOutlined,
+    "exclamation-circle-outlined": ExclamationCircleOutlined,
+  },
+  computed: {
+    store() {
+      return useServiceRequestStore();
+    },
+    filteredRequests() {
+      return this.store.getByStatus(this.selected_tab, this.serviceLiterals);
+    },
+    pendingCount() {
+      return this.store.getByStatus("Pending", this.serviceLiterals).length;
+    },
+    completedCount() {
+      return this.store.getByStatus("Completed", this.serviceLiterals).length;
+    },
+    modalTitle() {
+      return this.selected_Request && this.selected_Request.propertyName
+        ? this.selected_Request.propertyName
+        : "Service Request Details";
+    },
+    statusOptions() {
+      return this.serviceLiterals.map((label, value) => ({ label, value }));
+    },
+    statusLiterals() {
+      return this.serviceLiterals;
+    },
   },
   created() {
-    this.handleFetchServiceRequest();
+    // Only fetch if we don't have data
+    if (!this.store.hasData()) {
+      this.store.fetchRequests();
+    }
   },
-
-  methods: {
-    getStatusLabel(service) {
-      return this.serviceLiterals[service.serviceStatus];
-    },
-    handleFetchServiceRequest() {
-      this.serviceRequestsFiltered = this.serviceRequests;
-      // FetchServiceRequests(this.store.userProfile.referenceID).then(
-      //   (response) => {
-      //     console.log(response);
-      //     if (response.responseCode == "00") {
-      //       this.serviceRequests = response.serviceRequests;
-      //     } else handleError(response);
-      //   }
-      // );
-    },
-    toggleTabs(value) {
-      this.selected_tab = value;
-    },
-    openModal(request) {
-      this.$refs.viewRequestModal.openModal();
-      this.selected_Request = request;
-    },
-    onModalClose() {
-      console.log("Modal was closed");
-    },
+    methods: {
+        getStatusLabel(service) {
+    return this.serviceLiterals[service.serviceStatus];
+        },
+        openModal(request) {
+      this.modalVisible = true;
+            this.selected_Request = request;
+        },
+        onModalClose() {
+      this.modalVisible = false;
+        },
     onStatusChangeModal(newStatus) {
       this.selected_Request = {
         ...this.selected_Request,
         serviceStatus: this.statusToIndex[newStatus],
       };
-    },
-
+        },
     handleSubmit() {
-      const toast = useToast({ position: "top-right" });
-      console.log(this.selected_Request);
-      updateServiceRequest({
-        serviceRequestId: this.selected_Request.serviceRequestId,
+  updateServiceRequest({ 
+      serviceRequestId: this.selected_Request.serviceRequestId, 
         status: this.selected_Request.serviceStatus,
       }).then((response) => {
-        console.log(response, "reciprocal");
-        if (response.responseCode == "00") {
-          console.log("successful");
-          toast.success("Successful");
-        }
+        // handle response
+    });
+        },  
+        onStatusChange(service, newStatus) {
+      const oldStatusIndex = service.serviceStatus;
+      const oldStatusLabel = this.serviceLiterals[oldStatusIndex];
+      const newStatusIndex = this.serviceLiterals.indexOf(newStatus);
+      const self = this;
+      Modal.confirm({
+        title: "Update Service Request Status",
+        icon: h(ExclamationCircleOutlined),
+        content: `Are you sure you want to change the status to "${newStatus}"?`,
+        okText: "Yes",
+        okType: "primary",
+        cancelText: "No",
+        centered: true,
+        async onOk() {
+          self.updatingStatusId = service.serviceRequestId;
+          self.updatingStatusLoading = true;
+          try {
+            const response = await updateServiceRequest({
+      serviceRequestId: service.serviceRequestId, 
+              status: newStatusIndex,
+            });
+            if (response && response.responseCode === "00") {
+              // Update in Pinia store with proper reactivity
+              const req = self.store.requests.find(
+                (r) => r.serviceRequestId === service.serviceRequestId
+              );
+              if (req) {
+                // Use Vue.set or direct assignment to ensure reactivity
+                req.serviceStatus = newStatusIndex;
+                // Force reactivity by updating the entire requests array
+                self.store.requests = [...self.store.requests];
+              }
+              // Also update the local service object
+              service.serviceStatus = newStatusIndex;
+              message.success("Service request status updated!");
+            } else {
+              message.error(
+                response?.responseDescription || "Failed to update status"
+              );
+              // Revert to the previous status index
+              service.serviceStatus = oldStatusIndex;
+            }
+          } finally {
+            self.updatingStatusId = null;
+            self.updatingStatusLoading = false;
+          }
+        },
+        onCancel() {
+          // revert dropdown to previous value
+          service.serviceStatus = oldStatusIndex;
+        },
       });
     },
-    onStatusChange(service, newStatus) {
-      const index = this.serviceLiterals.indexOf(newStatus);
-      console.log(index);
-      const toast = useToast({ position: "top-right" });
-      service.serviceStatus = index;
-      console.log(service);
-      updateServiceRequest({
-        serviceRequestId: service.serviceRequestId,
-        status: index,
-      }).then((response) => {
-        console.log(response, "reciprocal");
-        if (response.responseCode == "00") {
-          console.log("successful");
-          toast.success("Successful");
-        } else {
-          toast.error(response.responseDescription);
-        }
-        console.log(response);
-      });
+    formatDate(date) {
+      if (!date || date.startsWith("0001")) return "N/A";
+      return new Date(date).toLocaleString();
     },
-    handleFilterSelected(val, option) {
-      if(val=="all")
-        return this.serviceRequestsFiltered = this.serviceRequests;
-      console.log(val)
-      return this.serviceRequestsFiltered = this.serviceRequests.filter((req) => {
-        console.log(req.status, option)
-        return req.status == option.label
-    })
-    }
+    statusColor(status) {
+      // Map your status codes to Ant Design badge status
+      return (
+        ["default", "processing", "warning", "success", "error"][status] ||
+        "default"
+      );
+    },
+    getServiceImage(service) {
+      if (service.imageUrls && service.imageUrls.length) {
+        const img = service.imageUrls.find((url) => url && url.trim());
+        if (img) return img;
+      }
+      return "https://via.placeholder.com/64x64?text=No+Image";
+    },
+    statusTagColor(status) {
+      // Map status index to Ant Design tag color
+      const colors = ["default", "blue", "orange", "green", "red"];
+      return colors[status] || "default";
+    },
+    dropdownIcon() {
+      return h(DownOutlined);
+    },
+    previewImage(imageUrl) {
+      // You can implement image preview functionality here
+      // For now, we'll just open the image in a new tab
+      window.open(imageUrl, "_blank");
+    },
   },
 };
 </script>
 
-<style scoped>
-/* TODO: see if we can move this to index.css */
-.border-sleek {
-  border: 0.75px solid rgba(54, 54, 54, 0.2);
-  border-radius: 0.75rem;
-}
-
-.page {
-  background-color: white;
-}
-
-.icon {
-  width: 25px;
-  height: fit-content;
+<style>
+/* Reduce gap between Ant Design tabs */
+:deep(.tab-tight-gap .ant-tabs-nav .ant-tabs-tab) {
+  margin-right: 0.5rem !important;
 }
 </style>
-=======
->>>>>>> main

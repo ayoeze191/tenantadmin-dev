@@ -28,7 +28,7 @@ import Property from "@/views/properties/Property.vue";
 import Amenities from "@/views/amenities/Amenities.vue";
 import RentPayment from "../views/payments/RentPayment.vue";
 import UtilityPayment from "../views/payments/UtilityPayment.vue";
-import Details from "../views/tenancy-applications/Details.vue";
+// import Details from "../views/tenancy-applications/Details.vue";
 import Verification from "@/views/properties/Verification.vue";
 import SetUpProperties from "@/views/properties/SetUpProperties.vue";
 import Audit from "@/views/Logs/Audit.vue";
@@ -107,11 +107,11 @@ const router = createRouter({
           name: "property-verification",
           component: Verification,
         },
-        {
-          path: "/applications/:id",
-          name: "details",
-          component: Details,
-        },
+        // {
+        //   path: "/applications/:id",
+        //   name: "details",
+        //   component: Details,
+        // },
         {
           path: "/properties",
           name: "admin-properties",

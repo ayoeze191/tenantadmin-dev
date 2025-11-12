@@ -57,7 +57,7 @@ export default {
     handleClick(e) {
       if (!this.disabled && !this.loading) {
         this.$emit('click', e);
-        this.onClick(e);
+        // this.onClick(e);
       }
     },
   },
