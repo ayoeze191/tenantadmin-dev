@@ -2,7 +2,7 @@
   <main
     class="flex w-full h-full overflow-hidden bg-primary p-[1rem] gap-3 box-border"
   >
-    <side-bar />
+    <!-- <side-bar /> -->
     <section
       class="flex flex-col w-full h-full bg-[#FFFFFF] rounded-[18px] box-border"
     >
