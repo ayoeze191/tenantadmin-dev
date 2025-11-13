@@ -1,7 +1,7 @@
 <template>
   <div
     :class="[
-      'px-4 font-inter w-full h-full',
+      'bg-neutral py-5 px-10 w-full h-screen pb-40 font-sf',
       modalOpen ? 'overflow-hidden' : 'overflow-y-scroll',
     ]"
   >
@@ -260,24 +260,26 @@
         <span class="bg-[#FFFFFF] border-gray-100 flex items-center pl-0">
           <span
             :class="{
-              'bg-[#FEF9C3] border-[#854D0F] border-solid border-[0.5px] text-[#854D0F]':
-                AccommodationApplicationStatus[record.status] ==
+              'bg-[#FEF9C3]   text-[#854D0F]':
+                AccommodationApplicationStatus[value.status] ==
                 'AwaitingAdditionalDocuments',
-              'bg-[#F3E8FF] text-[#6D24A9] border-[#6D24A9] border-solid border-[1px] ':
-                AccommodationApplicationStatus[record.status] ==
+              'bg-[#F3E8FF] text-[#6D24A9]':
+                AccommodationApplicationStatus[value.status] ==
                   'MoveInDateLandlordConfirmationPending' ||
-                AccommodationApplicationStatus[record.status] ==
-                  'MoveInDateTenantConfirmationPending',
-              'bg-[#FEF9C3] border-solid  border-[1px] text-[#1D40AE] border-[#1D40AE]':
-                AccommodationApplicationStatus[record.status] ==
-                'AwaitingReview',
-              'bg-red-700 text-red-300 border-red-300 border-solid border-[1px]':
-                AccommodationApplicationStatus[record.status] == 'Declined',
-              'bg-[#DCFCE7] text-[#166434] border-[#166434] border-solid border-[1px] z-50 left-[30%]':
-                AccommodationApplicationStatus[record.status] == 'Completed',
-              'bg-[#FEF9C3] text-[#854D0F] border-solid border-[1px] border-[#854D0F] z- left-[20%]':
-                AccommodationApplicationStatus[record.status] ==
+                AccommodationApplicationStatus[value.status] ==
+                  'ConfirmingMove-inDate',
+              'bg-[#DBE9FE] text-[#1D40AE] ':
+                AccommodationApplicationStatus[value.status] ==
+                'Awaiting Review',
+              'bg-red-700 text-red-100':
+                AccommodationApplicationStatus[value.status] == 'Declined',
+              'bg-[#DCFCE7] text-[#166434]':
+                AccommodationApplicationStatus[value.status] == 'Completed',
+              'bg-[#FEF9C3] text-[#854D0F]':
+                AccommodationApplicationStatus[value.status] ==
                 'AwaitingPayment',
+              'bg-red-200 text-red-500 border-solid border-[1px]  ':
+                AccommodationApplicationStatus[value.status] === 'Failed',
             }"
             class="flex gap-2 w-full text-center px-[20px] text-[14px] cursor-pointer font-sf rounded-[12px] leading-[145%] py-[2px] items-center relative group"
           >
@@ -334,7 +336,8 @@
               AccommodationApplicationStatus[value.status] === 'Failed',
           }"
           :disabled="AccommodationApplicationStatus[value.status] === 'Failed'"
-          @click="() => goto(value)"
+          @click="() => showModal(value)"
+          :key="index"
           class="bg-[#FFFFFF] flex justify-start text-[#404164] border-gray-100 border-y-[1px] px-[24px] py-[24px]"
         >
           <EyeOutlined
@@ -366,8 +369,8 @@
         :pageSize="pageSize"
         :total="total"
         @change="onPageChange"
-        :itemRender="itemRender"
       />
+      <!-- :itemRender="itemRender" -->
     </div>
   </div>
 
@@ -506,12 +509,15 @@
 <script>
 import StatusSelect from "@/components/StatusSelect.vue";
 import IconSearch from "../../components/icons/IconSearch.vue";
-import Modal from "@/components/Modal.vue";
+import IconPDFDoc from "@/components/icons/IconPDFDoc.vue";
+// import Modal from "@/components/Modal.vue";
+// import { Modal } from 'ant-design-vue';
 import { useRouter } from "vue-router";
 import { FetchTenant, ApproveTenant } from "@/api/tenancy";
-import applicationCard from "@/components/applicationCard.vue";
-import BasePagination from "@/components/BasePagination.vue";
+import { openDB } from "idb";
 import { useUserStore } from "@/store";
+import Button from "@/components/Button/Button.vue";
+import { useRoute } from "vue-router";
 import { AccomodationApplications } from "@/api/dashboard";
 // import { component } from "vue/types/umd";
 import parsePhoneNumber from "libphonenumber-js";
@@ -519,28 +525,10 @@ import moment from "moment";
 import { ref } from "vue";
 
 export default {
-  components: {
-    "table-component": V2Table,
-    "table-header": TableHeader,
-    DropdownButton: V2ServiceRequestsDropDown,
-    applicationCard,
-    BasePagination,
-  },
-  created() {
-    this.fetchData();
-  },
-  computed: {
-    totalPages() {
-      return Math.ceil(this.totalItemCount / this.pageSize) || 1;
-    },
-  },
+  name: "Applications",
   data() {
     return {
       store: useUserStore(),
-      searchQuery: "",
-      selectedStatus: "All Status",
-      selectedDisplayType: "Grid",
-      computedData: [],
       AccommodationApplicationStatus: {
         0: "Failed", // Application submission failed or system error occurred
         1: "Awaiting Review", // Application has been submitted and is under review by landlord
@@ -571,6 +559,163 @@ export default {
         8: "Application has been declined by landlord or tenant",
         9: "Application has been cancelled by tenant",
       },
+      stages: ["Review", "Document Approval", "Set Move-In Date"],
+      // [TODO: Responsible Rent in personal information attribute, what do we do if the property is null, not display or display n/a], no guarantor relationship just occupation, no occupation for the applicant, document uploaded information missing. Need backend api for upload signed lease pdf, how to know whether security deposit has been paid currently using doYouHaveTotalMoveinAmount
+      stagesTabDetails: [
+        [
+          {
+            tabTitle: "Personal Information",
+            tabDetails: [
+              { keys: ["phoneNo"], label: "Phone" },
+              { keys: ["intendedMoveInDate"], label: "Intended Move-In Date" },
+              { keys: ["currentAddress"], label: "Current Address" },
+              { keys: ["gender"], label: "Gender" },
+              { keys: ["whatsAppNo"], label: "WhatsApp Number" },
+            ],
+          },
+          {
+            tabTitle: "Professional Information",
+            tabDetails: [
+              { keys: ["nameOfEmployer"], label: "Name of Employer" },
+              {
+                keys: ["currentLandLordName"],
+                label: "Current Landlord's Name",
+              },
+              {
+                keys: ["currentLandLordEmail"],
+                label: "Current Landlord's Email",
+              },
+              {
+                keys: ["apprMonthlyIncome"],
+                label: "Approximate Monthly Income",
+              },
+              {
+                keys: ["lengthOfTimeWithEmployer"],
+                label: "Length of Time with Employer",
+              },
+              {
+                keys: ["workSupervisorPhoneNo"],
+                label: "Work Supervisor's Number",
+              },
+              {
+                keys: ["workSupervisorEmail"],
+                label: "Work Supervisor's Email",
+              },
+              {
+                keys: ["budgetForAccommodation"],
+                label: "Budget for Accommodation",
+              },
+              { keys: ["carModel"], label: "Car Make, Model" },
+              { keys: ["carLicenseNumber"], label: "Car License Number" },
+            ],
+          },
+          {
+            tabTitle: "Emergency Information",
+            tabDetails: [
+              {
+                label: "Emergency Contact",
+                keys: [
+                  "emergencyFullName",
+                  "emergencyPhoneNo",
+                  "emergencyEmail",
+                  "emergencyRelationship",
+                ],
+              },
+              {
+                label: "Guarantor Information 1",
+                keys: [
+                  "guarantor1FullName",
+                  "guarantor1PhoneNo",
+                  "guarantor1Email",
+                  "guarantor1Occupation",
+                ],
+              },
+              {
+                label: "Guarantor Information 2",
+                keys: [
+                  "guarantor2FullName",
+                  "guarantor2PhoneNo",
+                  "guarantor2Email",
+                  "guarantor2Occupation",
+                ],
+              },
+            ],
+          },
+          {
+            tabTitle: "Personal Behavior",
+            tabDetails: [
+              {
+                keys: ["haveYoubeenToCourtByLandLord"],
+                label: "Brought to court by a Landlord?",
+              },
+              {
+                keys: ["haveYoueverDamageApartmentOrMovestillowning"],
+                label: "Moved still owing Rent?",
+              },
+              {
+                keys: ["doYouHaveTotalMoveinAmount"],
+                label: "Total Move-in amount available?",
+              },
+              { keys: ["doYouHavePets"], label: "Have pets?" },
+              { keys: ["doYouSmoke"], label: "Smoke?" },
+              {
+                keys: ["isYourCurrentRentUpToDate"],
+                label: "Current rent up to date?",
+              },
+              {
+                keys: ["haveYoueverDamageApartmentOrMovestillowning"],
+                label: "Damaged an apartment?",
+              },
+              {
+                keys: ["haveYouEverBeenEvicted"],
+                label: "Been evicted as a tenant?",
+              },
+            ],
+          },
+          {
+            tabTitle: "Document Uploaded",
+            tabDetails: [
+              { name: "Proof of Ownership doc.", docType: "PDF" },
+              { name: "Government-Issued ID doc.", docType: "PDF" },
+              { name: "Lease Agreement Template doc.", docType: "PDF" },
+              { name: "House Rules doc.", docType: "PDF" },
+            ],
+          },
+        ],
+        [
+          {
+            tabTitle: "Additional Documents",
+            tabDetails: [
+              { name: "Proof of Ownership doc.", docType: "PDF" },
+              { name: "Government-Issued ID doc.", docType: "PDF" },
+              { name: "Lease Agreement Template doc.", docType: "PDF" },
+              { name: "House Rules doc.", docType: "PDF" },
+            ],
+          },
+          {
+            tabTitle: "Applicant's Information",
+            tabDetails: [
+              { keys: ["phoneNo"], label: "Phone" },
+              { keys: ["nameOfEmployer"], label: "Name Of Employer" },
+              { keys: ["apprMonthlyIncome"], label: "Monthly Income" },
+            ],
+          },
+        ],
+        [
+          {
+            tabTitle: "Move-In Date Information",
+            tabDetails: [
+              { keys: ["propertyName"], label: "Property Name" },
+              { keys: ["unitName"], label: "Unit" },
+              {
+                keys: ["intendedMoveInDate"],
+                label: "Tenants Intended Move-In date",
+              },
+              { keys: ["apprMonthlyIncome"], label: "Monthly Income" },
+            ],
+          },
+        ],
+      ],
       selected_tab: "pending",
       selected_Request: {},
       status: "Status",
@@ -579,8 +724,52 @@ export default {
       selectedStatus: "Status",
       selectedListType: "List",
       currentPage: 1,
-      pageSize: 8,
-      totalPages: 0,
+      searchQuery: "",
+      total: 0,
+      pageSize: 9,
+      dummyList: [
+        "https://plus.unsplash.com/premium_photo-1688572454849-4348982edf7d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8fDA%3D",
+        "https://images.unsplash.com/photo-1667053508464-eb11b394df83?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fHByb2ZpbGUlMjBwaWN0dXJlfGVufDB8fDB8fHww",
+        "https://images.unsplash.com/photo-1598550880863-4e8aa3d0edb4?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHByb2ZpbGUlMjBwaWN0dXJlfGVufDB8fDB8fHww",
+        "https://images.unsplash.com/photo-1683792384436-167313660657?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fHByb2ZpbGUlMjBwaWN0dXJlfGVufDB8fDB8fHww",
+        "https://plus.unsplash.com/premium_photo-1688572454849-4348982edf7d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8fDA%3D",
+        "https://images.unsplash.com/photo-1598550880863-4e8aa3d0edb4?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHByb2ZpbGUlMjBwaWN0dXJlfGVufDB8fDB8fHww",
+        "https://images.unsplash.com/photo-1667053508464-eb11b394df83?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fHByb2ZpbGUlMjBwaWN0dXJlfGVufDB8fDB8fHww",
+        "https://images.unsplash.com/photo-1683792384436-167313660657?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fHByb2ZpbGUlMjBwaWN0dXJlfGVufDB8fDB8fHww",
+      ],
+      Applications: [],
+    };
+  },
+  setup() {
+    const stage = ref(1);
+    const modalOpen = ref(false);
+    const selectedApplication = ref(null);
+
+    function showModal(app) {
+      selectedApplication.value = app;
+      modalOpen.value = true;
+    }
+
+    const handleOk = () => {
+      console.log("oked");
+      modalOpen.value = false;
+      stage.value = 1;
+    };
+
+    const handleCancel = () => {
+      console.log("cancelled");
+      modalOpen.value = false;
+      stage.value = 1;
+    };
+
+    return {
+      modalOpen,
+      stage,
+      selectedApplication,
+      moment,
+      showModal,
+      handleOk,
+      handleCancel,
     };
   },
   computed: {
@@ -600,7 +789,8 @@ export default {
   components: {
     "search-icon": IconSearch,
     "status-select": StatusSelect,
-    "modal-component": Modal,
+    IconPDFDoc,
+    Button,
   },
   methods: {
     TurnCamelCaseToWords(str) {
@@ -633,26 +823,11 @@ export default {
     toggleTabs(value) {
       this.selected_tab = value;
     },
-    openModal(request) {
-      this.$refs.viewRequestModal.openModal();
-      this.selected_Request = request;
-    },
-    onModalClose() {
-      console.log("Modal was closed");
-    },
     onPageChange(page) {
       this.currentPage = page;
-      this.fetchData(page); // 👈 Fetch data for the selected page
+      this.fetchData(page);
     },
-    handleSelect(selected) {
-      this.selectedStatus = selected.label;
-      // Handle filtering logic based on selected.value
-    },
-    handleDisplaytypeSelect(selected) {
-      this.selectedDisplayType = selected.label;
-      // Handle filtering logic based on selected.value
-    },
-    fetchData(page = 1) {
+    fetchData(page = this.currentPage) {
       const query = {
         size: this.pageSize,
         page: page,
@@ -662,26 +837,47 @@ export default {
         (response) => {
           if (response.responseCode == "00") {
             this.Applications = response.applications.items;
-            // this.currentPage = response.applications.page || page;
-            this.totalItemCount = response.applications.totalItemCount || 0;
-            this.computedData = response.applications.items.map((app) => {
-              return {
-                applicantName: app.applicantName,
-                propertyName: app.propertyName,
-                unitId: app.unitId,
-                status: this.AccommodationApplicationStatus[app.status],
-                email: this.email,
-                gender: this.gender,
-                phoneNo: this.phoneNo,
-                nationality: this.nationality,
-              };
-            });
+            this.currentPage = response.applications.page || page;
+            this.total = response.applications.totalItemCount || 0;
+            this.computedData = response.applications.items;
+            console.log("fetching", response.applications.items);
           }
         }
       );
     },
 
     handleSearch(value) {},
+
+    handleNext(event) {
+      this.stage = this.stage + 1;
+    },
+    handleBack(event) {
+      this.stage = this.stage - 1;
+    },
+
+    formatPhoneNum(num) {
+      if (!num) return num;
+      const phoneNum = parsePhoneNumber(num);
+      let res = phoneNum?.formatInternational();
+      if (!res) return num;
+      res = res.split(" ");
+      if (res.length != 4) return num;
+      res = res
+        .map((n, i) => {
+          if (i == 1) return ` (${n}) `;
+          else if (i == 2) return `${n}-`;
+          else return n;
+        })
+        .join("");
+      return res;
+    },
+    formatDate(ts) {
+      if (ts) {
+        const res = moment(ts);
+        return res.format("DD MMMM YYYY");
+      }
+      return "";
+    },
   },
   created() {
     this.fetchData();
@@ -689,9 +885,46 @@ export default {
 };
 </script>
 
-<style scoped>
-:deep(.ant-pagination-item) {
-  /* background: #000130 !important; */
-  /* color: white !important; */
+<style>
+/* Only affects modals wrapped in .application-page-modal */
+.ant-modal-root > .application-page-modal .ant-modal-content {
+  box-shadow: none !important;
+  /* box-shadow: 0px 2px 7px 3px rgba(30,30,30,0.09); */
+}
+
+.ant-modal-root > .application-page-modal .ant-modal-mask {
+  background: rgba(30, 30, 30, 0.06) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.ant-modal-root > .application-page-modal .ant-tabs-content-holder {
+  border-left: none !important;
+}
+
+.ant-modal-root > .application-page-modal .ant-tabs-ink-bar {
+  display: none !important;
+}
+
+.ant-modal-root > .application-page-modal .ant-tabs-tab-active {
+  background-color: rgba(30, 30, 30, 0.06) !important;
+  border-radius: 0.625rem !important;
+}
+
+.ant-modal-root > .application-page-modal .ant-modal {
+  width: 50vw !important;
+  height: fit-content !important;
+}
+
+.ant-modal-root > .application-page-modal p {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.ant-modal-root > .application-page-modal .ant-modal-title {
+  font-family: redwing, ui-sans-serif, system-ui, sans-serif !important;
+  font-weight: 500 !important;
+  font-size: 24px !important;
 }
 </style>
+
