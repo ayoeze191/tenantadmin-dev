@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-neutral py-[50px] px-6 w-full">
+  <div class="bg-neutral  px-6 w-full">
     <a-typography-title
       class="font-sf m-0 p-0"
       :style="{ color: '#404164', fontFamily: 'SF Compact Text' }"
@@ -1434,6 +1434,7 @@ function handleDrop(e) {
   console.log(e);
 }
 const SubmitCreateProperty = async() => {
+  
   let payload;
   let landlord = form.landlordId || store.userProfile.referenceID
   // if(form.rental_unit == 'apartment'){
@@ -1460,8 +1461,10 @@ const SubmitCreateProperty = async() => {
       unitTypes: []
     }
     if(form.formType == 'In App Form'){
-      payload[unitTypes] = [...form.unitTypes]
+      console.log(form.unitTypes, "form.unitTypes");
+      payload['unitTypes'] = [...form.unitTypes]
     }
+
     try{
       const res = await CreateNewProperty(payload)
       const toast = useToast();
@@ -1840,6 +1843,7 @@ const DisableNext = () => {
 
 
 const nextOrSubmit = async () => {
+  console.log("Next or Submit clicked", form);
   // makes sure the steps don't go beyond the last step
 
   if(currentStep.value < 3){

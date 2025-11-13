@@ -1,7 +1,7 @@
 <template>
-  <div class="px-4 font-inter">
+  <div class="px-4 font-inter h-full">
     <div
-      class="rounded-[16px] mt-4 font-inter border-[#36363633] border-[0.75px] border-solid"
+      class="rounded-[16px] mt-4 h-full font-inter border-[#36363633] border-[0.75px] border-solid"
     >
       <div class="flex gap-2.5 items-center">
         <table-header :total-item-count="totalItemCount" title="Tenants">

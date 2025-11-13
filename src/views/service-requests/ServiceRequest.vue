@@ -1,415 +1,273 @@
 <template>
-  <div class="bg-neutral py-5 px-4 w-full min-h-screen">
-    <a-card class="!bg-white !rounded-2xl !border-0 max-w-5xl mx-auto">
-      <div class="pb-2 border-b border-gray-100 mb-4">
-        <a-tabs v-model:activeKey="selected_tab" class="!mb-0 tab-tight-gap">
-          <a-tab-pane key="all">
-            <template #tab>
-              <span class="flex items-center text-base font-medium">
-                All
-                <a-badge
-                  :count="(store.requests || []).length"
-                  class="bg-gray-100 text-[#23234a] rounded-md text-xs font-medium px-2 ml-1"
-                />
-              </span>
-            </template>
-          </a-tab-pane>
-          <a-tab-pane v-for="status in serviceLiterals" :key="status">
-            <template #tab>
-              <span class="flex items-center text-base font-medium">
-                {{ status }}
-                <a-badge
-                  :count="
-                    (store.getByStatus(status, serviceLiterals) || []).length
-                  "
-                  class="bg-gray-100 text-[#23234a] rounded-md text-xs font-medium px-2 ml-1"
-                />
-              </span>
-            </template>
-          </a-tab-pane>
-        </a-tabs>
-      </div>
-      <div>
-        <a-spin
-          v-if="loading"
-          size="large"
-          class="flex justify-center items-center min-h-[300px]"
-        />
-        <template v-else-if="filteredRequests.length > 0">
-          <div class="grid gap-4">
-            <a-card
-              v-for="service in filteredRequests"
-              :key="service.serviceRequestId"
-              class="!rounded-xl !border !border-gray-100 !shadow-sm"
-              :bodyStyle="{ padding: '1.25rem' }"
-            >
-              <div class="flex items-center justify-between mb-2">
-                <div class="flex items-center gap-3">
-                  <a-avatar
-                    :src="getServiceImage(service)"
-                    shape="square"
-                    size="large"
-                    class="!w-16 !h-16 !rounded-lg !bg-gray-200 object-cover"
-                  />
-                  <div>
-                    <div class="text-base font-semibold text-[#23234a]">
-                      {{ service.subject }}
-                    </div>
-                    <div class="text-xs text-gray-400">
-                      {{ service.tenant }}
-                    </div>
-                  </div>
-                </div>
-                <a-select
-                  v-model:value="service.serviceStatus"
-                  class="w-36"
-                  :options="statusOptions"
-                  :dropdownMatchSelectWidth="false"
-                  @change="
-                    (val) => onStatusChange(service, statusLiterals[val])
-                  "
-                  :suffixIcon="dropdownIcon()"
-                  :disabled="
-                    updatingStatusLoading &&
-                    updatingStatusId === service.serviceRequestId
-                  "
-                >
-                  <template #option="{ value, label }">
-                    <a-tag :color="statusTagColor(value)" class="capitalize">{{
-                      label
-                    }}</a-tag>
-                  </template>
-                  <template #tagRender="{ label, value }">
-                    <a-tag :color="statusTagColor(value)" class="capitalize">{{
-                      label
-                    }}</a-tag>
-                  </template>
-                </a-select>
-              </div>
-              <div class="flex items-center gap-2 mb-2">
-                <a-tag
-                  :color="statusTagColor(service.serviceStatus)"
-                  class="capitalize"
-                  >{{ getStatusLabel(service) }}</a-tag
-                >
-              </div>
-              <div class="text-sm text-[#6b6b8a] mb-2">
-                {{ service.description }}
-              </div>
-              <div class="flex items-center gap-2">
-                <a-button
-                  type="link"
-                  class="p-0 text-primary underline text-xs"
-                  @click="openModal(service)"
-                  >View full details</a-button
-                >
-              </div>
-            </a-card>
-          </div>
-        </template>
-        <a-empty v-else description="No service requests found" class="my-10" />
-        </div>
-    </a-card>
-
-    <a-modal
-      ref="viewRequestModal"
-      v-model:visible="modalVisible"
-      :title="modalTitle"
-      :footer="null"
-      :width="800"
-      :centered="true"
-      class="!rounded-2xl"
-      @cancel="onModalClose"
+  <div class="px-4 h-full font-inter">
+    <div
+      class="rounded-[16px] h-full mt-4 font-inter border-[#36363633] border-[0.75px] border-solid"
     >
-      <div class="space-y-6 max-h-[70vh] overflow-y-auto pr-2">
-        <!-- Header Section -->
-        <div class="bg-gray-50 rounded-lg p-4 mb-6">
-          <div class="flex items-center gap-4">
-            <a-avatar
-              :src="getServiceImage(selected_Request)"
-              shape="square"
-              size="large"
-              class="!w-20 !h-20 !rounded-xl !bg-gray-200 object-cover"
-            />
-            <div class="flex-1">
-              <h3 class="text-lg font-semibold text-[#23234a] mb-1">
-                {{ selected_Request.subject || "N/A" }}
-              </h3>
-              <p class="text-sm text-gray-500 mb-2">
-                {{ selected_Request.tenant || "N/A" }}
-              </p>
-              <a-tag
-                :color="statusTagColor(selected_Request.serviceStatus)"
-                class="capitalize text-sm font-medium"
-                >{{ getStatusLabel(selected_Request) }}</a-tag
-              >
-            </div>
-          </div>
-        </div>
-
-        <!-- Details Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Left Column -->
-          <div class="space-y-4">
-            <div class="bg-white border border-gray-100 rounded-lg p-4">
-              <h4
-                class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2"
-              >
-                <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
-                Basic Information
-              </h4>
-              <div class="space-y-3">
-                <div class="flex justify-between items-center">
-                  <span class="text-sm text-gray-600 font-medium"
-                    >Reference:</span
-                  >
-                  <span class="text-sm text-[#23234a] font-semibold">
-                    {{ selected_Request.serviceReference || "N/A" }}
-                  </span>
-                </div>
-                <div class="flex justify-between items-center">
-                  <span class="text-sm text-gray-600 font-medium">Type:</span>
-                  <span class="text-sm text-[#23234a]">{{
-                    selected_Request.serviceType || "N/A"
-                  }}</span>
-                </div>
-                <div class="flex justify-between items-center">
-                  <span class="text-sm text-gray-600 font-medium"
-                    >Unit Type:</span
-                  >
-                  <span class="text-sm text-[#23234a]">{{
-                    selected_Request.unitType || "N/A"
-                  }}</span>
-                </div>
-              </div>
-  </div>
-
-            <div class="bg-white border border-gray-100 rounded-lg p-4">
-              <h4
-                class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2"
-              >
-                <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-                Contact Information
-              </h4>
-              <div class="space-y-3">
-                <div class="flex justify-between items-center">
-                  <span class="text-sm text-gray-600 font-medium"
-                    >Tenant(s):</span
-                  >
-                  <span class="text-sm text-[#23234a]">{{
-                    selected_Request.tenant || "N/A"
-                  }}</span>
-                </div>
-                <div class="flex justify-between items-center">
-                  <span class="text-sm text-gray-600 font-medium"
-                    >Professional:</span
-                  >
-                  <span class="text-sm text-[#23234a]">
-                    {{
-                      selected_Request.professional &&
-                      selected_Request.professional.trim()
-                        ? selected_Request.professional
-                        : "N/A"
-                    }}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Right Column -->
-          <div class="space-y-4">
-            <div class="bg-white border border-gray-100 rounded-lg p-4">
-              <h4
-                class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2"
-              >
-                <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
-                Timeline
-              </h4>
-              <div class="space-y-3">
-                <div class="flex justify-between items-center">
-                  <span class="text-sm text-gray-600 font-medium"
-                    >Created:</span
-                  >
-                  <span class="text-sm text-[#23234a]">{{
-                    formatDate(selected_Request.dateCreated)
-                  }}</span>
-                </div>
-                <div class="flex justify-between items-center">
-                  <span class="text-sm text-gray-600 font-medium"
-                    >Updated:</span
-                  >
-                  <span class="text-sm text-[#23234a]">{{
-                    formatDate(selected_Request.dateUpdated)
-                  }}</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="bg-white border border-gray-100 rounded-lg p-4">
-              <h4
-                class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2"
-              >
-                <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
-                Current Status
-              </h4>
-              <div class="flex items-center justify-between">
-                <span class="text-sm text-gray-600 font-medium">Status:</span>
-                <a-tag
-                  :color="statusTagColor(selected_Request.serviceStatus)"
-                  class="capitalize text-sm font-medium"
-                  >{{ getStatusLabel(selected_Request) }}</a-tag
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Description Section -->
-        <div class="bg-white border border-gray-100 rounded-lg p-4">
-          <h4
-            class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2"
-          >
-            <span class="w-2 h-2 bg-red-500 rounded-full"></span>
-            Description
-          </h4>
-          <p class="text-sm text-[#23234a] leading-relaxed">
-            {{ selected_Request.description || "No description provided" }}
-          </p>
-        </div>
-
-        <!-- Images Section -->
-        <div class="bg-white border border-gray-100 rounded-lg p-4">
-          <h4
-            class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2"
-          >
-            <span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
-            Attached Images
-          </h4>
-          <div class="flex gap-3 flex-wrap">
-            <template
-              v-if="
-                selected_Request.imageUrls &&
-                selected_Request.imageUrls.filter((img) => img).length
-              "
-            >
-              <div
-                v-for="(img, idx) in selected_Request.imageUrls"
-                :key="idx"
-                v-if="img"
-                class="relative group"
-              >
-                <img
-                  :src="img"
-                  class="w-24 h-24 object-cover rounded-lg border border-gray-200 hover:border-blue-300 transition-colors cursor-pointer"
-                  @click="previewImage(img)"
-                />
-                <div
-                  class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all rounded-lg flex items-center justify-center"
-                >
-                  <span
-                    class="text-white opacity-0 group-hover:opacity-100 text-xs font-medium"
-                  >
-                    Click to view
-                  </span>
-                </div>
-                    </div>
-            </template>
-            <div v-else class="flex items-center justify-center w-full py-8">
-              <div class="text-center">
-                <div
-                  class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-2"
-                >
-                  <svg
-                    class="w-6 h-6 text-gray-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    ></path>
-                  </svg>
-                </div>
-                <p class="text-sm text-gray-500">No images attached</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Notification Section (for completed requests) -->
-        <div
-          v-if="selected_Request.serviceStatus == 3"
-          class="bg-blue-50 border border-blue-200 rounded-lg p-4"
+      <div class="flex justify-between">
+        <table-header
+          :total-item-count="totalItemCount || 0"
+          title="All Requests"
         >
-          <h4
-            class="text-sm font-semibold text-blue-800 mb-3 flex items-center gap-2"
+          <DropdownButton
+            :label="serviceLiterals[selectedStatus]"
+            :options="[
+              { label: 'Pending', value: '1' },
+              { label: 'Completed', value: '3' },
+              { label: 'All', value: 'All' },
+            ]"
+            @select="handleSelect"
+          />
+          <!-- <button
+            class="border-solid border-[1px] px-[12px] py-[8px] text-[#000000B2] leading-[24px] font-inter rounded-[8px]"
           >
-            <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
-            Send Notification
-          </h4>
-          <div class="space-y-3">
-            <a-textarea
-              v-model:value="notificationMessage"
-              rows="3"
-              class="w-full text-sm"
-              placeholder="Enter notification message..."
+            See all requests
+          </button> -->
+        </table-header>
+      </div>
+      <div class="w-full mt-4 h-full">
+        <table-component
+          title="Service Requests"
+          :columns="headers"
+          :data-source="computedData"
+        >
+          <template #action="{ record }">
+            <div class="relative flex justify-center items-center group">
+              <!-- Hidden div -->
+              <a-button
+                @click="
+                  () => {
+                    showModal = true;
+                    selectedTenant = record;
+                  }
+                "
+                class="bg-[#000130] bg-inherit text-black cursor-pointer"
+                >view details</a-button
+              >
+            </div>
+          </template>
+          <template #status="{ text, record }">
+            {{ console.log(record) }}
+            <div class="flex justify-center">
+              <StatusButton
+                v-if="record"
+                :service-status="record.serviceStatus"
+              />
+            </div>
+          </template>
+        </table-component>
+        <!-- <BasePagination 
+        
+        /> -->
+      </div>
+    </div>
+  </div>
+  <a-modal
+    :footer="null"
+    width="437px"
+    :visible="showModal"
+    centered
+    :bodyStyle="{ padding: '0' }"
+    class=""
+    :closable="false"
+  >
+    <template #title>
+      <div class="flex items-center justify-between py-[12px]">
+        <span class="font-redwing text-2 leading-[100%] font-medium"
+          >Service Request Details</span
+        >
+        <span @click="showModal = false" class="cursor-pointer">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z"
+              fill="#323232"
             />
-            <div class="flex gap-3">
-              <a-button
-                type="primary"
-                class="px-6"
-                :loading="updatingStatusLoading"
-                :disabled="updatingStatusLoading"
-              >
-                    Send notification
-              </a-button>
-              <a-button
-                class="border-blue-300 text-blue-700 px-6"
-                :disabled="updatingStatusLoading"
-              >
-                Send to unit
-              </a-button>
-            </div>
-            </div>
+          </svg>
+        </span>
+      </div>
+    </template>
+    <div
+      class="border-[#36363633] border-[0.75px] bg-[#FFFFFF] py-[10px] gap-2.5 flex items-center rounded-[16px] border-solid border-b-[0.75px] px-[14px]"
+    >
+      <div><img src="/src/assets/TenantImage.svg" /></div>
+      <div class="h-full">
+        <p class="m-0 p-0 text-[#000000] font-inter font-medium leading-[100%]">
+          {{ selectedTenant.tenant || "Frank Thomas" }}
+        </p>
+        <p
+          class="m-0 p-0 text-[#00000066] text-[10px] font-inter font-medium leading-[100%] mt-[4px]"
+        >
+          franktho37@gmail.com
+        </p>
+      </div>
+    </div>
+    <div class="flex flex-col mt-4">
+      <p>
+        <span class="text-[#00000099] p-0 m-0">Apartment: </span
+        >{{
+          selectedTenant.accommodationName ||
+          "Thistlebrook Lane, Mistwood, Ontario, K8N 3P5"
+        }}
+      </p>
+      <p>
+        <span class="text-[#00000099] p-0 m-0">Category:</span
+        >{{ selectedTenant.serviceType }}
+      </p>
+      <p>
+        <span class="text-[#00000099] p-0 m-0">Description:</span
+        >{{
+          selectedTenant.description ||
+          "The faucet in the kitchen is leaking and needs immediate repair."
+        }}
+      </p>
+      <p>
+        <span class="text-[#00000099] p-0 m-0">Issue:</span>The faucet in the
+        kitchen is leaking and needs immediate repair.
+      </p>
+      <p>
+        <span class="text-[#00000099] p-0 m-0">Urgency:</span>
+      </p>
+      <p>
+        <span class="text-[#00000099] p-0 m-0 mr-[15px]"
+          >Service Requests Status:</span
+        >
+        <StatusButton :service-status="selectedTenant.serviceStatus" />
+      </p>
+      <div v-if="selectedTenant.serviceStatus == 'Completed'">
+        <p
+          class="m-0 p-0 text-[#000000] text-[14px] font-inter font-medium leading-[100%] mt-4 mb-3"
+        >
+          Send Notification
+        </p>
+        <div>
+          <BaseInput v-model="form.message" placeholder="Enter Message" />
+        </div>
+        <p class="m-0 p-0 mt-4 mb-3">Choose saved messages</p>
+
+        <div class="flex flex-wrap gap-2.5">
+          <a-button
+            @click="form.message = value"
+            v-for="value in messages"
+            class="py-[12px] flex rounded-[100px] items-center hover:bg-[#F0F0F0] bg-[#FFFFFF] px-[15px] font-inter font-medium text-[12px]"
+          >
+            {{ value }}
+          </a-button>
         </div>
       </div>
-    </a-modal>
-  </div>
+    </div>
+    <div class="border-t-[0.75px] border-[#36363533] mt-4 flex">
+      <a-button
+        @click="() => updateServiceRequest(1)"
+        v-if="selectedTenant.serviceStatus == 'Pending'"
+        class="bg-[#000130] py-[8px] flex font-inter items-center justify-center text-white w-full mt-4 rounded-[8px]"
+      >
+        Set to Completed
+      </a-button>
+      <a-button
+        v-if="selectedTenant.serviceStatus == 'Terminate'"
+        class="bg-[#000130] py-[8px] flex font-inter items-center justify-center text-white w-full mt-4 rounded-[8px]"
+      >
+        Renew Request
+      </a-button>
+      <div class="flex" v-else>
+        <a-button
+          class="bg-[#000130] py-[8px] flex font-inter items-center justify-center text-white w-full mt-4 rounded-[8px]"
+        >
+          Revert to Pending
+        </a-button>
+        <a-button
+          class="bg-[#000130] py-[8px] flex font-inter items-center justify-center text-white w-full mt-4 rounded-[8px]"
+        >
+          Send Message
+        </a-button>
+      </div>
+    </div>
+  </a-modal>
 </template>
 
 <script>
-import { updateServiceRequest } from "@/api/serviceRequest";
-import StatusDropdown from "@/components/StatusDropdown.vue";
-import StatusSelect from "@/components/StatusSelect.vue";
-import { useServiceRequestStore } from "@/stores/serviceRequests";
-import { DownOutlined, ExclamationCircleOutlined } from "@ant-design/icons-vue";
-import { message } from "ant-design-vue";
+import TenantCard from "@/components/TenantCard.vue";
+import TableHeader from "@/components/TableHeader.vue";
+import V2Table from "@/components/V2Table.vue";
+import V2ServiceRequestsDropDown from "@/components/V2ServiceRequestsDropDown.vue";
 import {
-  Avatar,
-  Badge,
-  Button,
-  Card,
-  Empty,
-  Input,
-  Modal,
-  Select,
-  Spin,
-  Tabs,
-  Tag,
-} from "ant-design-vue";
-import { h } from "vue";
-import IconSearch from "../../components/icons/IconSearch.vue";
+  FetchServiceRequests,
+  updateServiceRequest,
+} from "@/api/serviceRequest";
+import { useUserStore } from "@/store";
+import BasePagination from "@/components/BasePagination.vue";
+import StatusButton from "@/components/icons/StatusBadge.vue";
+import BaseInput from "@/components/BaseInput.vue";
 export default {
-    data() {
-        return {
-      selected_tab: "all",
-      userSelectedOption: "",
-            selected_Request: {},
-      notificationMessage: "",
+  components: {
+    "table-component": V2Table,
+    DropdownButton: V2ServiceRequestsDropDown,
+    "table-header": TableHeader,
+    BaseInput,
+    TenantCard,
+    StatusButton,
+  },
+  created() {
+    this.fetchData();
+  },
+  computed: {
+    computedData() {
+      return this.selectedStatus == "All"
+        ? this.data
+        : this.data.filter(
+            (item) => item.serviceStatus === this.selectedStatus
+          );
+    },
+  },
+  methods: {
+    handleSelect(option) {
+      this.selectedStatus = option.value;
+      // console.log("Selected:", option);
+    },
+    fetchData() {
+      FetchServiceRequests(this.store.userProfile.referenceID)
+        .then((response) => {
+          console.log("Service Requests Response:", response);
+          this.data = response.serviceRequests.map((request) => {
+            return {
+              tenant: request.tenant,
+              accommodationName: request.accommodationName,
+              unitId: request.unitId,
+              serviceType: request.serviceType,
+              description: request.description,
+              serviceStatus:
+                this.serviceLiterals[request.serviceStatus] || "Unknown",
+              action: request, // Pass the entire request object for action slot
+            };
+          });
+        })
+        .catch((error) => {
+          console.error("Error fetching service requests:", error);
+        });
+    },
+    UpdateServiceRequest(toType) {
+      const body = {
+        serviceRequests: this.selectedTenant,
+      };
+      updateServiceRequest().then().catch();
+    },
+  },
+  data() {
+    return {
+      messages: ["Your service request has been sorted"],
+      store: useUserStore(),
+      showModal: false,
+      selectedStatus: "All",
+      form: {
+        message: "",
+      },
+      data: [],
+      selectedTenant: {},
       serviceLiterals: [
         "Requested",
         "Pending",
@@ -417,185 +275,39 @@ export default {
         "Completed",
         "Terminate",
       ],
-      urgencyLevel: ["Low", "Medium", "High", "Emergency"],
-      statusToIndex: {
-        Requested: 0,
-        Pending: 1,
-        Ongoing: 2,
-        Completed: 3,
-        Terminate: 4,
-      },
-      modalVisible: false,
-      updatingStatusId: null,
-      updatingStatusLoading: false,
+      headers: [
+        {
+          title: "Tenant Name",
+          dataIndex: "tenant",
+          align: "left",
+        },
+        {
+          title: "Property",
+          dataIndex: "accommodationName",
+          className: "accommodationName",
+          align: "left",
+        },
+        {
+          title: "Unit Number",
+          className: "unitId",
+          dataIndex: "unitId",
+          align: "center",
+        },
+        {
+          title: "Status",
+          dataIndex: "serviceStatus",
+          slotName: "status",
+          align: "center",
+        },
+        {
+          title: "Service Type",
+          dataIndex: "serviceType",
+          className: "serviceType",
+          align: "center",
+        },
+        { title: "", dataIndex: "action", slotName: "action" },
+      ],
     };
-    },
-    components: {
-    "search-icon": IconSearch,
-    "status-select": StatusSelect,
-    StatusDropdown,
-    "a-card": Card,
-    "a-tabs": Tabs,
-    "a-tab-pane": Tabs.TabPane,
-    "a-badge": Badge,
-    "a-button": Button,
-    "a-empty": Empty,
-    "a-avatar": Avatar,
-    "a-modal": Modal,
-    "a-textarea": Input.TextArea,
-    "a-select": Select,
-    "a-tag": Tag,
-    "a-spin": Spin,
-    "down-outlined": DownOutlined,
-    "exclamation-circle-outlined": ExclamationCircleOutlined,
-  },
-  computed: {
-    store() {
-      return useServiceRequestStore();
-    },
-    filteredRequests() {
-      return this.store.getByStatus(this.selected_tab, this.serviceLiterals);
-    },
-    pendingCount() {
-      return this.store.getByStatus("Pending", this.serviceLiterals).length;
-    },
-    completedCount() {
-      return this.store.getByStatus("Completed", this.serviceLiterals).length;
-    },
-    modalTitle() {
-      return this.selected_Request && this.selected_Request.propertyName
-        ? this.selected_Request.propertyName
-        : "Service Request Details";
-    },
-    statusOptions() {
-      return this.serviceLiterals.map((label, value) => ({ label, value }));
-    },
-    statusLiterals() {
-      return this.serviceLiterals;
-    },
-  },
-  created() {
-    // Only fetch if we don't have data
-    if (!this.store.hasData()) {
-      this.store.fetchRequests();
-    }
-  },
-    methods: {
-        getStatusLabel(service) {
-    return this.serviceLiterals[service.serviceStatus];
-        },
-        openModal(request) {
-      this.modalVisible = true;
-            this.selected_Request = request;
-        },
-        onModalClose() {
-      this.modalVisible = false;
-        },
-    onStatusChangeModal(newStatus) {
-      this.selected_Request = {
-        ...this.selected_Request,
-        serviceStatus: this.statusToIndex[newStatus],
-      };
-        },
-    handleSubmit() {
-  updateServiceRequest({ 
-      serviceRequestId: this.selected_Request.serviceRequestId, 
-        status: this.selected_Request.serviceStatus,
-      }).then((response) => {
-        // handle response
-    });
-        },  
-        onStatusChange(service, newStatus) {
-      const oldStatusIndex = service.serviceStatus;
-      const oldStatusLabel = this.serviceLiterals[oldStatusIndex];
-      const newStatusIndex = this.serviceLiterals.indexOf(newStatus);
-      const self = this;
-      Modal.confirm({
-        title: "Update Service Request Status",
-        icon: h(ExclamationCircleOutlined),
-        content: `Are you sure you want to change the status to "${newStatus}"?`,
-        okText: "Yes",
-        okType: "primary",
-        cancelText: "No",
-        centered: true,
-        async onOk() {
-          self.updatingStatusId = service.serviceRequestId;
-          self.updatingStatusLoading = true;
-          try {
-            const response = await updateServiceRequest({
-      serviceRequestId: service.serviceRequestId, 
-              status: newStatusIndex,
-            });
-            if (response && response.responseCode === "00") {
-              // Update in Pinia store with proper reactivity
-              const req = self.store.requests.find(
-                (r) => r.serviceRequestId === service.serviceRequestId
-              );
-              if (req) {
-                // Use Vue.set or direct assignment to ensure reactivity
-                req.serviceStatus = newStatusIndex;
-                // Force reactivity by updating the entire requests array
-                self.store.requests = [...self.store.requests];
-              }
-              // Also update the local service object
-              service.serviceStatus = newStatusIndex;
-              message.success("Service request status updated!");
-            } else {
-              message.error(
-                response?.responseDescription || "Failed to update status"
-              );
-              // Revert to the previous status index
-              service.serviceStatus = oldStatusIndex;
-            }
-          } finally {
-            self.updatingStatusId = null;
-            self.updatingStatusLoading = false;
-          }
-        },
-        onCancel() {
-          // revert dropdown to previous value
-          service.serviceStatus = oldStatusIndex;
-        },
-      });
-    },
-    formatDate(date) {
-      if (!date || date.startsWith("0001")) return "N/A";
-      return new Date(date).toLocaleString();
-    },
-    statusColor(status) {
-      // Map your status codes to Ant Design badge status
-      return (
-        ["default", "processing", "warning", "success", "error"][status] ||
-        "default"
-      );
-    },
-    getServiceImage(service) {
-      if (service.imageUrls && service.imageUrls.length) {
-        const img = service.imageUrls.find((url) => url && url.trim());
-        if (img) return img;
-      }
-      return "https://via.placeholder.com/64x64?text=No+Image";
-    },
-    statusTagColor(status) {
-      // Map status index to Ant Design tag color
-      const colors = ["default", "blue", "orange", "green", "red"];
-      return colors[status] || "default";
-    },
-    dropdownIcon() {
-      return h(DownOutlined);
-    },
-    previewImage(imageUrl) {
-      // You can implement image preview functionality here
-      // For now, we'll just open the image in a new tab
-      window.open(imageUrl, "_blank");
-    },
   },
 };
 </script>
-
-<style>
-/* Reduce gap between Ant Design tabs */
-:deep(.tab-tight-gap .ant-tabs-nav .ant-tabs-tab) {
-  margin-right: 0.5rem !important;
-}
-</style>

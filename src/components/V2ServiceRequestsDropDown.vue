@@ -1,8 +1,9 @@
 <template>
   <a-dropdown :trigger="['click']">
-    <a-button type="default" class="flex items-center gap-2">
+    <a-button type="default" class="flex items-center gap-2 py-2">
       {{ label }}
-      <DownOutlined />
+      <DownOutlined v-if="icon !== 'grid'" />
+      <TableOutlined v-else />
     </a-button>
 
     <template #overlay>
@@ -20,7 +21,7 @@
 </template>
 
 <script setup>
-import { DownOutlined } from "@ant-design/icons-vue";
+import { DownOutlined, TableOutlined } from "@ant-design/icons-vue";
 
 const props = defineProps({
   label: {
@@ -32,6 +33,11 @@ const props = defineProps({
     required: true,
     // Example:
     // [{ label: 'Edit', value: 'edit' }, { label: 'Delete', value: 'delete' }]
+  },
+  icon: {
+    type: String,
+    default: null,
+    required: false,
   },
 });
 
@@ -51,7 +57,8 @@ function onSelect({ key }) {
   background-color: #f4f4f4;
   font-size: 14px;
   font-family: "Inter", sans-serif;
-
-  padding: 8px 12px;
+  padding: 8px 12px !important;
+  line-height: 24px;
+  height: 100%;
 }
 </style>
