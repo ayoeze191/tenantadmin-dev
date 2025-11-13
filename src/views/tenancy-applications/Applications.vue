@@ -1,5 +1,8 @@
 <template>
-  <div class="px-4 font-inter h-full">
+  <div :class="[
+      'px-4 font-inter h-full',
+      modalOpen ? 'overflow-hidden' : 'overflow-y-scroll',
+    ]">
     <div
       class="rounded-[16px] mt-4 h-full font-inter border-[#36363633] border-[0.75px] border-solid"
     >
@@ -73,6 +76,7 @@
                 'AwaitingPayment',
             }"
             class="bg-inherit text-black cursor-pointer"
+            @click="showModal(record)"
             >View Details</a-button
           >
         </template>
@@ -88,7 +92,7 @@
           @change="onPageChange"
         />
       </div>
-    </ul>
+    
     <div class="flex justify-center mt-8 mb-4">
       <a-pagination
         :current="currentPage"
@@ -230,6 +234,7 @@
       </div>
     </template>
   </a-modal>
+  </div>
 </template>
 
 <script>
@@ -250,6 +255,7 @@ import { AccomodationApplications } from "@/api/dashboard";
 // import { component } from "vue/types/umd";
 import parsePhoneNumber from "libphonenumber-js";
 import moment from "moment";
+import Button from "@/components/Button/Button.vue";
 import { ref } from "vue";
 
 export default {
@@ -259,6 +265,7 @@ export default {
     DropdownButton: V2ServiceRequestsDropDown,
     applicationCard,
     BasePagination,
+    Button
   },
   created() {
     this.fetchData();
