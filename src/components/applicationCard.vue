@@ -38,25 +38,22 @@
     </div>
     <div class="px-2.5 pb-[10px]">
       <button
+        @click="$emit('showModal')"
         class="py-[6px] w-full text-[12px] rounded-[6px] bg-[#FFFFFF] mt-2 text-center text-[#000000] font-inter font-medium leading-[100%]"
       >
         View Full Details
       </button>
     </div>
   </div>
-  {{ console.log(app) }}
 </template>
 
 <script setup>
-import { computed } from "vue";
-
 const props = defineProps({
   app: {
     type: Object,
     required: false,
   },
 });
-
-defineEmits(["edit", "verify"]);
+defineEmits(["showModal"]);
 // 👇 Prepend S/N column automatically
 </script>

@@ -147,10 +147,11 @@
               </p>
             </div>
 
-            <button
-              class="py-[13px] w-full btn_primary flex gap-2 justify-center rounded-[100px] text-sm sm:text-lg disabled:bg-[#bfbfbf] disabled:cursor-not-allowed"
+            <Button
+            class="flex gap-2 justify-center"
               @click="handleSubmit"
               :disabled="isDisabled()"
+              size="grow"
             >
               <a-spin
                 v-if="isLoading == true"
@@ -161,7 +162,7 @@
                 <slot />
               </a-spin>
               Continue
-            </button>
+            </Button>
           </a-form>
           <p class="text-center mt-[23px] p-0 text-sm leading-6 text-txt_dark">
             Already have an account?
@@ -237,7 +238,7 @@ export default {
   components: {
     "view-password-icon": IconViewPassword,
     "hide-password-icon": IconHidePassword,
-    "button-component": Button,
+    Button,
     "auth-hero": AuthHero,
   },
   methods: {

@@ -14,7 +14,9 @@
     :role="role"
     @click="handleClick"
   >
+   <slot>
     {{ label }}
+   </slot>
   </button>
 </template>
 
@@ -24,7 +26,7 @@ export default {
   props: {
     label: {
       type: String,
-      required: true,
+      default: "",
     },
     loading: {
       type: Boolean,
@@ -52,9 +54,10 @@ export default {
     },
   },
   methods: {
-    handleClick() {
+    handleClick(e) {
       if (!this.disabled && !this.loading) {
-        this.onClick();
+        this.$emit('click', e);
+        // this.onClick(e);
       }
     },
   },

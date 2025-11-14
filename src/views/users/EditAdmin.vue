@@ -45,7 +45,7 @@
             </label>
             <input id="email" name="email" class="input mt-4 mb-10" v-model="email"  />
             
-            <button-component label="Update" :disabled="isDisabled()"></button-component>
+            <Button label="Update" :disabled="isDisabled()" size ="grow"/>
         </form>
     </div>
 </template>
@@ -60,7 +60,7 @@ import vueSelect from 'vue-select';
 
 export default {
     components:{
-        'button-component': Button,
+        Button,
         'vue-select': vueSelect
 
     },

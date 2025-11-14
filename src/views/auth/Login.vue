@@ -88,11 +88,12 @@
                 Terms & Conditions</span
               >
             </p>
-            <button-component
-              class="m-0 mt-[24px] rounded-[100px] text-base sm:text-lg btn_primary"
+            <Button
+              class="m-0 mt-[24px] text-base sm:text-lg"
               label="Continue"
               :loading="isLoading"
               :disabled="isDisabled()"
+              size="grow"
             />
           </form>
 
@@ -137,7 +138,7 @@ export default {
   components: {
     "view-password-icon": iconViewPassword,
     "hide-password-icon": iconHidePassword,
-    "button-component": Button,
+    Button,
     "auth-hero": AuthHero,
   },
   methods: {

@@ -58,6 +58,7 @@
   #app {
     width: 100%;
     height: 100%;
+    overflow-y: auto;
   }
 
   ul {
@@ -122,21 +123,16 @@
     @apply  max-w-[450px]  rounded-[10px];
   }
   .btn {
-    @apply outline-none rounded-[10px] text-center px-4 py-1.5 cursor-pointer hover:opacity-90 leading-7;
+    @apply outline-none rounded-[10px] text-center px-3 py-1 cursor-pointer hover:opacity-90 leading-7;
   }
   .btn_grow {
-    @apply w-full;
+    @apply w-full py-2;
   }
 
   .btn_primary {
     @apply bg-primary text-white;
   }
-  .btn_secondary {
-    @apply border-2 border-secondary text-primary;
-  }
-  .btn_dng {
-    @apply bg-dng text-white;
-  }
+
   .btn_danger {
     @apply bg-dng3 border border-dng2 text-dng2;
   }
@@ -289,5 +285,62 @@
 :disabled,::placeholder {
   color: rgba(0, 0, 0, 0.3);
 }
-/* end */
+  .btn_secondary {
+    @apply border-2 border-secondary text-primary;
+  }
+  .btn_dng {
+    @apply bg-dng text-white;
+  }
 
+  .badge {
+    @apply text-white rounded-lg px-2 py-1;
+  }
+
+  .badge-success {
+    @apply bg-due;
+  }
+
+  .badge-pending {
+    @apply bg-pending_strong;
+  }
+
+  .ant-table-thead th {
+    font-weight: normal !important;
+    color: #0000007F !important;
+  }
+
+  .ant-spin-nested-loading, .ant-spin-container {
+    height: 100%;
+  }
+
+  .ant-spin-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .service-req-filter {
+    outline: none;
+  }
+  .service-req-filter > .ant-select-selector {
+    @apply px-3 h-[40px] flex items-center !important
+  }
+
+  .service-req-filter > .ant-select-selector:hover, .service-req-filter > .ant-select-selector:focus {
+    border-color: rgba(54, 54, 54, 0.2) !important;
+    background-color: #fafafa !important;
+    outline: none !important;
+  }
+
+  .ant-select-dropdown {
+   @apply w-fit left-[inherit] right-[2%] !important;
+   /* left: inherit !important;
+   right: 2% !important; */
+  }
+
+  .no-scroll-table {
+  width: 100%;
+  table-layout: auto !important;
+  overflow: hidden !important;
+}
+/* end */

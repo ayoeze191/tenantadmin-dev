@@ -55,7 +55,7 @@
                   class="w-12 text-center"
                 />
               </div>
-              <button-component label="Continue" :loading="isLoading" />
+              <Button label="Continue" :loading="isLoading" size="grow"/>
             </a-form-item>
             <p class="text-center m-0 p-0 text-sm text-txt_dark">
               Don’t have an account?
@@ -104,7 +104,7 @@ export default {
   components: {
     "view-password-icon": iconViewPassword,
     "hide-password-icon": iconHidePassword,
-    "button-component": Button,
+    Button,
     "auth-hero": AuthHero,
   },
   methods: {

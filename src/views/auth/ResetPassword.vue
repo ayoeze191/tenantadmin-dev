@@ -55,13 +55,12 @@
             <span class="text-[#020332] underline">Privacy Policy</span> and
             <span class="text-[#020332] underline"> Terms & Conditions</span>
           </p>
-          <button
-            class="btn btn_primary"
+          <Button
             :disabled="disabled()"
             @click="handleCreation"
-          >
-            Submit
-          </button>
+            label="Submit"
+            size="grow"
+          />
         </a-form>
       </div>
     </main>
@@ -152,7 +151,7 @@ export default {
   components: {
     "view-password-icon": IconViewPassword,
     "hide-password-icon": IconHidePassword,
-    "button-component": Button,
+    Button,
     "auth-hero": AuthHero,
   },
   methods: {

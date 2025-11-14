@@ -418,6 +418,7 @@ export default {
   },
   data() {
     return {
+      selectedTenant: {},
       selectedPendingLease: {},
       waitingLeases: [],
       currentPage: 1,
