@@ -867,6 +867,12 @@ export default {
       );
     },
 
+    getStage(status) {
+      if(status == 1 || status == 2) {
+        return 1
+      }
+    },
+
 
     // Failed = 0,
     // ApplicationReview = 1,
@@ -880,6 +886,7 @@ export default {
     // Cancelled = 9,
     handleNext(event) {
       this.stage = this.stage + 1;
+      // if stage == 3 then dage should be confirmed
       //AccommodationApplications/ConfirmMoveInDate
       //       {
       //   "applicationId": 2147483647,
