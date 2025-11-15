@@ -8,15 +8,27 @@
           :total-item-count="totalItemCount || 0"
           title="All Requests"
         >
-          <DropdownButton
-            :label="serviceLiterals[selectedStatus]"
-            :options="[
-              { label: 'Pending', value: '1' },
-              { label: 'Completed', value: '3' },
-              { label: 'All', value: 'All' },
-            ]"
-            @select="handleSelect"
-          />
+          <div class="flex justify-between">
+            <a-input
+              @change="handleSearch"
+              v-model:value="searchQuery"
+              placeholder="Search by name, gender, age.."
+              class="py-[9px] border-[#D0D5DD] mr-[10px] border-[1px] rounded-[8px] w-[338px] border-solid"
+            >
+              <template #prefix>
+                <SearchOutlined class="text-[#BEC1C6] text-[20px]" />
+              </template>
+            </a-input>
+            <DropdownButton
+              :label="serviceLiterals[selectedStatus]"
+              :options="[
+                { label: 'Pending', value: '1' },
+                { label: 'Completed', value: '3' },
+                { label: 'All', value: 'All' },
+              ]"
+              @select="handleSelect"
+            />
+          </div>
           <!-- <button
             class="border-solid border-[1px] px-[12px] py-[8px] text-[#000000B2] leading-[24px] font-inter rounded-[8px]"
           >
@@ -55,9 +67,15 @@
             </div>
           </template>
         </table-component>
-        <!-- <BasePagination 
-        
-        /> -->
+        <Pagination
+          :currentPage="currentPage"
+          :totalPages="totalPages"
+          :total="computedData.length"
+          :pageSize="pageSize"
+          @prev="handlePrev"
+          @next="handleNext"
+          @change="handlePageChange"
+        />
       </div>
     </div>
   </div>
@@ -162,20 +180,16 @@
     </div>
     <div class="border-t-[0.75px] border-[#36363533] mt-4 flex">
       <a-button
-        @click="() => updateServiceRequest(1)"
+        @click="() => HandleUpdateServiceRequest(3)"
         v-if="selectedTenant.serviceStatus == 'Pending'"
         class="bg-[#000130] py-[8px] flex font-inter items-center justify-center text-white w-full mt-4 rounded-[8px]"
       >
         Set to Completed
       </a-button>
-      <a-button
-        v-if="selectedTenant.serviceStatus == 'Terminate'"
-        class="bg-[#000130] py-[8px] flex font-inter items-center justify-center text-white w-full mt-4 rounded-[8px]"
-      >
-        Renew Request
-      </a-button>
+      <div v-if="selectedTenant.serviceStatus == 'Terminate'"></div>
       <div class="flex" v-else>
         <a-button
+          @click="() => HandleUpdateServiceRequest(1)"
           class="bg-[#000130] py-[8px] flex font-inter items-center justify-center text-white w-full mt-4 rounded-[8px]"
         >
           Revert to Pending
@@ -192,6 +206,7 @@
 
 <script>
 import TenantCard from "@/components/TenantCard.vue";
+
 import TableHeader from "@/components/TableHeader.vue";
 import V2Table from "@/components/V2Table.vue";
 import V2ServiceRequestsDropDown from "@/components/V2ServiceRequestsDropDown.vue";
@@ -211,20 +226,56 @@ export default {
     BaseInput,
     TenantCard,
     StatusButton,
+    Pagination: BasePagination,
   },
   created() {
     this.fetchData();
   },
   computed: {
+    totalPages() {
+      return Math.ceil(this.data.length / this.pageSize);
+    },
     computedData() {
-      return this.selectedStatus == "All"
-        ? this.data
-        : this.data.filter(
-            (item) => item.serviceStatus === this.selectedStatus
-          );
+      // STEP 1: apply search
+      let filtered = this.searchRequests(this.data, this.searchQuery);
+      // STEP 2: apply status filter
+      if (this.selectedStatus !== "All") {
+        filtered = filtered.filter(
+          (item) => item.serviceStatus === this.selectedStatus
+        );
+      }
+      // STEP 3: apply pagination
+      const start = (this.currentPage - 1) * this.pageSize;
+      const end = start + this.pageSize;
+
+      return filtered.slice(start, end);
     },
   },
   methods: {
+    searchRequests() {
+      if (!this.searchQuery) return this.data;
+      const lower = this.searchQuery.toLowerCase();
+      return this.data.filter((item) => {
+        return (
+          item.serviceRequestId?.toString().toLowerCase().includes(lower) ||
+          item.tenant?.toLowerCase().includes(lower) ||
+          item.accommodationName?.toLowerCase().includes(lower) ||
+          item.unitId?.toString().toLowerCase().includes(lower) ||
+          item.serviceType?.toLowerCase().includes(lower) ||
+          item.description?.toLowerCase().includes(lower) ||
+          item.serviceStatus?.toLowerCase().includes(lower)
+        );
+      });
+    },
+    handlePrev() {
+      if (this.currentPage > 1) this.currentPage--;
+    },
+    handleNext() {
+      if (this.currentPage < this.totalPages) this.currentPage++;
+    },
+    handlePageChange(page) {
+      this.currentPage = page;
+    },
     handleSelect(option) {
       this.selectedStatus = option.value;
       // console.log("Selected:", option);
@@ -235,6 +286,7 @@ export default {
           console.log("Service Requests Response:", response);
           this.data = response.serviceRequests.map((request) => {
             return {
+              serviceRequestId: request.serviceRequestId,
               tenant: request.tenant,
               accommodationName: request.accommodationName,
               unitId: request.unitId,
@@ -250,15 +302,19 @@ export default {
           console.error("Error fetching service requests:", error);
         });
     },
-    UpdateServiceRequest(toType) {
+    HandleUpdateServiceRequest(toType) {
       const body = {
-        serviceRequests: this.selectedTenant,
+        serviceRequests: this.selectedTenant.serviceRequestId,
+        status: toType,
       };
-      updateServiceRequest().then().catch();
+      updateServiceRequest(body).then().catch();
     },
   },
   data() {
     return {
+      searchQuery: "",
+      currentPage: 1,
+      pageSize: 6,
       messages: ["Your service request has been sorted"],
       store: useUserStore(),
       showModal: false,

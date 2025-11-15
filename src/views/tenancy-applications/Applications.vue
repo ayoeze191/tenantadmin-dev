@@ -4,7 +4,10 @@
       class="rounded-[16px] mt-4 h-full font-inter border-[#36363633] border-[0.75px] border-solid"
     >
       <div class="flex items-center">
-        <table-header :total-item-count="totalItemCount" title="Applications">
+        <table-header
+          :total-item-count="totalItemCount"
+          title="All Applications"
+        >
           <div class="flex justify-between w-full items-center">
             <a-input
               v-model:value="searchQuery"
@@ -117,12 +120,15 @@
         class="size-[40px] object-cover rounded-lg"
       />
       <div class="flex flex-col">
-        <span>{{ selectedApplication.applicantName }}</span>
-        <span>{{ selectedApplication.email }}</span>
+        <span
+          class="font-[600] text-[#000000] font-inter text-[14px] leading-[100%]"
+          >{{ selectedApplication.applicantName }}</span
+        >
+        <span class="text-[#00000066]">{{ selectedApplication.email }}</span>
       </div>
     </div>
 
-    <a-tabs tabPosition="left" class="mt-3">
+    <a-tabs tabPosition="left" class="mt-3 custom-tabs">
       <a-tab-pane
         v-for="tab in stagesTabDetails[stage - 1]"
         :key="tab.tabTitle"
@@ -245,7 +251,7 @@
         <div v-for="item in tab.tabDetails" v-else>
           <p class="font-bold">{{ item.label }}</p>
           <div class="mb-2">
-            <div v-for="key in item.keys">
+            <div v-for="key in item.keys" class="text-[#00000099]">
               <p
                 v-if="
                   [
@@ -264,6 +270,7 @@
                 {{ formatDate(selectedApplication[key]) || "N/A" }}
               </p>
               <p
+                class=""
                 v-else-if="
                   ['apprMonthlyIncome', 'budgetForAccommodation'].includes(key)
                 "
@@ -293,7 +300,7 @@
         <a-button
           @click="handleNext"
           :loading="approving"
-          class="bg-[#000130] font-inter px-3 flex items-center justify-center py-[6px] rounded-[8px] text-[14px] font-medium text-white"
+          class="bg-[#000130] leading-[24px] font-inter px-3 flex items-center justify-center py-[6px] rounded-[8px] text-[14px] font-medium text-white"
           >Next</a-button
         >
         <a-button
@@ -311,7 +318,7 @@
             }
           "
           type="custom"
-          class="border-solid border-[#36363633] flex items-center justify-center px-[12px] py-[6px] rounded-[8px] border-gray-200 text-[#121212] border-[1.5px] box-border"
+          class="border-solid font-[500] font-inter border-[#36363633] flex items-center justify-center px-[12px] py-[6px] rounded-[8px] border-gray-200 text-[#121212] border-[1.5px] box-border"
           >Request Additional Document</a-button
         >
       </div>
@@ -407,26 +414,27 @@
           class="rounded-[6px] border-[#D8D8D8] border-[1px] border-solid h-[48px]"
           placeholder="Add Document"
         />
-
-        <button @click="">
+        <button
+          @click="
+            requestDocumentsOptions.push({
+              label: form.otherDocument,
+              value: form.otherDocument,
+            });
+            form.otherDocument = '';
+          "
+          class="flex items-center justify-center size-[48px] rounded-[6px]"
+        >
           <PlusOutlined class="" />
         </button>
       </div>
-      <div class="mt-[1rem] flex gap-[10px] items-center">
-        <!-- <button
-          @click="handleRequestDocument"
-          :disabled="form.requestDocuments.length === 0"
-          class="bg-[#000130] disabled:bg-slate-400 disabled:cursor-not-allowed flex-1 leading-[28px] py-[8px] px-[42.5px] rounded-[4px] font-sf font-[600] text-[#FFFFFF]"
-        >
-          Send Request
-        </button> -->
+      <!-- <div class="mt-[1rem] flex gap-[10px] items-center">
         <button
           @click="showRequestDocumentModal = false"
           class="bg-[#D1D5DB] flex-[0.8] leading-[28px] py-[8px] px-[42.5px] rounded-[4px] font-sf font-[600] text-[#FFFFFF]"
         >
           Cancel
         </button>
-      </div>
+      </div> -->
     </div>
   </a-modal>
 
@@ -465,6 +473,7 @@ import V2Table from "@/components/V2Table.vue";
 import V2ServiceRequestsDropDown from "@/components/V2ServiceRequestsDropDown.vue";
 import { FetchTenant, ApproveTenant } from "@/api/tenancy";
 import { ConfirmMoveInDate, GenerateLease } from "@/api/tenancy";
+import { RequestAdditionalDocuments } from "@/api/tenancy";
 import applicationCard from "@/components/applicationCard.vue";
 import BasePagination from "@/components/BasePagination.vue";
 import { useUserStore } from "@/store";
@@ -551,6 +560,7 @@ export default {
               { keys: ["currentAddress"], label: "Current Address" },
               { keys: ["gender"], label: "Gender" },
               { keys: ["whatsAppNo"], label: "WhatsApp Number" },
+              // { keys: ["whatsAppNo"], label: "Responsible Rent" },
             ],
           },
           {
@@ -849,10 +859,8 @@ export default {
           this.declining = false;
           this.showDeclinemoldal = false;
         }
-        // this.router.push("/applications");
       });
     },
-
     async handleMovingDate(original) {
       let payload = {
         applicationId: this.selectedApplication.applicationId,
@@ -876,6 +884,10 @@ export default {
       });
     },
     async handleRequestDocument() {
+      if (this.form.requestDocuments.length == 0) {
+        this.toast.error("Please select at least one document to request");
+        return;
+      }
       const payload = {
         ApplicationId: this.selectedApplication.applicationId,
         RequiredDocumentsJson: this.form.requestDocuments.join(","),
@@ -884,7 +896,8 @@ export default {
       };
       RequestAdditionalDocuments({ ...payload }).then((response) => {
         if (response.responseCode == "00") {
-          this.showRequestDocumentModal = false;
+          this.form.requestDocuments = [];
+          this.requestModalOpen = false;
           this.toast.success("Request sent successfully");
         } else {
           this.toast.error("Coudln't send request");
@@ -1041,32 +1054,42 @@ export default {
 </script>
 
 <style>
+:deep(.trigger) {
+  background: #111921;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.ant-btn {
+  color: #0000004d !important;
+}
 /* Only affects modals wrapped in .application-page-modal */
-.ant-modal-root > .application-page-modal .ant-modal-content {
+:deep(.ant-modal-root > .application-page-modal .ant-modal-content) {
   box-shadow: none !important;
   /* box-shadow: 0px 2px 7px 3px rgba(30,30,30,0.09); */
 }
 
-.ant-modal-root > .application-page-modal .ant-modal-mask {
+:deep(.ant-modal-root > .application-page-modal .ant-modal-mask) {
   background: rgba(30, 30, 30, 0.06) !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
 }
 
-.ant-modal-root > .application-page-modal .ant-tabs-content-holder {
+:deep(.ant-modal-root > .application-page-modal .ant-tabs-content-holder) {
   border-left: none !important;
 }
 
-.ant-modal-root > .application-page-modal .ant-tabs-ink-bar {
+:deep(.ant-modal-root > .application-page-modal .ant-tabs-ink-bar) {
   display: none !important;
 }
 
-.ant-modal-root > .application-page-modal .ant-tabs-tab-active {
+:deep(.ant-modal-root > .application-page-modal .ant-tabs-tab-active) {
   background-color: rgba(30, 30, 30, 0.06) !important;
   border-radius: 0.625rem !important;
 }
 
-.ant-modal-root > .application-page-modal .ant-modal {
+:deep(.ant-modal-root > .application-page-modal .ant-modal) {
   width: 50vw !important;
   height: fit-content !important;
 }
@@ -1080,5 +1103,12 @@ export default {
   font-family: redwing, ui-sans-serif, system-ui, sans-serif !important;
   font-weight: 500 !important;
   font-size: 24px !important;
+}
+:deep(.custom-tabs .ant-tabs-tab) {
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+:deep(.custom-tabs .ant-tabs-tab) {
+  margin-right: 2px !important;
 }
 </style>
