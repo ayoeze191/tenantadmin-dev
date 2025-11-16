@@ -407,7 +407,42 @@
         :tab="tab.tabTitle"
         class="flex flex-col gap-y-3"
       >
-        <div>
+        <div v-if="stage == 4" class="flex flex-col gap-2">
+          <div class="flex flex-col">
+            <h2 class="font-medium uppercase text-[1rem] font-redwing text-black">
+            UPLOAD SIGNED LEASE PDF
+          </h2>
+            <a-upload-dragger
+                v-model:fileList="leaseFile"
+                name="leaseFile"
+                :multiple="false"
+                :maxCount="1"
+                action=""
+                @change="handleChange"
+                @drop="handleDrop"
+              >
+                <p class="ant-upload-drag-icon">
+                  <inbox-outlined></inbox-outlined>
+                </p>
+                <p class="ant-upload-text">Click or drag to upload documents</p>
+                <p class="ant-upload-hint">
+                  Upload a pre-signed lease agreement document
+                </p>
+              </a-upload-dragger>
+          </div>
+          <div>
+            <h2 class="font-medium uppercase text-[1rem] font-redwing text-black">
+           {{ tab.tabDetails.label }}
+          </h2>
+            <div class="bg-[#F9F9F9] p-3 rounded-lg">
+              <div v-for="key in tab.tabDetails.keys">
+                <p class="font-semibold text-black">{{ key }}</p>
+                <p>{{ selectedApplication[key] }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-else>
           <h2 class="font-medium uppercase text-[1rem] font-redwing text-black">
             {{ tab.tabTitle }}
           </h2>
@@ -514,11 +549,17 @@
             <Button type="danger">Decline</Button>
           </div>
         </div>
+        <div v-if="stage == 4" class="flex justify-between gap-3 max-h-fit">
+          <Button
+            type="custom"
+            class="border-gray-200 border-[1.75px] box-border text-[#121212]"
+            @click="handleReqDoc"
+            >Back</Button
+          >
+          <Button @click="handleNext">Generate Lease</Button>
+        </div>
       </a-tab-pane>
     </a-tabs>
-    <!-- <template #footer>
-
-    </template> -->
   </a-modal>
 </template>
 
@@ -535,7 +576,9 @@ import { useUserStore } from "@/store";
 import Button from "@/components/Button/Button.vue";
 import { useRoute } from "vue-router";
 import { AccomodationApplications } from "@/api/dashboard";
-// import { component } from "vue/types/umd";
+
+import { message } from "ant-design-vue";
+
 import parsePhoneNumber from "libphonenumber-js";
 import moment from "moment";
 import dayjs from "dayjs";
@@ -582,7 +625,6 @@ export default {
         "Set Move-In Date",
         "Lease Generation",
       ],
-      // [TODO: Responsible Rent in personal information attribute, what do we do if the property is null, not display or display n/a], no guarantor relationship just occupation, no occupation for the applicant, document uploaded information missing. Need backend api for upload signed lease pdf, how to know whether security deposit has been paid currently using doYouHaveTotalMoveinAmount
       stagesTabDetails: [
         [
           {
@@ -737,6 +779,20 @@ export default {
             ],
           },
         ],
+        [
+          {
+            tabTitle: "Lease Generation",
+            tabDetails: {
+              keys: [
+                "propertyName",
+                "previousAddress",
+                "unitName",
+                "intendedMoveInDate",
+              ],
+              label: "LEASE DETAILS PREVIEW",
+            },
+          },
+        ],
       ],
       selected_tab: "pending",
       selected_Request: {},
@@ -764,6 +820,7 @@ export default {
   },
   setup() {
     const stage = ref(1);
+    const leaseFile = ref(null);
     const modalOpen = ref(false);
     const selectedApplication = ref(null);
     const selectedMoveInDate = ref(null);
@@ -789,6 +846,7 @@ export default {
       stage,
       selectedApplication,
       selectedMoveInDate,
+      leaseFile,
       showModal,
       handleOk,
       handleCancel,
@@ -867,58 +925,14 @@ export default {
       );
     },
 
-    getStage(status) {
-      if(status == 1 || status == 2) {
-        return 1
-      }
-    },
+    setStage(status) {},
 
-    // Status to Stage mapping:
-      // Stage 1:
-        // ApplicationReview = 1, [Initial Review]
-        // AdditionalDocumentsRequired = 2,[Awaiting Documents]
-
-      // Stage 2:
-        // ??
-
-      // Stage 3:
-        // AwaitingPayment = 5, [Awaiting Payment]
-        // MoveInDateLandlordConfirmationPending = 3, [Confirm Move-In Date]
-
-      // Stage 4:
-        // AwaitingLeaseGeneration = 6, [Awaiting Lease]
-
-      // Next: Completed
-
-    // Questions:
-      // Difference between Declined, Cancelled and Failed
-      // What is this status for MoveInDateTenantConfirmationPending = 4?
-      // I'm guessing declined removes it from the list does it get removed when accepted too?
-      // Security Deposit payed?
-      // What status opens stage 2, Awaiting Document Approval ???
-
-    // Statuses from Toye:
-      // Failed = 0, ??
-      // ApplicationReview = 1, [Initial Review]
-      // AdditionalDocumentsRequired = 2,[Awaiting Documents]
-      // MoveInDateLandlordConfirmationPending = 3, [Confirm Move-In Date]
-      // MoveInDateTenantConfirmationPending = 4, ??
-      // AwaitingPayment = 5, [Awaiting Payment]
-      // AwaitingLeaseGeneration = 6, [Awaiting Lease]
-      // Completed = 7, ??
-      // Declined = 8, 
-      // Cancelled = 9, ??
     handleNext(event) {
       this.stage = this.stage + 1;
-      // if stage == 3 then page should be confirmed
-      //AccommodationApplications/ConfirmMoveInDate
-      //       {
-      //   "applicationId": 2147483647,
-      //   "moveInDate": "2025-11-13T17:57:13.957Z",
-      //   "isOriginalDateApproved": true,
-      //   "confirmedByUserId": "string",
-      //   "comments": "string"
-      // }
+      if (this.stage == 5) {
+        this.modalOpen.value = false;
+      }
+
       console.log(this.selectedMoveInDate.value);
     },
     handleBack(event) {
@@ -927,14 +941,20 @@ export default {
 
     handleReqDoc() {},
 
-    handleDecline() {
-      //PUT AccomodationApplications/{applicationId}/status
-//       {
-//   "applicationId": 2,
-//   "status": 3,
-//   "comments": "string",
-//   "updatedByUserId": "string"
-// }
+    handleDecline() {},
+    handleChange(info) {
+      const status = info.file.status;
+      if (status !== "uploading") {
+        console.log(info.file, info.fileList);
+      }
+      if (status === "done") {
+        message.success(`${info.file.name} file uploaded successfully.`);
+      } else if (status === "error") {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+    handleDrop(e) {
+      console.log(e);
     },
 
     formatPhoneNum(num) {
@@ -1029,5 +1049,10 @@ export default {
 .application-page-modal .ant-tabs-tab {
   margin: 0 !important;
   /* padding: 0; */
+}
+
+.application-page-modal .ant-upload-wrapper {
+  width: 70%;
+  max-width: 305px;
 }
 </style>
