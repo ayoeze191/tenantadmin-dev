@@ -179,26 +179,27 @@
       </div>
     </div>
     <div class="border-t-[0.75px] border-[#36363533] mt-4 flex">
-      <a-button
+      <button
         @click="() => HandleUpdateServiceRequest(3)"
         v-if="selectedTenant.serviceStatus == 'Pending'"
         class="bg-[#000130] py-[8px] flex font-inter items-center justify-center text-white w-full mt-4 rounded-[8px]"
       >
         Set to Completed
-      </a-button>
+      </button>
       <div v-if="selectedTenant.serviceStatus == 'Terminate'"></div>
-      <div class="flex" v-else>
-        <a-button
+      <div class="flex w-full gap-2.5" v-else>
+        <button
           @click="() => HandleUpdateServiceRequest(1)"
           class="bg-[#000130] py-[8px] flex font-inter items-center justify-center text-white w-full mt-4 rounded-[8px]"
         >
           Revert to Pending
-        </a-button>
-        <a-button
+        </button>
+        <button
+          v-if="selectedTenant.serviceStatus == 'Pending'"
           class="bg-[#000130] py-[8px] flex font-inter items-center justify-center text-white w-full mt-4 rounded-[8px]"
         >
           Send Message
-        </a-button>
+        </button>
       </div>
     </div>
   </a-modal>

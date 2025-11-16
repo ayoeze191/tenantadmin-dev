@@ -133,7 +133,7 @@
       <div class="m-0 p-0"><ExclamationCircleOutlined /></div>
       <div class="p-0 m-0">
         <p>{{ selectedApplication.status }}</p>
-        <p>Tenant has been notified to provide additional documents</p>
+        <p>{{ selectedApplication.AccommodationApplicationStatusDesc }}</p>
       </div>
     </div>
     <div
@@ -329,8 +329,15 @@
       <div v-if="stage == 1" class="mt-3 flex justify-end gap-3">
         <button
           @click="handleNext"
+          :disabled="
+            approving ||
+            declining ||
+            (selectedApplication.status == 'AwaitingAdditionalDocuments' &&
+              form.requestDocuments.length == 0) ||
+            selectedApplication.status == 'Completed'
+          "
           :loading="approving"
-          class="bg-[#000130] leading-[24px] font-inter px-3 flex items-center justify-center py-[6px] rounded-[8px] text-[14px] font-medium text-white"
+          class="bg-[#000130] text-[white] disabled:cursor-not-allowed disabled:text-white leading-[24px] font-inter px-3 flex items-center justify-center py-[6px] rounded-[8px] text-[14px] font-medium"
         >
           Next
         </button>
@@ -338,7 +345,14 @@
           type="danger"
           :loading="declining"
           @click="declineData"
-          class="bg-[#A00000] font-inter flex items-center justify-center px-3 py-[6px] rounded-[8px] text-[14px] font-medium text-white"
+          :disabled="
+            approving ||
+            declining ||
+            (selectedApplication.status == 'AwaitingAdditionalDocuments' &&
+              form.requestDocuments.length == 0) ||
+            selectedApplication.status == 'Completed'
+          "
+          class="bg-[#A00000] disabled:text-white disabled:cursor-not-allowed font-inter flex items-center justify-center px-3 py-[6px] rounded-[8px] text-[14px] font-medium text-white"
         >
           Decline
         </button>
@@ -389,6 +403,7 @@
         >
         <div>
           <Button
+            :loading="movingdate"
             @click="() => handleMovingDate(true)"
             class="px-3 py-[6px] bg-[#000130] mr-[10px] text-[#FFFFFF] rounded-[8px]"
             >Confirm Date</Button
@@ -538,6 +553,7 @@ export default {
   },
   data() {
     return {
+      movingdate: false,
       requestDocumentsOptions: [
         {
           label: "Additional Income Verification",
@@ -783,6 +799,19 @@ export default {
         // 6: "Cancel", // Use Cancelled instead
         // 5: "PaymentCompeted", // Use Completed instead
       },
+      AccommodationApplicationStatusDesc: {
+        0: "Application submission failed or system error occurred",
+        1: "New Application submitted, review Tenant details and<br> decide whether to approve, decline or request more documents",
+
+        2: "You have requested extra documents waiting for tenants to upload",
+        3: "Application approved, awaiting landlord to confirm move-in date",
+        4: "Landlord set different date, awaiting tenant confirmation",
+        5: "Move-in date confirmed, awaiting security deposit payment",
+        6: "Payment received, awaiting lease document generation",
+        7: "Lease generated and application process completed",
+        8: "Application has been declined by landlord or tenant",
+        9: "Application has been cancelled by tenant",
+      },
       headers: [
         {
           title: "Name",
@@ -844,7 +873,8 @@ export default {
       );
       try {
         if (response.responseCode == "00") {
-          this.toast.success("Lease Generated Successfully");
+          this.toast.success("A lease Has been generated");
+          this.modalOpen = false;
         } else {
           this.toast.error("Coudln't generate lease");
         }
@@ -898,6 +928,7 @@ export default {
       });
     },
     async handleMovingDate(original) {
+      this.movingdate = true;
       let payload = {
         applicationId: this.selectedApplication.applicationId,
         isOriginalDateApproved: original ? true : false,
@@ -905,6 +936,7 @@ export default {
         comments: "",
         moveInDate: this.selectedApplication.intendedMoveInDate,
       };
+
       if (original == false) {
         payload = { ...payload, moveInDate: this.form.moveInDate };
       }
@@ -913,6 +945,7 @@ export default {
           this.stage = 4;
           this.modalOpen = true;
           this.moveInDateModalOpen = false;
+          this.movingdate = false;
           this.toast.success("Move-in date confirmed");
         } else {
           this.toast.error("Coudln't update");
@@ -1056,6 +1089,7 @@ export default {
           if (response.responseCode == "00" && response.applications) {
             this.Applications = response.applications.items || [];
             this.totalItemCount = response.applications.totalItemCount || 0;
+
             this.computedData = (response.applications.items || []).map(
               (app) => {
                 return {
@@ -1065,6 +1099,8 @@ export default {
                   status:
                     this.AccommodationApplicationStatus[app.status] ||
                     "Unknown",
+                  AccommodationApplicationStatusDesc:
+                    this.AccommodationApplicationStatusDesc[app.status],
                   email: app.email || "N/A",
                   gender: app.gender || "N/A",
                   phoneNo: app.phoneNo || "N/A",
