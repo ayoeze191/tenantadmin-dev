@@ -78,7 +78,7 @@
     <div class="px-2.5 pb-[10px]">
       <button
         @click="$emit('showModal')"
-        class="py-[6px] bg-[#FFFFFF] border-[#36363633] border-solid border-[0.75px] w-full text-[12px] rounded-[6px] bg-[#FFFFFF] mt-2 text-center text-[#000000] font-inter font-medium leading-[100%]"
+        class="py-[6px] bg-[#FFFFFF] border-[#36363633] border-solid border-[0.75px] w-full text-[12px] rounded-[6px] mt-2 text-center text-[#000000] font-inter font-medium leading-[100%]"
       >
         View Full Details
       </button>

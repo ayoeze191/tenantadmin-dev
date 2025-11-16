@@ -111,20 +111,49 @@
     wrapClassName="application-page-modal"
   >
     <div
-      v-if="selectedApplication"
-      class="border-gray-200 border-[1.5px] rounded-xl p-2 flex gap-1.5"
+      class="flex gap-[10px] mt-[5px] mb-[1rem] items-center rounded-[10px] px-[10px]"
+      :class="{
+        'bg-[#FEF9C3] border-[#854D0F] border-solid border-[0.5px] text-[#854D0F]':
+          selectedApplication.status == 'AwaitingAdditionalDocuments',
+        'bg-[#F3E8FF] text-[#6D24A9] border-[#6D24A9] border-solid border-[1px] ':
+          selectedApplication.status ==
+            'MoveInDateLandlordConfirmationPending' ||
+          selectedApplication.status == 'ConfirmingMove-inDate',
+        'bg-[#FEF9C3] border-solid  border-[1px] text-[#1D40AE] border-[#1D40AE]':
+          selectedApplication.status == 'AwaitingReview',
+        'bg-red-700 text-red-300 border-red-300 border-solid border-[1px]':
+          selectedApplication.status == 'Failed',
+        'bg-[#DCFCE7] text-[#166434] border-[#166434] border-solid border-[1px] z-50 left-[30%]':
+          selectedApplication.status == 'Completed',
+        'bg-[#FEF9C3] text-[#854D0F] border-solid border-[1px] border-[#854D0F] z- left-[20%]':
+          selectedApplication.status == 'AwaitingPayment',
+      }"
     >
-      <img
-        :src="dummyList[0]"
-        alt="profile picture"
-        class="size-[40px] object-cover rounded-lg"
-      />
+      <div class="m-0 p-0"><ExclamationCircleOutlined /></div>
+      <div class="p-0 m-0">
+        <p>{{ selectedApplication.status }}</p>
+        <p>Tenant has been notified to provide additional documents</p>
+      </div>
+    </div>
+    <div
+      v-if="selectedApplication"
+      class="border-gray-200 items-center border-[1.5px] rounded-xl p-2 flex gap-1.5"
+    >
+      <div>
+        <img
+          :src="dummyList[0]"
+          alt="profile picture"
+          class="size-[34px] object-cover rounded-lg"
+        />
+      </div>
       <div class="flex flex-col">
         <span
-          class="font-[600] text-[#000000] font-inter text-[14px] leading-[100%]"
+          class="font-[600] p-0 m-0 text-[#000000] font-inter text-[14px] leading-[100%]"
           >{{ selectedApplication.applicantName }}</span
         >
-        <span class="text-[#00000066]">{{ selectedApplication.email }}</span>
+        <span class="text-[#00000066] m-0 p-0">{{
+          selectedApplication.email
+        }}</span>
       </div>
     </div>
 
@@ -297,30 +326,37 @@
     </a-tabs>
     <template #footer>
       <div v-if="stage == 1" class="mt-3 flex justify-end gap-3">
-        <a-button
+        <button
           @click="handleNext"
           :loading="approving"
           class="bg-[#000130] leading-[24px] font-inter px-3 flex items-center justify-center py-[6px] rounded-[8px] text-[14px] font-medium text-white"
-          >Next</a-button
         >
-        <a-button
+          Next
+        </button>
+        <button
           type="danger"
           :loading="declining"
           @click="declineData"
           class="bg-[#A00000] font-inter flex items-center justify-center px-3 py-[6px] rounded-[8px] text-[14px] font-medium text-white"
-          >Decline</a-button
         >
-        <a-button
+          Decline
+        </button>
+        <button
           @click="
             () => {
               modalOpen = false;
               requestModalOpen = true;
             }
           "
+          :disabled="
+            requesting ||
+            selectedApplication.status == 'AwaitingAdditionalDocuments'
+          "
           type="custom"
-          class="border-solid font-[500] font-inter border-[#36363633] flex items-center justify-center px-[12px] py-[6px] rounded-[8px] border-gray-200 text-[#121212] border-[1.5px] box-border"
-          >Request Additional Document</a-button
+          class="border-solid disabled:cursor-not-allowed font-[500] font-inter border-[#36363633] flex items-center justify-center px-[12px] py-[6px] rounded-[8px] border-gray-200 text-[#121212] border-[1.5px] box-border"
         >
+          Request Additional Document
+        </button>
       </div>
       <div v-if="stage == 2" class="mt-3 flex justify-end gap-3">
         <Button
@@ -786,7 +822,6 @@ export default {
       totalItemCount: 0,
       currentPage: 1,
       pageSize: 8,
-      totalPages: 0,
     };
   },
   watch: {

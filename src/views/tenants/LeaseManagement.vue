@@ -65,7 +65,7 @@
                   }
                 "
                 class="bg-[#000130] bg-inherit text-black cursor-pointer"
-                >view details</a-button
+                >View Lease</a-button
               >
             </div>
           </template>
