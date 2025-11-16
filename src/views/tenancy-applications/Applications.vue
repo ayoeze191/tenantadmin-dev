@@ -434,7 +434,7 @@
             <h2 class="font-medium uppercase text-[1rem] font-redwing text-black">
            {{ tab.tabDetails.label }}
           </h2>
-            <div class="bg-[#F9F9F9] p-3 rounded-lg">
+            <div class="bg-[#F9F9F9] p-3 rounded-lg flex flex-col gap-2.5">
               <div v-for="key in tab.tabDetails.keys">
                 <p class="font-semibold text-black">{{ key }}</p>
                 <p>{{ selectedApplication[key] }}</p>
@@ -1054,5 +1054,7 @@ export default {
 .application-page-modal .ant-upload-wrapper {
   width: 70%;
   max-width: 305px;
+  padding: 0 .5rem;
+  box-sizing: border-box;
 }
 </style>
