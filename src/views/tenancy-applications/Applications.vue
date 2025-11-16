@@ -873,20 +873,44 @@ export default {
       }
     },
 
+    // Status to Stage mapping:
+      // Stage 1:
+        // ApplicationReview = 1, [Initial Review]
+        // AdditionalDocumentsRequired = 2,[Awaiting Documents]
 
-    // Failed = 0,
-    // ApplicationReview = 1,
-    // AdditionalDocumentsRequired = 2,
-    // MoveInDateLandlordConfirmationPending = 3,
-    // MoveInDateTenantConfirmationPending = 4,
-    // AwaitingPayment = 5,
-    // AwaitingLeaseGeneration = 6,
-    // Completed = 7,
-    // Declined = 8,
-    // Cancelled = 9,
+      // Stage 2:
+        // ??
+
+      // Stage 3:
+        // AwaitingPayment = 5, [Awaiting Payment]
+        // MoveInDateLandlordConfirmationPending = 3, [Confirm Move-In Date]
+
+      // Stage 4:
+        // AwaitingLeaseGeneration = 6, [Awaiting Lease]
+
+      // Next: Completed
+
+    // Questions:
+      // Difference between Declined, Cancelled and Failed
+      // What is this status for MoveInDateTenantConfirmationPending = 4?
+      // I'm guessing declined removes it from the list does it get removed when accepted too?
+      // Security Deposit payed?
+      // What status opens stage 2, Awaiting Document Approval ???
+
+    // Statuses from Toye:
+      // Failed = 0, ??
+      // ApplicationReview = 1, [Initial Review]
+      // AdditionalDocumentsRequired = 2,[Awaiting Documents]
+      // MoveInDateLandlordConfirmationPending = 3, [Confirm Move-In Date]
+      // MoveInDateTenantConfirmationPending = 4, ??
+      // AwaitingPayment = 5, [Awaiting Payment]
+      // AwaitingLeaseGeneration = 6, [Awaiting Lease]
+      // Completed = 7, ??
+      // Declined = 8, 
+      // Cancelled = 9, ??
     handleNext(event) {
       this.stage = this.stage + 1;
-      // if stage == 3 then dage should be confirmed
+      // if stage == 3 then page should be confirmed
       //AccommodationApplications/ConfirmMoveInDate
       //       {
       //   "applicationId": 2147483647,
