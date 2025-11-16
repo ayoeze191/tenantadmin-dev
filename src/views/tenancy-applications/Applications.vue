@@ -109,6 +109,7 @@
     @cancel="handleCancel"
     :centered="true"
     wrapClassName="application-page-modal"
+    width="800px"
   >
     <div
       class="flex gap-[10px] mt-[5px] mb-[1rem] items-center rounded-[10px] px-[10px]"
@@ -204,11 +205,11 @@
           v-if="
             ['Document Uploaded', 'Additional Documents'].includes(tab.tabTitle)
           "
-          class="flex gap-x-3 gap-y-0 size-full flex-wrap"
+          class="flex flex-wrap gap-x-3 gap-y-0 size-full"
         >
           <div
             v-for="doc in tab.tabDetails"
-            class="bg-[#1e1e1e10] w-[30%] h-[9rem] p-2 flex flex-col flex-shrink-0 justify-center items-center rounded-lg mb-1.5"
+            class="bg-[#1e1e1e10] w-[170px] h-[9rem] p-2 flex flex-col flex-shrink-0 justify-center items-center rounded-lg mb-1.5"
           >
             <IconPDFDoc />
             <span>{{ doc.name }}</span>
