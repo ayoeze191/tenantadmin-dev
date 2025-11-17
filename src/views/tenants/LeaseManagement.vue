@@ -26,6 +26,8 @@
                   () => {
                     showModal = true;
                     selectedPendingLease = value;
+                    selectedTenant = value;
+                    selectedType = 'request';
                   }
                 "
   />
@@ -62,6 +64,7 @@
                   () => {
                     showModal = true;
                     selectedTenant = record;
+                    selectedType = 'aggreement';
                   }
                 "
                 class="bg-[#000130] bg-inherit text-black cursor-pointer"
@@ -140,19 +143,21 @@
         >{{ selectedTenant.apartmentNumber || "nill" }}
       </p>
       <p class="p-0 m-0 mb-[10px]">
-        <span class="text-[#00000099] p-0 m-0">Issue:</span>The faucet in the
+        <span class="text-[#00000099] p-0 m-0">Email Address</span>The faucet in the
         kitchen is leaking and needs immediate repair.
       </p>
       <p class="p-0 m-0 mb-[10px]">
-        <span class="text-[#00000099] p-0 m-0">Urgency:</span>
+        <span class="text-[#00000099] p-0 m-0">Current Rent:</span>
       </p>
-      <p class="p-0 m-0 mb-[10px]">
-        <span class="text-[#00000099] p-0 m-0 mr-[15px]">Lease Status:</span>
+       <p class="p-0 m-0 mb-[10px]" v-if="selectedType === 'aggreement'">
+        <span class="text-[#00000099] p-0 m-0 mr-[15px]">Lease Status: {{selectedTenant.contractType}}</span>
+      </p>
+      <p class="p-0 m-0 mb-[10px]" v-else>
+        <span class="text-[#00000099] p-0 m-0 mr-[15px]">Request Type: {{selectedTenant.requestTypeName}}</span>
         <!-- <StatusButton :service-status="selectedTenant.serviceStatus" /> -->
-        {{ selectedTenant.serviceStatus }}
       </p>
+      
       <p class="p-0 m-0 mb-[10px]">
-        <span class="text-[#00000099] p-0 m-0 mr-[15px]">Documents:</span>
         <div class="bg-[#F9F9F9] flex flex-col  py-4 w-full justify-center  gap-4 items-center rounded-[10px]">
           <DocumentIcon />
           Contract Doc
@@ -180,32 +185,19 @@
         </div>
       </div>
     </div>
-    <div class="border-t-[0.75px] border-[#36363533] mt-4 flex">
-      <a-button
-        @click="() => updateServiceRequest(1)"
-        v-if="selectedTenant.serviceStatus == 'Pending'"
+    <div class="border-t-[0.75px] w-full gap-[10px] border-[#36363533] mt-4 flex" v-if="selectedType == 'request'">
+      <button
+        @click="HandleDeclineLease"
+        class="bg-[#ffffff] border-solid border-[1px] border-[#D0D5DD]  py-[8px] flex font-inter items-center justify-center text-[#000000] w-full mt-4 rounded-[8px]"
+      >
+        Decline
+      </button>
+      <button
+        
         class="bg-[#000130] py-[8px] flex font-inter items-center justify-center text-white w-full mt-4 rounded-[8px]"
       >
-        Set to Completed
-      </a-button>
-      <a-button
-        v-if="selectedTenant.serviceStatus == 'Terminate'"
-        class="bg-[#000130] py-[8px] flex font-inter items-center justify-center text-white w-full mt-4 rounded-[8px]"
-      >
-        Renew Request
-      </a-button>
-      <div class="flex" v-else>
-        <a-button
-          class="bg-[#000130] py-[8px] flex font-inter items-center justify-center text-white w-full mt-4 rounded-[8px]"
-        >
-          Revert to Pending
-        </a-button>
-        <a-button
-          class="bg-[#000130] py-[8px] flex font-inter items-center justify-center text-white w-full mt-4 rounded-[8px]"
-        >
-          Send Message
-        </a-button>
-      </div>
+        Approve Requests
+      </button>
     </div>
   </a-modal>
 
@@ -221,6 +213,8 @@ import { FetchLeases, fetchWaitingLeases, ApproveDeclineLease } from "@/api/leas
 import { useUserStore } from "@/store";
 import DocumentIcon from "@/components/icons/DocumentIcon.vue";
 import BasePagination from "@/components/BasePagination.vue";
+import { useToast } from "vue-toast-notification";
+
 export default {
   components: {
     "table-component": V2Table,
@@ -250,11 +244,28 @@ export default {
     },
     HandleDeclineLease() {
       const body = {
-        requestId: this.selectedPendingLease.contractRequestId,
+        requestId: this.selectedTenant.contractRequestId,
         status: 3
       }
       ApproveDeclineLease(body).then((response) => { 
         console.log(response.data)
+          if(response.responseCode == "00"){
+        this.toast.success('Successfully Approved')
+        this.showModal = false
+        }
+        
+      })
+    },
+     HandleApproveLease() {
+      const body = {
+        requestId: this.selectedTenant.contractRequestId,
+        status: 2
+      }
+      ApproveDeclineLease(body).then((response) => { 
+        if(response.responseCode == "00"){
+        this.toast.success('Successfully Approved')
+        this.showModal = false
+        }
       })
     },
     fetchData() {
@@ -269,12 +280,16 @@ export default {
         if (response.responseCode == "00") {
           this.data = response.agreements.map((lease) => ({
             name: lease.tenantName || "nill",
-            accommodataionName: lease.accommodataionName || "nill",
+            accommodataionName: lease.accommodataionName || lease.apartmentName,
             unitType: lease.unitType || "nill",
             rentRate: lease.rentRate || "nill",
             due: lease.endDate || "nill",
             startDate: lease.startDate || "nill",
             serviceStatus: lease.status || "nill",
+            contractReqType: lease.contractReqType,
+            requestTypeName: lease.requestTypeName,
+            contractType: lease.contractType,
+            contractRequestId: lease.contractRequestId || 'nill'
           }));
         } else handleError(response);
       });
@@ -300,7 +315,9 @@ export default {
   },
   data() {
     return {
+      toast: useToast(),
       selectedTenant: {},
+      selectedType : "aggreement",
       selectedPendingLease: {},
       waitingLeases: [],
       currentPage: 1,

@@ -28,7 +28,7 @@ export const fetchWaitingLeases = async (landlordId, query) => {
 };
 
 export const ApproveDeclineLease = async (body) => {
-  const url = "ContractRequest/Accept-Reject-Lease-Terminate-Request";
+  const url = "ContractRequest/AcceptRejectLeaseTerminateRequest";
   try {
     const response = await postApi(url, body);
     return response.data;
