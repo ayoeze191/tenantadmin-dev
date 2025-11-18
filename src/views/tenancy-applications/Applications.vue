@@ -24,7 +24,17 @@
                 :options="[
                   { label: 'All Status', value: 'All' },
                   { label: 'Completed', value: 'Completed' },
-                  { label: 'Pending', value: 'Pending' },
+                  { label: 'Awaiting Review', value: 'Awaiting Review' },
+                  {
+                    label: 'Confirm Move-in Date',
+                    value: 'Confirming Move-inDate',
+                  },
+                  {
+                    label: 'Awaiting Additional Documents',
+                    value: 'AwaitingAdditionalDocuments',
+                  },
+                  { label: 'Awaiting Payment', value: 'AwaitingPayment' },
+                  { label: 'Failed', value: 'Failed' },
                 ]"
                 @select="handleSelect"
               />
@@ -58,11 +68,12 @@
         :data-source="computedData"
       >
         <template #action="{ record }">
-          <a-button
+          <button
             class="bg-inherit text-black cursor-pointer"
             @click="() => showModal(record)"
-            >View Details</a-button
           >
+            View Details
+          </button>
         </template>
         <template #status="{ record }">
           <div class="flex justify-center">
@@ -115,19 +126,19 @@
       class="flex gap-[10px] mt-[5px] mb-[1rem] items-center rounded-[10px] px-[10px]"
       :class="{
         'bg-[#FEF9C3] border-[#854D0F] border-solid border-[0.5px] text-[#854D0F]':
-          selectedApplication.status == 'AwaitingAdditionalDocuments',
+          selectedApplication.status == 'Awaiting Additional Documents',
         'bg-[#F3E8FF] text-[#6D24A9] border-[#6D24A9] border-solid border-[1px] ':
           selectedApplication.status ==
-            'MoveInDateLandlordConfirmationPending' ||
-          selectedApplication.status == 'ConfirmingMove-inDate',
+            'MoveIn Date Landlord Confirmation Pending' ||
+          selectedApplication.status == 'Confirming Move-inDate',
         'bg-[#FEF9C3] border-solid  border-[1px] text-[#1D40AE] border-[#1D40AE]':
-          selectedApplication.status == 'AwaitingReview',
+          selectedApplication.status == 'Awaiting Review',
         'bg-red-700 text-red-300 border-red-300 border-solid border-[1px]':
           selectedApplication.status == 'Failed',
         'bg-[#DCFCE7] text-[#166434] border-[#166434] border-solid border-[1px] z-50 left-[30%]':
           selectedApplication.status == 'Completed',
         'bg-[#FEF9C3] text-[#854D0F] border-solid border-[1px] border-[#854D0F] z- left-[20%]':
-          selectedApplication.status == 'AwaitingPayment',
+          selectedApplication.status == 'Awaiting Payment',
       }"
     >
       <div class="m-0 p-0"><ExclamationCircleOutlined /></div>
@@ -423,19 +434,21 @@
       </div>
 
       <div v-if="stage == 4" class="mt-3 flex justify-end gap-3">
-        <Button
+        <button
           type="custom"
           class="border-solid border-[#36363633] px-[12px] py-[6px] rounded-[8px] border-gray-200 text-[#121212] border-[1.5px] box-border"
           @click="handleBack"
-          >Back</Button
         >
+          Back
+        </button>
         <div>
-          <a-button
+          <button
             :loading="generating"
             @click="HandleGenerateLease"
             class="px-3 py-[6px] bg-[#000130] flex items-center justify-center mr-[10px] text-[#FFFFFF] rounded-[8px]"
-            >Generate Lease</a-button
           >
+            Generate Lease
+          </button>
         </div>
       </div>
     </template>
@@ -534,6 +547,7 @@ import parsePhoneNumber from "libphonenumber-js";
 import moment from "moment";
 import IconPDFDoc from "@/components/icons/IconPDFDoc.vue";
 import confirm from "ant-design-vue/es/modal/confirm";
+import { data } from "autoprefixer";
 export default {
   components: {
     "table-component": V2Table,
@@ -550,9 +564,24 @@ export default {
     totalPages() {
       return Math.ceil(this.totalItemCount / this.pageSize) || 1;
     },
+    computedData() {
+      // STEP 1: apply search
+      let filtered = this.searchRequests(this.data, this.searchQuery);
+      console.log("Filtered after search:", filtered);
+      // STEP 2: apply status filter
+      console.log("Selected Status:", this.selectedStatus);
+      if (this.selectedStatus !== "All") {
+        filtered = filtered.filter(
+          (item) => item.status === this.selectedStatus
+        );
+      }
+      // STEP 3: apply pagination
+      return filtered;
+    },
   },
   data() {
     return {
+      data: [],
       movingdate: false,
       requestDocumentsOptions: [
         {
@@ -779,17 +808,16 @@ export default {
       store: useUserStore(),
 
       searchQuery: "",
-      selectedStatus: "All Status",
+      selectedStatus: "All",
       selectedDisplayType: "Grid",
-      computedData: [],
       AccommodationApplicationStatus: {
         0: "Failed", // Application submission failed or system error occurred
         1: "Awaiting Review", // Application has been submitted and is under review by landlord
-        2: "AwaitingAdditionalDocuments", // Landlord has requested additional documents from tenant
-        3: "MoveInDateLandlordConfirmationPending", // Application approved, awaiting landlord to confirm move-in date
-        4: "ConfirmingMove-inDate", // Landlord set different date, awaiting tenant confirmation
-        5: "AwaitingPayment", // Move-in date confirmed, awaiting security deposit payment
-        6: "AwaitingLeaseGeneration", // Payment received, awaiting lease document generation
+        2: "Awaiting AdditionalDocuments", // Landlord has requested additional documents from tenant
+        3: "MoveIn Date Landlord Confirmation Pending", // Application approved, awaiting landlord to confirm move-in date
+        4: "Confirming Move-inDate", // Landlord set different date, awaiting tenant confirmation
+        5: "Awaiting Payment", // Move-in date confirmed, awaiting security deposit payment
+        6: "Awaiting LeaseGeneration", // Payment received, awaiting lease document generation
         7: "Completed", // Lease generated and application process completed
         8: "Declined", // Application has been declined by landlord or tenant
         9: "Cancelled", // Application has been cancelled by tenant
@@ -866,6 +894,16 @@ export default {
     },
   },
   methods: {
+    searchRequests() {
+      if (!this.searchQuery) return this.data;
+      const lower = this.searchQuery.toLowerCase();
+      return this.data.filter((item) => {
+        return (
+          item.applicantName.toLowerCase().includes(lower) ||
+          item.propertyName.toLowerCase().includes(lower)
+        );
+      });
+    },
     async HandleGenerateLease() {
       this.generating = true;
       const response = await GenerateLease(
@@ -1029,6 +1067,23 @@ export default {
     showModal(app) {
       this.selectedApplication = app; // Remove .value
       this.modalOpen = true; // Remove .value
+      if (this.selectedApplication.status == "Awaiting Review") {
+        this.stage = 1;
+      } else if (
+        this.selectedApplication.status == "Awaiting AdditionalDocuments"
+      ) {
+        this.stage = 2;
+      } else if (
+        this.selectedApplication.status ==
+          "MoveIn Date Landlord Confirmation Pending" ||
+        this.selectedApplication.status == "Confirming Move-inDate"
+      ) {
+        this.stage = 3;
+      } else if (
+        this.selectedApplication.status == "Awaiting LeaseGeneration"
+      ) {
+        this.stage = 4;
+      }
     },
     formatPhoneNum(num) {
       if (!num) return num;
@@ -1070,7 +1125,7 @@ export default {
       this.fetchData(page); // 👈 Fetch data for the selected page
     },
     handleSelect(selected) {
-      this.selectedStatus = selected.label;
+      this.selectedStatus = selected.value;
       // Handle filtering logic based on selected.value
     },
     handleDisplaytypeSelect(selected) {
@@ -1089,35 +1144,31 @@ export default {
           if (response.responseCode == "00" && response.applications) {
             this.Applications = response.applications.items || [];
             this.totalItemCount = response.applications.totalItemCount || 0;
-
-            this.computedData = (response.applications.items || []).map(
-              (app) => {
-                return {
-                  applicantName: app.applicantName || "N/A",
-                  propertyName: app.propertyName || "N/A",
-                  unitId: app.unitId || "N/A",
-                  status:
-                    this.AccommodationApplicationStatus[app.status] ||
-                    "Unknown",
-                  AccommodationApplicationStatusDesc:
-                    this.AccommodationApplicationStatusDesc[app.status],
-                  email: app.email || "N/A",
-                  gender: app.gender || "N/A",
-                  phoneNo: app.phoneNo || "N/A",
-                  nationality: app.nationality || "N/A",
-                  applicationId: app.applicationId || "N/A",
-                };
-              }
-            );
+            this.data = (response.applications.items || []).map((app) => {
+              return {
+                applicantName: app.applicantName || "N/A",
+                propertyName: app.propertyName || "N/A",
+                unitId: app.unitId || "N/A",
+                status:
+                  this.AccommodationApplicationStatus[app.status] || "Unknown",
+                AccommodationApplicationStatusDesc:
+                  this.AccommodationApplicationStatusDesc[app.status],
+                email: app.email || "N/A",
+                gender: app.gender || "N/A",
+                phoneNo: app.phoneNo || "N/A",
+                nationality: app.nationality || "N/A",
+                applicationId: app.applicationId || "N/A",
+              };
+            });
           } else {
             console.error("Failed to fetch applications:", response);
-            this.computedData = [];
+            this.data = [];
             this.totalItemCount = 0;
           }
         })
         .catch((error) => {
           console.error("Error fetching applications:", error);
-          this.computedData = [];
+          this.data = [];
           this.totalItemCount = 0;
         });
     },
