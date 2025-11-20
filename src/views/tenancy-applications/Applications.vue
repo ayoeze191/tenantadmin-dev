@@ -338,24 +338,9 @@
     </a-tabs>
     <template #footer>
       <div v-if="stage == 1" class="mt-3 flex justify-end gap-3">
-        <button
-          @click="handleNext"
-          :disabled="
-            approving ||
-            declining ||
-            (selectedApplication.status == 'AwaitingAdditionalDocuments' &&
-              form.requestDocuments.length == 0) ||
-            selectedApplication.status == 'Completed'
-          "
+        <UniversalButton
+          label="Next"
           :loading="approving"
-          class="bg-[#000130] text-[white] disabled:cursor-not-allowed disabled:text-white leading-[24px] font-inter px-3 flex items-center justify-center py-[6px] rounded-[8px] text-[14px] font-medium"
-        >
-          Next
-        </button>
-        <button
-          type="danger"
-          :loading="declining"
-          @click="declineData"
           :disabled="
             approving ||
             declining ||
@@ -363,108 +348,138 @@
               form.requestDocuments.length == 0) ||
             selectedApplication.status == 'Completed'
           "
-          class="bg-[#A00000] disabled:text-white disabled:cursor-not-allowed font-inter flex items-center justify-center px-3 py-[6px] rounded-[8px] text-[14px] font-medium text-white"
+          @click="handleNext"
+          customClass="bg-[#000130] text-white leading-[24px] px-3 py-[6px] rounded-[8px] text-[14px]"
         >
-          Decline
-        </button>
-        <button
+        </UniversalButton>
+        <UniversalButton
+          label="Decline"
+          :loading="declining"
+          :disabled="
+            approving ||
+            declining ||
+            (selectedApplication.status == 'AwaitingAdditionalDocuments' &&
+              form.requestDocuments.length == 0) ||
+            selectedApplication.status == 'Completed'
+          "
+          @click="declineData"
+          customClass="bg-[#A00000] disabled:text-white disabled:cursor-not-allowed font-inter flex items-center justify-center px-3 py-[6px] rounded-[8px] text-[14px] font-medium text-white"
+        />
+
+        <UniversalButton
+          :disabled="
+            requesting ||
+            selectedApplication.status === 'AwaitingAdditionalDocuments'
+          "
           @click="
             () => {
               modalOpen = false;
               requestModalOpen = true;
             }
           "
-          :disabled="
-            requesting ||
-            selectedApplication.status == 'AwaitingAdditionalDocuments'
-          "
-          type="custom"
-          class="border-solid disabled:cursor-not-allowed font-[500] font-inter border-[#36363633] flex items-center justify-center px-[12px] py-[6px] rounded-[8px] border-gray-200 text-[#121212] border-[1.5px] box-border"
+          customClass="border-solid disabled:cursor-not-allowed font-[500] font-inter border-[#36363633] flex items-center justify-center px-[12px] py-[6px] rounded-[8px] border-gray-200 text-[#121212] border-[1.5px] box-border"
         >
           Request Additional Document
-        </button>
+        </UniversalButton>
       </div>
       <div v-if="stage == 2" class="mt-3 flex justify-end gap-3">
-        <Button
-          type="custom"
-          class="border-solid border-[#36363633] px-[12px] py-[6px] rounded-[8px] border-gray-200 text-[#121212] border-[1.5px] box-border"
+        <!-- Back Button -->
+        <UniversalButton
           @click="handleBack"
-          >Back</Button
+          customClass="border-solid border-[#36363633] px-[12px] py-[6px] rounded-[8px] border-gray-200 text-[#121212] border-[1.5px] box-border"
         >
+          Back
+        </UniversalButton>
+
         <div>
-          <Button
+          <!-- Next Button -->
+          <UniversalButton
             @click="handleNext"
-            class="bg-[#000130] mr-[10px] font-inter px-3 py-[6px] rounded-[8px] text-[14px] font-medium text-white"
+            customClass="bg-[#000130] mr-[10px] font-inter px-3 py-[6px] rounded-[8px] text-[14px] font-medium text-white"
           >
             Next
-          </Button>
-          <Button
-            type="danger"
-            class="bg-[#A00000] font-inter px-3 py-[6px] rounded-[8px] text-[14px] font-medium text-white"
-            >Decline</Button
+          </UniversalButton>
+
+          <!-- Decline Button -->
+          <UniversalButton
+            @click="declineData"
+            customClass="bg-[#A00000] font-inter px-3 py-[6px] rounded-[8px] text-[14px] font-medium text-white"
           >
+            Decline
+          </UniversalButton>
         </div>
       </div>
+
       <div v-if="stage == 3" class="mt-3 flex justify-end gap-3">
-        <Button
-          type="custom"
-          class="border-solid border-[#36363633] px-[12px] py-[6px] rounded-[8px] border-gray-200 text-[#121212] border-[1.5px] box-border"
+        <!-- Back Button -->
+        <UniversalButton
           @click="handleBack"
-          >Back</Button
+          customClass="border-solid border-[#36363633] px-[12px] py-[6px] rounded-[8px] border-gray-200 text-[#121212] border-[1.5px] box-border"
         >
+          Back
+        </UniversalButton>
+
         <div>
-          <Button
+          <!-- Confirm Date Button -->
+          <UniversalButton
             :loading="movingdate"
             @click="() => handleMovingDate(true)"
-            class="px-3 py-[6px] bg-[#000130] mr-[10px] text-[#FFFFFF] rounded-[8px]"
-            >Confirm Date</Button
+            customClass="px-3 py-[6px] bg-[#000130] mr-[10px] text-[#FFFFFF] rounded-[8px]"
           >
-          <Button
+            Confirm Date
+          </UniversalButton>
+
+          <!-- Decline Button -->
+          <UniversalButton
             @click="
               () => {
                 moveInDateModalOpen = true;
                 modalOpen = false;
               }
             "
-            type="danger"
-            class="bg-[#A00000] text-white font-inter font-medium rounded-[8px] px-[12px] py-[6px]"
-            >Decline</Button
+            customClass="bg-[#A00000] text-white font-inter font-medium rounded-[8px] px-[12px] py-[6px]"
           >
+            Decline
+          </UniversalButton>
         </div>
       </div>
 
       <div v-if="stage == 4" class="mt-3 flex justify-end gap-3">
-        <button
-          type="custom"
-          class="border-solid border-[#36363633] px-[12px] py-[6px] rounded-[8px] border-gray-200 text-[#121212] border-[1.5px] box-border"
+        <!-- Back Button -->
+        <UniversalButton
           @click="handleBack"
+          customClass="border-solid border-[#36363633] px-[12px] py-[6px] rounded-[8px] border-gray-200 text-[#121212] border-[1.5px] box-border"
         >
           Back
-        </button>
+        </UniversalButton>
+
         <div>
-          <button
+          <!-- Generate Lease Button -->
+          <UniversalButton
             :loading="generating"
             @click="HandleGenerateLease"
-            class="px-3 py-[6px] bg-[#000130] flex items-center justify-center mr-[10px] text-[#FFFFFF] rounded-[8px]"
+            customClass="px-3 py-[6px] bg-[#000130] flex items-center justify-center mr-[10px] text-[#FFFFFF] rounded-[8px]"
           >
             Generate Lease
-          </button>
+          </UniversalButton>
         </div>
       </div>
     </template>
   </a-modal>
+
   <a-modal
     wrapClassName="application-page-modal"
     v-model:open="requestModalOpen"
     :title="`Request Additional Documents`"
     :centered="true"
-    @ok="handleRequestDocument"
+    :footer="null"
   >
     <div>
       <div class="flex items-center justify-between">
         <span class="modal-title"></span>
         <span></span>
       </div>
+
       <div class="">
         <a-checkbox-group
           class="flex flex-col gap-4 mt-4"
@@ -473,13 +488,14 @@
           :options="requestDocumentsOptions"
         />
       </div>
+
       <div class="flex gap-2 items-center p-0 mt-4">
         <a-input
           v-model:value="form.otherDocument"
           class="rounded-[6px] border-[#D8D8D8] border-[1px] border-solid h-[48px]"
           placeholder="Add Document"
         />
-        <button
+        <UniversalButton
           @click="
             requestDocumentsOptions.push({
               label: form.otherDocument,
@@ -487,19 +503,30 @@
             });
             form.otherDocument = '';
           "
-          class="flex items-center justify-center size-[48px] rounded-[6px]"
+          customClass="flex items-center justify-center w-[48px] h-[48px] rounded-[6px]"
         >
-          <PlusOutlined class="" />
-        </button>
+          <PlusOutlined />
+        </UniversalButton>
       </div>
-      <!-- <div class="mt-[1rem] flex gap-[10px] items-center">
-        <button
-          @click="showRequestDocumentModal = false"
-          class="bg-[#D1D5DB] flex-[0.8] leading-[28px] py-[8px] px-[42.5px] rounded-[4px] font-sf font-[600] text-[#FFFFFF]"
+
+      <!-- Custom Footer -->
+      <div class="flex justify-end gap-2 mt-6">
+        <!-- Cancel Button -->
+        <UniversalButton
+          @click="requestModalOpen = false"
+          customClass="border border-gray-200 text-[#121212] px-4 py-2 rounded-[6px]"
         >
           Cancel
-        </button>
-      </div> -->
+        </UniversalButton>
+
+        <!-- Ok Button -->
+        <UniversalButton
+          @click="handleRequestDocument"
+          customClass="bg-[#000130] text-white px-4 py-2 rounded-[6px]"
+        >
+          Ok
+        </UniversalButton>
+      </div>
     </div>
   </a-modal>
 
@@ -545,6 +572,7 @@ import { useUserStore } from "@/store";
 import { AccomodationApplications } from "@/api/dashboard";
 import parsePhoneNumber from "libphonenumber-js";
 import moment from "moment";
+import UniversalButton from "@/components/Button/UniversalButton.vue";
 import IconPDFDoc from "@/components/icons/IconPDFDoc.vue";
 import confirm from "ant-design-vue/es/modal/confirm";
 import { data } from "autoprefixer";
@@ -556,6 +584,7 @@ export default {
     applicationCard,
     BasePagination,
     IconPDFDoc,
+    UniversalButton,
   },
   created() {
     this.fetchData();
@@ -1158,6 +1187,40 @@ export default {
                 phoneNo: app.phoneNo || "N/A",
                 nationality: app.nationality || "N/A",
                 applicationId: app.applicationId || "N/A",
+                intendedMoveInDate: app.intendedMoveInDate || "N/A",
+                currentAddress: app.currentAddress || "N/A",
+                whatsAppNo: app.whatsAppNo || "N/A",
+                nameOfEmployer: app.nameOfEmployer || "N/A",
+                apprMonthlyIncome: app.apprMonthlyIncome || "N/A",
+                budgetForAccommodation: app.budgetForAccommodation || "N/A",
+                workSupervisorEmail: app.workSupervisorEmail || "N/A",
+                workSupervisorPhoneNo: app.workSupervisorPhoneNo || "N/A",
+                lengthOfTimeWithEmployer: app.lengthOfTimeWithEmployer || "N/A",
+                currentLandLordName: app.currentLandLordName || "N/A",
+                currentLandLordEmail: app.currentLandLordEmail || "N/A",
+                emergencyFullName: app.emergencyFullName || "N/A",
+                emergencyPhoneNo: app.emergencyPhoneNo || "N/A",
+                emergencyEmail: app.emergencyEmail || "N/A",
+                emergencyRelationship: app.emergencyRelationship || "N/A",
+                guarantor1FullName: app.guarantor1FullName || "N/A",
+                guarantor1PhoneNo: app.guarantor1PhoneNo || "N/A",
+                guarantor1Email: app.guarantor1Email || "N/A",
+                guarantor1Occupation: app.guarantor1Occupation || "N/A",
+                guarantor2FullName: app.guarantor2FullName || "N/A",
+                guarantor2PhoneNo: app.guarantor2PhoneNo || "N/A",
+                guarantor2Email: app.guarantor2Email || "N/A",
+                guarantor2Occupation: app.guarantor2Occupation || "N/A",
+                haveYoubeenToCourtByLandLord:
+                  app.haveYoubeenToCourtByLandLord || "N/A",
+                haveYoueverDamageApartmentOrMovestillowning:
+                  app.haveYoueverDamageApartmentOrMovestillowning || "N/A",
+                doYouHaveTotalMoveinAmount:
+                  app.doYouHaveTotalMoveinAmount || "N/A",
+                doYouHavePets: app.doYouHavePets || "N/A",
+                doYouSmoke: app.doYouSmoke || "N/A",
+                isYourCurrentRentUpToDate:
+                  app.isYourCurrentRentUpToDate || "N/A",
+                haveYouEverBeenEvicted: app.haveYouEverBeenEvicted || "N/A",
               };
             });
           } else {

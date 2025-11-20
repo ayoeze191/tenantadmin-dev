@@ -47,7 +47,7 @@
           {{ app.applicantName }}
         </p>
         <p class="p-0 m-0 text-[12px] text-[#464646]">
-          {{ app.gender || "Male" }}, 24
+          {{ app.gender || "Male" }}
         </p>
       </div>
       <div
@@ -76,18 +76,21 @@
       </div>
     </div>
     <div class="px-2.5 pb-[10px]">
-      <button
+      <Button
+        label="View Full Details"
+        customClass="bg-[#FFFFFF] border-[#36363633] border-[0.75px] w-full text-[12px] text-[#000] mt-2"
         @click="$emit('showModal')"
-        class="py-[6px] bg-[#FFFFFF] border-[#36363633] border-solid border-[0.75px] w-full text-[12px] rounded-[6px] mt-2 text-center text-[#000000] font-inter font-medium leading-[100%]"
-      >
-        View Full Details
-      </button>
+      ></Button>
     </div>
   </div>
 </template>
 
 <script setup>
+import Button from "./Button/UniversalButton.vue";
 const props = defineProps({
+  components: {
+    Button,
+  },
   app: {
     type: Object,
     required: false,

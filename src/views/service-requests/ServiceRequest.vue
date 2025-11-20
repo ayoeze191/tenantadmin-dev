@@ -112,7 +112,12 @@
     <div
       class="border-[#36363633] border-[0.75px] bg-[#FFFFFF] py-[10px] gap-2.5 flex items-center rounded-[16px] border-solid border-b-[0.75px] px-[14px]"
     >
-      <div><img src="/src/assets/TenantImage.svg" /></div>
+      <div>
+        <img
+          class="w-[34px] h-[34px] rounded-[6px]"
+          :src="selectedTenant.imageUrls[0]"
+        />
+      </div>
       <div class="h-full">
         <p class="m-0 p-0 text-[#000000] font-inter font-medium leading-[100%]">
           {{ selectedTenant.tenant || "Frank Thomas" }}
@@ -154,9 +159,33 @@
         <span class="text-[#00000099] p-0 m-0 mr-[15px]"
           >Service Requests Status:</span
         >
-        <StatusButton :service-status="selectedTenant.serviceStatus" />
+        <!-- <StatusButton :service-status="selectedTenant.serviceStatus" /> -->
+        <a-dropdown>
+          <template #overlay>
+            <a-menu>
+              <a-menu-item
+                v-for="(status, index) in serviceLiterals"
+                :key="index"
+                @click="() => HandleUpdateServiceRequest(index)"
+                >{{ status }}
+              </a-menu-item>
+            </a-menu>
+          </template>
+          <button
+            class="bg-[#C38201] px-2 py-[4px] rounded-[4px] text-white font-inter leading-[100%] font-[500] text-[10px]"
+          >
+            {{ selectedTenant.serviceStatus }}
+          </button>
+        </a-dropdown>
       </p>
-      <div v-if="selectedTenant.serviceStatus == 'Completed'">
+      <p>
+        <span class="text-[#00000099] p-0 m-0 mr-[15px]">Image</span>:
+        <img
+          :src="selectedTenant.imageUrls[0]"
+          class="w-[146px] h-[117px] rounded-[4px] bg-cover"
+        />
+      </p>
+      <div>
         <p
           class="m-0 p-0 text-[#000000] text-[14px] font-inter font-medium leading-[100%] mt-4 mb-3"
         >
@@ -179,23 +208,22 @@
       </div>
     </div>
     <div class="border-t-[0.75px] border-[#36363533] mt-4 flex">
-      <button
+      <!-- <button
         @click="() => HandleUpdateServiceRequest(3)"
         v-if="selectedTenant.serviceStatus == 'Pending'"
         class="bg-[#000130] py-[8px] flex font-inter items-center justify-center text-white w-full mt-4 rounded-[8px]"
       >
         Set to Completed
-      </button>
-      <div v-if="selectedTenant.serviceStatus == 'Terminate'"></div>
-      <div class="flex w-full gap-2.5" v-else>
-        <button
-          @click="() => HandleUpdateServiceRequest(1)"
+      </button> -->
+      <!-- <div v-if="selectedTenant.serviceStatus == 'Terminate'"></div> -->
+      <div class="flex w-full gap-2.5">
+        <!-- <button
+          @click="() => HandleUpdateServiceRequest(2)"
           class="bg-[#000130] py-[8px] flex font-inter items-center justify-center text-white w-full mt-4 rounded-[8px]"
         >
           Revert to Pending
-        </button>
+        </button> -->
         <button
-          v-if="selectedTenant.serviceStatus == 'Pending'"
           class="bg-[#000130] py-[8px] flex font-inter items-center justify-center text-white w-full mt-4 rounded-[8px]"
         >
           Send Message
@@ -219,6 +247,7 @@ import { useUserStore } from "@/store";
 import BasePagination from "@/components/BasePagination.vue";
 import StatusButton from "@/components/icons/StatusBadge.vue";
 import BaseInput from "@/components/BaseInput.vue";
+import { useToast } from "vue-toast-notification";
 export default {
   components: {
     "table-component": V2Table,
@@ -292,6 +321,7 @@ export default {
               accommodationName: request.accommodationName,
               unitId: request.unitId,
               serviceType: request.serviceType,
+              imageUrls: [...request.imageUrls],
               description: request.description,
               serviceStatus:
                 this.serviceLiterals[request.serviceStatus] || "Unknown",
@@ -308,11 +338,19 @@ export default {
         serviceRequests: this.selectedTenant.serviceRequestId,
         status: toType,
       };
-      updateServiceRequest(body).then().catch();
+      updateServiceRequest(body)
+        .then((res) => {
+          if (res.responseCode == "00") {
+            this.toast.success("Successfully updated");
+            this.selectedTenant["serviceStatus"] = this.serviceLiterals[toType];
+          }
+        })
+        .catch();
     },
   },
   data() {
     return {
+      toast: useToast(),
       searchQuery: "",
       currentPage: 1,
       pageSize: 6,

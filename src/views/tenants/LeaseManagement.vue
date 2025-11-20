@@ -193,6 +193,7 @@
         Decline
       </button>
       <button
+        @click="HandleDeclineLease"
         
         class="bg-[#000130] py-[8px] flex font-inter items-center justify-center text-white w-full mt-4 rounded-[8px]"
       >
@@ -250,7 +251,9 @@ export default {
       ApproveDeclineLease(body).then((response) => { 
         console.log(response.data)
           if(response.responseCode == "00"){
-        this.toast.success('Successfully Approved')
+        this.toast.info('Successfully Declined')
+    this.fetchData();
+        
         this.showModal = false
         }
         
@@ -265,6 +268,8 @@ export default {
         if(response.responseCode == "00"){
         this.toast.success('Successfully Approved')
         this.showModal = false
+    this.fetchData();
+
         }
       })
     },
