@@ -335,7 +335,7 @@ export default {
     },
     HandleUpdateServiceRequest(toType) {
       const body = {
-        serviceRequests: this.selectedTenant.serviceRequestId,
+        serviceRequestId: this.selectedTenant.serviceRequestId,
         status: toType,
       };
       updateServiceRequest(body)

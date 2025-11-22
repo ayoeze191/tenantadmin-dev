@@ -262,7 +262,7 @@ export default {
       showModal: false,
       totalItemCount: 0,
       currentPage: 1,
-      pageSize: 9,
+      pageSize: 8,
       selectedTenant: null,
       headers: [
         {
