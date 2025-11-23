@@ -409,35 +409,61 @@
       >
         <div v-if="stage == 4" class="flex flex-col gap-2">
           <div class="flex flex-col">
-            <h2 class="font-medium uppercase text-[1rem] font-redwing text-black">
-            UPLOAD SIGNED LEASE PDF
-          </h2>
+            <h2
+              class="font-medium uppercase text-[1rem] font-redwing text-black"
+            >
+              UPLOAD SIGNED LEASE PDF
+            </h2>
             <a-upload-dragger
-                v-model:fileList="leaseFile"
-                name="leaseFile"
-                :multiple="false"
-                :maxCount="1"
-                action=""
-                @change="handleChange"
-                @drop="handleDrop"
-              >
-                <p class="ant-upload-drag-icon">
-                  <inbox-outlined></inbox-outlined>
-                </p>
-                <p class="ant-upload-text">Click or drag to upload documents</p>
-                <p class="ant-upload-hint">
-                  Upload a pre-signed lease agreement document
-                </p>
-              </a-upload-dragger>
+              v-if="leaseFile == null || !leaseFile[0]"
+              class="upload-dragger"
+              :fileList="leaseFile"
+              name="leaseFile"
+              :multiple="false"
+              :maxCount="1"
+              :iconRender="customIconRender"
+              :customRequest="handleUpload"
+              @change="handleChange"
+              @drop="handleDrop"
+            >
+              <p class="ant-upload-drag-icon">
+                <inbox-outlined></inbox-outlined>
+              </p>
+              <p class="ant-upload-text">Click or drag to upload documents</p>
+              <p class="ant-upload-hint">
+                Upload a pre-signed lease agreement document
+              </p>
+            </a-upload-dragger>
+            <a-upload
+              v-else
+              :fileList="leaseFile"
+              name="leaseFile"
+              :multiple="false"
+              :maxCount="1"
+              :customRequest="handleUpload"
+              :iconRender="customIconRender"
+              @change="handleChange"
+              @drop="handleDrop"
+            >
+              <a-button>
+                <upload-outlined></upload-outlined>
+                Reupload
+              </a-button>
+            </a-upload>
           </div>
           <div>
-            <h2 class="font-medium uppercase text-[1rem] font-redwing text-black">
-           {{ tab.tabDetails.label }}
-          </h2>
+            <h2
+              class="font-medium uppercase text-[1rem] font-redwing text-black"
+            >
+              {{ tab.tabDetails.label }}
+            </h2>
             <div class="bg-[#F9F9F9] p-3 rounded-lg flex flex-col gap-2.5">
               <div v-for="key in tab.tabDetails.keys">
                 <p class="font-semibold text-black">{{ key }}</p>
-                <p>{{ selectedApplication[key] }}</p>
+                <p v-if="key == 'intendedMoveInDate'">
+                  {{ formatDate(selectedApplication[key]) || "N/A" }}
+                </p>
+                <p v-else>{{ selectedApplication[key] }}</p>
               </div>
             </div>
           </div>
@@ -452,11 +478,11 @@
                 tab.tabTitle
               )
             "
-            class="flex gap-3 flex-wrap justify-between items-start"
+            class="flex gap-3 flex-wrap justify-start items-start"
           >
             <div
               v-for="doc in tab.tabDetails"
-              class="bg-[#F6F6F6] flex-1 min-w-[130px] h-[7rem] px-3.5 py-2 flex flex-col flex-shrink-0 justify-around items-center rounded-lg font-medium text-[#121212] max-[1000px]:w-[45%]"
+              class="bg-[#F6F6F6] min-w-[130px] h-[7rem] px-3.5 py-2 flex flex-col flex-shrink-0 justify-around items-center rounded-lg font-medium text-[#121212] max-[1000px]:w-[45%] w-[40%]"
             >
               <IconPDFDoc />
               <span>{{ doc.name }}</span>
@@ -515,17 +541,22 @@
           </div>
         </div>
 
-        <div v-if="stage == 1" class="flex justify-end gap-3 max-h-fit">
+        <div
+          v-if="stage == 1"
+          class="ant-modal-footer flex justify-end gap-3 max-h-fit"
+        >
           <Button @click="handleNext">Next</Button>
           <Button type="danger">Decline</Button>
           <Button
             type="custom"
             class="border-gray-200 border-[1.75px] box-border text-[#121212]"
-            @click="handleReqDoc"
             >Request Additional Document</Button
           >
         </div>
-        <div v-if="stage == 2" class="flex justify-between gap-3">
+        <div
+          v-if="stage == 2"
+          class="ant-modal-footer flex justify-between gap-3"
+        >
           <Button
             type="custom"
             class="border-gray-200 border-[1.5px] box-border"
@@ -537,7 +568,10 @@
             <Button type="danger">Decline</Button>
           </div>
         </div>
-        <div v-if="stage == 3" class="flex justify-between gap-3">
+        <div
+          v-if="stage == 3"
+          class="ant-modal-footer flex justify-between gap-3"
+        >
           <Button
             type="custom"
             class="border-gray-200 border-[1.5px] box-border"
@@ -549,11 +583,14 @@
             <Button type="danger">Decline</Button>
           </div>
         </div>
-        <div v-if="stage == 4" class="flex justify-between gap-3 max-h-fit">
+        <div
+          v-if="stage == 4"
+          class="ant-modal-footer flex justify-between gap-3 max-h-fit"
+        >
           <Button
             type="custom"
             class="border-gray-200 border-[1.75px] box-border text-[#121212]"
-            @click="handleReqDoc"
+            @click="handleBack"
             >Back</Button
           >
           <Button @click="handleNext">Generate Lease</Button>
@@ -578,6 +615,7 @@ import { useRoute } from "vue-router";
 import { AccomodationApplications } from "@/api/dashboard";
 
 import { message } from "ant-design-vue";
+import { h } from "vue";
 
 import parsePhoneNumber from "libphonenumber-js";
 import moment from "moment";
@@ -828,17 +866,20 @@ export default {
     function showModal(app) {
       selectedApplication.value = app;
       selectedMoveInDate.value = dayjs(app.intendedMoveInDate);
+      // console.log(selectedMoveInDate)
       modalOpen.value = true;
     }
 
     const handleOk = () => {
       modalOpen.value = false;
       stage.value = 1;
+      leaseFile.value = null;
     };
 
     const handleCancel = () => {
       modalOpen.value = false;
       stage.value = 1;
+      leaseFile.value = null;
     };
 
     return {
@@ -933,16 +974,14 @@ export default {
         this.modalOpen.value = false;
       }
 
-      console.log(this.selectedMoveInDate.value);
+      // console.log(this.selectedMoveInDate);
     },
     handleBack(event) {
       this.stage = this.stage - 1;
     },
-
-    handleReqDoc() {},
-
-    handleDecline() {},
     handleChange(info) {
+      this.leaseFile = [...info.fileList];
+      console.log(this.leaseFile);
       const status = info.file.status;
       if (status !== "uploading") {
         console.log(info.file, info.fileList);
@@ -955,6 +994,17 @@ export default {
     },
     handleDrop(e) {
       console.log(e);
+    },
+
+    async handleUpload({ file, onSuccess, onError }) {
+      try {
+        console.log("got here");
+        file.status = "done";
+        console.log((this.leaseFile[0].status = "done"));
+        onSuccess("ok, let's go!");
+      } catch (error) {
+        onError("no work");
+      }
     },
 
     formatPhoneNum(num) {
@@ -974,6 +1024,10 @@ export default {
       return res;
     },
 
+    customIconRender({ file }) {
+      return h(IconPDFDoc);
+    },
+
     formatDate(ts) {
       if (ts) {
         const res = moment(ts);
@@ -989,6 +1043,9 @@ export default {
 </script>
 
 <style>
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 .application-page-modal * {
   font-family: inter, ui-sans-serif, system-ui, sans-serif;
 }
@@ -1043,7 +1100,7 @@ export default {
 }
 
 .ant-modal-root > .application-page-modal .ant-modal-footer {
-  margin-top: 3rem;
+  margin-top: 0.75rem;
 }
 
 .application-page-modal .ant-tabs-tab {
@@ -1051,10 +1108,38 @@ export default {
   /* padding: 0; */
 }
 
-.application-page-modal .ant-upload-wrapper {
+.application-page-modal .ant-upload {
   width: 70%;
   max-width: 305px;
-  padding: 0 .5rem;
+  padding: 0 0.5rem;
   box-sizing: border-box;
+}
+
+.ant-modal-root > .application-page-modal .ant-upload-wrapper {
+  display: flex;
+  flex-direction: row-reverse;
+  width: 100%;
+  max-width: none;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ant-modal-root > .application-page-modal .ant-upload-list-item-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.ant-modal-root > .application-page-modal .upload-dragger {
+  margin-right: auto;
+}
+
+.ant-modal-root > .application-page-modal .ant-upload-list-item {
+  @apply bg-[#F6F6F6] min-w-[130px] px-3.5 py-2 flex flex-col flex-shrink-0 justify-around items-center rounded-lg font-medium text-[#121212] [@media(min-width:1000px)]:w-[45%] w-[40%];
+  height: fit-content !important;
+}
+
+.ant-modal-root > .application-page-modal .ant-upload > .ant-btn {
+  display: flex;
+  align-items: center;
 }
 </style>
