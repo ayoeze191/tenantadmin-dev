@@ -11,10 +11,6 @@
           :total-item-count="totalItemCount"
           title="All Applications"
         >
-        <table-header
-          :total-item-count="totalItemCount"
-          title="All Applications"
-        >
           <div class="flex justify-between w-full items-center">
             <a-input
               v-model:value="searchQuery"
@@ -31,17 +27,6 @@
                 :options="[
                   { label: 'All Status', value: 'All' },
                   { label: 'Completed', value: 'Completed' },
-                  { label: 'Awaiting Review', value: 'Awaiting Review' },
-                  {
-                    label: 'Confirm Move-in Date',
-                    value: 'Confirming Move-inDate',
-                  },
-                  {
-                    label: 'Awaiting Additional Documents',
-                    value: 'AwaitingAdditionalDocuments',
-                  },
-                  { label: 'Awaiting Payment', value: 'AwaitingPayment' },
-                  { label: 'Failed', value: 'Failed' },
                   { label: 'Awaiting Review', value: 'Awaiting Review' },
                   {
                     label: 'Confirm Move-in Date',
@@ -78,11 +63,6 @@
           :app="value"
           @showModal="() => showModal(value)"
         />
-        <applicationCard
-          v-for="value in computedData"
-          :app="value"
-          @showModal="() => showModal(value)"
-        />
       </div>
       <table-component
         v-if="selectedDisplayType == 'List'"
@@ -91,36 +71,6 @@
         :data-source="computedData"
       >
         <template #action="{ record }">
-          <button
-            class="bg-inherit text-black cursor-pointer"
-            @click="() => showModal(record)"
-          >
-            View Details
-          </button>
-        </template>
-        <template #status="{ record }">
-          <div class="flex justify-center">
-            <button
-              :class="{
-                'bg-[#FEF9C3] border-[#854D0F] border-solid border-[0.5px] text-[#854D0F]':
-                  record.status == 'AwaitingAdditionalDocuments',
-                'bg-[#F3E8FF] text-[#6D24A9] border-[#6D24A9] border-solid border-[1px] ':
-                  record.status == 'MoveInDateLandlordConfirmationPending' ||
-                  record.status == 'ConfirmingMove-inDate',
-                'bg-[#FEF9C3] border-solid  border-[1px] text-[#1D40AE] border-[#1D40AE]':
-                  record.status == 'AwaitingReview',
-                'bg-red-700 text-red-300 border-red-300 border-solid border-[1px]':
-                  record.status == 'Failed',
-                'bg-[#DCFCE7] text-[#166434] border-[#166434] border-solid border-[1px] z-50 left-[30%]':
-                  record.status == 'Completed',
-                'bg-[#FEF9C3] text-[#854D0F] border-solid border-[1px] border-[#854D0F] z- left-[20%]':
-                  record.status == 'AwaitingPayment',
-              }"
-              class="px-3 py-1 rounded-[8px] text-[12px] font-medium"
-            >
-              {{ record.status }}
-            </button>
-          </div>
           <button
             class="bg-inherit text-black cursor-pointer"
             @click="() => showModal(record)"
@@ -386,95 +336,6 @@
         </div>
       </a-tab-pane>
     </a-tabs>
-  </a-modal>
-
-  <a-modal
-    wrapClassName="application-page-modal"
-    v-model:open="requestModalOpen"
-    :title="`Request Additional Documents`"
-    :centered="true"
-    :footer="null"
-  >
-    <div>
-      <div class="flex items-center justify-between">
-        <span class="modal-title"></span>
-        <span></span>
-      </div>
-
-      <div class="">
-        <a-checkbox-group
-          class="flex flex-col gap-4 mt-4"
-          v-model:value="form.requestDocuments"
-          name="checkboxgroup"
-          :options="requestDocumentsOptions"
-        />
-      </div>
-
-      <div class="flex gap-2 items-center p-0 mt-4">
-        <a-input
-          v-model:value="form.otherDocument"
-          class="rounded-[6px] border-[#D8D8D8] border-[1px] border-solid h-[48px]"
-          placeholder="Add Document"
-        />
-        <UniversalButton
-          @click="
-            requestDocumentsOptions.push({
-              label: form.otherDocument,
-              value: form.otherDocument,
-            });
-            form.otherDocument = '';
-          "
-          customClass="flex items-center justify-center w-[48px] h-[48px] rounded-[6px]"
-        >
-          <PlusOutlined />
-        </UniversalButton>
-      </div>
-
-      <!-- Custom Footer -->
-      <div class="flex justify-end gap-2 mt-6">
-        <!-- Cancel Button -->
-        <UniversalButton
-          @click="requestModalOpen = false"
-          customClass="border border-gray-200 text-[#121212] px-4 py-2 rounded-[6px]"
-        >
-          Cancel
-        </UniversalButton>
-
-        <!-- Ok Button -->
-        <UniversalButton
-          @click="handleRequestDocument"
-          customClass="bg-[#000130] text-white px-4 py-2 rounded-[6px]"
-        >
-          Ok
-        </UniversalButton>
-      </div>
-    </div>
-  </a-modal>
-
-  <a-modal
-    v-model:open="moveInDateModalOpen"
-    :title="'Request Move In Date'"
-    :centered="true"
-    @ok="
-      () => {
-        handleMovingDate(false);
-      }
-    "
-    wrapClassName="application-page-modal"
-  >
-    <div>
-      <div>
-        <p class="m-0 text-[#404164] text-[16px] font-sf">
-          Move-In Date(Tenant’s Preferred :
-          {{ selectedApplication.intendedMoveInDate }})
-        </p>
-        <a-date-picker
-          v-model:value="form.moveInDate"
-          class="rounded-[6px] mt-[4px] border-[#D8D8D8] border-[1px] w-full border-solid h-[48px]"
-          placeholder="Add Document"
-        />
-      </div>
-    </div>
   </a-modal>
 </template>
 
