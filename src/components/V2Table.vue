@@ -80,6 +80,13 @@ const computedColumns = computed(() => {
 </script>
 
 <style scoped>
+:deep(.ant-table-cell) {
+  line-height: 100% !important;
+  font-size: 14px !important;
+  color: #000000 !important;
+  font-family: "Inter", sans-serif !important;
+  font-weight: 500 !important;
+}
 :deep(.ant-table-thead) > tr > th {
   color: #00000080 !important;
   font-family: "Inter", sans-serif !important;
@@ -87,6 +94,7 @@ const computedColumns = computed(() => {
   font-size: 14px !important;
   line-height: 20px !important;
 }
+
 :deep(.ant-table) {
   height: 100% !important;
 }

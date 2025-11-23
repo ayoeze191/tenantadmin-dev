@@ -26,7 +26,7 @@
             <div class="relative flex justify-center items-center group">
               <!-- Hidden div -->
               <div
-                class="absolute text-[12px] z-10 right-2 top-0 p-5 border-[0.75px] border-solid rounded-[16px] bg-white opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300"
+                class="absolute z-[50] text-[12px] right-2 top-0 p-5 border-[0.75px] border-solid rounded-[16px] bg-white opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300"
               >
                 <div
                   class="flex items-center gap-[8px] p-[10px] rounded-[10px] border-[0.75px] border-solid border-[#36363633]"
@@ -35,7 +35,7 @@
                     <img src="/src/assets/TenantImage.svg" />
                   </div>
                   <div>
-                    <p class="m-0 p-0 text-[]">
+                    <p class="m-0 p-0">
                       {{ record.name }}
                     </p>
                     <p class="m-0 p-0 mt-[2px]">{{ record.email }}</p>
@@ -68,7 +68,8 @@
                   </div>
                 </div>
 
-                <a-button
+                <UniversalButton
+                  label="Send notification to Tenant"
                   @click="
                     () => {
                       selectedTenant = record;
@@ -76,10 +77,8 @@
                       form.email = record.email;
                     }
                   "
-                  class="py-[8px] w-full flex items-center justify-center bg-[#000130] text-white mt-6 text-[14px] rounded-[8px]"
-                >
-                  Send notification to Tenant
-                </a-button>
+                  customClass="py-[8px] w-full flex items-center justify-center bg-[#000130] text-white mt-6 text-[14px] rounded-[8px]"
+                />
               </div>
               <a-button
                 class="bg-[#000130] bg-inherit text-black cursor-pointer"
@@ -191,7 +190,7 @@
         <a-button
           :loading="sendingmailtoteneant"
           @click="handleSendEmail"
-          class="w-full py-[8px] flex items-center hover:bg-[#000130] hover:text-white justify-center text-black rounded-[8px]"
+          class="w-full py-[8px] flex items-center bg-[#000130] text-white justify-center rounded-[8px]"
         >
           Send to Tenant
         </a-button>
@@ -213,6 +212,29 @@ import BaseInput from "@/components/BaseInput.vue";
 import { h } from "vue";
 import { sendEmailToTenant } from "@/api/tenancy";
 import FilterButton from "@/components/icons/FilterButton.vue";
+import UniversalButton from "@/components/Button/UniversalButton.vue";
+import { ref } from "vue";
+
+const showPopover = ref(false);
+const popoverRecord = ref(null);
+
+// Position of teleport card
+const popX = ref(0);
+const popY = ref(0);
+
+const openPopover = (event, record) => {
+  const rect = event.target.getBoundingClientRect();
+
+  popX.value = rect.left + window.scrollX;
+  popY.value = rect.bottom + window.scrollY + 8; // small offset
+
+  popoverRecord.value = record;
+  showPopover.value = true;
+};
+
+const closePopover = () => {
+  showPopover.value = false;
+};
 export default {
   components: {
     "table-component": V2Table,
@@ -221,6 +243,7 @@ export default {
     BasePagination: BasePagination,
     BaseInput: BaseInput,
     FilterButton,
+    UniversalButton,
   },
   created() {
     this.handleFetchLandlords();
@@ -239,7 +262,7 @@ export default {
       showModal: false,
       totalItemCount: 0,
       currentPage: 1,
-      pageSize: 9,
+      pageSize: 8,
       selectedTenant: null,
       headers: [
         {
@@ -315,11 +338,11 @@ export default {
     handleSendEmail() {
       this.sendingmailtoteneant = true;
       const body = {
-        toEmail: this.form.email,
-        toName: this.selectedTenant.name,
-        body: this.form.message,
+        tenantId: this.selectedTenant.accountId,
         subject: "Notification from Property Management",
-        fromName: "Property Management 10Nants Admin",
+        body: this.form.message,
+        sendEmail: true,
+        sendPush: true,
       };
       sendEmailToTenant(body).then((response) => {
         this.sendingmailtoteneant = false;
@@ -394,3 +417,4 @@ export default {
   },
 };
 </script>
+<style></style>

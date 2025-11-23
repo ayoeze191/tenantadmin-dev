@@ -26,3 +26,13 @@ export const fetchWaitingLeases = async (landlordId, query) => {
     handleError(error);
   }
 };
+
+export const ApproveDeclineLease = async (body) => {
+  const url = "ContractRequest/AcceptRejectLeaseTerminateRequest";
+  try {
+    const response = await postApi(url, body);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
