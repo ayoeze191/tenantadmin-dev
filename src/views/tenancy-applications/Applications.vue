@@ -1,11 +1,7 @@
 <template>
   <div class="px-4 font-inter h-full">
     <div
-      :class="[
-      'bg-neutral py-5 px-10 w-full h-screen pb-40 font-sf',
-      modalOpen ? 'overflow-hidden' : 'overflow-y-scroll',
-    ]"
-    >
+      class="rounded-[16px] mt-4 h-full font-inter border-[#36363633] border-[0.75px] border-solid">
       <div class="flex items-center">
         <table-header
           :total-item-count="totalItemCount"
@@ -253,7 +249,7 @@
               >
                 <a-date-picker
                   v-if="stage == 3"
-                  v-model:value="selectedMoveInDate"
+                  v-model:value="this.form.moveInDate"
                 />
                 <span v-else
                   >{{ formatDate(selectedApplication[key]) || "N/A" }}</span
@@ -280,59 +276,59 @@
           v-if="stage == 1"
           class="ant-modal-footer flex justify-end gap-3 max-h-fit"
         >
-          <button @click="handleNext">Next</button>
-          <button type="danger">Decline</button>
-          <button
+          <Button @click="handleNext">Next</Button>
+          <Button type="danger">Decline</Button>
+          <Button
             type="custom"
             class="border-gray-200 border-[1.75px] box-border text-[#121212]"
           >
             Request Additional Document
-          </button>
+          </Button>
         </div>
         <div
           v-if="stage == 2"
           class="ant-modal-footer flex justify-between gap-3"
         >
-          <button
+          <Button
             type="custom"
             class="border-gray-200 border-[1.5px] box-border"
             @click="handleBack"
           >
             Back
-          </button>
+          </Button>
           <div class="flex gap-3">
-            <button @click="handleNext">Next</button>
-            <button type="danger">Decline</button>
+            <Button @click="handleNext">Next</Button>
+            <Button type="danger">Decline</Button>
           </div>
         </div>
         <div
           v-if="stage == 3"
           class="ant-modal-footer flex justify-between gap-3"
         >
-          <button
+          <Button
             type="custom"
             class="border-gray-200 border-[1.5px] box-border"
             @click="handleBack"
           >
             Back
-          </button>
+          </Button>
           <div class="flex gap-3">
-            <button @click="handleNext">Confirm Date</button>
-            <button type="danger">Decline</button>
+            <Button @click="handleMovingDate" :disabled="selectedApplication.status=='Confirming Move-inDate'">Confirm Date</Button>
+            <Button type="danger">Decline</Button>
           </div>
         </div>
         <div
           v-if="stage == 4"
           class="ant-modal-footer flex justify-between gap-3 max-h-fit"
         >
-          <button
+          <Button
             type="custom"
             class="border-gray-200 border-[1.75px] box-border text-[#121212]"
             @click="handleBack"
           >
             Back
-          </button>
-          <button @click="handleNext">Generate Lease</button>
+          </Button>
+          <Button @click="handleNext">Generate Lease</Button>
         </div>
       </a-tab-pane>
     </a-tabs>
@@ -788,18 +784,19 @@
         });
       },
       async handleMovingDate(original) {
+        const moveInDateISO = this.getMoveInDateISO(this.form.moveInDate)
         this.movingdate = true;
         let payload = {
           applicationId: this.selectedApplication.applicationId,
-          isOriginalDateApproved: original ? true : false,
+          isOriginalDateApproved: moveInDateISO == this.selectedApplication.intendedMoveInDate,
           confirmedByUserId: "landlord",
-          comments: "",
-          moveInDate: this.selectedApplication.intendedMoveInDate,
+          comments: "N/A",
+          moveInDate: moveInDateISO,
         };
 
-        if (original == false) {
-          payload = { ...payload, moveInDate: this.form.moveInDate };
-        }
+        // if (original == false) {
+        //   payload = { ...payload, moveInDate: this.form.moveInDate };
+        // }
         ConfirmMoveInDate({ ...payload }).then((response) => {
           if (response.responseCode == "00") {
             this.stage = 4;
@@ -808,6 +805,7 @@
             this.movingdate = false;
             this.toast.success("Move-in date confirmed");
           } else {
+            console.log(response, payload)
             this.toast.error("Coudln't update");
           }
         });
@@ -875,6 +873,9 @@
         if (this.stage == 2) {
           this.stage++;
         }
+      },
+      getMoveInDateISO(date) {
+        return dayjs(date).format("YYYY-MM-DDTHH:mm:ss");
       },
       handleOk() {
         this.modalOpen = false; // Remove .value
@@ -1056,9 +1057,9 @@
             this.totalItemCount = 0;
           });
       },
-    },
-    customIconRender({ file }) {
-      return h(IconPDFDoc);
+      customIconRender({ file }) {
+        return h(IconPDFDoc);
+      },
     },
   };
 </script>
