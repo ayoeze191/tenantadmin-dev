@@ -88,3 +88,20 @@ export const sendEmailToTenant = async (body) => {
     console.log(err);
   }
 };
+
+export const ChangeApplicationStatus = async (body) => {
+    try {
+    const response = await putApi(
+      `/api/v2/AccommodationApplications/${body.applicationId}/status`,
+      {
+        applicationId: body.applicationId,
+        status: body.statusId,
+        comments: body.comments,
+        updatedByUserId: body.userId,
+      }
+    );
+    return response.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
