@@ -122,8 +122,11 @@
     wrapClassName="application-page-modal"
     :footer="null"
   >
-    <div v-if="selectedApplication.status=='Awaiting AdditionalDocuments'" class="flex gap-3 text-[#854D0F] bg-[#C382011A] rounded-lg py-1.5 px-2 mb-3 items-center">
-      <IconAlertCircleOutlined class="h-[1.5rem]" color="#854D0F"/>
+    <div
+      v-if="selectedApplication.status == 'Awaiting AdditionalDocuments'"
+      class="flex gap-3 text-[#854D0F] bg-[#C382011A] rounded-lg py-1.5 px-2 mb-3 items-center"
+    >
+      <IconAlertCircleOutlined class="h-[1.5rem]" color="#854D0F" />
       <div>
         <p class="font-semibold">Awaiting Additional Documents</p>
         <p>Tenant has been notified to provide additional documents</p>
@@ -296,7 +299,9 @@
           <Button
             type="custom"
             class="border-gray-200 border-[1.75px] box-border text-[#121212]"
-            :disabled="selectedApplication.status === 'AwaitingAdditionalDocuments'"
+            :disabled="
+              selectedApplication.status === 'AwaitingAdditionalDocuments'
+            "
             @click="
               () => {
                 modalOpen = false;
@@ -337,7 +342,10 @@
           <div class="flex gap-3">
             <Button
               @click="handleMovingDate"
-              :disabled="selectedApplication.status == 'Confirming Move-inDate' || this.form.moveInDate==null"
+              :disabled="
+                selectedApplication.status == 'Confirming Move-inDate' ||
+                this.form.moveInDate == null
+              "
               >Confirm Date</Button
             >
             <Button type="danger">Decline</Button>
@@ -360,7 +368,7 @@
     </a-tabs>
   </a-modal>
 
-   <a-modal
+  <a-modal
     wrapClassName="application-page-modal"
     v-model:open="requestModalOpen"
     :title="`Request Additional Documents`"
@@ -463,7 +471,7 @@ export default {
     IconPDFDoc,
     UniversalButton,
     Button,
-    IconAlertCircleOutlined
+    IconAlertCircleOutlined,
   },
   created() {
     this.fetchData();
@@ -491,6 +499,7 @@ export default {
     return {
       data: [],
       movingdate: false,
+
       requestDocumentsOptions: [
         {
           label: "Additional Income Verification",
@@ -547,14 +556,10 @@ export default {
             tabTitle: "Personal Information",
             tabDetails: [
               { keys: ["phoneNo"], label: "Phone" },
-              {
-                keys: ["intendedMoveInDate"],
-                label: "Intended Move-In Date",
-              },
+              { keys: ["intendedMoveInDate"], label: "Intended Move-In Date" },
               { keys: ["currentAddress"], label: "Current Address" },
               { keys: ["gender"], label: "Gender" },
               { keys: ["whatsAppNo"], label: "WhatsApp Number" },
-              // { keys: ["whatsAppNo"], label: "Responsible Rent" },
             ],
           },
           {
@@ -702,18 +707,15 @@ export default {
         [
           {
             tabTitle: "Lease Generation",
-            tabDetails: [
-              { keys: ["propertyName"], label: "Property Name" },
-              { keys: ["currentAddress"], label: "Property Address" },
-              { keys: ["unitId"], label: "Unit" },
-
-              {
-                keys: ["intendedMoveInDate"],
-                label: "Tenants Intended Move-In date",
-              },
-              { keys: ["budgetForAccommodation"], label: "Lease Type" },
-              { keys: ["budgetForAccommodation"], label: "Lease Start Date" },
-            ],
+            tabDetails: {
+              keys: [
+                "propertyName",
+                "previousAddress",
+                "unitName",
+                "intendedMoveInDate",
+              ],
+              label: "LEASE DETAILS PREVIEW",
+            },
           },
         ],
       ],
@@ -878,7 +880,7 @@ export default {
       });
     },
     async handleMovingDate(original) {
-      console.log(this.form.moveInDate)
+      console.log(this.form.moveInDate);
       const moveInDateISO = this.getMoveInDateISO(this.form.moveInDate);
       this.movingdate = true;
       let payload = {
@@ -966,7 +968,7 @@ export default {
       //   statusId = "Awaiting Review";
       // } else if (this.stage == 2) {
       //   statusId = "Awaiting AdditionalDocuments";
-      // } 
+      // }
       //else if (
       //   this.selectedApplication.status ==
       //     "MoveIn Date Landlord Confirmation Pending" ||
