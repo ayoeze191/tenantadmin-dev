@@ -12,7 +12,7 @@ import Applications from "@/views/tenancy-applications/Applications.vue";
 import Tenants from "@/views/tenants/Tenants.vue";
 import Payments from "@/views/payments/PaymentsDue.vue";
 import nprogress from "nprogress";
-import AddProperties from "@/views/properties/AddProperties.vue";
+// import AddProperties from "@/views/properties/AddProperties.vue";
 import ViewProperties from "@/views/properties/ViewProperties.vue";
 import LeaseManagement from "@/views/tenants/LeaseManagement.vue";
 import Landlord from "@/views/users/Landlord.vue";
@@ -33,6 +33,11 @@ import Verification from "@/views/properties/Verification.vue";
 import SetUpProperties from "@/views/properties/SetUpProperties.vue";
 import Audit from "@/views/Logs/Audit.vue";
 import Otp from "@/views/auth/otp.vue";
+
+
+//temp
+import AddProperties from "@/views/properties/Propertyv2.vue";
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [

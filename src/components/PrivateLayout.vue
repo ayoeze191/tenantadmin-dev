@@ -1,14 +1,14 @@
 <template>
   <main
-    class="flex w-full h-full overflow-hidden bg-primary p-[1rem] gap-3 box-border"
+    class="flex w-full h-full overflow-y-auto bg-primary p-[1rem] gap-3 box-border"
   >
     <side-bar />
     <section
-      class="flex flex-col w-full h-full bg-[#FFFFFF] rounded-[18px] box-border"
+      class="flex flex-col w-full h-full bg-[#FFFFFF] rounded-[18px] box-border p-[1rem]"
     >
       <top-nav />
       <div class="flex-1 pt-4 h-full">
-        <div class="" v-if="store.userProfile.isVerified == true">
+        <div class="h-full" v-if="store.userProfile.isVerified == true">
           <router-view></router-view>
         </div>
         <!--  -->

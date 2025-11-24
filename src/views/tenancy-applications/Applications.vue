@@ -120,179 +120,126 @@
     @cancel="handleCancel"
     :centered="true"
     wrapClassName="application-page-modal"
-    width="800px"
+    :footer="null"
   >
     <div
-      class="flex gap-[10px] mt-[5px] mb-[1rem] items-center rounded-[10px] px-[10px]"
-      :class="{
-        'bg-[#FEF9C3] border-[#854D0F] border-solid border-[0.5px] text-[#854D0F]':
-          selectedApplication.status == 'Awaiting Additional Documents',
-        'bg-[#F3E8FF] text-[#6D24A9] border-[#6D24A9] border-solid border-[1px] ':
-          selectedApplication.status ==
-            'MoveIn Date Landlord Confirmation Pending' ||
-          selectedApplication.status == 'Confirming Move-inDate',
-        'bg-[#FEF9C3] border-solid  border-[1px] text-[#1D40AE] border-[#1D40AE]':
-          selectedApplication.status == 'Awaiting Review',
-        'bg-red-700 text-red-300 border-red-300 border-solid border-[1px]':
-          selectedApplication.status == 'Failed',
-        'bg-[#DCFCE7] text-[#166434] border-[#166434] border-solid border-[1px] z-50 left-[30%]':
-          selectedApplication.status == 'Completed',
-        'bg-[#FEF9C3] text-[#854D0F] border-solid border-[1px] border-[#854D0F] z- left-[20%]':
-          selectedApplication.status == 'Awaiting Payment',
-      }"
+      v-if="selectedApplication.status == 'Awaiting AdditionalDocuments'"
+      class="flex gap-3 text-[#854D0F] bg-[#C382011A] rounded-lg py-1.5 px-2 mb-3 items-center"
     >
-      <div class="m-0 p-0"><ExclamationCircleOutlined /></div>
-      <div class="p-0 m-0">
-        <p>{{ selectedApplication.status }}</p>
-        <p>{{ selectedApplication.AccommodationApplicationStatusDesc }}</p>
+      <IconAlertCircleOutlined class="h-[1.5rem]" color="#854D0F" />
+      <div>
+        <p class="font-semibold">Awaiting Additional Documents</p>
+        <p>Tenant has been notified to provide additional documents</p>
       </div>
     </div>
     <div
       v-if="selectedApplication"
-      class="border-gray-200 items-center border-[1.5px] rounded-xl p-2 flex gap-1.5"
+      class="border-gray-200 border-[1.5px] rounded-xl p-2 flex gap-1.5 text-[#00000099]"
     >
-      <div>
-        <img
-          :src="dummyList[0]"
-          alt="profile picture"
-          class="size-[34px] object-cover rounded-lg"
-        />
-      </div>
+      <img
+        :src="dummyList[0]"
+        alt="profile picture"
+        class="size-[40px] object-cover rounded-lg"
+      />
       <div class="flex flex-col">
-        <span
-          class="font-[600] p-0 m-0 text-[#000000] font-inter text-[14px] leading-[100%]"
-          >{{ selectedApplication.applicantName }}</span
-        >
-        <span class="text-[#00000066] m-0 p-0">{{
-          selectedApplication.email
+        <span class="text-black font-semibold">{{
+          selectedApplication.applicantName
         }}</span>
+        <span>{{ selectedApplication.email }}</span>
       </div>
     </div>
 
-    <a-tabs tabPosition="left" class="mt-3 custom-tabs">
+    <a-tabs tabPosition="left" class="mt-3 text-[#00000099]">
       <a-tab-pane
         v-for="tab in stagesTabDetails[stage - 1]"
         :key="tab.tabTitle"
         :tab="tab.tabTitle"
+        class="flex flex-col gap-y-3"
       >
-        <div class="w-full" v-if="tab.tabTitle == 'Lease Generation'">
-          <p class="font-medium uppercase p-0 m-0 text-[1rem] font-redwing">
-            UPLOAD SIGNED LEASE PDF
-          </p>
-          <a-upload-dragger
-            class="border-dashed flex justify-center items-center w-full border-[#C7C7C7] rounded-[5px] p-[14px] m-0"
-            style="margin: 0"
-            name="file"
-            list-type="picture-card"
-          >
-            <p class="ant-upload-drag-icon mx-auto p-0 w-fit pt-[28px]">
-              <svg
-                width="26"
-                height="31"
-                viewBox="0 0 26 31"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M25.0459 9.07906L17.1709 1.20406C17.0664 1.09962 16.9423 1.01681 16.8057 0.960347C16.6691 0.903885 16.5228 0.874884 16.375 0.875H2.875C2.27826 0.875 1.70597 1.11205 1.28401 1.53401C0.862053 1.95597 0.625 2.52826 0.625 3.125V27.875C0.625 28.4717 0.862053 29.044 1.28401 29.466C1.70597 29.8879 2.27826 30.125 2.875 30.125H23.125C23.7217 30.125 24.294 29.8879 24.716 29.466C25.1379 29.044 25.375 28.4717 25.375 27.875V9.875C25.3751 9.72722 25.3461 9.58086 25.2897 9.44429C25.2332 9.30772 25.1504 9.18362 25.0459 9.07906ZM17.5 4.71547L21.5345 8.75H17.5V4.71547ZM23.125 27.875H2.875V3.125H15.25V9.875C15.25 10.1734 15.3685 10.4595 15.5795 10.6705C15.7905 10.8815 16.0766 11 16.375 11H23.125V27.875ZM17.1709 16.9541C17.2755 17.0586 17.3584 17.1827 17.4149 17.3192C17.4715 17.4558 17.5006 17.6022 17.5006 17.75C17.5006 17.8978 17.4715 18.0442 17.4149 18.1808C17.3584 18.3173 17.2755 18.4414 17.1709 18.5459C17.0664 18.6505 16.9423 18.7334 16.8058 18.7899C16.6692 18.8465 16.5228 18.8756 16.375 18.8756C16.2272 18.8756 16.0808 18.8465 15.9442 18.7899C15.8077 18.7334 15.6836 18.6505 15.5791 18.5459L14.125 17.0905V23.375C14.125 23.6734 14.0065 23.9595 13.7955 24.1705C13.5845 24.3815 13.2984 24.5 13 24.5C12.7016 24.5 12.4155 24.3815 12.2045 24.1705C11.9935 23.9595 11.875 23.6734 11.875 23.375V17.0905L10.4209 18.5459C10.3164 18.6505 10.1923 18.7334 10.0558 18.7899C9.91919 18.8465 9.77282 18.8756 9.625 18.8756C9.47718 18.8756 9.33081 18.8465 9.19424 18.7899C9.05767 18.7334 8.93359 18.6505 8.82906 18.5459C8.72454 18.4414 8.64163 18.3173 8.58506 18.1808C8.52849 18.0442 8.49937 17.8978 8.49937 17.75C8.49937 17.6022 8.52849 17.4558 8.58506 17.3192C8.64163 17.1827 8.72454 17.0586 8.82906 16.9541L12.2041 13.5791C12.3085 13.4745 12.4326 13.3915 12.5692 13.3349C12.7058 13.2783 12.8522 13.2491 13 13.2491C13.1478 13.2491 13.2942 13.2783 13.4308 13.3349C13.5674 13.3915 13.6915 13.4745 13.7959 13.5791L17.1709 16.9541Z"
-                  fill="#404164"
-                />
-              </svg>
-            </p>
-            <p
-              class="text-[#404164] font-600 text-[14px] font-sf leading-[100%]"
+        <div v-if="stage == 4" class="flex flex-col gap-2">
+          <div class="flex flex-col">
+            <h2
+              class="font-medium uppercase text-[1rem] font-redwing text-black"
             >
-              Drop files here or click to upload
-            </p>
-            <p class="text-[#808097] font-[12px] font-sf leading-[100%]">
-              Accepted File Types: doc, docx
-            </p>
-          </a-upload-dragger>
-        </div>
-        <h2 class="font-medium uppercase text-[1rem] font-redwing">
-          {{ tab.tabTitle }}
-        </h2>
-        <div
-          v-if="
-            ['Document Uploaded', 'Additional Documents'].includes(tab.tabTitle)
-          "
-          class="flex flex-wrap gap-x-3 gap-y-0 size-full"
-        >
-          <div
-            v-for="doc in tab.tabDetails"
-            class="bg-[#1e1e1e10] w-[170px] h-[9rem] p-2 flex flex-col flex-shrink-0 justify-center items-center rounded-lg mb-1.5"
-          >
-            <IconPDFDoc />
-            <span>{{ doc.name }}</span>
+              UPLOAD SIGNED LEASE PDF
+            </h2>
+            <a-upload-dragger
+              v-if="leaseFile == null || !leaseFile[0]"
+              class="upload-dragger"
+              :fileList="leaseFile"
+              name="leaseFile"
+              :multiple="false"
+              :maxCount="1"
+              :iconRender="customIconRender"
+              :customRequest="handleUpload"
+              @change="handleChange"
+              @drop="handleDrop"
+            >
+              <p class="ant-upload-drag-icon">
+                <inbox-outlined></inbox-outlined>
+              </p>
+              <p class="ant-upload-text">Click or drag to upload documents</p>
+              <p class="ant-upload-hint">
+                Upload a pre-signed lease agreement document
+              </p>
+            </a-upload-dragger>
+            <a-upload
+              v-else
+              :fileList="leaseFile"
+              name="leaseFile"
+              :multiple="false"
+              :maxCount="1"
+              :customRequest="handleUpload"
+              :iconRender="customIconRender"
+              @change="handleChange"
+              @drop="handleDrop"
+            >
+              <a-button>
+                <upload-outlined></upload-outlined>
+                Reupload
+              </a-button>
+            </a-upload>
           </div>
-        </div>
-        <div
-          v-if="['Lease Generation'].includes(tab.tabTitle)"
-          class="bg-[#F9F9F9] rounded-[12px] p-[15px]"
-        >
-          <div v-for="item in tab.tabDetails">
-            <p
-              class="text-[12px] text-[#000000] font-inter leading-[20px] font-semibold"
+          <div>
+            <h2
+              class="font-medium uppercase text-[1rem] font-redwing text-black"
             >
-              {{ item.label }}
-            </p>
-            <div class="mb-2">
-              <div v-for="key in item.keys">
-                <p
-                  class="text-[#00000099] text-[12px] font-[500] font-inter leading-[20px]"
-                  v-if="
-                    [
-                      'phoneNo',
-                      'whatsAppNo',
-                      'workSupervisorPhoneNo',
-                      'emergencyPhoneNo',
-                      'guarantor1PhoneNo',
-                      'guarantor2PhoneNo',
-                    ].includes(key)
-                  "
-                >
-                  {{ formatPhoneNum(selectedApplication[key]) || "N/A" }}
-                </p>
-                <p
-                  v-else-if="key == 'intendedMoveInDate'"
-                  class="text-[#00000099] text-[12px] font-[500] font-inter leading-[20px]"
-                >
+              {{ tab.tabDetails.label }}
+            </h2>
+            <div class="bg-[#F9F9F9] p-3 rounded-lg flex flex-col gap-2.5">
+              <div v-for="key in tab.tabDetails.keys">
+                <p class="font-semibold text-black">{{ key }}</p>
+                <p v-if="key == 'intendedMoveInDate'">
                   {{ formatDate(selectedApplication[key]) || "N/A" }}
                 </p>
-                <p
-                  class="text-[#00000099] text-[12px] font-[500] font-inter leading-[20px]"
-                  v-else-if="
-                    ['apprMonthlyIncome', 'budgetForAccommodation'].includes(
-                      key
-                    )
-                  "
-                >
-                  {{
-                    selectedApplication[key]
-                      ? `CA\$${selectedApplication[key]}`
-                      : "N/A"
-                  }}
-                </p>
-                <p
-                  v-else
-                  class="text-[#00000099] text-[12px] font-[500] font-inter leading-[20px]"
-                >
-                  {{
-                    selectedApplication[key] == true
-                      ? "Yes"
-                      : selectedApplication[key] == false
-                      ? "No"
-                      : selectedApplication[key] || "N/A"
-                  }}
-                </p>
+                <p v-else>{{ selectedApplication[key] }}</p>
               </div>
             </div>
           </div>
         </div>
-        <div v-for="item in tab.tabDetails" v-else>
-          <p class="font-bold">{{ item.label }}</p>
-          <div class="mb-2">
-            <div v-for="key in item.keys" class="text-[#00000099]">
+        <div v-else>
+          <h2 class="font-medium uppercase text-[1rem] font-redwing text-black">
+            {{ tab.tabTitle }}
+          </h2>
+          <div
+            v-if="
+              ['Document Uploaded', 'Additional Documents'].includes(
+                tab.tabTitle
+              )
+            "
+            class="flex gap-3 flex-wrap justify-start items-start"
+          >
+            <div
+              v-for="doc in tab.tabDetails"
+              class="bg-[#F6F6F6] min-w-[130px] h-[7rem] px-3.5 py-2 flex flex-col flex-shrink-0 justify-around items-center rounded-lg font-medium text-[#121212] max-[1000px]:w-[45%] w-[40%]"
+            >
+              <IconPDFDoc />
+              <span>{{ doc.name }}</span>
+            </div>
+          </div>
+          <div v-for="item in tab.tabDetails" class="mb-1.5">
+            <p class="font-semibold text-black">{{ item.label }}</p>
+            <div v-for="key in item.keys">
               <p
                 v-if="
                   [
@@ -307,11 +254,19 @@
               >
                 {{ formatPhoneNum(selectedApplication[key]) || "N/A" }}
               </p>
-              <p v-else-if="key == 'intendedMoveInDate'">
-                {{ formatDate(selectedApplication[key]) || "N/A" }}
-              </p>
+              <div
+                v-else-if="key == 'intendedMoveInDate'"
+                :class="stage == 3 ? 'mt-1' : ''"
+              >
+                <a-date-picker
+                  v-if="stage == 3"
+                  v-model:value="this.form.moveInDate"
+                />
+                <span v-else>{{
+                  formatDate(selectedApplication[key]) || "N/A"
+                }}</span>
+              </div>
               <p
-                class=""
                 v-else-if="
                   ['apprMonthlyIncome', 'budgetForAccommodation'].includes(key)
                 "
@@ -334,137 +289,83 @@
             </div>
           </div>
         </div>
-      </a-tab-pane>
-    </a-tabs>
-    <template #footer>
-      <div v-if="stage == 1" class="mt-3 flex justify-end gap-3">
-        <UniversalButton
-          label="Next"
-          :loading="approving"
-          :disabled="
-            approving ||
-            declining ||
-            (selectedApplication.status == 'AwaitingAdditionalDocuments' &&
-              form.requestDocuments.length == 0) ||
-            selectedApplication.status == 'Completed'
-          "
-          @click="handleNext"
-          customClass="bg-[#000130] text-white leading-[24px] px-3 py-[6px] rounded-[8px] text-[14px]"
+
+        <div
+          v-if="stage == 1"
+          class="ant-modal-footer flex justify-end gap-3 max-h-fit"
         >
-        </UniversalButton>
-        <UniversalButton
-          label="Decline"
-          :loading="declining"
-          :disabled="
-            approving ||
-            declining ||
-            (selectedApplication.status == 'AwaitingAdditionalDocuments' &&
-              form.requestDocuments.length == 0) ||
-            selectedApplication.status == 'Completed'
-          "
-          @click="declineData"
-          customClass="bg-[#A00000] disabled:text-white disabled:cursor-not-allowed font-inter flex items-center justify-center px-3 py-[6px] rounded-[8px] text-[14px] font-medium text-white"
-        />
-
-        <UniversalButton
-          :disabled="
-            requesting ||
-            selectedApplication.status === 'AwaitingAdditionalDocuments'
-          "
-          @click="
-            () => {
-              modalOpen = false;
-              requestModalOpen = true;
-            }
-          "
-          customClass="border-solid disabled:cursor-not-allowed font-[500] font-inter border-[#36363633] flex items-center justify-center px-[12px] py-[6px] rounded-[8px] border-gray-200 text-[#121212] border-[1.5px] box-border"
-        >
-          Request Additional Document
-        </UniversalButton>
-      </div>
-      <div v-if="stage == 2" class="mt-3 flex justify-end gap-3">
-        <!-- Back Button -->
-        <UniversalButton
-          @click="handleBack"
-          customClass="border-solid border-[#36363633] px-[12px] py-[6px] rounded-[8px] border-gray-200 text-[#121212] border-[1.5px] box-border"
-        >
-          Back
-        </UniversalButton>
-
-        <div>
-          <!-- Next Button -->
-          <UniversalButton
-            @click="handleNext"
-            customClass="bg-[#000130] mr-[10px] font-inter px-3 py-[6px] rounded-[8px] text-[14px] font-medium text-white"
-          >
-            Next
-          </UniversalButton>
-
-          <!-- Decline Button -->
-          <UniversalButton
-            @click="declineData"
-            customClass="bg-[#A00000] font-inter px-3 py-[6px] rounded-[8px] text-[14px] font-medium text-white"
-          >
-            Decline
-          </UniversalButton>
-        </div>
-      </div>
-
-      <div v-if="stage == 3" class="mt-3 flex justify-end gap-3">
-        <!-- Back Button -->
-        <UniversalButton
-          @click="handleBack"
-          customClass="border-solid border-[#36363633] px-[12px] py-[6px] rounded-[8px] border-gray-200 text-[#121212] border-[1.5px] box-border"
-        >
-          Back
-        </UniversalButton>
-
-        <div>
-          <!-- Confirm Date Button -->
-          <UniversalButton
-            :loading="movingdate"
-            @click="() => handleMovingDate(true)"
-            customClass="px-3 py-[6px] bg-[#000130] mr-[10px] text-[#FFFFFF] rounded-[8px]"
-          >
-            Confirm Date
-          </UniversalButton>
-
-          <!-- Decline Button -->
-          <UniversalButton
+          <Button @click="handleNext">Next</Button>
+          <Button type="danger">Decline</Button>
+          <Button
+            type="custom"
+            class="border-gray-200 border-[1.75px] box-border text-[#121212]"
+            :disabled="
+              selectedApplication.status === 'AwaitingAdditionalDocuments'
+            "
             @click="
               () => {
-                moveInDateModalOpen = true;
                 modalOpen = false;
+                requestModalOpen = true;
               }
             "
-            customClass="bg-[#A00000] text-white font-inter font-medium rounded-[8px] px-[12px] py-[6px]"
           >
-            Decline
-          </UniversalButton>
+            Request Additional Document
+          </Button>
         </div>
-      </div>
-
-      <div v-if="stage == 4" class="mt-3 flex justify-end gap-3">
-        <!-- Back Button -->
-        <UniversalButton
-          @click="handleBack"
-          customClass="border-solid border-[#36363633] px-[12px] py-[6px] rounded-[8px] border-gray-200 text-[#121212] border-[1.5px] box-border"
+        <div
+          v-if="stage == 2"
+          class="ant-modal-footer flex justify-between gap-3"
         >
-          Back
-        </UniversalButton>
-
-        <div>
-          <!-- Generate Lease Button -->
-          <UniversalButton
-            :loading="generating"
-            @click="HandleGenerateLease"
-            customClass="px-3 py-[6px] bg-[#000130] flex items-center justify-center mr-[10px] text-[#FFFFFF] rounded-[8px]"
+          <Button
+            type="custom"
+            class="border-gray-200 border-[1.5px] box-border"
+            @click="handleBack"
           >
-            Generate Lease
-          </UniversalButton>
+            Back
+          </Button>
+          <div class="flex gap-3">
+            <Button @click="handleNext">Next</Button>
+            <Button type="danger">Decline</Button>
+          </div>
         </div>
-      </div>
-    </template>
+        <div
+          v-if="stage == 3"
+          class="ant-modal-footer flex justify-between gap-3"
+        >
+          <Button
+            type="custom"
+            class="border-gray-200 border-[1.5px] box-border"
+            @click="handleBack"
+          >
+            Back
+          </Button>
+          <div class="flex gap-3">
+            <Button
+              @click="handleMovingDate"
+              :disabled="
+                selectedApplication.status == 'Confirming Move-inDate' ||
+                this.form.moveInDate == null
+              "
+              >Confirm Date</Button
+            >
+            <Button type="danger">Decline</Button>
+          </div>
+        </div>
+        <div
+          v-if="stage == 4"
+          class="ant-modal-footer flex justify-between gap-3 max-h-fit"
+        >
+          <Button
+            type="custom"
+            class="border-gray-200 border-[1.75px] box-border text-[#121212]"
+            @click="handleBack"
+          >
+            Back
+          </Button>
+          <Button @click="handleGenerateLease">Generate Lease</Button>
+        </div>
+      </a-tab-pane>
+    </a-tabs>
   </a-modal>
 
   <a-modal
@@ -529,32 +430,6 @@
       </div>
     </div>
   </a-modal>
-
-  <a-modal
-    v-model:open="moveInDateModalOpen"
-    :title="'Request Move In Date'"
-    :centered="true"
-    @ok="
-      () => {
-        handleMovingDate(false);
-      }
-    "
-    wrapClassName="application-page-modal"
-  >
-    <div>
-      <div>
-        <p class="m-0 text-[#404164] text-[16px] font-sf">
-          Move-In Date(Tenant’s Preferred :
-          {{ selectedApplication.intendedMoveInDate }})
-        </p>
-        <a-date-picker
-          v-model:value="form.moveInDate"
-          class="rounded-[6px] mt-[4px] border-[#D8D8D8] border-[1px] w-full border-solid h-[48px]"
-          placeholder="Add Document"
-        />
-      </div>
-    </div>
-  </a-modal>
 </template>
 
 <script>
@@ -564,18 +439,28 @@ import { useToast } from "vue-toast-notification";
 import V2Table from "@/components/V2Table.vue";
 import V2ServiceRequestsDropDown from "@/components/V2ServiceRequestsDropDown.vue";
 import { FetchTenant, ApproveTenant } from "@/api/tenancy";
-import { ConfirmMoveInDate, GenerateLease } from "@/api/tenancy";
-import { RequestAdditionalDocuments } from "@/api/tenancy";
+import {
+  ConfirmMoveInDate,
+  GenerateLease,
+  RequestAdditionalDocuments,
+  ChangeApplicationStatus,
+} from "@/api/tenancy";
 import applicationCard from "@/components/applicationCard.vue";
 import BasePagination from "@/components/BasePagination.vue";
 import { useUserStore } from "@/store";
 import { AccomodationApplications } from "@/api/dashboard";
-import parsePhoneNumber from "libphonenumber-js";
-import moment from "moment";
 import UniversalButton from "@/components/Button/UniversalButton.vue";
-import IconPDFDoc from "@/components/icons/IconPDFDoc.vue";
 import confirm from "ant-design-vue/es/modal/confirm";
 import { data } from "autoprefixer";
+import Button from "@/components/Button/Button.vue";
+import IconPDFDoc from "@/components/icons/IconPDFDoc.vue";
+import { message } from "ant-design-vue";
+import { h } from "vue";
+import parsePhoneNumber from "libphonenumber-js";
+import moment from "moment";
+import dayjs from "dayjs";
+import IconAlertCircleOutlined from "@/components/icons/IconAlertCircleOutlined.vue";
+
 export default {
   components: {
     "table-component": V2Table,
@@ -585,6 +470,8 @@ export default {
     BasePagination,
     IconPDFDoc,
     UniversalButton,
+    Button,
+    IconAlertCircleOutlined,
   },
   created() {
     this.fetchData();
@@ -612,6 +499,7 @@ export default {
     return {
       data: [],
       movingdate: false,
+
       requestDocumentsOptions: [
         {
           label: "Additional Income Verification",
@@ -641,7 +529,8 @@ export default {
       modalOpen: false,
       requestModalOpen: false,
       moveInDateModalOpen: false,
-      selectedApplication: {},
+      selectedApplication: null,
+      leaseFile: null,
       toast: useToast(),
       stage: 1,
       stages: [
@@ -671,7 +560,6 @@ export default {
               { keys: ["currentAddress"], label: "Current Address" },
               { keys: ["gender"], label: "Gender" },
               { keys: ["whatsAppNo"], label: "WhatsApp Number" },
-              // { keys: ["whatsAppNo"], label: "Responsible Rent" },
             ],
           },
           {
@@ -819,18 +707,15 @@ export default {
         [
           {
             tabTitle: "Lease Generation",
-            tabDetails: [
-              { keys: ["propertyName"], label: "Property Name" },
-              { keys: ["currentAddress"], label: "Property Address" },
-              { keys: ["unitId"], label: "Unit" },
-
-              {
-                keys: ["intendedMoveInDate"],
-                label: "Tenants Intended Move-In date",
-              },
-              { keys: ["budgetForAccommodation"], label: "Lease Type" },
-              { keys: ["budgetForAccommodation"], label: "Lease Start Date" },
-            ],
+            tabDetails: {
+              keys: [
+                "propertyName",
+                "previousAddress",
+                "unitName",
+                "intendedMoveInDate",
+              ],
+              label: "LEASE DETAILS PREVIEW",
+            },
           },
         ],
       ],
@@ -933,7 +818,7 @@ export default {
         );
       });
     },
-    async HandleGenerateLease() {
+    async handleGenerateLease() {
       this.generating = true;
       const response = await GenerateLease(
         this.selectedApplication.applicationId
@@ -943,7 +828,7 @@ export default {
           this.toast.success("A lease Has been generated");
           this.modalOpen = false;
         } else {
-          this.toast.error("Coudln't generate lease");
+          this.toast.error("Couldn't generate lease");
         }
         this.modalOpen = false;
         this.generating = false;
@@ -995,18 +880,21 @@ export default {
       });
     },
     async handleMovingDate(original) {
+      console.log(this.form.moveInDate);
+      const moveInDateISO = this.getMoveInDateISO(this.form.moveInDate);
       this.movingdate = true;
       let payload = {
         applicationId: this.selectedApplication.applicationId,
-        isOriginalDateApproved: original ? true : false,
+        isOriginalDateApproved:
+          moveInDateISO == this.selectedApplication.intendedMoveInDate,
         confirmedByUserId: "landlord",
-        comments: "",
-        moveInDate: this.selectedApplication.intendedMoveInDate,
+        comments: "N/A",
+        moveInDate: moveInDateISO,
       };
 
-      if (original == false) {
-        payload = { ...payload, moveInDate: this.form.moveInDate };
-      }
+      // if (original == false) {
+      //   payload = { ...payload, moveInDate: this.form.moveInDate };
+      // }
       ConfirmMoveInDate({ ...payload }).then((response) => {
         if (response.responseCode == "00") {
           this.stage = 4;
@@ -1015,6 +903,7 @@ export default {
           this.movingdate = false;
           this.toast.success("Move-in date confirmed");
         } else {
+          console.log(response, payload);
           this.toast.error("Coudln't update");
         }
       });
@@ -1073,6 +962,33 @@ export default {
     },
     handleBack(event) {
       this.stage = this.stage - 1;
+      let statusId;
+      // compute status id from stage
+      if (this.stage == 1 || this.stage == 2) {
+        // if you reuested additional documents
+        if (this.selectedApplication.status == "Awaiting AdditionalDocuments") {
+          statusId = 2;
+        } else {
+          statusId = 1;
+        }
+      } else if (this.stage == 3) {
+        // check if landlord has already confirmed date
+        this.stage = 3;
+      } 
+      const payload = {
+        applicationId: this.selectedApplication.applicationId,
+        statusId,
+        comments: "N/A",
+        userId: "landlord",
+      };
+
+      ChangeApplicationStatus({ ...payload }).then((response) => {
+        if (response.responseCode == "00") {
+          console.log("Status changed successfully");
+        } else {
+          console.error("Couldn't change status request");
+        }
+      });
     },
     async handleNext(event) {
       if (this.stage == 1) {
@@ -1083,19 +999,48 @@ export default {
         this.stage++;
       }
     },
+    getMoveInDateISO(date) {
+      return dayjs(date).format("YYYY-MM-DDTHH:mm:ss");
+    },
     handleOk() {
-      console.log("oked");
       this.modalOpen = false; // Remove .value
       this.stage = 1; // Remove .value
+      this.leaseFile = null;
     },
     handleCancel() {
-      console.log("cancelled");
       this.modalOpen = false; // Remove .value
       this.stage = 1; // Remove .value
+      this.leaseFile = null;
+    },
+    handleChange(info) {
+      this.leaseFile = [...info.fileList];
+      console.log(this.leaseFile);
+      const status = info.file.status;
+      if (status !== "uploading") {
+        console.log(info.file, info.fileList);
+      }
+      if (status === "done") {
+        message.success(`${info.file.name} file uploaded successfully.`);
+      } else if (status === "error") {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+    handleDrop(e) {
+      console.log(e);
+    },
+    async handleUpload({ file, onSuccess, onError }) {
+      try {
+        file.status = "done";
+        this.leaseFile[0].status = "done";
+        onSuccess("ok, let's go!");
+      } catch (error) {
+        onError("no work");
+      }
     },
     showModal(app) {
       this.selectedApplication = app; // Remove .value
       this.modalOpen = true; // Remove .value
+      this.form.moveInDate = dayjs(app.intendedMoveInDate);
       if (this.selectedApplication.status == "Awaiting Review") {
         this.stage = 1;
       } else if (
@@ -1235,49 +1180,54 @@ export default {
           this.totalItemCount = 0;
         });
     },
+    customIconRender({ file }) {
+      return h(IconPDFDoc);
+    },
   },
 };
 </script>
 
 <style>
-:deep(.trigger) {
-  background: #111921;
-  color: white;
-  padding: 8px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-.ant-btn {
-  color: #0000004d !important;
+.application-page-modal * {
+  font-family: inter, ui-sans-serif, system-ui, sans-serif;
 }
 /* Only affects modals wrapped in .application-page-modal */
-:deep(.ant-modal-root > .application-page-modal .ant-modal-content) {
+.ant-modal-root > .application-page-modal .ant-modal-content {
   box-shadow: none !important;
   /* box-shadow: 0px 2px 7px 3px rgba(30,30,30,0.09); */
 }
 
-:deep(.ant-modal-root > .application-page-modal .ant-modal-mask) {
+.ant-modal-root > .application-page-modal .ant-modal-mask {
   background: rgba(30, 30, 30, 0.06) !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
 }
 
-:deep(.ant-modal-root > .application-page-modal .ant-tabs-content-holder) {
+.ant-modal-root > .application-page-modal .ant-tabs-content-holder {
   border-left: none !important;
 }
 
-:deep(.ant-modal-root > .application-page-modal .ant-tabs-ink-bar) {
+.ant-modal-root > .application-page-modal .ant-tabs-ink-bar {
   display: none !important;
 }
 
-:deep(.ant-modal-root > .application-page-modal .ant-tabs-tab-active) {
+.ant-modal-root > .application-page-modal .ant-tabs-tab-active {
   background-color: rgba(30, 30, 30, 0.06) !important;
   border-radius: 0.625rem !important;
 }
 
-:deep(.ant-modal-root > .application-page-modal .ant-modal) {
+.ant-modal-root > .application-page-modal .ant-modal {
   width: 50vw !important;
-  height: fit-content !important;
+  min-width: 630px;
+  /* height: 70vh !important; */
+}
+
+.ant-modal-root > .application-page-modal .ant-modal > div:first-of-type {
+  /* height: 70vh; */
+}
+
+.ant-modal-root > .application-page-modal .ant-modal-content {
+  /* height: 65vh; */
 }
 
 .ant-modal-root > .application-page-modal p {
@@ -1290,11 +1240,48 @@ export default {
   font-weight: 500 !important;
   font-size: 24px !important;
 }
-:deep(.custom-tabs .ant-tabs-tab) {
-  padding-left: 8px !important;
-  padding-right: 8px !important;
+
+.ant-modal-root > .application-page-modal .ant-modal-footer {
+  margin-top: 0.75rem;
 }
-:deep(.custom-tabs .ant-tabs-tab) {
-  margin-right: 2px !important;
+
+.application-page-modal .ant-tabs-tab {
+  margin: 0 !important;
+  /* padding: 0; */
+}
+
+.application-page-modal .ant-upload {
+  width: 70%;
+  max-width: 305px;
+  padding: 0 0.5rem;
+  box-sizing: border-box;
+}
+
+.ant-modal-root > .application-page-modal .ant-upload-wrapper {
+  display: flex;
+  flex-direction: row-reverse;
+  width: 100%;
+  max-width: none;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ant-modal-root > .application-page-modal .ant-upload-list-item-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.ant-modal-root > .application-page-modal .upload-dragger {
+  margin-right: auto;
+}
+
+.ant-modal-root > .application-page-modal .ant-upload-list-item {
+  @apply bg-[#F6F6F6] min-w-[130px] px-3.5 py-2 flex flex-col flex-shrink-0 justify-around items-center rounded-lg font-medium text-[#121212] [@media(min-width:1000px)]:w-[45%] w-[40%];
+  height: fit-content !important;
+}
+
+.ant-modal-root > .application-page-modal .ant-upload > .ant-btn {
+  display: flex;
+  align-items: center;
 }
 </style>

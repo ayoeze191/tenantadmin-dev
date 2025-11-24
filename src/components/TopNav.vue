@@ -1,6 +1,6 @@
 <template>
   <a-layout-header
-    class="w-full flex justify-between items-center px-[16px] pt-[16px] bg-[]"
+    class="w-full flex justify-between items-center bg-[]"
   >
     <div
       class="text-[#000000] bg-[#F7F7F7] px-[16px] py-2 w-full border-[#36363633] border-[0.75px] rounded-[8px] font-redwing text-[18px] font-medium leading-[100%]"
