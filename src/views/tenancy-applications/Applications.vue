@@ -362,7 +362,7 @@
           >
             Back
           </Button>
-          <Button @click="handleNext">Generate Lease</Button>
+          <Button @click="handleGenerateLease">Generate Lease</Button>
         </div>
       </a-tab-pane>
     </a-tabs>
@@ -818,7 +818,7 @@ export default {
         );
       });
     },
-    async HandleGenerateLease() {
+    async handleGenerateLease() {
       this.generating = true;
       const response = await GenerateLease(
         this.selectedApplication.applicationId
@@ -828,7 +828,7 @@ export default {
           this.toast.success("A lease Has been generated");
           this.modalOpen = false;
         } else {
-          this.toast.error("Coudln't generate lease");
+          this.toast.error("Couldn't generate lease");
         }
         this.modalOpen = false;
         this.generating = false;
@@ -962,30 +962,33 @@ export default {
     },
     handleBack(event) {
       this.stage = this.stage - 1;
-      // let statusId;
-      // // compute status id from stage
-      // if ((this.stage = 1)) {
-      //   statusId = "Awaiting Review";
-      // } else if (this.stage == 2) {
-      //   statusId = "Awaiting AdditionalDocuments";
-      // }
-      //else if (
-      //   this.selectedApplication.status ==
-      //     "MoveIn Date Landlord Confirmation Pending" ||
-      //   this.selectedApplication.status == "Confirming Move-inDate"
-      // ) {
-      //   this.stage = 3;
-      // } else if (
-      //   this.selectedApplication.status == "Awaiting LeaseGeneration"
-      // ) {
-      //   this.stage = 4;
-      // }
-      // const payload = {
-      //   applicationId: this.selectedApplication.applicationId,
-      //   statusId,
-      //   comments: "N/A",
-      //   userId: "landlord",
-      // };
+      let statusId;
+      // compute status id from stage
+      if (this.stage == 1 || this.stage == 2) {
+        // if you reuested additional documents
+        if (this.selectedApplication.status == "Awaiting AdditionalDocuments") {
+          statusId = 2;
+        } else {
+          statusId = 1;
+        }
+      } else if (this.stage == 3) {
+        // check if landlord has already confirmed date
+        this.stage = 3;
+      } 
+      const payload = {
+        applicationId: this.selectedApplication.applicationId,
+        statusId,
+        comments: "N/A",
+        userId: "landlord",
+      };
+
+      ChangeApplicationStatus({ ...payload }).then((response) => {
+        if (response.responseCode == "00") {
+          console.log("Status changed successfully");
+        } else {
+          console.error("Couldn't change status request");
+        }
+      });
     },
     async handleNext(event) {
       if (this.stage == 1) {
