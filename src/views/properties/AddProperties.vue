@@ -665,7 +665,6 @@
 
 <!--  -->
                 <div v-if="form.rental_unit == 'condo' || form.rental_unit == 'house'">
-
   <div class="flex gap-4">
                 <a-form-item
                   required
