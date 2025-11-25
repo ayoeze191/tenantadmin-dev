@@ -240,7 +240,7 @@
             </div>
           </div>
         </a-form>
-        <div v-if="stage == 2" class="w-[356px]">
+        <a-form v-if="stage == 2" class="w-[356px]">
           <p
             class="text-[#000000] font-[500] leading-[20px] font-redwing text-[14px]"
           >
@@ -256,61 +256,212 @@
                 size="large"
               />
             </a-form-item>
-            <div class="flex gap-3">
-              <a-form-item name="name" class="custom-form-item">
-                <a-input
-                  v-model:value="form.name"
-                  placeholder="Unit Type"
-                  size="large"
-                />
-              </a-form-item>
-              <a-form-item name="name" class="custom-form-item">
-                <a-input
-                  v-model:value="form.name"
-                  placeholder="Count"
-                  size="large"
-                />
-              </a-form-item>
-            </div>
+            <div v-for="(i, index) in form.unitTypes">
+              <div class="flex gap-3">
+                <a-form-item name="name" class="custom-form-item">
+                  <a-select
+                    ref="select"
+                    v-model:value="form.unitTypes[index].unitType"
+                    style="width: 200px"
+                    :placeholder="
+                      form.rental_unit == 'shared_condo' ||
+                      form.rental_unit == 'shared_house'
+                        ? 'Room Type'
+                        : 'Unit Type'
+                    "
+                    class="w-full h-[52px]"
+                    @focus="focus"
+                    @change="handleChange"
+                    :getPopupContainer="(node) => node.parentNode"
+                  >
+                    <a-select-option
+                      v-for="unit in unitTypeOptions"
+                      :key="unit.id"
+                      :value="unit.id"
+                    >
+                      {{ unit.name }}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+                <a-form-item
+                  v-if="form.rental_unit == 'apartment'"
+                  :rules="[
+                    { required: true, message: 'Please input quantity' },
+                  ]"
+                  :name="['unitTypes', index, 'quantity']"
+                  required
+                  class="flex-1 form-labels"
+                >
+                  <a-input
+                    v-model:value="form.unitTypes[index].quantity"
+                    placeholder="Count"
+                    size="large"
+                    type="number"
+                  />
+                </a-form-item>
+                <a-form-item
+                  :name="['unitTypes', index, 'rentPerMonth']"
+                  class="flex-1 form-labels"
+                  :rules="[
+                    { required: true, message: 'Please input Rent Price' },
+                    {
+                      pattern: /^[0-9]+$/,
+                      message: 'Rent Price must be a number',
+                    },
+                  ]"
+                >
+                  <a-input
+                    v-model:value="form.unitTypes[index].rentPerMonth"
+                    placeholder="Rent Price"
+                    size="large"
+                  />
+                </a-form-item>
+              </div>
 
-            <a-form-item name="bathrooms" class="custom-form-item">
-              <a-input
-                v-model:value="form.name"
-                placeholder="No of Bathrooms"
-                size="large"
-              />
-            </a-form-item>
-            <div class="flex gap-[12px]">
-              <a-form-item name="Address" class="custom-form-item">
+              <a-form-item
+                :rules="[
+                  { required: true, message: 'Please input Security Deposit' },
+                  {
+                    pattern: /^[0-9]+$/,
+                    message: 'Security Deposit must be a number',
+                  },
+                ]"
+                :name="['unitTypes', index, 'securityDeposit']"
+                required
+                class="flex-1 form-labels"
+              >
                 <a-input
-                  v-model:value="form.name"
-                  placeholder="Rent Price"
-                  size="large"
-                />
-              </a-form-item>
-              <a-form-item name="Address" class="custom-form-item">
-                <a-input
-                  v-model:value="form.name"
+                  v-model:value="form.unitTypes[index].securityDeposit"
                   placeholder="Security Deposit"
                   size="large"
                 />
               </a-form-item>
-            </div>
-            <div class="flex gap-[12px]">
-              <a-form-item name="Address" class="custom-form-item">
-                <a-input
-                  v-model:value="form.name"
-                  placeholder="Availability"
-                  size="large"
-                />
-              </a-form-item>
-              <a-form-item name="Address" class="custom-form-item">
-                <a-input
-                  v-model:value="form.name"
-                  placeholder="Occupancy"
-                  size="large"
-                />
-              </a-form-item>
+              <div
+                class="flex gap-[12px]"
+                v-if="
+                  form.rental_unit == 'shared_condo' ||
+                  form.rental_unit == 'shared_house' ||
+                  form.rental_unit == 'apartment'
+                "
+              >
+                <a-form-item
+                  :name="['unitTypes', index, 'availabilityDate']"
+                  :rules="[
+                    {
+                      required: true,
+                      message: 'Please input Availability Date',
+                    },
+                  ]"
+                  required
+                  class="flex-1 form-labels"
+                >
+                  <a-input
+                    :rules="[
+                      { required: true, message: 'Please enter availability' },
+                    ]"
+                    v-model:value="form.unitTypes[index].availabilityDate"
+                    placeholder="Availability Date"
+                    size="large"
+                    type="Date"
+                  />
+                </a-form-item>
+                <a-form-item
+                  required
+                  class="flex-1 form-labels"
+                  :rules="[{ required: true, message: 'Please input Deposit' }]"
+                  :name="['unitTypes', index, 'occupancyStatus']"
+                >
+                  <a-select
+                    ref="select"
+                    v-model:value="form.unitTypes[index].occupancyStatus"
+                    style="width: 200px"
+                    placeholder="Select Occupancy Status"
+                    class="w-full"
+                    @focus="focus"
+                    :getPopupContainer="(node) => node.parentNode"
+                  >
+                    <a-select-option :value="1"
+                      >Available and Vacant</a-select-option
+                    >
+                    <a-select-option :value="2"
+                      >Currently Occupied</a-select-option
+                    >
+                    <a-select-option :value="3"
+                      >Under Renovation</a-select-option
+                    >
+                    <a-select-option :value="4"
+                      >Sale Closing Soon</a-select-option
+                    >
+                  </a-select>
+                </a-form-item>
+              </div>
+              <div
+                class="flex gap-4"
+                v-if="
+                  form.rental_unit == 'condo' || form.rental_unit == 'house'
+                "
+              >
+                <a-form-item
+                  :name="['unitTypes', 0, 'numberOfBedrooms']"
+                  :rules="[
+                    {
+                      required: true,
+                      message: 'Please enter the number Of Bedrooms',
+                    },
+                  ]"
+                  required
+                  class="flex-1 form-labels"
+                >
+                  <div
+                    class="form-labels text-base mb-4 font-regular leading-[100%] font-sf"
+                  >
+                    Bedroom
+                  </div>
+                  <a-input
+                    type="number"
+                    placeholder="Enter Bedroom No"
+                    v-model:value.number="form.unitTypes[0].numberOfBedrooms"
+                  />
+                </a-form-item>
+                <a-form-item
+                  :name="['unitTypes', 0, 'numberOfBathrooms']"
+                  :rules="[
+                    {
+                      required: true,
+                      message: 'Please enter the number Of Bathrooms',
+                    },
+                  ]"
+                  required
+                  class="flex-1 form-labels"
+                >
+                  <div
+                    class="form-labels text-base mb-4 font-regular leading-[100%] font-sf"
+                  >
+                    Bathroom
+                  </div>
+                  <a-input
+                    type="number"
+                    placeholder="Enter Bathroom No"
+                    v-model:value.number="form.unitTypes[0].numberOfBathrooms"
+                  />
+                </a-form-item>
+              </div>
+              <div class="flex gap-[12px]">
+                <a-form-item name="Address" class="custom-form-item">
+                  <a-input
+                    v-model:value="form.name"
+                    placeholder="Availability"
+                    size="large"
+                  />
+                </a-form-item>
+                <a-form-item name="Address" class="custom-form-item">
+                  <a-input
+                    v-model:value="form.name"
+                    placeholder="Occupancy"
+                    size="large"
+                  />
+                </a-form-item>
+              </div>
             </div>
 
             <a-checkbox-group
@@ -369,7 +520,13 @@
               </div>
             </div>
           </div>
-        </div>
+        </a-form>
+        <a-form>
+          <a-form-item v-if="stage == 3">
+            Stage 3
+            <FIleUploader />
+          </a-form-item>
+        </a-form>
         <!-- preview -->
         <div class="" v-if="stage !== 0">
           <p
@@ -377,31 +534,33 @@
           >
             QUICK PREVIEW
           </p>
-          <div class="w-[300px] h-[193px]"></div>
+          <div class="w-[300px] h-[193px] mb-2">
+            <AccomodationBg />
+          </div>
           <div class="bg-[#F9F9F9] flex flex-col gap-4 p-[15px] rounded-[12px]">
             <div>
               <p class="m-0 p-0 text-[12px] font-inter font-semibold">
                 Property Name
               </p>
-              <span>-----</span>
+              <span>{{ form.name }}</span>
             </div>
             <div>
               <p class="m-0 p-0 text-[12px] font-inter font-semibold">
                 Property Address
               </p>
-              <span>-----</span>
+              <span>{{ form.address }}</span>
             </div>
             <div>
               <p class="m-0 p-0 text-[12px] font-inter font-semibold">
                 Zip Code
               </p>
-              <span>-----</span>
+              <span>{{ form.zipCode }}</span>
             </div>
             <div>
               <p class="m-0 p-0 text-[12px] font-inter font-semibold">
                 Province
               </p>
-              <span>-----</span>
+              <span>{{ form.province }}</span>
             </div>
           </div>
         </div>
@@ -428,7 +587,9 @@ import DropdownButton from "@/components/V2ServiceRequestsDropDown.vue";
 import { useUserStore } from "@/store";
 import { onMounted, ref } from "vue";
 import { reactive } from "vue";
+import AccomodationBg from "@/components/icons/AccomodationBg.vue";
 import { useOptionsStore } from "@/stores/options";
+import FIleUploader from "@/components/FIleUploader.vue";
 
 const allProvinces = ref([]);
 const fetchProvinces = async () => {
@@ -437,11 +598,14 @@ const fetchProvinces = async () => {
 };
 onMounted(async () => {
   await optionsStore.fetchAmenities();
+  await optionsStore.fetchUnitTypes();
+
   amenityOptions.value = optionsStore.amenities.map((a) => ({
     label: a.name,
     value: a.amenityId,
     image: a.image || a.icon || null,
   }));
+  unitTypeOptions.value = [...optionsStore.unitTypes];
   await fetchProvinces();
 });
 const totalItemCount = 0;
@@ -451,13 +615,57 @@ const stages = ["Add Property", "Property Details", "Property Setup"];
 const stage = ref(0);
 const store = useUserStore();
 const modalVisible = ref(true);
+const unitTypeOptions = ref({});
+
 const form = reactive({
-  rental_unit: "",
+  partkingType: "",
+  pet: "",
+  heatingType: "",
+  laundryType: "",
+  acType: "",
+  leaseType: "",
+  unit_type: "",
+  count: "",
+  rent_price: "",
+  availability_date: "",
+  occupancy_status: "",
+  security_deposit: "",
+  governmentID: "",
+  proofOfOwnership: "",
+  governmentID: "",
+  otherDocs: "",
+  rental_unit: null,
   name: "",
   address: "",
-  city: null,
+  city: "",
   zipCode: "",
-  province: null,
+  province: "",
+  propertyType: null,
+  description: "",
+  units: null,
+  unitTypes: [
+    {
+      unitCount: "",
+      occupancyStatus: "",
+      unitType: "",
+      quantity: "",
+      securityDeposit: "",
+      rentPerMonth: 0,
+      availabilityDate: "",
+      numberOfBathrooms: 0,
+      numberOfBedrooms: 0,
+      unitImg: [],
+      fileList: [],
+    },
+  ],
+  images: [],
+  propertyAmenities: [],
+  landlordId: null,
+  amenities: [],
+  amenityname: "",
+  amenitiesKeyWords: "",
+  formType: "Bulk Upload",
+  propertyImages: [],
 });
 const propertyTypes = [
   { title: "Apartment", value: "Apartment" },
@@ -474,6 +682,10 @@ const ModalTitles = [
   { title: "Add Property", sub_title: "Define what you are listing" },
   { title: "Property Details", sub_title: "Tell us about your property" },
   { title: "Property Setup", sub_title: "Tell us about your property" },
+  {
+    title: "Property Documents Setup",
+    sub_title: "Upload Your property Documents",
+  },
 ];
 const propertyData = {
   landLordId: null,
@@ -531,13 +743,13 @@ function showModal() {
 }
 function handleNext() {
   stage.value++;
-  if (stage.value == 3) {
-    //submit
-  }
+  // if (stage.value == 3) {
+  //   //submit
+  // }
 }
 function disableNext() {
   if (stage.value == 0) {
-    if (form.rental_unit == "") return true;
+    if (form.rental_unit == null) return true;
   } else if (stage.value == 1) {
     if (
       form.name == "" ||
