@@ -4,22 +4,24 @@
 
     <a-upload-dragger
       class="border-dashed border border-[#36363633] rounded-[12px] py-4 px-3"
-      name="file"
-      :before-upload="handleBeforeUpload"
-      :show-upload-list="false"
+      :file-list="fileList"
+      :custom-request="customRequest"
+      @update:fileList="onFileListChange"
+      multiple
+      :accept="type || 'application/pdf'"
     >
       <div>
         <p class="ant-upload-drag-icon mx-auto w-fit p-0 m-0">
           <!-- your svg -->
         </p>
-        <p class="font-inter text-[12px] font-semibold leading-[20px] p-0 m-0">
+
+        <p class="font-inter text-[12px] font-semibold leading-[20px] m-0">
           Drop Document Here
         </p>
-        <p
-          class="text-[#00000099] font-inter leading-[20px] font-[500] mt-[2px]"
-        >
+
+        <p class="text-[#00000099] font-inter leading-[20px] font-[500] mt-[2px]">
           {{ desc || "Upload a pre-signed lease agreement document" }}
-       <div>   {{ type || "*pdf" }}</div>
+          <div>Accepted File Types: {{ type || "pdf" }}</div>
         </p>
       </div>
     </a-upload-dragger>
@@ -27,33 +29,24 @@
 </template>
 
 <script setup>
-import { message } from "ant-design-vue";
-import { document } from "postcss";
-
 const props = defineProps({
-  title: {
-    type: String,
-    required: false,
+  title: String,
+  desc: String,
+  type: String,
+  fileList: {
+    type: Array,
+    default: () => [],
   },
-  desc: {
-    type: String,
-    required: false,
-  },
-  type: {
-    type: String,
-    required: false,
+  customRequest: {
+    type: Function,
+    required: true,
   },
 });
 
-const emit = defineEmits(["fileSelected"]);
+const emit = defineEmits(["update:fileList"]);
 
-const handleBeforeUpload = (file) => {
-  // This prevents autoupload
-  // and gives you the file so you can manually send it to your backend.
-  emit("fileSelected", file);
-
-  message.success("File selected: " + file.name);
-
-  return false; // VERY IMPORTANT — stops automatic upload
+// Sync file list with parent v-model
+const onFileListChange = (newList) => {
+  emit("update:fileList", newList);
 };
 </script>
