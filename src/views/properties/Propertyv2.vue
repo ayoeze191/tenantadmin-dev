@@ -136,6 +136,40 @@
       <div class="flex gap-4">
         <div class="m-0 p-0" v-if="stage == 0">
           <div class="mt-[24px] w-full">
+            <a-form-item
+              v-if="store.userProfile.referenceID == 'NN1'"
+              name="formType"
+              class="flex flex-col gap-2 bg-white"
+            >
+              <div class="text-[#404164] text-lg mb-4 font-sf font-normal">
+                Landlord
+              </div>
+              <a-select
+                v-model:value="form.landlordId"
+                placeholder="Search and select a landlord"
+                size="large"
+                show-search
+                :getPopupContainer="(node) => node.parentNode"
+                :filter-option="false"
+                :loading="landlordLoading"
+                :options="landlordOptions"
+                @search="onLandlordSearch"
+                @popup-scroll="onLandlordScroll"
+                :field-names="{ label: 'label', value: 'value' }"
+                :not-found-content="
+                  landlordLoading ? 'Loading...' : 'No landlords found'
+                "
+              >
+                <template #option="{ label, value }">
+                  <div class="flex flex-col bg-white">
+                    <span class="font-medium bg-white">{{ label }}</span>
+                  </div>
+                </template>
+                <template #suffixIcon>
+                  <a-spin v-if="landlordLoading" size="small" />
+                </template>
+              </a-select>
+            </a-form-item>
             <a-radio-group
               v-model:value="form.rental_unit"
               class="grid grid-cols-2 w-full gap-4"
@@ -182,7 +216,6 @@
                 size="large"
               />
             </a-form-item>
-
             <a-form-item name="Address" class="custom-form-item">
               <a-input
                 v-model:value="form.address"
@@ -209,7 +242,7 @@
               </a-select>
             </a-form-item>
             <div class="flex p-0 m-0 gap-[12px] items-center">
-              <div class="w-full m-0">
+              <div class="w-full m-0 p-0">
                 <a-select
                   ref="select"
                   v-model:value="form.city"
@@ -230,7 +263,10 @@
                   </a-select-option>
                 </a-select>
               </div>
-              <a-form-item name="postalcode" class="custom-form-item w-full">
+              <a-form-item
+                name="postalcode"
+                class="custom-form-item p-0 m-0 w-full"
+              >
                 <a-input
                   v-model:value="form.zipCode"
                   placeholder="Postal Code"
@@ -261,7 +297,6 @@
                 <a-select
                   ref="select"
                   v-model:value="form.unitTypes[index].unitType"
-                  style="width: 200px"
                   :placeholder="
                     form.rental_unit == 'shared_condo' ||
                     form.rental_unit == 'shared_house'
@@ -800,11 +835,36 @@ import { useOptionsStore } from "@/stores/options";
 import FIleUploader from "@/components/FIleUploader.vue";
 import { uploadImage } from "@/api/properties";
 import { options } from "less";
-
+import { FetchLandlords } from "@/api/properties";
 const allProvinces = ref([]);
 const fetchProvinces = async () => {
   const response = await getProvinces();
   allProvinces.value = response;
+};
+const landlordOptions = ref([]);
+
+const landlordLoading = ref(false);
+const fetchAllLandlords = async (searchName = "", page = 1) => {
+  landlordLoading.value = true;
+  try {
+    const response = await FetchLandlords();
+    if (response && response.data) {
+      const landlords = response.data.map((landlord) => ({
+        label: `${landlord.text}`,
+        value: landlord.value,
+        // data: landlord,
+      }));
+
+      landlordOptions.value = landlords;
+      // landlordOptions.value = [...landlordOptions.value, ...landlords];
+      // landlordTotalItems.value = response.accountList.totalItemCount;
+      // landlordCurrentPage.value = page;
+    }
+  } catch (error) {
+    console.error("Error fetching landlords:", error);
+  } finally {
+    landlordLoading.value = false;
+  }
 };
 const handleAddUnit = () => {
   form.unitTypes.push({
@@ -865,6 +925,7 @@ const customAdditionalDocumentsUpload = async (options, type) => {
 onMounted(async () => {
   await optionsStore.fetchAmenities();
   await optionsStore.fetchUnitTypes();
+  await fetchAllLandlords();
 
   amenityOptions.value = optionsStore.amenities.map((a) => ({
     label: a.name,
@@ -1013,6 +1074,8 @@ const propertyData = {
 
 function handleDisplayTypeSelect() {}
 function showModal() {
+  stage.value = 0;
+
   modalVisible.value = !modalVisible.value;
 }
 async function handleNext() {
@@ -1027,7 +1090,11 @@ async function handleNext() {
 }
 function disableNext() {
   if (stage.value == 0) {
-    if (form.rental_unit == null) return true;
+    if (store.userProfile.referenceID == "NN1") {
+      if (form.rental_unit === null || form.landlordId == null) {
+        return true;
+      }
+    }
   } else if (stage.value == 1) {
     if (
       form.name == "" ||
