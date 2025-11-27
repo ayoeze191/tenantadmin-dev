@@ -202,7 +202,12 @@
             </a-radio-group>
           </div>
         </div>
-        <a-form v-if="stage == 1" class="w-[365px]">
+        <a-form
+          v-if="stage == 1"
+          class="w-[365px]"
+          :rules="rules"
+          :model="form"
+        >
           <p
             class="text-[#000000] font-[500] leading-[20px] font-redwing text-[14px]"
           >
@@ -276,7 +281,7 @@
             </div>
           </div>
         </a-form>
-        <a-form v-if="stage == 2" class="w-[356px]">
+        <a-form :model="form" v-if="stage == 2" class="w-[356px]">
           <p
             class="text-[#000000] font-[500] leading-[20px] font-redwing text-[14px]"
           >
@@ -540,7 +545,7 @@
             </a-checkbox-group>
           </div>
         </a-form>
-        <a-form v-if="stage == 4">
+        <a-form :model="form" v-if="stage == 4">
           <a-form-item>
             <FIleUploader
               v-model:fileList="otherDocsFileList"
@@ -570,7 +575,7 @@
             />
           </a-form-item>
         </a-form>
-        <a-form v-if="stage == 3">
+        <a-form v-if="stage == 3" :model="form">
           <div class="">
             <p class="text-[#000000] text-[18px] font-sf leading-[100%]">
               <!-- {{
@@ -808,13 +813,13 @@
           </div>
         </div>
       </div>
-      <button
+      <UniversalButton
         :disabled="disableNext()"
         @click="handleNext"
         class="bg-[#000130] disabled:bg-[#000130] disabled:text-[#FFFFFF] disabled:opacity-70 disabled:cursor-wait ml-auto mt-[24px] text-white rounded-[8px] w-[85px] h-[36px] flex items-center justify-center"
       >
         Continue
-      </button>
+      </UniversalButton>
     </a-modal>
   </div>
 </template>
@@ -836,10 +841,25 @@ import FIleUploader from "@/components/FIleUploader.vue";
 import { uploadImage } from "@/api/properties";
 import { options } from "less";
 import { FetchLandlords } from "@/api/properties";
+import UniversalButton from "@/components/Button/UniversalButton.vue";
 const allProvinces = ref([]);
 const fetchProvinces = async () => {
   const response = await getProvinces();
   allProvinces.value = response;
+};
+const rules = {
+  name: [
+    { required: true, message: "Property name is required" },
+    {
+      pattern: /^[A-Za-z\s]+$/,
+      message: "Property name should not contain numbers",
+    },
+  ],
+  address: [{ required: true, message: "Address is required" }],
+  zipCode: [{ required: true, message: "Zip code is required" }],
+  province: [{ required: true, message: "Province is required" }],
+  description: [{ required: true, message: "Description is required" }],
+  city: [{ required: true, message: "City is required" }],
 };
 const landlordOptions = ref([]);
 

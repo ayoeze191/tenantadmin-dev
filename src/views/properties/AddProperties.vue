@@ -833,7 +833,6 @@
                   <a-select
                     ref="select"
                     v-model:value="form.heatingType"
-                    style="width: 200px"
                     placeholder="Select Rental Unit"
                     class="w-full h-[52px]"
                     @focus="focus"

@@ -223,11 +223,13 @@
         >
           Revert to Pending
         </button> -->
-        <button
+        <UniversalButton
+          @click="handleSendEmail"
+          :loading="sendingmailtoteneant"
           class="bg-[#000130] py-[8px] flex font-inter items-center justify-center text-white w-full mt-4 rounded-[8px]"
         >
           Send Message
-        </button>
+        </UniversalButton>
       </div>
     </div>
   </a-modal>
@@ -235,7 +237,7 @@
 
 <script>
 import TenantCard from "@/components/TenantCard.vue";
-
+import { sendEmailToTenant } from "@/api/tenancy";
 import TableHeader from "@/components/TableHeader.vue";
 import V2Table from "@/components/V2Table.vue";
 import V2ServiceRequestsDropDown from "@/components/V2ServiceRequestsDropDown.vue";
@@ -243,11 +245,13 @@ import {
   FetchServiceRequests,
   updateServiceRequest,
 } from "@/api/serviceRequest";
+import { handleToast } from "@/utils/helper";
 import { useUserStore } from "@/store";
 import BasePagination from "@/components/BasePagination.vue";
 import StatusButton from "@/components/icons/StatusBadge.vue";
 import BaseInput from "@/components/BaseInput.vue";
 import { useToast } from "vue-toast-notification";
+import UniversalButton from "@/components/Button/UniversalButton.vue";
 export default {
   components: {
     "table-component": V2Table,
@@ -318,6 +322,7 @@ export default {
             return {
               serviceRequestId: request.serviceRequestId,
               tenant: request.tenant,
+              tenantId: request.tenantId,
               accommodationName: request.accommodationName,
               unitId: request.unitId,
               serviceType: request.serviceType,
@@ -332,6 +337,26 @@ export default {
         .catch((error) => {
           console.error("Error fetching service requests:", error);
         });
+    },
+    handleSendEmail() {
+      this.sendingmailtoteneant = true;
+      console.log(this.selectedTenant.tenantId);
+      const body = {
+        tenantId: this.selectedTenant.tenantId,
+        subject: "Notification from Property Management",
+        body: this.form.message,
+        sendEmail: true,
+        sendPush: true,
+      };
+      sendEmailToTenant(body).then((response) => {
+        this.sendingmailtoteneant = false;
+        if (response.success == true) {
+          handleToast("Email Sent Successfully", "success");
+          this.form.email = "";
+          this.form.message = "";
+          this.showModal = false;
+        } else handleError(response);
+      });
     },
     HandleUpdateServiceRequest(toType) {
       const body = {
@@ -350,6 +375,7 @@ export default {
   },
   data() {
     return {
+      sendingmailtoteneant: false,
       toast: useToast(),
       searchQuery: "",
       currentPage: 1,

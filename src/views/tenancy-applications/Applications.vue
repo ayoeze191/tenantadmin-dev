@@ -578,24 +578,24 @@ export default {
                 keys: ["apprMonthlyIncome"],
                 label: "Approximate Monthly Income",
               },
-              {
-                keys: ["lengthOfTimeWithEmployer"],
-                label: "Length of Time with Employer",
-              },
-              {
-                keys: ["workSupervisorPhoneNo"],
-                label: "Work Supervisor's Number",
-              },
-              {
-                keys: ["workSupervisorEmail"],
-                label: "Work Supervisor's Email",
-              },
+              // {
+              //   keys: ["lengthOfTimeWithEmployer"],
+              //   label: "Length of Time with Employer",
+              // },
+              // {
+              //   keys: ["workSupervisorPhoneNo"],
+              //   label: "Work Supervisor's Number",
+              // },
+              // {
+              //   keys: ["workSupervisorEmail"],
+              //   label: "Work Supervisor's Email",
+              // },
               {
                 keys: ["budgetForAccommodation"],
                 label: "Budget for Accommodation",
               },
-              { keys: ["carModel"], label: "Car Make, Model" },
-              { keys: ["carLicenseNumber"], label: "Car License Number" },
+              // { keys: ["carModel"], label: "Car Make, Model" },
+              // { keys: ["carLicenseNumber"], label: "Car License Number" },
             ],
           },
           {
@@ -743,7 +743,7 @@ export default {
       },
       AccommodationApplicationStatusDesc: {
         0: "Application submission failed or system error occurred",
-        1: "New Application submitted, review Tenant details and<br> decide whether to approve, decline or request more documents",
+        1: "New Application submitted, review Tenant details and decide whether to approve, decline or request more documents",
 
         2: "You have requested extra documents waiting for tenants to upload",
         3: "Application approved, awaiting landlord to confirm move-in date",
@@ -974,7 +974,7 @@ export default {
       } else if (this.stage == 3) {
         // check if landlord has already confirmed date
         this.stage = 3;
-      } 
+      }
       const payload = {
         applicationId: this.selectedApplication.applicationId,
         statusId,
