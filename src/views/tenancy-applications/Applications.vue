@@ -80,12 +80,13 @@
             <button
               :class="{
                 'bg-[#FEF9C3] border-[#854D0F] border-solid border-[0.5px] text-[#854D0F]':
-                  record.status == 'AwaitingAdditionalDocuments',
+                  record.status == 'Awaiting AdditionalDocuments',
                 'bg-[#F3E8FF] text-[#6D24A9] border-[#6D24A9] border-solid border-[1px] ':
-                  record.status == 'MoveInDateLandlordConfirmationPending' ||
-                  record.status == 'ConfirmingMove-inDate',
+                  record.status ==
+                    'MoveIn Date Landlord Confirmation Pending' ||
+                  record.status == 'Confirming Move-inDate',
                 'bg-[#FEF9C3] border-solid  border-[1px] text-[#1D40AE] border-[#1D40AE]':
-                  record.status == 'AwaitingReview',
+                  record.status == 'Awaiting Review',
                 'bg-red-700 text-red-300 border-red-300 border-solid border-[1px]':
                   record.status == 'Failed',
                 'bg-[#DCFCE7] text-[#166434] border-[#166434] border-solid border-[1px] z-50 left-[30%]':
@@ -123,13 +124,28 @@
     :footer="null"
   >
     <div
-      v-if="selectedApplication.status == 'Awaiting AdditionalDocuments'"
-      class="flex gap-3 text-[#854D0F] bg-[#C382011A] rounded-lg py-1.5 px-2 mb-3 items-center"
+      :class="{
+        'bg-[#FEF9C3] border-[#854D0F] border-solid border-[0.5px] text-[#854D0F]':
+          selectedApplication.status == 'Awaiting AdditionalDocuments',
+        'bg-[#F3E8FF] text-[#6D24A9] border-[#6D24A9] border-solid border-[1px] ':
+          selectedApplication.status ==
+            'MoveIn Date Landlord Confirmation Pending' ||
+          selectedApplication.status == 'Confirming Move-inDate',
+        'bg-[#FEF9C3] border-solid  border-[1px] text-[#1D40AE] border-[#1D40AE]':
+          selectedApplication.status == 'Awaiting Review',
+        'bg-red-700 text-red-300 border-red-300 border-solid border-[1px]':
+          selectedApplication.status == 'Failed',
+        'bg-[#DCFCE7] text-[#166434] border-[#166434] border-solid border-[1px] z-50 left-[30%]':
+          selectedApplication.status == 'Completed',
+        'bg-[#FEF9C3] text-[#854D0F] border-solid border-[1px] border-[#854D0F] z- left-[20%]':
+          selectedApplication.status == 'AwaitingPayment',
+      }"
+      class="flex gap-3 rounded-lg py-1.5 px-2 mb-3 items-center"
     >
-      <IconAlertCircleOutlined class="h-[1.5rem]" color="#854D0F" />
+      <IconAlertCircleOutlined class="h-[1.5rem]" />
       <div>
-        <p class="font-semibold">Awaiting Additional Documents</p>
-        <p>Tenant has been notified to provide additional documents</p>
+        <p class="font-semibold">{{ selectedApplication.status }}</p>
+        <p>{{ selectedApplication.AccommodationApplicationStatusDesc }}</p>
       </div>
     </div>
     <div
@@ -1122,7 +1138,8 @@ export default {
               return {
                 applicantName: app.applicantName || "N/A",
                 propertyName: app.propertyName || "N/A",
-                unitId: app.unitId || "N/A",
+                unitId: app.unitRefNo || "N/A",
+
                 status:
                   this.AccommodationApplicationStatus[app.status] || "Unknown",
                 AccommodationApplicationStatusDesc:
