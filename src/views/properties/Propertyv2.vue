@@ -556,36 +556,6 @@
             </a-checkbox-group>
           </div>
         </a-form>
-        <a-form :model="form" v-if="stage == 4">
-          <a-form-item>
-            <FIleUploader
-              v-model:fileList="otherDocsFileList"
-              :customRequest="
-                (options) =>
-                  customAdditionalDocumentsUpload(options, 'proofOfOwnership')
-              "
-              title="Proof Of Ownership"
-            />
-
-            <FIleUploader
-              v-model:fileList="AdditionalDocumentList"
-              :customRequest="
-                (options) =>
-                  customAdditionalDocumentsUpload(options, 'otherDocs')
-              "
-              title="Additional Documents"
-            />
-
-            <FIleUploader
-              v-model:fileList="governmentIDList"
-              :customRequest="
-                (options) =>
-                  customAdditionalDocumentsUpload(options, 'governmentID')
-              "
-              title="Government-Issued ID"
-            />
-          </a-form-item>
-        </a-form>
         <a-form v-if="stage == 3" :model="form">
           <div class="">
             <p class="text-[#000000] text-[18px] font-sf leading-[100%]">
@@ -782,6 +752,37 @@
             </a-form>
           </div>
         </a-form>
+        <a-form :model="form" v-if="stage == 4">
+          <a-form-item>
+            <FIleUploader
+              v-model:fileList="otherDocsFileList"
+              :customRequest="
+                (options) =>
+                  customAdditionalDocumentsUpload(options, 'proofOfOwnership')
+              "
+              title="Proof Of Ownership"
+            />
+
+            <FIleUploader
+              v-model:fileList="AdditionalDocumentList"
+              :customRequest="
+                (options) =>
+                  customAdditionalDocumentsUpload(options, 'otherDocs')
+              "
+              title="Additional Documents"
+            />
+
+            <FIleUploader
+              v-model:fileList="governmentIDList"
+              :customRequest="
+                (options) =>
+                  customAdditionalDocumentsUpload(options, 'governmentID')
+              "
+              title="Government-Issued ID"
+            />
+          </a-form-item>
+        </a-form>
+
         <!-- preview -->
         <div class="" v-if="stage !== 0">
           <p
@@ -824,14 +825,84 @@
           </div>
         </div>
       </div>
-      <UniversalButton
+      <button
         :disabled="disableNext()"
         @click="handleNext"
         :loading="submitting"
         class="bg-[#000130] disabled:bg-[#000130] disabled:text-[#FFFFFF] disabled:opacity-70 disabled:cursor-not-allowed ml-auto mt-[24px] text-white rounded-[8px] w-[85px] h-[36px] flex items-center justify-center"
       >
+        <span v-if="loading">Loading...</span>
+
         Continue
-      </UniversalButton>
+      </button>
+    </a-modal>
+
+    <a-modal
+      :open="showSuccessModal"
+      :closable="false"
+      :footer="null"
+      :width="500"
+    >
+      <template #title>
+        <div class="flex items-center justify-between py-[12px]">
+          <span></span>
+          <span></span>
+          <button @click="() => (showSuccessModal = false)">
+            <CloseOutlined />
+          </button>
+        </div>
+      </template>
+      <div class="mx-auto w-fit">
+        <p class="text-[#404164] text-[20px] font-medium">
+          Submitted Successfully
+        </p>
+        <svg
+          width="200"
+          height="201"
+          viewBox="0 0 200 201"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle
+            cx="100"
+            cy="100.5"
+            r="100"
+            fill="black"
+            fill-opacity="0.25"
+          />
+          <ellipse
+            cx="100.008"
+            cy="99.9324"
+            rx="86.5232"
+            ry="83.948"
+            fill="black"
+            fill-opacity="0.25"
+          />
+          <path
+            d="M162.125 100.434C162.125 134.742 134.313 162.555 100.004 162.555C65.6955 162.555 37.8828 134.742 37.8828 100.434C37.8828 66.1251 65.6955 38.3125 100.004 38.3125C134.313 38.3125 162.125 66.1251 162.125 100.434Z"
+            fill="white"
+          />
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M100.001 173.228C140.167 173.228 172.728 140.667 172.728 100.501C172.728 60.3346 140.167 27.7734 100.001 27.7734C59.8346 27.7734 27.2734 60.3346 27.2734 100.501C27.2734 140.667 59.8346 173.228 100.001 173.228ZM138.473 81.4232C141.331 77.9947 140.867 72.8992 137.439 70.0421C134.01 67.1851 128.915 67.6483 126.058 71.0768L96.9834 105.966C94.1817 109.328 92.6066 111.189 91.3491 112.333L91.301 112.377L91.2492 112.338C89.8933 111.313 88.1562 109.601 85.0616 106.507L73.3332 94.7784C70.1774 91.6227 65.061 91.6227 61.9052 94.7784C58.7494 97.9342 58.7494 103.051 61.9052 106.206L73.6336 117.935L73.9635 118.265L73.9636 118.265C76.6019 120.904 79.14 123.443 81.5015 125.229C84.1469 127.229 87.6113 129.11 92.0509 128.909C96.4906 128.707 99.7705 126.521 102.224 124.289C104.414 122.297 106.712 119.538 109.1 116.671L109.399 116.312L138.473 81.4232ZM90.596 112.934C90.596 112.934 90.5998 112.932 90.6072 112.928C90.5996 112.933 90.596 112.935 90.596 112.934ZM92.042 112.863C92.0496 112.866 92.0536 112.868 92.0537 112.868C92.0537 112.868 92.0499 112.867 92.042 112.863Z"
+            fill="#000130"
+          />
+        </svg>
+      </div>
+
+      <div class="flex flex-col">
+        <RouterLink
+          to="/properties"
+          class="bg-[#000130] text-center w-full rounded-[4px] py-[9px] text-[500] leading-[25px] text-white mt-[36px]"
+          >View Accomodations</RouterLink
+        >
+        <RouterLink
+          to="/edit"
+          class="text-[#404164] font-semibold leading-[100%] text-[18px] mt-4 text-center mx-auto w-full"
+          >Edit Accomodations</RouterLink
+        >
+      </div>
     </a-modal>
   </div>
 </template>
@@ -861,6 +932,7 @@ import { FetchLandlords } from "@/api/properties";
 import UniversalButton from "@/components/Button/UniversalButton.vue";
 import PropertyCard from "@/components/PropertyCard.vue";
 const allProvinces = ref([]);
+const showSuccessModal = ref(false);
 const fetchProvinces = async () => {
   const response = await getProvinces();
   allProvinces.value = response;
@@ -1015,7 +1087,6 @@ const onPageChange = (page) => {
 const totalItemCount = 0;
 const searchQuery = "";
 const selectedDisplayType = "Grid";
-const stages = ["Add Property", "Property Details", "Property Setup"];
 const stage = ref(0);
 const store = useUserStore();
 const modalVisible = ref(true);
@@ -1157,17 +1228,18 @@ function showModal() {
 }
 const submitting = ref(false);
 async function handleNext() {
+  console.log("Before:", stage.value);
   if (stage.value == 4) {
     await SubmitCreateProperty();
     return;
   }
   stage.value++;
-
-  // if (stage.value == 3) {
-  //   //submit
-  // }
+  console.log("After:", stage.value);
 }
 function disableNext() {
+  if (submitting.value) {
+    return true;
+  }
   if (stage.value == 0) {
     if (store.userProfile.referenceID == "NN1") {
       if (form.rental_unit === null || form.landlordId == null) {

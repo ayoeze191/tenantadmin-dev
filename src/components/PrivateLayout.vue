@@ -7,7 +7,8 @@
       <top-nav />
       <div class="flex-1 pt-4 h-full">
         <div class="h-full" v-if="store.userProfile.isVerified == true">
-          <router-view></router-view>
+          <router-view v-if="!store.loading"></router-view>
+          <Loader />
         </div>
         <!--  -->
         <div
@@ -31,10 +32,12 @@
 import SideBar from "./SideBar.vue";
 import TopNav from "./TopNav.vue";
 import { useUserStore } from "@/store";
+import Loader from "./Loader.vue";
 export default {
   components: {
     "top-nav": TopNav,
     "side-bar": SideBar,
+    Loader,
   },
   data() {
     return {

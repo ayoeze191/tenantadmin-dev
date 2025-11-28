@@ -446,6 +446,208 @@
       </div>
     </div>
   </a-modal>
+
+  <a-modal :visible="false" :footer="null" width="1245px" :closable="false">
+    <div class="flex w-full">
+      <div class="border-r-solid border-r-[1px] pr-[75px] w-[570px]">
+        <p class="text-[#404164] font-sf text-[14px] font-[400p] py-[24px]">
+          PROPERTY & TENANT DETAILS
+        </p>
+        <div>
+          <p
+            class="text-[#404164] text-[14px] font-[500] font-sf leading-[100%]"
+          >
+            Property Address
+          </p>
+          <p class="mt-[8px] text-[12px] font-sf leading-[100%] text-[#808097]">
+            12 Ontario Dr,Toronto, ON M6K 3C3, Canada
+          </p>
+        </div>
+        <div>
+          <p
+            class="text-[#404164] m-0 text-[14px] font-[500] font-sf leading-[100%]"
+          >
+            Applicant
+          </p>
+          <p class="mt-[8px] text-[12px] font-sf leading-[100%] text-[#808097]">
+            Meredith Grey
+          </p>
+        </div>
+        <div>
+          <p
+            class="text-[#404164] text-[14px] font-[500] m-0 font-sf leading-[100%]"
+          >
+            Rent
+          </p>
+          <p class="mt-[8px] text-[12px] font-sf leading-[100%] text-[#808097]">
+            C$ 670
+          </p>
+        </div>
+        <div>
+          <p
+            class="text-[#404164] m-0 text-[14px] font-[500] font-sf leading-[100%]"
+          >
+            Security Deposit
+          </p>
+          <p class="mt-[8px] text-[12px] font-sf leading-[100%] text-[#808097]">
+            C$ 670
+          </p>
+        </div>
+        <div>
+          <p
+            class="text-[#404164] m-0 text-[14px] font-[500] font-sf leading-[100%]"
+          >
+            Lease Type
+          </p>
+          <p class="mt-[8px] text-[12px] font-sf leading-[100%] text-[#808097]">
+            Month-to-Month
+          </p>
+        </div>
+        <div>
+          <p
+            class="text-[#404164] m-0 text-[14px] font-[500] font-sf leading-[100%]"
+          >
+            Lease Start Date
+          </p>
+          <p class="mt-[8px] text-[12px] font-sf leading-[100%] text-[#808097]">
+            12/07/2026
+          </p>
+        </div>
+      </div>
+      <div class="pl-[24px]">
+        <p class="text-[#404164] text-[14px] leading-[100%] font-sf m-0">
+          LEASE DOCUMENT PREVIEW
+        </p>
+        <p
+          class="mx-auto w-fit mt-[28px] text-[#404164] leading-[100%] font-[500] font-sf"
+        >
+          RESIDENTIAL LEASE AGREEMENT
+        </p>
+        <div class="font-sf">
+          <p class="text-[#404164] font-sf leading-[100%] font-[400] mb-4">
+            This Lease Agreement is entered into on August 12, 2025,
+            between 10ANTS Property Management (Landlord) and John Doe (Tenant).
+          </p>
+          <div class="mb-4">
+            <p class="text-[#404164] font-sf leading-[100%] font-[500] m-0">
+              1. PROPERTY DESCRIPTION
+            </p>
+            <p class="text-[#404164] font-sf leading-[100%] font-[400] m-0">
+              The Landlord hereby leases to the Tenant the residential property
+              located at Block B, Apartment 4, subject to the terms and
+              conditions set forth in this agreement.
+            </p>
+          </div>
+
+          <div class="mb-4">
+            <p class="text-[#404164] font-sf leading-[100%] font-[500] m-0">
+              2. LEASE TERM
+            </p>
+            <p class="text-[#404164] font-sf leading-[100%] font-[400] m-0">
+              The lease term shall commence on August 12, 2025 and shall
+              continue for a period of twelve (12) months, ending on August 12,
+              2026.
+            </p>
+          </div>
+
+          <div class="mb-4">
+            <p class="text-[#404164] font-sf leading-[100%] font-[500] m-0">
+              3. RENT AND PAYMENT TERMS
+            </p>
+            <p class="text-[#404164] font-sf leading-[100%] font-[400] m-0">
+              The annual rent for the premises is ₦1,500,000 (One Million Five
+              Hundred Thousand Naira), payable in monthly installments
+              of ₦125,000. Rent is due on the first day of each month and shall
+              be considered late if not received within five (5) days of the due
+              date.
+            </p>
+          </div>
+
+          <div class="mb-4">
+            <p class="text-[#404164] font-sf leading-[100%] font-[500] m-0">
+              3. RENT AND PAYMENT TERMS
+            </p>
+            <p class="text-[#404164] font-sf leading-[100%] font-[400] m-0">
+              The annual rent for the premises is ₦1,500,000 (One Million Five
+              Hundred Thousand Naira), payable in monthly installments
+              of ₦125,000. Rent is due on the first day of each month and shall
+              be considered late if not received within five (5) days of the due
+              date.
+            </p>
+          </div>
+
+          <div class="mb-4">
+            <p class="text-[#404164] font-sf leading-[100%] font-[500] m-0">
+              4. SECURITY DEPOSIT
+            </p>
+            <p class="text-[#404164] font-sf leading-[100%] font-[400] m-0">
+              Tenant shall pay a security deposit equivalent to two (2) months'
+              rent, totalling C$50,000, to be held by the Landlord as security
+              for any damages or unpaid rent.
+            </p>
+          </div>
+
+          <div class="mb-4">
+            <p class="text-[#404164] font-sf leading-[100%] font-[500] m-0">
+              5. UTILITIES AND MAINTENANCE
+            </p>
+            <p class="text-[#404164] font-sf leading-[100%] font-[400] m-0">
+              Tenant shall be responsible for all utilities including
+              electricity, water, and internet. Landlord shall maintain the
+              structural integrity of the property and handle major repairs
+            </p>
+          </div>
+
+          <div class="mb-4">
+            <p class="text-[#404164] font-sf leading-[100%] font-[500] m-0">
+              6. TERMINATION
+            </p>
+            <p class="text-[#404164] font-sf leading-[100%] font-[400] m-0">
+              This lease may be terminated by either party with thirty (30) days
+              written notice, subject to the terms outlined in this agreement.
+            </p>
+          </div>
+          <hr />
+          <p
+            class="mt-[12px] text-[16px] font-sf leading-[100%] text-[#404164]"
+          >
+            IN WITNESS WHEREOF, the parties have executed this lease agreement
+            on the date first written above.
+          </p>
+          <div class="flex justify-between mt-[24px]">
+            <div class="w-[40%]">
+              <hr class="w-full" />
+              <p
+                class="text-[#404164] mt-[10px] text-[14px] leading-[100%] font-sf"
+              >
+                Landlord Signature
+              </p>
+            </div>
+            <div class="w-[40%]">
+              <hr class="w-full" />
+              <p
+                class="text-[#404164] mt-[10px] text-[14px] leading-[100%] font-sf"
+              >
+                Tenant Signature (John Doe)
+              </p>
+            </div>
+          </div>
+          <div class="ml-auto mt-[28px] w-fit flex gap-[40px]">
+            <button
+              class="px-[43px] py-[12px] font-sf font-[600] text-[14px] text-[#000130] rounded-[4px] border-[1px] border-[#000130]"
+            >
+              Download Pdf
+            </button>
+            <button
+              class="px-[43px] py-[12px] font-sf font-[600] text-[14px] rounded-[4px] text-white bg-[#000130]"
+            >
+              Send Lease
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </a-modal>
 </template>
 
 <script>
@@ -711,7 +913,7 @@ export default {
             tabTitle: "Move-In Date Information",
             tabDetails: [
               { keys: ["propertyName"], label: "Property Name" },
-              { keys: ["unitName"], label: "Unit" },
+              { keys: ["unitRefNo"], label: "Unit" },
               {
                 keys: ["intendedMoveInDate"],
                 label: "Tenants Intended Move-In date",
@@ -846,8 +1048,10 @@ export default {
         } else {
           this.toast.error("Couldn't generate lease");
         }
+
         this.modalOpen = false;
         this.generating = false;
+        this.fetchData();
 
         this.stage = 1;
       } catch (err) {
@@ -1144,6 +1348,7 @@ export default {
                   this.AccommodationApplicationStatus[app.status] || "Unknown",
                 AccommodationApplicationStatusDesc:
                   this.AccommodationApplicationStatusDesc[app.status],
+
                 email: app.email || "N/A",
                 gender: app.gender || "N/A",
                 phoneNo: app.phoneNo || "N/A",
@@ -1185,6 +1390,7 @@ export default {
                   app.isYourCurrentRentUpToDate || "N/A",
                 haveYouEverBeenEvicted: app.haveYouEverBeenEvicted || "N/A",
                 img: app.unitImages[0],
+                unitRefNo: app.unitRefNo,
               };
             });
           } else {
