@@ -244,7 +244,6 @@
                 v-if="
                   [
                     'phoneNo',
-                    'whatsAppNo',
                     'workSupervisorPhoneNo',
                     'emergencyPhoneNo',
                     'guarantor1PhoneNo',
@@ -559,7 +558,7 @@ export default {
               { keys: ["intendedMoveInDate"], label: "Intended Move-In Date" },
               { keys: ["currentAddress"], label: "Current Address" },
               { keys: ["gender"], label: "Gender" },
-              { keys: ["whatsAppNo"], label: "WhatsApp Number" },
+              // { keys: ["whatsAppNo"], label: "WhatsApp Number" },
             ],
           },
           {

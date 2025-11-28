@@ -1,9 +1,9 @@
 <template>
   <div
-    class="w-full h-full border-2 border-gray rounded-xl box-border flex flex-col"
+    class="w-full h-full border-2 border-gray rounded-xl box-border flex flex-col overflow-y-scroll"
   >
     <div class="flex items-center border-b-2">
-      <table-header :total-item-count="totalItemCount" title="All Properties">
+      <table-header :total-item-count="total" title="All Properties">
         <div class="flex justify-between w-full items-center">
           <a-input
             v-model:value="searchQuery"
@@ -33,16 +33,23 @@
     </div>
     <div
       v-if="totalItemCount == 0"
-      class="h-[100%] text-primary flex flex-col justify-center items-center"
+      class="text-primary px-[13.5px] py-[10px] gap-[20px] grid grid-cols-4 justify-center items-center h-fit"
     >
-      <IconProperties />
+      <PropertyCard
+        v-for="value in propertyList"
+        :name="value.name"
+        :imageUrl="value.imageUrl"
+        :address="value.address"
+        :totalUnits="value.totalUnits"
+      />
+      <!-- <IconProperties />
       <div>
         <p>You have no Properties</p>
         <p class="text-gray-400">There's nothing to view</p>
-      </div>
-      <Button class="flex gap-1.5" @click="showModal"
+      </div> -->
+      <!-- <Button class="flex gap-1.5" @click="showModal"
         ><span class="font-semibold">+</span> Add property</Button
-      >
+      > -->
     </div>
     <div v-else>
       <div
@@ -99,8 +106,8 @@
     <div class="border-t border-solid">
       <BasePagination
         :currentPage="currentPage"
-        :totalPages="totalPages"
-        :total="totalItemCount"
+        :totalPages="totalPages()"
+        :total="total"
         :pageSize="pageSize"
         @prev="onPrev"
         @next="onNext"
@@ -308,7 +315,7 @@
                       ? 'Room Type'
                       : 'Unit Type'
                   "
-                  class="w-full h-[52px]"
+                  class="w-full h-[48px]"
                   placeholder="Unit Type"
                   @focus="focus"
                   @change="handleChange"
@@ -338,6 +345,7 @@
                     placeholder="Count"
                     size="large"
                     type="number"
+                    class="h-[48px]"
                   />
                 </a-form-item>
                 <a-form-item
@@ -352,6 +360,7 @@
                   ]"
                 >
                   <a-input
+                    class="h-[48px]"
                     v-model:value="form.unitTypes[index].rentPerMonth"
                     placeholder="Rent Price"
                     size="large"
@@ -375,6 +384,7 @@
                   v-model:value="form.unitTypes[index].securityDeposit"
                   placeholder="Security Deposit"
                   size="large"
+                  class="h-[48px]"
                 />
               </a-form-item>
               <div
@@ -397,6 +407,7 @@
                   class="flex-1 form-labels"
                 >
                   <a-input
+                    class="h-[48px]"
                     :rules="[
                       { required: true, message: 'Please enter availability' },
                     ]"
@@ -816,7 +827,8 @@
       <UniversalButton
         :disabled="disableNext()"
         @click="handleNext"
-        class="bg-[#000130] disabled:bg-[#000130] disabled:text-[#FFFFFF] disabled:opacity-70 disabled:cursor-wait ml-auto mt-[24px] text-white rounded-[8px] w-[85px] h-[36px] flex items-center justify-center"
+        :loading="submitting"
+        class="bg-[#000130] disabled:bg-[#000130] disabled:text-[#FFFFFF] disabled:opacity-70 disabled:cursor-not-allowed ml-auto mt-[24px] text-white rounded-[8px] w-[85px] h-[36px] flex items-center justify-center"
       >
         Continue
       </UniversalButton>
@@ -826,7 +838,12 @@
 
 <script setup>
 import IconProperties from "@/components/icons/IconProperties.vue";
-import { CreateNewProperty, getProvinces } from "@/api/properties";
+import {
+  CreateNewProperty,
+  getProvinces,
+  FetchProperties,
+  FetchUnitTypes,
+} from "@/api/properties";
 import Button from "@/components/Button/Button.vue";
 import Table from "@/components/V2Table.vue";
 import TableHeader from "@/components/TableHeader.vue";
@@ -842,6 +859,7 @@ import { uploadImage } from "@/api/properties";
 import { options } from "less";
 import { FetchLandlords } from "@/api/properties";
 import UniversalButton from "@/components/Button/UniversalButton.vue";
+import PropertyCard from "@/components/PropertyCard.vue";
 const allProvinces = ref([]);
 const fetchProvinces = async () => {
   const response = await getProvinces();
@@ -885,6 +903,38 @@ const fetchAllLandlords = async (searchName = "", page = 1) => {
   } finally {
     landlordLoading.value = false;
   }
+};
+const currentPage = ref(1);
+const totalPages = () => {
+  console.log(total.value);
+  return Math.ceil(total.value / pageSize.value);
+};
+const pageSize = ref(16);
+const total = ref(0);
+const propertyList = ref([]);
+const handleFetchProperties = (page = currentPage.value) => {
+  const query = {
+    size: pageSize.value,
+    page: page,
+    query: "",
+  };
+  FetchProperties(store.userProfile.referenceID, query)
+    .then((response) => {
+      if (response.responseCode == "00") {
+        propertyList.value = response.propertyRecs.items;
+        total.value = response.propertyRecs.totalItemCount || 0;
+        pageSize.value = response.propertyRecs.pageSize || pageSize.value;
+        currentPage.value = response.propertyRecs.page || page;
+      } else {
+        // this.error = "Failed to load properties.";
+      }
+    })
+    .catch((e) => {
+      // this.error = "Failed to load properties.";
+    })
+    .finally(() => {
+      this.loading = false;
+    });
 };
 const handleAddUnit = () => {
   form.unitTypes.push({
@@ -943,10 +993,13 @@ const customAdditionalDocumentsUpload = async (options, type) => {
   }
 };
 onMounted(async () => {
+  handleFetchProperties();
+  submitting.value = true;
   await optionsStore.fetchAmenities();
   await optionsStore.fetchUnitTypes();
   await fetchAllLandlords();
 
+  submitting.value = false;
   amenityOptions.value = optionsStore.amenities.map((a) => ({
     label: a.name,
     value: a.amenityId,
@@ -955,6 +1008,10 @@ onMounted(async () => {
   unitTypeOptions.value = [...optionsStore.unitTypes];
   await fetchProvinces();
 });
+onMounted(() => {});
+const onPageChange = (page) => {
+  currentPage.value = page;
+};
 const totalItemCount = 0;
 const searchQuery = "";
 const selectedDisplayType = "Grid";
@@ -981,9 +1038,9 @@ const form = reactive({
   occupancy_status: "",
   security_deposit: "",
   governmentID: "",
-  proofOfOwnership: "",
-  governmentID: "",
-  otherDocs: "",
+  proofOfOwnership: null,
+  governmentID: null,
+  otherDocs: null,
   rental_unit: null,
   name: "",
   address: "",
@@ -1098,12 +1155,14 @@ function showModal() {
 
   modalVisible.value = !modalVisible.value;
 }
+const submitting = ref(false);
 async function handleNext() {
   if (stage.value == 4) {
     await SubmitCreateProperty();
     return;
   }
   stage.value++;
+
   // if (stage.value == 3) {
   //   //submit
   // }
@@ -1148,6 +1207,8 @@ function disableNext() {
 }
 
 const SubmitCreateProperty = async () => {
+  submitting.value = true;
+  console.log("here");
   let payload;
   let landlord = form.landlordId || store.userProfile.referenceID;
   // if(form.rental_unit == 'apartment'){
@@ -1193,6 +1254,7 @@ const SubmitCreateProperty = async () => {
     } else {
       toast.error("Couldn't create");
     }
+    submitting.value = false;
   } catch (err) {
     console.error("Error creating property:", err);
     message.error("Failed to create property. Please try again.");

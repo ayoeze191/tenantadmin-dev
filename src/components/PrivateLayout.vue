@@ -1,5 +1,5 @@
 <template>
-  <main class="flex w-full h-full bg-primary p-[1rem] gap-3 box-border">
+  <main class="flex w-full h-full bg-primary gap-3 box-border">
     <side-bar />
     <section
       class="flex flex-col w-full h-full bg-[#FFFFFF] rounded-[18px] box-border p-[1rem]"
