@@ -229,13 +229,14 @@
             "
             class="flex gap-3 flex-wrap justify-start items-start"
           >
-            <div
-              v-for="doc in tab.tabDetails"
+            <a
+              v-for="doc in selectedApplication.propertyDocs"
+              :href="doc"
               class="bg-[#F6F6F6] min-w-[130px] h-[7rem] px-3.5 py-2 flex flex-col flex-shrink-0 justify-around items-center rounded-lg font-medium text-[#121212] max-[1000px]:w-[45%] w-[40%]"
             >
               <IconPDFDoc />
-              <span>{{ doc.name }}</span>
-            </div>
+              <!-- <span>{{ doc.name }}</span> -->
+            </a>
           </div>
           <div v-for="item in tab.tabDetails" class="mb-1.5">
             <p class="font-semibold text-black">{{ item.label }}</p>
@@ -1154,6 +1155,7 @@ export default {
                 guarantor2PhoneNo: app.guarantor2PhoneNo || "N/A",
                 guarantor2Email: app.guarantor2Email || "N/A",
                 guarantor2Occupation: app.guarantor2Occupation || "N/A",
+                propertyDocs: app.propertyDocs || "N/A",
                 haveYoubeenToCourtByLandLord:
                   app.haveYoubeenToCourtByLandLord || "N/A",
                 haveYoueverDamageApartmentOrMovestillowning:
@@ -1165,6 +1167,7 @@ export default {
                 isYourCurrentRentUpToDate:
                   app.isYourCurrentRentUpToDate || "N/A",
                 haveYouEverBeenEvicted: app.haveYouEverBeenEvicted || "N/A",
+                img: app.unitImages[0],
               };
             });
           } else {
