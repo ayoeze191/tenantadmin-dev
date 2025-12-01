@@ -90,7 +90,7 @@ export const sendEmailToTenant = async (body) => {
 };
 
 export const ChangeApplicationStatus = async (body) => {
-    try {
+  try {
     const response = await putApi(
       `/api/v2/AccommodationApplications/${body.applicationId}/status`,
       {
@@ -99,6 +99,17 @@ export const ChangeApplicationStatus = async (body) => {
         comments: body.comments,
         updatedByUserId: body.userId,
       }
+    );
+    return response.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const getLeaseReview = async (body) => {
+  try {
+    const response = await getApi(
+      `v2/AccommodationApplications/${body.applicationId}/GetLeaseReview`
     );
     return response.data;
   } catch (err) {

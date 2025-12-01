@@ -179,7 +179,8 @@
             >
               UPLOAD SIGNED LEASE PDF
             </h2>
-            <a-upload-dragger
+            <div v-html="selectedApplication.leaseHtml"></div>
+            <!-- <a-upload-dragger
               v-if="leaseFile == null || !leaseFile[0]"
               class="upload-dragger"
               :fileList="leaseFile"
@@ -214,7 +215,7 @@
                 <upload-outlined></upload-outlined>
                 Reupload
               </a-button>
-            </a-upload>
+            </a-upload> -->
           </div>
           <div>
             <h2
@@ -447,7 +448,12 @@
     </div>
   </a-modal>
 
-  <a-modal :visible="false" :footer="null" width="1245px" :closable="false">
+  <a-modal
+    :visible="showLeaseDetailsModal"
+    :footer="null"
+    width="1245px"
+    :closable="false"
+  >
     <div class="flex w-full">
       <div class="border-r-solid border-r-[1px] pr-[75px] w-[570px]">
         <p class="text-[#404164] font-sf text-[14px] font-[400p] py-[24px]">
@@ -460,7 +466,7 @@
             Property Address
           </p>
           <p class="mt-[8px] text-[12px] font-sf leading-[100%] text-[#808097]">
-            12 Ontario Dr,Toronto, ON M6K 3C3, Canada
+            {{ selectedApplication.currentAddress }}
           </p>
         </div>
         <div>
@@ -470,7 +476,7 @@
             Applicant
           </p>
           <p class="mt-[8px] text-[12px] font-sf leading-[100%] text-[#808097]">
-            Meredith Grey
+            {{ selectedApplication.applicantName }}
           </p>
         </div>
         <div>
@@ -480,7 +486,7 @@
             Rent
           </p>
           <p class="mt-[8px] text-[12px] font-sf leading-[100%] text-[#808097]">
-            C$ 670
+            {{ "nil" }}
           </p>
         </div>
         <div>
@@ -490,7 +496,7 @@
             Security Deposit
           </p>
           <p class="mt-[8px] text-[12px] font-sf leading-[100%] text-[#808097]">
-            C$ 670
+            {{ "nil" }}
           </p>
         </div>
         <div>
@@ -500,7 +506,7 @@
             Lease Type
           </p>
           <p class="mt-[8px] text-[12px] font-sf leading-[100%] text-[#808097]">
-            Month-to-Month
+            {{ "nil" }}
           </p>
         </div>
         <div>
@@ -510,7 +516,7 @@
             Lease Start Date
           </p>
           <p class="mt-[8px] text-[12px] font-sf leading-[100%] text-[#808097]">
-            12/07/2026
+            {{ "nil" }}
           </p>
         </div>
       </div>
@@ -525,8 +531,10 @@
         </p>
         <div class="font-sf">
           <p class="text-[#404164] font-sf leading-[100%] font-[400] mb-4">
-            This Lease Agreement is entered into on August 12, 2025,
-            between 10ANTS Property Management (Landlord) and John Doe (Tenant).
+            This Lease Agreement is entered into on {{ new Date() }},
+            between 10ANTS Property Management (Landlord) and {{
+              selectedApplication.applicantName
+            }}.
           </p>
           <div class="mb-4">
             <p class="text-[#404164] font-sf leading-[100%] font-[500] m-0">
@@ -534,8 +542,8 @@
             </p>
             <p class="text-[#404164] font-sf leading-[100%] font-[400] m-0">
               The Landlord hereby leases to the Tenant the residential property
-              located at Block B, Apartment 4, subject to the terms and
-              conditions set forth in this agreement.
+              located at {{ selectedApplication.currentAddress }} subject to the
+              terms and conditions set forth in this agreement.
             </p>
           </div>
 
@@ -544,9 +552,10 @@
               2. LEASE TERM
             </p>
             <p class="text-[#404164] font-sf leading-[100%] font-[400] m-0">
-              The lease term shall commence on August 12, 2025 and shall
-              continue for a period of twelve (12) months, ending on August 12,
-              2026.
+              The lease term shall commence on {{
+                selectedApplication.intendedMoveInDate
+              }} and shall continue for a period of twelve (12) months, ending
+              on August 12, 2026.
             </p>
           </div>
 
@@ -628,12 +637,13 @@
               <p
                 class="text-[#404164] mt-[10px] text-[14px] leading-[100%] font-sf"
               >
-                Tenant Signature (John Doe)
+                Tenant Signature {{ selectedApplication.applicantName }}
               </p>
             </div>
           </div>
           <div class="ml-auto mt-[28px] w-fit flex gap-[40px]">
             <button
+              @click="handleGetLeaseReview"
               class="px-[43px] py-[12px] font-sf font-[600] text-[14px] text-[#000130] rounded-[4px] border-[1px] border-[#000130]"
             >
               Download Pdf
@@ -647,6 +657,7 @@
         </div>
       </div>
     </div>
+    <div v-html="selectedApplication.leaseHtml"></div>
   </a-modal>
 </template>
 
@@ -657,6 +668,7 @@ import { useToast } from "vue-toast-notification";
 import V2Table from "@/components/V2Table.vue";
 import V2ServiceRequestsDropDown from "@/components/V2ServiceRequestsDropDown.vue";
 import { FetchTenant, ApproveTenant } from "@/api/tenancy";
+import { getLeaseReview } from "@/api/tenancy";
 import {
   ConfirmMoveInDate,
   GenerateLease,
@@ -715,6 +727,7 @@ export default {
   },
   data() {
     return {
+      showLeaseDetailsModal: false,
       data: [],
       movingdate: false,
 
@@ -937,6 +950,7 @@ export default {
           },
         ],
       ],
+      generatingReview: false,
       store: useUserStore(),
 
       searchQuery: "",
@@ -1048,15 +1062,26 @@ export default {
         } else {
           this.toast.error("Couldn't generate lease");
         }
-
         this.modalOpen = false;
         this.generating = false;
         this.fetchData();
-
         this.stage = 1;
       } catch (err) {
         console.log(err);
       }
+    },
+    async handleGetLeaseReview() {
+      this.generatingReview = true;
+      const body = { applicationId: this.selectedApplication.applicationId };
+      getLeaseReview(body)
+        .then((response) => {
+          this.selectedApplication = {
+            ...this.selectedApplication,
+            leaseHtml: response.leaseHtml,
+          };
+          this.generatingReview = false;
+        })
+        .catch();
     },
     async approveData() {
       this.approving = true;
@@ -1115,14 +1140,18 @@ export default {
       // if (original == false) {
       //   payload = { ...payload, moveInDate: this.form.moveInDate };
       // }
-      ConfirmMoveInDate({ ...payload }).then((response) => {
+      ConfirmMoveInDate({ ...payload }).then(async (response) => {
         if (response.responseCode == "00") {
           this.stage = 4;
           this.modalOpen = true;
           this.moveInDateModalOpen = false;
           this.movingdate = false;
           this.toast.success("Move-in date confirmed");
+          await this.handleGetLeaseReview();
         } else {
+          // this.stage = 4;
+          // await this.handleGetLeaseReview();
+
           console.log(response, payload);
           this.toast.error("Coudln't update");
         }
@@ -1391,6 +1420,7 @@ export default {
                 haveYouEverBeenEvicted: app.haveYouEverBeenEvicted || "N/A",
                 img: app.unitImages[0],
                 unitRefNo: app.unitRefNo,
+                currentAddress: app.currentAddress,
               };
             });
           } else {
