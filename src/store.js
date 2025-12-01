@@ -16,9 +16,11 @@ export const useUserStore = defineStore("user", {
       localStorage.setItem("10ant_up", JSON.stringify(data));
       localStorage.setItem("10ant_isl", JSON.stringify(true));
     },
-    setisLoading() {
-      this.loading = !this.loading;
+
+    setisLoading(value) {
+      this.loading = value;
     },
+
     logUserOut() {
       this.isLoggedIn = false;
       localStorage.removeItem("10ant_up");

@@ -90,7 +90,7 @@
         <BasePagination
           :currentPage="currentPage"
           :totalPages="totalPages"
-          :total="total"
+          :total="totalItemCount"
           :pageSize="pageSize"
           @prev="onPrev"
           @next="onNext"
@@ -214,27 +214,7 @@ import { sendEmailToTenant } from "@/api/tenancy";
 import FilterButton from "@/components/icons/FilterButton.vue";
 import UniversalButton from "@/components/Button/UniversalButton.vue";
 import { ref } from "vue";
-
-const showPopover = ref(false);
-const popoverRecord = ref(null);
-
-// Position of teleport card
-const popX = ref(0);
-const popY = ref(0);
-
-const openPopover = (event, record) => {
-  const rect = event.target.getBoundingClientRect();
-
-  popX.value = rect.left + window.scrollX;
-  popY.value = rect.bottom + window.scrollY + 8; // small offset
-
-  popoverRecord.value = record;
-  showPopover.value = true;
-};
-
-const closePopover = () => {
-  showPopover.value = false;
-};
+import { useUserStore } from "@/store";
 export default {
   components: {
     "table-component": V2Table,
@@ -245,12 +225,14 @@ export default {
     FilterButton,
     UniversalButton,
   },
-  created() {
+  async created() {
     this.handleFetchLandlords();
+    this.store.setisLoading(false);
   },
   data() {
     return {
       sendingmailtoteneant: false,
+      isFetching: false,
       messages: [
         "Your lease Would Expire Soon",
         "A noise complain has b...",
@@ -259,6 +241,7 @@ export default {
         "Kindly pay your rent please",
       ],
       form: { email: "", message: "" },
+      store: useUserStore(),
       showModal: false,
       totalItemCount: 0,
       currentPage: 1,
@@ -321,10 +304,7 @@ export default {
         this.onPageChange(this.currentPage);
       }
     },
-    onPageChange(page) {
-      this.currentPage = page;
-      // You can trigger API call or data refresh here
-    },
+
     isActive(data) {
       if (this.tableDropdown == data) {
         return true;
@@ -354,27 +334,32 @@ export default {
         } else handleError(response);
       });
     },
-    handleFetchLandlords(page = 1) {
+    async handleFetchLandlords(page = 1) {
       const query = {
         size: this.pageSize,
         page: page,
         query: "",
       };
-      FetchTenants(query).then((response) => {
-        if (response.accountList) {
-          this.landlordList = response.accountList.items.map(
-            (landlord) =>
-              landlord && {
-                name: landlord.firstname + " " + landlord.lastname,
-                email: landlord.emailAddress,
-                isVerified: landlord.isVerified ? "Yes" : "No",
-                lastLoginDate: this.formatDate(landlord.lastLoginDate),
-                accountId: landlord.accountId,
-              }
-          );
-          this.totalItemCount = response.accountList.totalItemCount;
-        } else handleError(response);
-      });
+      this.store.setisLoading(true);
+      FetchTenants(query)
+        .then((response) => {
+          if (response.accountList) {
+            this.landlordList = response.accountList.items.map(
+              (landlord) =>
+                landlord && {
+                  name: landlord.firstname + " " + landlord.lastname,
+                  email: landlord.emailAddress,
+                  isVerified: landlord.isVerified ? "Yes" : "No",
+                  lastLoginDate: this.formatDate(landlord.lastLoginDate),
+                  accountId: landlord.accountId,
+                }
+            );
+            this.totalItemCount = response.accountList.totalItemCount;
+          } else handleError(response);
+        })
+        .finally(() => {
+          // this.store.setisLoading(false);
+        });
     },
     formatDate(date) {
       return dayjs(date).format("DD MMM,YYYY");

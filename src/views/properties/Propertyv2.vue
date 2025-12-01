@@ -904,6 +904,34 @@
         >
       </div>
     </a-modal>
+    <a-modal :open="false" :closable="false">
+      <template #title>
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="font-redwing text-[24px] font-medium text-[]">
+              My Properties
+            </span>
+          </div>
+          <span></span>
+          <button @click="showModal">
+            <CloseOutlined />
+          </button>
+        </div>
+      </template>
+      <div class="flex gap-[8px]">
+        <div>
+          <img src="/src/assets/propertyImage2.svg" />
+        </div>
+        <div class="flex flex-col gap-[8px]">
+          <img src="/src/assets/propertyImage.svg" />
+          <img src="/src/assets/propertyImage.svg" />
+        </div>
+      </div>
+
+      <div>
+        <a-tab-pane key="single" tab="Single Add"> </a-tab-pane>
+      </div>
+    </a-modal>
   </div>
 </template>
 
@@ -1070,7 +1098,6 @@ onMounted(async () => {
   await optionsStore.fetchAmenities();
   await optionsStore.fetchUnitTypes();
   await fetchAllLandlords();
-
   submitting.value = false;
   amenityOptions.value = optionsStore.amenities.map((a) => ({
     label: a.name,
@@ -1089,7 +1116,7 @@ const searchQuery = "";
 const selectedDisplayType = "Grid";
 const stage = ref(0);
 const store = useUserStore();
-const modalVisible = ref(true);
+const modalVisible = ref(false);
 const unitTypeOptions = ref({});
 const otherDocsFileList = ref([]);
 const AdditionalDocumentList = ref([]);
