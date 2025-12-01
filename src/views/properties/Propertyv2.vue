@@ -92,7 +92,7 @@
                 'bg-[#DCFCE7] text-[#166434] border-[#166434] border-solid border-[1px] z-50 left-[30%]':
                   record.status == 'Completed',
                 'bg-[#FEF9C3] text-[#854D0F] border-solid border-[1px] border-[#854D0F] z- left-[20%]':
-                  record.status == 'AwaitingPayment',
+                  record.status == 'Awaiting Payment',
               }"
               class="px-3 py-1 rounded-[8px] text-[12px] font-medium"
             >

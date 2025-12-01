@@ -33,7 +33,7 @@
                     label: 'Awaiting Additional Documents',
                     value: 'AwaitingAdditionalDocuments',
                   },
-                  { label: 'Awaiting Payment', value: 'AwaitingPayment' },
+                  { label: 'Awaiting Payment', value: 'Awaiting Payment' },
                   { label: 'Failed', value: 'Failed' },
                 ]"
                 @select="handleSelect"
@@ -138,7 +138,7 @@
         'bg-[#DCFCE7] text-[#166434] border-[#166434] border-solid border-[1px] z-50 left-[30%]':
           selectedApplication.status == 'Completed',
         'bg-[#FEF9C3] text-[#854D0F] border-solid border-[1px] border-[#854D0F] z- left-[20%]':
-          selectedApplication.status == 'AwaitingPayment',
+          selectedApplication.status == 'Awaiting Payment',
       }"
       class="flex gap-3 rounded-lg py-1.5 px-2 mb-3 items-center"
     >
