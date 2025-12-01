@@ -1374,13 +1374,12 @@ const createProperty = async () => {
     const toast = useToast();
     if (res.responseCode == "00") {
       console.log("Property created successfully:", res);
-      //    if(form.formType == "In App Form"){
-      //     toast.success("Successfully created")
-      //     showSuccessModal.value = true;
-      //    }
-      //    else{
-      //     await handleuploadExcelFile(res.accommodationId)
-      //    }
+      if (form.formType == "In App Form") {
+        toast.success("Successfully created");
+        showSuccessModal.value = true;
+      } else {
+        await handleuploadExcelFile(res.accommodationId);
+      }
     } else {
       toast.error("Couldn't create");
     }
