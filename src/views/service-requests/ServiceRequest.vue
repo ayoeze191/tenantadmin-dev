@@ -41,6 +41,7 @@
           title="Service Requests"
           :columns="headers"
           :data-source="computedData"
+          :loading="fetching"
         >
           <template #action="{ record }">
             <div class="relative flex justify-center items-center group">
@@ -79,6 +80,7 @@
       </div>
     </div>
   </div>
+
   <a-modal
     :footer="null"
     width="437px"
@@ -315,8 +317,10 @@ export default {
       // console.log("Selected:", option);
     },
     fetchData() {
+      this.fetching = true;
       FetchServiceRequests(this.store.userProfile.referenceID)
         .then((response) => {
+          this.fetching = false;
           console.log("Service Requests Response:", response);
           this.data = response.serviceRequests.map((request) => {
             return {
@@ -388,6 +392,7 @@ export default {
         message: "",
       },
       data: [],
+      fetching: false,
       selectedTenant: {},
       serviceLiterals: [
         "Requested",
