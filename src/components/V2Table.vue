@@ -1,6 +1,6 @@
 <template>
   <a-table
-    v-if="dataSource.length"
+    v-if="dataSource.length && !loading"
     :columns="computedColumns"
     :data-source="dataSource"
     bordered
@@ -39,6 +39,7 @@
     </template>
   </a-table>
 
+  <Loader v-else-if="loading == true" />
   <div v-else>
     <IsEmpty :title="title" />
   </div>
@@ -47,6 +48,7 @@
 <script setup>
 import { computed } from "vue";
 import IsEmpty from "./IsEmpty.vue";
+import Loader from "./Loader.vue";
 
 const props = defineProps({
   columns: {
@@ -59,6 +61,10 @@ const props = defineProps({
   },
   title: {
     type: String,
+    required: false,
+  },
+  loading: {
+    type: Boolean,
     required: false,
   },
 });

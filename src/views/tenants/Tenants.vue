@@ -21,6 +21,7 @@
           :title="tenants"
           :columns="headers"
           :data-source="landlordList"
+          :loading="isFetching"
         >
           <template #action="{ record }">
             <div class="relative flex justify-center items-center group">
@@ -215,6 +216,7 @@ import FilterButton from "@/components/icons/FilterButton.vue";
 import UniversalButton from "@/components/Button/UniversalButton.vue";
 import { ref } from "vue";
 import { useUserStore } from "@/store";
+import Loader from "@/components/Loader.vue";
 export default {
   components: {
     "table-component": V2Table,
@@ -224,9 +226,11 @@ export default {
     BaseInput: BaseInput,
     FilterButton,
     UniversalButton,
+    Loader,
   },
   async created() {
     this.handleFetchLandlords();
+    this.store.setisLoading(false);
   },
   data() {
     return {
@@ -339,9 +343,10 @@ export default {
         page: page,
         query: "",
       };
-
+      this.isFetching = true;
       FetchTenants(query)
         .then((response) => {
+          this.isFetching = false;
           if (response.accountList) {
             this.landlordList = response.accountList.items.map(
               (landlord) =>

@@ -1,5 +1,5 @@
 <template>
-  <div class="px-4 font-inter h-full" v-if="loadingData == false">
+  <div class="px-4 font-inter h-full">
     <div
       class="rounded-[16px] mt-4 h-full font-inter border-[#36363633] border-[0.75px] border-solid"
     >
@@ -52,6 +52,13 @@
         </table-header>
       </div>
       <div
+        v-if="loadingData == true"
+        class="mx-auto h-[500px] w-full flex justify-center items-center"
+      >
+        <Loader />
+      </div>
+      <div
+        v-else
         class="px-2.5 mt-2 gap-4 grid grid-cols-4 mb-4"
         v-if="selectedDisplayType == 'Grid'"
       >
@@ -66,6 +73,7 @@
         :title="'applications'"
         :columns="headers"
         :data-source="computedData"
+        :loading="loadingData"
       >
         <template #action="{ record }">
           <button
@@ -116,7 +124,7 @@
       </div>
     </div>
   </div>
-  <Loader v-else />
+
   <a-modal
     v-model:open="modalOpen"
     :title="`Stage ${stage} • ${stages[stage - 1]}`"
