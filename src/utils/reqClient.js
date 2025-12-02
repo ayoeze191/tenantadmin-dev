@@ -1,5 +1,33 @@
 import axios from "axios";
 import BASE_URL from "../api/baseUrl";
+import { useUserStore } from "@/store";
+
+// --- Axios Loading Interceptors ---
+// axios.interceptors.request.use(
+//   (config) => {
+//     const store = useUserStore();
+//     store.setisLoading(true); // turn on loading
+//     return config;
+//   },
+//   (error) => {
+//     const store = useUserStore();
+//     store.setisLoading(false);
+//     return Promise.reject(error);
+//   }
+// );
+
+// axios.interceptors.response.use(
+//   (response) => {
+//     const store = useUserStore();
+//     store.setisLoading(false); // turn off loading
+//     return response;
+//   },
+//   (error) => {
+//     const store = useUserStore();
+//     store.setisLoading(false); // turn off loading
+//     return Promise.reject(error);
+//   }
+// );
 
 export const preAuthGetApi = async (url, body, tokens, headers) =>
   axios.get(`${BASE_URL}/${url}`, body, {

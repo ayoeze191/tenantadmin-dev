@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="fetchingData == false"
     class="w-full h-full border-2 border-gray rounded-xl box-border flex flex-col overflow-y-scroll"
   >
     <div class="flex items-center border-b-2">
@@ -933,6 +934,7 @@
       </div>
     </a-modal>
   </div>
+  <Loader v-else />
 </template>
 
 <script setup>
@@ -960,7 +962,9 @@ import { options } from "less";
 import { FetchLandlords } from "@/api/properties";
 import UniversalButton from "@/components/Button/UniversalButton.vue";
 import PropertyCard from "@/components/PropertyCard.vue";
+import Loader from "@/components/Loader.vue";
 const allProvinces = ref([]);
+const fetchingData = ref(false);
 const showSuccessModal = ref(false);
 const fetchProvinces = async () => {
   const response = await getProvinces();
@@ -1014,6 +1018,7 @@ const pageSize = ref(16);
 const total = ref(0);
 const propertyList = ref([]);
 const handleFetchProperties = (page = currentPage.value) => {
+  fetchingData.value = true;
   const query = {
     size: pageSize.value,
     page: page,
@@ -1021,6 +1026,8 @@ const handleFetchProperties = (page = currentPage.value) => {
   };
   FetchProperties(store.userProfile.referenceID, query)
     .then((response) => {
+      fetchingData.value = false;
+
       if (response.responseCode == "00") {
         propertyList.value = response.propertyRecs.items;
         total.value = response.propertyRecs.totalItemCount || 0;

@@ -227,7 +227,6 @@ export default {
   },
   async created() {
     this.handleFetchLandlords();
-    this.store.setisLoading(false);
   },
   data() {
     return {
@@ -340,7 +339,7 @@ export default {
         page: page,
         query: "",
       };
-      this.store.setisLoading(true);
+
       FetchTenants(query)
         .then((response) => {
           if (response.accountList) {

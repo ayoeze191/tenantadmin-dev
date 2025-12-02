@@ -1,5 +1,5 @@
 <template>
-  <div class="px-4 font-inter h-full">
+  <div class="px-4 font-inter h-full" v-if="loadingData == false">
     <div
       class="rounded-[16px] mt-4 h-full font-inter border-[#36363633] border-[0.75px] border-solid"
     >
@@ -58,7 +58,7 @@
         <applicationCard
           v-for="value in computedData"
           :app="value"
-          @showModal="() => showModal(value)"
+          @showModal="async () => await showModal(value)"
         />
       </div>
       <table-component
@@ -70,7 +70,7 @@
         <template #action="{ record }">
           <button
             class="bg-inherit text-black cursor-pointer"
-            @click="() => showModal(record)"
+            @click="async () => await showModal(record)"
           >
             View Details
           </button>
@@ -93,6 +93,8 @@
                   record.status == 'Completed',
                 'bg-[#FEF9C3] text-[#854D0F] border-solid border-[1px] border-[#854D0F] z- left-[20%]':
                   record.status == 'AwaitingPayment',
+                'bg-[#FEF9C3] text-[#854D0F] border-solid border-[1px] border-[#854D0F] z- left-[20%]':
+                  record.status == 'Awaiting Lease Generation',
               }"
               class="px-3 py-1 rounded-[8px] text-[12px] font-medium"
             >
@@ -114,6 +116,7 @@
       </div>
     </div>
   </div>
+  <Loader v-else />
   <a-modal
     v-model:open="modalOpen"
     :title="`Stage ${stage} • ${stages[stage - 1]}`"
@@ -139,6 +142,8 @@
           selectedApplication.status == 'Completed',
         'bg-[#FEF9C3] text-[#854D0F] border-solid border-[1px] border-[#854D0F] z- left-[20%]':
           selectedApplication.status == 'Awaiting Payment',
+        'bg-[#FEF9C3] text-[#854D0F] border-solid border-[1px] border-[#854D0F] z- left-[20%]':
+          selectedApplication.status == 'Awaiting Lease Generation',
       }"
       class="flex gap-3 rounded-lg py-1.5 px-2 mb-3 items-center"
     >
@@ -179,6 +184,12 @@
             >
               UPLOAD SIGNED LEASE PDF
             </h2>
+            <div class="mx-auto flex justify-center items-center">
+              <div
+                v-if="loadingReview == true"
+                class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"
+              ></div>
+            </div>
             <div v-html="selectedApplication.leaseHtml"></div>
             <!-- <a-upload-dragger
               v-if="leaseFile == null || !leaseFile[0]"
@@ -663,6 +674,7 @@
 
 <script>
 import { useRouter } from "vue-router";
+
 import TableHeader from "@/components/TableHeader.vue";
 import { useToast } from "vue-toast-notification";
 import V2Table from "@/components/V2Table.vue";
@@ -690,6 +702,7 @@ import parsePhoneNumber from "libphonenumber-js";
 import moment from "moment";
 import dayjs from "dayjs";
 import IconAlertCircleOutlined from "@/components/icons/IconAlertCircleOutlined.vue";
+import Loader from "@/components/Loader.vue";
 
 export default {
   components: {
@@ -702,6 +715,7 @@ export default {
     UniversalButton,
     Button,
     IconAlertCircleOutlined,
+    Loader,
   },
   created() {
     this.fetchData();
@@ -750,6 +764,7 @@ export default {
         { label: "Co-signer Information", value: "Co-signer Information" },
         { label: "Pet Documentation", value: "Pet Documentation" },
       ],
+      loadingData: false,
       form: {
         requestDocuments: [],
         otherDocument: "",
@@ -950,7 +965,7 @@ export default {
           },
         ],
       ],
-      generatingReview: false,
+      loadingReview: false,
       store: useUserStore(),
 
       searchQuery: "",
@@ -963,7 +978,7 @@ export default {
         3: "MoveIn Date Landlord Confirmation Pending", // Application approved, awaiting landlord to confirm move-in date
         4: "Confirming Move-inDate", // Landlord set different date, awaiting tenant confirmation
         5: "Awaiting Payment", // Move-in date confirmed, awaiting security deposit payment
-        6: "Awaiting LeaseGeneration", // Payment received, awaiting lease document generation
+        6: "Awaiting Lease Generation", // Payment received, awaiting lease document generation
         7: "Completed", // Lease generated and application process completed
         8: "Declined", // Application has been declined by landlord or tenant
         9: "Cancelled", // Application has been cancelled by tenant
@@ -1071,7 +1086,7 @@ export default {
       }
     },
     async handleGetLeaseReview() {
-      this.generatingReview = true;
+      this.loadingReview = true;
       const body = { applicationId: this.selectedApplication.applicationId };
       getLeaseReview(body)
         .then((response) => {
@@ -1079,7 +1094,7 @@ export default {
             ...this.selectedApplication,
             leaseHtml: response.leaseHtml,
           };
-          this.generatingReview = false;
+          this.loadingReview = false;
         })
         .catch();
     },
@@ -1132,21 +1147,26 @@ export default {
         applicationId: this.selectedApplication.applicationId,
         isOriginalDateApproved:
           moveInDateISO == this.selectedApplication.intendedMoveInDate,
-        confirmedByUserId: "landlord",
+        confirmedByUserType: 1,
         comments: "N/A",
         moveInDate: moveInDateISO,
       };
-
       // if (original == false) {
       //   payload = { ...payload, moveInDate: this.form.moveInDate };
       // }
       ConfirmMoveInDate({ ...payload }).then(async (response) => {
         if (response.responseCode == "00") {
-          this.stage = 4;
-          this.modalOpen = true;
-          this.moveInDateModalOpen = false;
-          this.movingdate = false;
-          this.toast.success("Move-in date confirmed");
+          if (payload.isOriginalDateApproved == true) {
+            this.stage = 4;
+            this.moveInDateModalOpen = false;
+            this.movingdate = false;
+            this.toast.success("Move-in date confirmed");
+          } else {
+            this.modalOpen = false;
+            this.toast.success(
+              "Move-in date confirmed, wait for tenant confirmation"
+            );
+          }
           await this.handleGetLeaseReview();
         } else {
           // this.stage = 4;
@@ -1286,7 +1306,7 @@ export default {
         onError("no work");
       }
     },
-    showModal(app) {
+    async showModal(app) {
       this.selectedApplication = app; // Remove .value
       this.modalOpen = true; // Remove .value
       this.form.moveInDate = dayjs(app.intendedMoveInDate);
@@ -1305,6 +1325,7 @@ export default {
       } else if (
         this.selectedApplication.status == "Awaiting LeaseGeneration"
       ) {
+        await this.handleGetLeaseReview();
         this.stage = 4;
       }
     },
@@ -1355,7 +1376,9 @@ export default {
       this.selectedDisplayType = selected.label;
       // Handle filtering logic based on selected.value
     },
+
     fetchData(page = 1) {
+      this.loadingData = true;
       const query = {
         size: this.pageSize,
         page: page,
@@ -1364,6 +1387,8 @@ export default {
 
       FetchTenant(query, this.store.userProfile.referenceID)
         .then((response) => {
+          // this.store.setisLoading(false);
+          this.loadingData = false;
           if (response.responseCode == "00" && response.applications) {
             this.Applications = response.applications.items || [];
             this.totalItemCount = response.applications.totalItemCount || 0;

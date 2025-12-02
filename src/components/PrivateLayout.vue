@@ -8,7 +8,7 @@
       <div class="flex-1 pt-4 h-full">
         <div class="h-full" v-if="store.userProfile.isVerified == true">
           <router-view v-if="!store.loading"></router-view>
-          <Loader />
+          <Loader v-else />
         </div>
         <!--  -->
         <div
