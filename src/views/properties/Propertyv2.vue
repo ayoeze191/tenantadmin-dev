@@ -16,7 +16,7 @@
             </template>
           </a-input>
           <div class="flex justify-between gap-[14px]">
-            <DropdownButton
+            <!-- <DropdownButton
               :icon="'grid'"
               :label="selectedDisplayType"
               @select="handleDisplayTypeSelect"
@@ -24,7 +24,7 @@
                 { label: 'Grid', value: 'Grid' },
                 { label: 'List', value: 'List' },
               ]"
-            />
+            /> -->
             <Button class="flex gap-2.5" @click="showModal"
               ><span class="font-semibold">+</span> Add property</Button
             >
