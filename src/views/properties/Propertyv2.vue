@@ -902,7 +902,7 @@
 
       <div class="flex flex-col">
         <RouterLink
-          to="/properties"
+          to="/"
           class="bg-[#000130] text-center w-full rounded-[8px] py-[13px] text-sm font-[500] leading-[25px] text-white mt-[36px]"
           >View Accomodations</RouterLink
         >
