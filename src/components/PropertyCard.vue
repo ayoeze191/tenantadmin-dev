@@ -62,22 +62,26 @@
         </p>
       </div>
 
-      <button
+      <UniversalButton
         class="py-[6px] border-solid rounded-[6px] border-[0.75px] border-[#36363633] mt-[10px] text-center w-full justify-center"
         @click="$emit('view')"
+        :loading="loading"
       >
         View Full Details
-      </button>
+      </UniversalButton>
     </div>
   </div>
 </template>
 
 <script setup>
+import UniversalButton from "./Button/UniversalButton.vue";
+
 defineProps({
   imageUrl: String,
   name: String,
   address: String,
   totalUnits: Number,
+  loading: Boolean,
 });
 
 defineEmits(["view"]);

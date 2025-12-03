@@ -42,6 +42,8 @@
         :imageUrl="value.imageUrl"
         :address="value.address"
         :totalUnits="value.totalUnits"
+        :loading="selectedPropertyInfoId == value.accommodationId && loadingItem == true"
+        @view="() => handleViewProperty(value.accommodationId)"
       />
       <!-- <IconProperties />
       <div>
@@ -913,7 +915,7 @@
         >
       </div>
     </a-modal>
-    <a-modal :open="false" :closable="false">
+    <a-modal :open="showPropertyDetailsModal" :closable="false">
       <template #title>
         <div class="flex items-center justify-between">
           <div>
@@ -922,7 +924,7 @@
             </span>
           </div>
           <span></span>
-          <button @click="showModal">
+          <button @click="showPropertyDetailsModal = false">
             <CloseOutlined />
           </button>
         </div>
@@ -938,7 +940,54 @@
       </div>
 
       <div>
-        <a-tab-pane key="single" tab="Single Add"> </a-tab-pane>
+        <a-tabs
+          v-model:activeKey="activeKey"
+          class="tenant-details-tabs tab-gap"
+        >
+          <a-tab-pane key="1" tab="Property Info"
+            >
+            <div>
+              <p class="font-redwing text-">DETAILS</p>
+            </div>
+              <div class="mt-4 text-[#808097]">
+                      <h1
+                        class="font-medium text-base text-txt_dark leading-[100%]"
+                      >
+                        Description
+                      </h1>
+                      <p
+                        class="text-[#808097] text-[14px] font-sf leading-[100%]"
+                        style="color: #808097 !important"
+                      >
+                        {{ propertyDetails.description || 'nill' }}
+                      </p>
+                    </div>
+                    <div class="mt-[16px]">
+                      <li
+                        class="font-medium text-base text-txt_dark leading-[100%]"
+                      >
+                        Amenities
+                      </li>
+                      <div class="mt-2">
+                      <li v-for="option in amenityOptions" style="color: #808097 !important; " class="text-[#808097] text-[14px] font-sf leading-[100%] ">
+                        <li
+                        class="list-disc text-[14px] text-[#808097] leading-[100%]"
+                          v-if="
+                            form.amenities.find((ame) => ame == option.value)
+                          "
+                          >{{ option.label || 'nill' }}</li
+                        >
+                      </li>
+                      </div>
+                      <!-- <li v-for="value in ameniti"></li> -->
+                    </div>
+            </a-tab-pane
+          >
+          <a-tab-pane key="2" tab="Tab 2" force-render
+            >Content of Tab Pane 2</a-tab-pane
+          >
+          <a-tab-pane key="3" tab="Tab 3">Content of Tab Pane 3</a-tab-pane>
+        </a-tabs>
       </div>
     </a-modal>
   </div>
@@ -971,6 +1020,18 @@ import { FetchLandlords } from "@/api/properties";
 import UniversalButton from "@/components/Button/UniversalButton.vue";
 import PropertyCard from "@/components/PropertyCard.vue";
 import Loader from "@/components/Loader.vue";
+import { getPropertyInfo } from "@/api/properties";
+const loadingItem = ref(false)
+const handleViewProperty = async (id) => {
+  selectedPropertyInfoId.value = id;
+  loadingItem.value = true
+  propertyDetails.value = (await getPropertyInfo(id)).propertydata;
+  showPropertyDetailsModal.value = true;
+  loadingItem.value = false
+};
+const propertyDetails = ref(null)
+const selectedPropertyInfoId = ref(null)
+const showPropertyDetailsModal = ref(false)
 const allProvinces = ref([]);
 const fetchingData = ref(false);
 const showSuccessModal = ref(false);
@@ -1049,7 +1110,7 @@ const handleFetchProperties = (page = currentPage.value) => {
       // this.error = "Failed to load properties.";
     })
     .finally(() => {
-      this.loading = false;
+
     });
 };
 const handleAddUnit = () => {
@@ -1060,7 +1121,7 @@ const handleAddUnit = () => {
     quantity: "",
     securityDeposit: "",
     rentPerMonth: "",
-    availabilityDate: "",
+    availabilityDate: null,
     bathrooms: "",
     bedrooms: "",
     unitImg: [],
@@ -1158,9 +1219,9 @@ const form = reactive({
   rental_unit: null,
   name: "",
   address: "",
-  city: "",
+  city: null,
   zipCode: "",
-  province: "",
+  province: null,
   propertyType: null,
   description: "",
   units: null,
@@ -1172,7 +1233,7 @@ const form = reactive({
       quantity: "",
       securityDeposit: "",
       rentPerMonth: 0,
-      availabilityDate: "",
+      availabilityDate: null,
       numberOfBathrooms: 0,
       numberOfBedrooms: 0,
       unitImg: [],
@@ -1448,5 +1509,42 @@ const createProperty = async () => {
 /* Optional: Checkmark color (it's a pseudo-element) */
 :deep(.ant-checkbox-checked .ant-checkbox-inner::after) {
   border-color: white;
+}
+
+:deep(.tenant-details-tabs .ant-tabs-nav) {
+  margin-bottom: 0;
+}
+:deep(.tenant-details-tabs .ant-tabs-tab) {
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: "Inter";
+  line-height: 20px;
+  color: #00000066;
+  border: #000000 1px solid;
+  border: none !important;
+  margin: 0;
+  margin-right: 14px;
+}
+:deep(.ant-tabs-nav::before) {
+  border-bottom: none !important;
+}
+
+:deep(.tenant-details-tabs .ant-tabs-nav-wrap) {
+  border: none !important;
+}
+.tenant-details-tabs .ant-tabs-tab-active {
+  background: #23234a !important;
+  color: #fff !important;
+}
+.tenant-details-tabs .ant-tabs-ink-bar {
+  display: none;
+}
+.tenant-details-tabs .ant-tabs-nav-list {
+  width: 100%;
+  display: flex;
+}
+.tenant-details-tabs .ant-tabs-tab {
+  flex: 1;
 }
 </style>
