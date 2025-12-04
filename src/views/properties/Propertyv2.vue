@@ -946,50 +946,423 @@
         >
           <a-tab-pane key="1" tab="Property Info"
             >
-            <div>
-              <p class="font-redwing text-">DETAILS</p>
-            </div>
-              <div class="mt-4 text-[#808097]">
-                      <h1
-                        class="font-medium text-base text-txt_dark leading-[100%]"
+            <div class="mt-[24px]">
+              <p class="font-redwing text-[14px] p-0 m-0">DETAILS</p>
+              <div class="flex items-center gap-2 text-[#808097] font-sf mt-2">
+                <svg width="11" height="13" viewBox="0 0 11 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M3.66797 5.41797C3.66797 5.8821 3.85234 6.32722 4.18053 6.65541C4.50872 6.98359 4.95384 7.16797 5.41797 7.16797C5.8821 7.16797 6.32722 6.98359 6.65541 6.65541C6.98359 6.32722 7.16797 5.8821 7.16797 5.41797C7.16797 4.95384 6.98359 4.50872 6.65541 4.18053C6.32722 3.85234 5.8821 3.66797 5.41797 3.66797C4.95384 3.66797 4.50872 3.85234 4.18053 4.18053C3.85234 4.50872 3.66797 4.95384 3.66797 5.41797Z" stroke="#808097" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M8.71659 8.71641L6.2415 11.1915C6.02274 11.41 5.72618 11.5328 5.41696 11.5328C5.10774 11.5328 4.81118 11.41 4.59242 11.1915L2.11675 8.71641C1.46413 8.06376 1.0197 7.23224 0.839653 6.327C0.659608 5.42176 0.752038 4.48346 1.10525 3.63076C1.45847 2.77805 2.05661 2.04923 2.82403 1.53646C3.59146 1.02369 4.4937 0.75 5.41667 0.75C6.33964 0.75 7.24188 1.02369 8.0093 1.53646C8.77673 2.04923 9.37487 2.77805 9.72808 3.63076C10.0813 4.48346 10.1737 5.42176 9.99368 6.327C9.81364 7.23224 9.36921 8.06376 8.71659 8.71641Z" stroke="#808097" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+                <span class="text-sm leading-[16px] font-normal">
+                        {{ propertyDetails.address }} 
+                      </span>
+              </div>
+              <div
+                      class="flex items-center gap-2 text-[#808097] font-sf mt-2"
+                    >
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
                       >
-                        Description
-                      </h1>
+                        <path
+                          d="M8.66667 14V9.33333L5.33333 6L2 9.33333V14H5.33333M8.66667 14H5.33333M8.66667 14H14V2.66667C14 2.48986 13.9298 2.32029 13.8047 2.19526C13.6797 2.07024 13.5101 2 13.3333 2H6.66667C6.48986 2 6.32029 2.07024 6.19526 2.19526C6.07024 2.32029 6 2.48986 6 2.66667V6.66667M5.33333 14V11.3333M8.66667 4.66667V4.67333M11.3333 4.66667V4.67333M11.3333 7.33333V7.34M11.3333 10V10.0067"
+                          stroke="#808097"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                      <span class="text-sm leading-[16px] font-normal">
+                        {{ propertyUnitIInfo.length }} Units
+                      </span>
+                    </div>
+            </div>
+              <div class="mt-4 ">
+                                   <p class="font-redwing text-[#000000] text-[14px] p-0 m-0">DESCRIPTION</p>
                       <p
-                        class="text-[#808097] text-[14px] font-sf leading-[100%]"
+                        class="text-[#00000099] text-[14px] font-sf leading-[100%]"
                         style="color: #808097 !important"
                       >
                         {{ propertyDetails.description || 'nill' }}
                       </p>
                     </div>
-                    <div class="mt-[16px]">
-                      <li
-                        class="font-medium text-base text-txt_dark leading-[100%]"
+                    <div class="mt-[24px]">
+                      <p
+                        class="font-redwing text-[14px] p-0 m-0"
                       >
-                        Amenities
-                      </li>
-                      <div class="mt-2">
+                        AMENITIES
+                    </p>
+                      <div class="">
+                        {{console.log(amenityOptions, propertyAmenitiess, "Amenitites Option")}}
                       <li v-for="option in amenityOptions" style="color: #808097 !important; " class="text-[#808097] text-[14px] font-sf leading-[100%] ">
                         <li
-                        class="list-disc text-[14px] text-[#808097] leading-[100%]"
+                        class="list-disc text-[12px] text-[#00000099] leading-[20px] font-inter font-medium"
                           v-if="
-                            form.amenities.find((ame) => ame == option.value)
+                            propertyAmenitiess.find((ame) => ame.amenityId == option.value)
                           "
-                          >{{ option.label || 'nill' }}</li
-                        >
+                          >{{ option.label || 'nill' }}</li>
                       </li>
                       </div>
                       <!-- <li v-for="value in ameniti"></li> -->
                     </div>
-            </a-tab-pane
-          >
-          <a-tab-pane key="2" tab="Tab 2" force-render
-            >Content of Tab Pane 2</a-tab-pane
-          >
-          <a-tab-pane key="3" tab="Tab 3">Content of Tab Pane 3</a-tab-pane>
+
+                    <div class="mt-[24px]">
+                       <h1
+                        class="font-medium text-base text-txt_dark leading-[100%]"
+                      >
+                        Documents
+                      </h1>
+                      <div class="flex items-center gap-6">
+                       <a :href="propertyDetails.propertyDoc" class="bg-[#FAFAFA] p-4 w-fit rounded-[4px] mt-2 flex flex-col gap-2 items-center">
+                        <DocumentIcon />
+                        Property Doc
+                       </a>
+                        <a :href="propertyDetails.governmentID" class="bg-[#FAFAFA] p-4 w-fit rounded-[4px] mt-2 flex flex-col gap-2 items-center">
+                        <DocumentIcon />
+                        Government ID
+                       </a>
+                        <a :href="propertyDetails.proofofOwnership" class="bg-[#FAFAFA] p-4 w-fit rounded-[4px] mt-2 flex flex-col gap-2 items-center">
+                        <DocumentIcon />
+                        Proof of Ownership
+                       </a>
+                       </div>
+                    </div>
+            </a-tab-pane>
+         <a-tab-pane
+                    v-for="unit in propertyUnitIInfo"
+                    :key="unit.unitId"
+                    :tab="unit.unitName"
+                  >
+                  <div class="flex items-center gap-2 text-[#808097] font-sf mt-2">
+                <svg width="11" height="13" viewBox="0 0 11 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M3.66797 5.41797C3.66797 5.8821 3.85234 6.32722 4.18053 6.65541C4.50872 6.98359 4.95384 7.16797 5.41797 7.16797C5.8821 7.16797 6.32722 6.98359 6.65541 6.65541C6.98359 6.32722 7.16797 5.8821 7.16797 5.41797C7.16797 4.95384 6.98359 4.50872 6.65541 4.18053C6.32722 3.85234 5.8821 3.66797 5.41797 3.66797C4.95384 3.66797 4.50872 3.85234 4.18053 4.18053C3.85234 4.50872 3.66797 4.95384 3.66797 5.41797Z" stroke="#808097" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M8.71659 8.71641L6.2415 11.1915C6.02274 11.41 5.72618 11.5328 5.41696 11.5328C5.10774 11.5328 4.81118 11.41 4.59242 11.1915L2.11675 8.71641C1.46413 8.06376 1.0197 7.23224 0.839653 6.327C0.659608 5.42176 0.752038 4.48346 1.10525 3.63076C1.45847 2.77805 2.05661 2.04923 2.82403 1.53646C3.59146 1.02369 4.4937 0.75 5.41667 0.75C6.33964 0.75 7.24188 1.02369 8.0093 1.53646C8.77673 2.04923 9.37487 2.77805 9.72808 3.63076C10.0813 4.48346 10.1737 5.42176 9.99368 6.327C9.81364 7.23224 9.36921 8.06376 8.71659 8.71641Z" stroke="#808097" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+                <span class="text-sm leading-[16px] font-normal">
+                        {{ propertyDetails.address }} 
+                      </span>
+              </div>
+              
+              <div class="text-[#000000] py-2 px-3 bg-[#F9F9F9] mt-4 flex justify-between items-center" v-for="uni in unit.bedRoom">
+                <div>
+                <p class="p-0 m-0  text-[#000000] text-[14px] font-[500] font-inter leading-[21px]">{{unit.unitName}}</p>
+                <div class="flex gap-1 items-center ">
+                <p class="p-0 m-0  text-[#000000] text-[12px] font-[500] font-inter leading-[20px]">{{unit.referenceNumber}}</p>
+                .
+                <p class="p-0 m-0  text-[#000000] text-[12px] font-[500] font-inter leading-[20px]">CA${{unit.price}}</p>
+</div>
+                </div>
+                <div>
+                  <a-dropdown>
+    <a class="ant-dropdown-link" @click.prevent>
+      <DownOutlined />
+    </a>
+    <template #overlay>
+      <a-menu>
+        <a-menu-item>
+          <a href="#" @click="viewUnitModal = true">View details</a>
+        </a-menu-item>
+        <a-menu-item>
+          <a @click="showAddTenantModal = true" href="#">Add Tenant</a>
+        </a-menu-item>
+      </a-menu>
+    </template>
+  </a-dropdown>
+                </div>
+              </div>
+              
+                  </a-tab-pane>
         </a-tabs>
       </div>
     </a-modal>
+
+
+      <a-modal
+      v-model:visible="showAddTenantModal"
+      :footer="null"
+      width="540px"
+      centered
+      :bodyStyle="{ padding: '0' }"
+      class="add-tenants-modal"
+      :closable="false"
+      @cancel="resetTenantModal"
+    >
+      <template #title>
+        <div
+          class="flex items-center justify-between border-b border-[#C7C7C7] py-[12px]"
+        >
+          <div
+            class="cursor-pointer flex items-center gap-[8px] text-txt_dark text-[18px] font-medium"
+          >
+            <ArrowLeftOutlined @click="showAddTenantModal = false" class="text-[18px]" />
+            Back
+          </div>
+          <span class="modal-title">Add Tenants</span>
+          <span></span>
+        </div>
+      </template>
+      <a-tabs
+        v-model:activeKey="tenantTab"
+        class="add-tenants-tabs tab-gap"
+        centered
+        :tabBarGutter="20"
+      >
+        <a-tab-pane key="single" tab="Single Add">
+          <div class="px-2 py-2">
+            <div class="font-semibold text-gray-700 text-base mb-2">
+              Tenant Information
+            </div>
+            <a-form
+              :model="tenantForm"
+              :rules="tenantRules"
+              ref="tenantFormRef"
+              layout="vertical"
+            >
+              <a-form-item label="Full Name" name="FullName" required>
+                <a-input
+                  v-model:value="tenantForm.FullName"
+                  placeholder="Enter full name"
+                  size="large"
+                />
+              </a-form-item>
+              <a-form-item label="Email" name="emailAddress" required>
+                <a-input
+                  v-model:value="tenantForm.emailAddress"
+                  placeholder="Enter email"
+                  size="large"
+                />
+              </a-form-item>
+              <a-form-item label="Phone Number" name="phoneNumber" required>
+                <a-input
+                  v-model:value="tenantForm.phoneNumber"
+                  placeholder="Enter phone number"
+                  size="large"
+                />
+              </a-form-item>
+
+              <a-form-item
+                label="Lease Start Date"
+                name="leasestartDate"
+                required
+                class="w-full"
+              >
+                <a-date-picker
+                  v-model:value="tenantForm.leasestartDate"
+                  size="large"
+                  class="w-full"
+                />
+              </a-form-item>
+
+              <a-form-item
+                label="Lease Start Date"
+                name="leaseendDate"
+                required
+                class="w-full"
+              >
+                <a-date-picker
+                  v-model:value="tenantForm.leaseendDate"
+                  size="large"
+                  class="w-full"
+                />
+              </a-form-item>
+
+              <div class="flex justify-end gap-3 mt-8">
+                <a-button @click="resetTenantModal" size="large"
+                  >Cancel</a-button
+                >
+                <a-button
+                  type="primary"
+                  :loading="tenantLoading"
+                  @click="createProperties"
+                  size="large"
+                  class="px-8"
+                  >Add Tenants</a-button
+                >
+              </div>
+            </a-form>
+          </div>
+        </a-tab-pane>
+        <a-tab-pane key="bulk" tab="Bulk Upload">
+          <div class="px-2 py-4">
+            <div class="font-semibold text-gray-700 text-base mb-1">
+              Upload Instructions
+            </div>
+            <div class="text-gray-500 text-sm mb-4">
+              Upload a CSV file containing tenant details. Ensure it follows the
+              required format.
+            </div>
+            <div class="font-medium text-gray-700 mb-1">File Upload</div>
+            <a-upload-dragger
+              :before-upload="() => false"
+              :show-upload-list="true"
+              :accept="'.csv'"
+              v-model:file-list="bulkFileList"
+              class="mb-2"
+            >
+              <div class="flex flex-col items-center justify-center py-2">
+                <svg width="48" height="48" fill="none" viewBox="0 0 24 24">
+                  <path
+                    d="M12 16V4m0 0l-4 4m4-4l4 4"
+                    stroke="#23234a"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <rect
+                    x="4"
+                    y="16"
+                    width="16"
+                    height="4"
+                    rx="2"
+                    fill="#f3f4f6"
+                    stroke="#e5e7eb"
+                    stroke-width="2"
+                  />
+                </svg>
+                <div class="mt-2 text-gray-400 text-base">
+                  Drag and drop CSV file here
+                </div>
+              </div>
+            </a-upload-dragger>
+            <div class="mt-2 mb-1 text-gray-700 font-medium">
+              Download Sample CSV
+            </div>
+            <a
+              @click="downloadSampleFile"
+              class="text-primary cursor-pointer mb-4 block"
+              >sample.co</a
+            >
+            <div class="flex justify-end gap-3 mt-8">
+              <a-button @click="resetTenantModal" size="large">Cancel</a-button>
+              <a-button
+                type="primary"
+                :loading="tenantLoading"
+                @click="submitBulkTenant"
+                size="large"
+                class="px-8"
+                >Upload File</a-button
+              >
+            </div>
+          </div>
+        </a-tab-pane>
+      </a-tabs>
+    </a-modal>
+
+
+    <!-- Unit details -->
+         <a-modal
+      :footer="null"
+      width="768px"
+      :visible="viewUnitModal"
+      centered
+      :bodyStyle="{ padding: '0' }"
+      class=""
+      :closable="false"
+    >
+            <template #title>
+        <div
+          class="flex items-center justify-between border-b border-[#C7C7C7] p-0 m-0 py-[25px]"
+        >
+          <div
+            @click="viewUnitModal = false"
+            class="cursor-pointer flex items-center gap-[8px] text-txt_dark text-[18px] font-medium m-0 p-0"
+          >
+            <ArrowLeftOutlined
+              @click="goBack"
+              class="text-[18px] text-[#808097]"
+            />
+            Back
+            </div>
+          <span class="text-[32px] font-[500] font-sf leading-[28px] ">
+            {{selectedUnit.unitName}}
+          </span>
+          <span class="m-0 p-0"></span>
+        </div>
+      </template>
+
+      <div class="grid grid-cols-2 gap-y-[8px] px-[87px] py-[47px]">
+        <div>
+          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Unit Type</p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">{{selectedUnit.unitName}}</p>
+        </div>
+        <div>
+          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Packing Type</p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">nil</p>
+        </div>
+         <div>
+          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Reference Number</p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">{{selectedUnit.referenceNumber}}</p>
+        </div>
+         <div>
+          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Pets</p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">{{'nil'}}</p>
+        </div>
+        <div>
+          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">No of Bathroom (s)</p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">{{selectedUnit.bathRoom}}</p>
+        </div>
+        <div>
+          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">AC Type</p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">Nil</p>
+        </div>
+        <!-- Next -->
+
+         <div>
+          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Occupancy Status</p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">{{selectedUnit.occupancyStatus}}</p>
+        </div>
+        <div>
+          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Heating Type</p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">nil</p>
+        </div>
+         <div>
+          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  "> Rent </p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">${{ selectedUnit.price }}</p>
+        </div>
+         <div>
+          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Laundry Type</p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">{{'Nil'}}</p>
+        </div>
+        <div>
+          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Security Deposit</p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">${{selectedUnit.securityDeposit}}</p>
+        </div>
+        <div>
+          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Availability Date</p>
+          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">12/07/2025</p>
+        </div>
+      </div>
+      <div class="p-0 m-0 font-sf">
+        <div class="flex justify-between px-[87px] py-[47px] font-sf">
+          <p class="leading-[100%] text-[16px]  text-[#404164]">Unit Images</p>
+        <p class="leading-[100%] text-[16px]  text-[#404164]">{{selectedUnit.accommodationImages.length}} Images</p>
+        </div>
+      </div>
+        <div class="px-[87px] pb-[47px]">
+          <a-carousel autoplay arrows>
+             <template #prevArrow>
+      <div class="custom-slick-arrow" style="left: 10px; z-index: 1">
+        <left-circle-outlined />
+      </div>
+    </template>
+     <template #nextArrow>
+      <div class="custom-slick-arrow" style="right: 10px">
+        <right-circle-outlined />
+      </div>
+    </template>
+    <div v-for="value in selectedUnit.accommodationImages" class="carousel-item">
+      <img :src="value.image" class="carousel-item" />
+    </div>
+   
+  </a-carousel>
+        </div>  
+    </a-modal>
+    <!-- End unit details -->
   </div>
   <Loader v-else />
 </template>
@@ -1011,6 +1384,7 @@ import { useUserStore } from "@/store";
 import { onMounted, ref } from "vue";
 import { reactive } from "vue";
 import { useToast } from "vue-toast-notification";
+import DocumentIcon from "@/components/icons/DocumentIcon.vue";
 import AccomodationBg from "@/components/icons/AccomodationBg.vue";
 import { useOptionsStore } from "@/stores/options";
 import FIleUploader from "@/components/FIleUploader.vue";
@@ -1021,15 +1395,32 @@ import UniversalButton from "@/components/Button/UniversalButton.vue";
 import PropertyCard from "@/components/PropertyCard.vue";
 import Loader from "@/components/Loader.vue";
 import { getPropertyInfo } from "@/api/properties";
+const showAddTenantModal = ref(false)
+const viewUnitModal = ref(false)
+const tenantTab= ref('single')
+
+const tenantForm = ref({
+  FullName: null,
+  emailAddress: null,
+  phoneNumber: null,
+  leasestartDate: null,
+  leaseendDate: null
+}) 
 const loadingItem = ref(false)
 const handleViewProperty = async (id) => {
   selectedPropertyInfoId.value = id;
   loadingItem.value = true
-  propertyDetails.value = (await getPropertyInfo(id)).propertydata;
+  const response = await getPropertyInfo(id)
+  const {propertydata, propertyunits, propertyAmenities} = response
+  propertyDetails.value = propertydata;
+  propertyUnitIInfo.value = propertyunits;
+  propertyAmenitiess.value = propertyAmenities;
   showPropertyDetailsModal.value = true;
   loadingItem.value = false
 };
 const propertyDetails = ref(null)
+const propertyAmenitiess = ref(null)
+const propertyUnitIInfo = ref(null)
 const selectedPropertyInfoId = ref(null)
 const showPropertyDetailsModal = ref(false)
 const allProvinces = ref([]);
