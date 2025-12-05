@@ -331,7 +331,11 @@
           class="ant-modal-footer flex justify-end gap-3 max-h-fit"
         >
           <Button @click="handleNext">Next</Button>
-          <Button type="danger">Decline</Button>
+          <Button
+            type="danger"
+            v-if="selectedApplication.status == 'Awaiting Review'"
+            >Decline</Button
+          >
           <Button
             type="custom"
             class="border-gray-200 border-[1.75px] box-border text-[#121212]"

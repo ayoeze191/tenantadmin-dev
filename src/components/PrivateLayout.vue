@@ -1,12 +1,12 @@
 <template>
   <main class="flex w-full h-full bg-primary gap-3 box-border">
-    <side-bar />
+    <span><side-bar /></span>
     <section
-      class="flex flex-col w-full h-full bg-[#FFFFFF] rounded-[18px] box-border p-[1rem]"
+      class="flex flex-col w-full overflow-hidden h-full bg-[#FFFFFF] rounded-[18px] box-border p-[1rem]"
     >
       <top-nav />
-      <div class="flex-1 pt-4 h-full">
-        <div class="h-full" v-if="store.userProfile.isVerified == true">
+      <div class="pt-4 h-full w-full">
+        <div class="h-full w-full" v-if="store.userProfile.isVerified == true">
           <router-view v-if="!store.loading"></router-view>
           <Loader v-else />
         </div>

@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="fetchingData == false"
-    class="w-full h-full border-2 border-gray rounded-xl box-border flex flex-col overflow-y-scroll"
+    class="w-full h-full border-2 border-gray rounded-xl box-border flex flex-col "
   >
     <div class="flex items-center border-b-2">
       <table-header :total-item-count="total" title="All Properties">
@@ -16,15 +16,6 @@
             </template>
           </a-input>
           <div class="flex justify-between gap-[14px]">
-            <!-- <DropdownButton
-              :icon="'grid'"
-              :label="selectedDisplayType"
-              @select="handleDisplayTypeSelect"
-              :options="[
-                { label: 'Grid', value: 'Grid' },
-                { label: 'List', value: 'List' },
-              ]"
-            /> -->
             <Button class="flex gap-2.5" @click="showModal"
               ><span class="font-semibold">+</span> Add property</Button
             >
@@ -931,11 +922,10 @@
       </template>
       <div class="flex gap-[8px]">
         <div>
-          <img src="/src/assets/propertyImage2.svg" />
+          <img :src="propertyDetails.imageUrls[0]" />
         </div>
         <div class="flex flex-col gap-[8px]">
-          <img src="/src/assets/propertyImage.svg" />
-          <img src="/src/assets/propertyImage.svg" />
+          <img v-for="img in propertyDetails.imageUrls" :src="img" />
         </div>
       </div>
 

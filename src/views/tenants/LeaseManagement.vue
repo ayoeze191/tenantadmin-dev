@@ -1,7 +1,7 @@
 <template>
   <div class="px-4 font-inter w-full relative">
     <div
-      class="rounded-[16px] w-full mt-4 relative font-inter border-[#36363633] border-[0.75px] border-solid " 
+      class="rounded-[16px] w-full mt-4 relative font-inter border-[#36363633] border-[0.75px] border-solid min-h-[180px]"
     >
       <div class="flex justify-between">
         <table-header
@@ -15,24 +15,23 @@
           </button>
         </table-header>
       </div>
-    <div
-  class="w-full px-2.5 pb-2.5 mt-4 flex gap-2.5 overflow-x-auto scrollbar-hide"
->
-  <TenantCard
-    v-for="value in waitingLeases.slice(0, 5)"
-    :key="value.id"
-    :lease="value"
-    @view="
-                  () => {
-                    showModal = true;
-                    selectedPendingLease = value;
-                    selectedTenant = value;
-                    selectedType = 'request';
-                  }
-                "
-  />
-</div>
-
+      <div
+        class="w-full px-2.5 pb-2.5 mt-4 flex gap-2.5 overflow-x-scroll scrollbar-hide"
+      >
+        <TenantCard
+          v-for="value in waitingLeases"
+          :key="value.id"
+          :lease="value"
+          @view="
+            () => {
+              showModal = true;
+              selectedPendingLease = value;
+              selectedTenant = value;
+              selectedType = 'request';
+            }
+          "
+        />
+      </div>
     </div>
     <div
       class="rounded-[16px] w-full h-full mt-4 font-inter border-[#36363633] border-[0.75px] border-solid"
@@ -43,11 +42,6 @@
           title="Lease Management"
         >
           <FilterButton />
-          <!-- <button
-            class="border-solid border-[1px] px-[12px] py-[8px] text-[#000000B2] leading-[24px] font-inter rounded-[8px]"
-          >
-            See all requests
-          </button> -->
         </table-header>
       </div>
       <div class="w-full mt-4 h-full">
@@ -143,25 +137,32 @@
         >{{ selectedTenant.apartmentNumber || "nill" }}
       </p>
       <p class="p-0 m-0 mb-[10px]">
-        <span class="text-[#00000099] p-0 m-0">Email Address</span>The faucet in the
-        kitchen is leaking and needs immediate repair.
+        <span class="text-[#00000099] p-0 m-0">Email Address</span>The faucet in
+        the kitchen is leaking and needs immediate repair.
       </p>
       <p class="p-0 m-0 mb-[10px]">
-        <span class="text-[#00000099] p-0 m-0">Current Rent:</span>
+        <span class="text-[#00000099] p-0 m-0">Current Rent: </span>
       </p>
-       <p class="p-0 m-0 mb-[10px]" v-if="selectedType === 'aggreement'">
-        <span class="text-[#00000099] p-0 m-0 mr-[15px]">Lease Status: {{selectedTenant.contractType}}</span>
+      <p class="p-0 m-0 mb-[10px]" v-if="selectedType === 'aggreement'">
+        <span class="text-[#00000099] p-0 m-0 mr-[15px]"
+          >Lease Status: {{ selectedTenant.contractType }}</span
+        >
       </p>
       <p class="p-0 m-0 mb-[10px]" v-else>
-        <span class="text-[#00000099] p-0 m-0 mr-[15px]">Request Type: {{selectedTenant.requestTypeName}}</span>
+        <span class="text-[#00000099] p-0 m-0 mr-[15px]"
+          >Request Type: {{ selectedTenant.requestTypeName }}</span
+        >
         <!-- <StatusButton :service-status="selectedTenant.serviceStatus" /> -->
       </p>
-      
+
       <p class="p-0 m-0 mb-[10px]">
-        <div class="bg-[#F9F9F9] flex flex-col  py-4 w-full justify-center  gap-4 items-center rounded-[10px]">
+        <a
+          :href="selectedTenant.contractDoc"
+          class="bg-[#F9F9F9] flex flex-col py-4 w-full justify-center gap-4 items-center rounded-[10px]"
+        >
           <DocumentIcon />
           Contract Doc
-        </div>
+        </a>
       </p>
       <div v-if="selectedTenant.serviceStatus == 'Completed'">
         <p
@@ -185,23 +186,24 @@
         </div>
       </div>
     </div>
-    <div class="border-t-[0.75px] w-full gap-[10px] border-[#36363533] mt-4 flex" v-if="selectedType == 'request'">
+    <div
+      class="border-t-[0.75px] w-full gap-[10px] border-[#36363533] mt-4 flex"
+      v-if="selectedType == 'request'"
+    >
       <button
         @click="HandleDeclineLease"
-        class="bg-[#ffffff] border-solid border-[1px] border-[#D0D5DD]  py-[8px] flex font-inter items-center justify-center text-[#000000] w-full mt-4 rounded-[8px]"
+        class="bg-[#ffffff] border-solid border-[1px] border-[#D0D5DD] py-[8px] flex font-inter items-center justify-center text-[#000000] w-full mt-4 rounded-[8px]"
       >
         Decline
       </button>
       <button
         @click="HandleDeclineLease"
-        
         class="bg-[#000130] py-[8px] flex font-inter items-center justify-center text-white w-full mt-4 rounded-[8px]"
       >
         Approve Requests
       </button>
     </div>
   </a-modal>
-
 </template>
 
 <script>
@@ -210,7 +212,11 @@ import TableHeader from "@/components/TableHeader.vue";
 import V2Table from "@/components/V2Table.vue";
 import V2ServiceRequestsDropDown from "@/components/V2ServiceRequestsDropDown.vue";
 import FilterButton from "@/components/icons/FilterButton.vue";
-import { FetchLeases, fetchWaitingLeases, ApproveDeclineLease } from "@/api/lease";
+import {
+  FetchLeases,
+  fetchWaitingLeases,
+  ApproveDeclineLease,
+} from "@/api/lease";
 import { useUserStore } from "@/store";
 import DocumentIcon from "@/components/icons/DocumentIcon.vue";
 import BasePagination from "@/components/BasePagination.vue";
@@ -246,32 +252,30 @@ export default {
     HandleDeclineLease() {
       const body = {
         requestId: this.selectedTenant.contractRequestId,
-        status: 3
-      }
-      ApproveDeclineLease(body).then((response) => { 
-        console.log(response.data)
-          if(response.responseCode == "00"){
-        this.toast.info('Successfully Declined')
-    this.fetchData();
-        
-        this.showModal = false
+        status: 3,
+      };
+      ApproveDeclineLease(body).then((response) => {
+        console.log(response.data);
+        if (response.responseCode == "00") {
+          this.toast.info("Successfully Declined");
+          this.fetchData();
+
+          this.showModal = false;
         }
-        
-      })
+      });
     },
-     HandleApproveLease() {
+    HandleApproveLease() {
       const body = {
         requestId: this.selectedTenant.contractRequestId,
-        status: 2
-      }
-      ApproveDeclineLease(body).then((response) => { 
-        if(response.responseCode == "00"){
-        this.toast.success('Successfully Approved')
-        this.showModal = false
-    this.fetchData();
-
+        status: 2,
+      };
+      ApproveDeclineLease(body).then((response) => {
+        if (response.responseCode == "00") {
+          this.toast.success("Successfully Approved");
+          this.showModal = false;
+          this.fetchData();
         }
-      })
+      });
     },
     fetchData() {
       const query = {
@@ -294,7 +298,7 @@ export default {
             contractReqType: lease.contractReqType,
             requestTypeName: lease.requestTypeName,
             contractType: lease.contractType,
-            contractRequestId: lease.contractRequestId || 'nill'
+            contractRequestId: lease.contractRequestId || "nill",
           }));
         } else handleError(response);
       });
@@ -322,7 +326,7 @@ export default {
     return {
       toast: useToast(),
       selectedTenant: {},
-      selectedType : "aggreement",
+      selectedType: "aggreement",
       selectedPendingLease: {},
       waitingLeases: [],
       currentPage: 1,
