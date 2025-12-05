@@ -39,12 +39,12 @@
             app.phoneNo || "-09037183645"
           }}</span>
         </p>
-        <p
+        <!-- <p
           class="m-0 p-0 flex justify-between text-[12px] text-[#00000099] font-inter font-medium leading-[20px]"
         >
           Nationality:
           <span class="text-[#000000]">{{ app.nationality || "Nigeria" }}</span>
-        </p>
+        </p> -->
       </div>
     </div>
     <div class="px-2.5 pb-[10px]">

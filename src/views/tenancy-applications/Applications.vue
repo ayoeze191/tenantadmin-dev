@@ -1414,7 +1414,6 @@ export default {
                 email: app.email || "N/A",
                 gender: app.gender || "N/A",
                 phoneNo: app.phoneNo || "N/A",
-                nationality: app.nationality || "N/A",
                 applicationId: app.applicationId || "N/A",
                 intendedMoveInDate: app.intendedMoveInDate || "N/A",
                 currentAddress: app.currentAddress || "N/A",

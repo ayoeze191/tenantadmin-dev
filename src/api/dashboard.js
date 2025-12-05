@@ -59,3 +59,19 @@ export const inviteUsers = async (mail) => {
   }
   return response.data;
 };
+
+export const serviceRequests = async (landlordId) => {
+  let response;
+  try {
+    if (landlordId == "NN1") {
+      response = await getApi("Dashboard/ServiceRequest");
+      return response.data;
+    }
+    response = await getApi(
+      `Dashboard/ServiceRequest?LandLordId=${landlordId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

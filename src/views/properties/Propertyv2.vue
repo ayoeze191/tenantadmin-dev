@@ -1068,8 +1068,28 @@
           <a href="#" @click="viewUnitModal = true">View details</a>
         </a-menu-item>
         <a-menu-item>
-          <a @click="showAddTenantModal = true" href="#">Add Tenant</a>
+          <a @click="() => {
+            showAddTenantModal = true
+                                tenantForm.unitId = unit.unitId;
+            
+            }" href="#">Add Tenant</a>
         </a-menu-item>
+        <a-menu-item key="3" 
+          @click="
+                              () => {
+                                editUnitModal = true;
+                                selectedUnit = {
+                                  ...unit,
+                                  availabilityDate: dayjs(
+                                    unit.availabilityDate
+                                  ),
+                                  unitImg: unit.unitImg || [],
+                                };
+                                console.log(selectedUnit, 'selectedUnit');
+                              }
+                            "
+        
+        > Edit Unit </a-menu-item>
       </a-menu>
     </template>
   </a-dropdown>
@@ -1096,14 +1116,14 @@
         <div
           class="flex items-center justify-between border-b border-[#C7C7C7] py-[12px]"
         >
-          <div
+          <span class="modal-title font-redwing text-[24px] font-medium leading-[100%]">Add Tenants</span>
+          <span></span>
+           <div
             class="cursor-pointer flex items-center gap-[8px] text-txt_dark text-[18px] font-medium"
           >
             <ArrowLeftOutlined @click="showAddTenantModal = false" class="text-[18px]" />
-            Back
           </div>
-          <span class="modal-title">Add Tenants</span>
-          <span></span>
+          
         </div>
       </template>
       <a-tabs
@@ -1141,6 +1161,7 @@
                 <a-input
                   v-model:value="tenantForm.phoneNumber"
                   placeholder="Enter phone number"
+                  
                   size="large"
                 />
               </a-form-item>
@@ -1178,7 +1199,7 @@
                 <a-button
                   type="primary"
                   :loading="tenantLoading"
-                  @click="createProperties"
+                  @click="createTenant"
                   size="large"
                   class="px-8"
                   >Add Tenants</a-button
@@ -1255,114 +1276,186 @@
 
 
     <!-- Unit details -->
-         <a-modal
+     <a-modal
       :footer="null"
-      width="768px"
-      :visible="viewUnitModal"
+      width="458px"
+      :visible="editUnitModal"
       centered
       :bodyStyle="{ padding: '0' }"
       class=""
       :closable="false"
+      @cancel="resetTenantModal"
     >
-            <template #title>
+      <!-- <div class="add-tenants-modal-header">
+        <div class="modal-title">Add Tenants</div>
+      </div> -->
+      <template #title>
         <div
-          class="flex items-center justify-between border-b border-[#C7C7C7] p-0 m-0 py-[25px]"
+          class="flex items-center justify-between border-b border-[#C7C7C7] py-[12px]"
         >
-          <div
-            @click="viewUnitModal = false"
-            class="cursor-pointer flex items-center gap-[8px] text-txt_dark text-[18px] font-medium m-0 p-0"
+          <button
+            @click="editUnitModal = false"
+            class="cursor-pointer flex items-center gap-[8px] text-txt_dark text-[18px] font-medium"
           >
             <ArrowLeftOutlined
               @click="goBack"
               class="text-[18px] text-[#808097]"
             />
             Back
-            </div>
-          <span class="text-[32px] font-[500] font-sf leading-[28px] ">
-            {{selectedUnit.unitName}}
-          </span>
-          <span class="m-0 p-0"></span>
+          </button>
+          <span class="modal-title">Edit Units</span>
+          <span></span>
         </div>
       </template>
+      <div>
+        <div
+          class="bg-[#C382011A] flex items-center gap-[8px] p-2 rounded-[8px] mt-4"
+        >
+          <div class="">
+         <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M8.5 9.33333V5.16667M8.5 1C12.6421 1 16 4.35786 16 8.5C16 12.6421 12.6421 16 8.5 16C4.35786 16 1 12.6421 1 8.5C1 4.35786 4.35786 1 8.5 1ZM8.4585 11.8333V11.75L8.5415 11.7498V11.8333H8.4585Z" stroke="#854D0F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
 
-      <div class="grid grid-cols-2 gap-y-[8px] px-[87px] py-[47px]">
-        <div>
-          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Unit Type</p>
-          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">{{selectedUnit.unitName}}</p>
+          </div>
+          <div class="m-0">
+            <p class="text-[#854D0F] m-0 font-sf text-[12px]  font-semibold leading-[100%]">
+              You are editing a single unit
+            </p>
+            <p class="text-[#854D0F] m-0 text-[12px] font-sf">
+              Not all instances of the similar units would change or be affected
+              by this edit.
+            </p>
+          </div>
         </div>
-        <div>
-          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Packing Type</p>
-          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">nil</p>
-        </div>
-         <div>
-          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Reference Number</p>
-          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">{{selectedUnit.referenceNumber}}</p>
-        </div>
-         <div>
-          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Pets</p>
-          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">{{'nil'}}</p>
-        </div>
-        <div>
-          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">No of Bathroom (s)</p>
-          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">{{selectedUnit.bathRoom}}</p>
-        </div>
-        <div>
-          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">AC Type</p>
-          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">Nil</p>
-        </div>
-        <!-- Next -->
+      </div>
 
-         <div>
-          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Occupancy Status</p>
-          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">{{selectedUnit.occupancyStatus}}</p>
+      <a-form>
+        <p class="text-[#404164] font-redwing text-[14px]  font-medium mt-[16px]">
+          Unit Information
+        </p>
+        <a-form-item name="rentRate" required>
+          
+          <a-input-number
+            style="width: 100%"
+            min="0"
+            size="large"
+            v-model:value="selectedUnit.referenceNumber"
+          />
+        </a-form-item>
+
+        <div class="flex gap-4">
+          <a-form-item name="rent_price" required class="flex-1 form-labels">
+            <a-input
+              placeholder="Rent Price"
+              size="large"
+              v-model:value="selectedUnit.price"
+            />
+          </a-form-item>
+          <a-form-item
+            name="security_deposit"
+            required
+            class="flex-1 form-labels"
+          >
+           
+            <a-input
+              placeholder="Security Deposit"
+              size="large"
+              v-model:value="selectedUnit.securityDeposit"
+            />
+          </a-form-item>
         </div>
-        <div>
-          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Heating Type</p>
-          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">nil</p>
+
+        <div class="flex gap-4">
+          <a-form-item name="rent_price" required class="flex-1 form-labels">
+            <a-date-picker
+              placeholder="Rent Price"
+              size="large"
+              v-model:value="selectedUnit.availabilityDate"
+            />
+          </a-form-item>
+          <a-form-item
+            name="security_deposit"
+            type="date"
+            class="flex-1 form-labels"
+          >
+
+            <a-select
+              ref="select"
+              v-model:value="selectedUnit.occupancyStatus"
+              style="width: 200px"
+              placeholder="Select Occupancy Status"
+              class="w-full"
+              @focus="focus"
+            >
+              <a-select-option :value="1">Available and Vacant</a-select-option>
+              <a-select-option :value="2">Currently Occupied</a-select-option>
+              <a-select-option :value="3">Under Renovation</a-select-option>
+              <a-select-option :value="4">Sale Closing Soon</a-select-option>
+            </a-select>
+          </a-form-item>
         </div>
-         <div>
-          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  "> Rent </p>
-          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">${{ selectedUnit.price }}</p>
+        <a-form-item>
+          <div
+            class="form-labels text-[14px] m-0 p-0 font-regular leading-[100%] font-redwing"
+          >
+            Upload Photos
+          </div>
+          <a-upload-dragger
+    v-model:fileList="UnitImageFileList"
+    name="file"
+    :customRequest="customUnitImageUpload"
+    class="border-dashed border-[#C7C7C7] rounded-[5px] p-[14px]"
+    list-type="picture-card"
+          >
+            <p class="ant-upload-drag-icon mx-auto w-fit pt-[28px]">
+              <svg
+                width="26"
+                height="31"
+                viewBox="0 0 26 31"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M25.0459 9.07906L17.1709 1.20406C17.0664 1.09962 16.9423 1.01681 16.8057 0.960347C16.6691 0.903885 16.5228 0.874884 16.375 0.875H2.875C2.27826 0.875 1.70597 1.11205 1.28401 1.53401C0.862053 1.95597 0.625 2.52826 0.625 3.125V27.875C0.625 28.4717 0.862053 29.044 1.28401 29.466C1.70597 29.8879 2.27826 30.125 2.875 30.125H23.125C23.7217 30.125 24.294 29.8879 24.716 29.466C25.1379 29.044 25.375 28.4717 25.375 27.875V9.875C25.3751 9.72722 25.3461 9.58086 25.2897 9.44429C25.2332 9.30772 25.1504 9.18362 25.0459 9.07906ZM17.5 4.71547L21.5345 8.75H17.5V4.71547ZM23.125 27.875H2.875V3.125H15.25V9.875C15.25 10.1734 15.3685 10.4595 15.5795 10.6705C15.7905 10.8815 16.0766 11 16.375 11H23.125V27.875ZM17.1709 16.9541C17.2755 17.0586 17.3584 17.1827 17.4149 17.3192C17.4715 17.4558 17.5006 17.6022 17.5006 17.75C17.5006 17.8978 17.4715 18.0442 17.4149 18.1808C17.3584 18.3173 17.2755 18.4414 17.1709 18.5459C17.0664 18.6505 16.9423 18.7334 16.8058 18.7899C16.6692 18.8465 16.5228 18.8756 16.375 18.8756C16.2272 18.8756 16.0808 18.8465 15.9442 18.7899C15.8077 18.7334 15.6836 18.6505 15.5791 18.5459L14.125 17.0905V23.375C14.125 23.6734 14.0065 23.9595 13.7955 24.1705C13.5845 24.3815 13.2984 24.5 13 24.5C12.7016 24.5 12.4155 24.3815 12.2045 24.1705C11.9935 23.9595 11.875 23.6734 11.875 23.375V17.0905L10.4209 18.5459C10.3164 18.6505 10.1923 18.7334 10.0558 18.7899C9.91919 18.8465 9.77282 18.8756 9.625 18.8756C9.47718 18.8756 9.33081 18.8465 9.19424 18.7899C9.05767 18.7334 8.93359 18.6505 8.82906 18.5459C8.72454 18.4414 8.64163 18.3173 8.58506 18.1808C8.52849 18.0442 8.49937 17.8978 8.49937 17.75C8.49937 17.6022 8.52849 17.4558 8.58506 17.3192C8.64163 17.1827 8.72454 17.0586 8.82906 16.9541L12.2041 13.5791C12.3085 13.4745 12.4326 13.3915 12.5692 13.3349C12.7058 13.2783 12.8522 13.2491 13 13.2491C13.1478 13.2491 13.2942 13.2783 13.4308 13.3349C13.5674 13.3915 13.6915 13.4745 13.7959 13.5791L17.1709 16.9541Z"
+                  fill="#404164"
+                />
+              </svg>
+            </p>
+            <p
+              class="ant-upload-text text-[#404164] font-600 font-sf leading-[100%]"
+            >
+              Drop Photos here or click to upload
+            </p>
+            <p
+              class="ant-upload-hint text-[#808097] font-[12px] font-sf leading-[100%]"
+            >
+              Accepted File Types: png, jpg
+            </p>
+          </a-upload-dragger>
+        </a-form-item>
+
+        <div class="flex gap-2.5 ml-auto w-fit">
+          <button
+          @click="editUnitModal = false"
+            class="border-[#000130] border py-[6px] text-[14px] font-inter px-[12px] text-[#404164]  font-semibold leading-[28px] rounded-[8px]"
+          >
+            Cancel
+          </button>
+          <button
+            @click="SubmitEditUnit"
+                        class="border-[#000130] bg-[#000130] border py-[6px] text-[14px] font-inter px-[12px] text-[#FFFFFF]  font-semibold leading-[28px] rounded-[8px]"
+
+          >
+            Save
+          </button>
         </div>
-         <div>
-          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Laundry Type</p>
-          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">{{'Nil'}}</p>
-        </div>
-        <div>
-          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Security Deposit</p>
-          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">${{selectedUnit.securityDeposit}}</p>
-        </div>
-        <div>
-          <p class="text-[#404164] leading-[100%] p-0 m-0 text-[14px]  ">Availability Date</p>
-          <p class="p-0 m-0 mt-[2px] font-[400] font-sf leading-[100%] text-[#808097]">12/07/2025</p>
-        </div>
-      </div>
-      <div class="p-0 m-0 font-sf">
-        <div class="flex justify-between px-[87px] py-[47px] font-sf">
-          <p class="leading-[100%] text-[16px]  text-[#404164]">Unit Images</p>
-        <p class="leading-[100%] text-[16px]  text-[#404164]">{{selectedUnit.accommodationImages.length}} Images</p>
-        </div>
-      </div>
-        <div class="px-[87px] pb-[47px]">
-          <a-carousel autoplay arrows>
-             <template #prevArrow>
-      <div class="custom-slick-arrow" style="left: 10px; z-index: 1">
-        <left-circle-outlined />
-      </div>
-    </template>
-     <template #nextArrow>
-      <div class="custom-slick-arrow" style="right: 10px">
-        <right-circle-outlined />
-      </div>
-    </template>
-    <div v-for="value in selectedUnit.accommodationImages" class="carousel-item">
-      <img :src="value.image" class="carousel-item" />
-    </div>
-   
-  </a-carousel>
-        </div>  
+      </a-form>
     </a-modal>
+
     <!-- End unit details -->
+
+
+
   </div>
   <Loader v-else />
 </template>
@@ -1375,12 +1468,14 @@ import {
   FetchProperties,
   FetchUnitTypes,
 } from "@/api/properties";
+import { AddTenants, EditPropertyUnit } from "@/api/properties";
 import Button from "@/components/Button/Button.vue";
 import Table from "@/components/V2Table.vue";
 import TableHeader from "@/components/TableHeader.vue";
 import BasePagination from "@/components/BasePagination.vue";
 import DropdownButton from "@/components/V2ServiceRequestsDropDown.vue";
 import { useUserStore } from "@/store";
+import dayjs from "dayjs";
 import { onMounted, ref } from "vue";
 import { reactive } from "vue";
 import { useToast } from "vue-toast-notification";
@@ -1395,6 +1490,68 @@ import UniversalButton from "@/components/Button/UniversalButton.vue";
 import PropertyCard from "@/components/PropertyCard.vue";
 import Loader from "@/components/Loader.vue";
 import { getPropertyInfo } from "@/api/properties";
+const editUnitModal = ref(false)
+const selectedUnit = ref({
+  referenceNumber: "",
+  price: "",
+  securityDeposit: "",
+  availabilityDate: "",
+  occupancyStatus: 1,
+  unitImg: []
+});
+
+const SubmitEditUnit = async () => {
+  const payload = {
+    unitId: selectedUnit.value.unitId,
+    refNumber: selectedUnit.value.referenceNumber,
+    rentPrice: selectedUnit.value.price,
+    securityDeposit: selectedUnit.value.securityDeposit,
+    availabilityDate: selectedUnit.value.availabilityDate,
+    occupancyStatus: selectedUnit.value.occupancyStatus,
+    unitImg: selectedUnit.value.unitImg
+  };
+  const response = await EditPropertyUnit(payload);
+  const toast = useToast();
+  toast.success("Succsfully updated the unit");
+  editUnitModal.value = false;
+};
+const tenantLoading = ref(false)
+const createTenant = async () => {
+  tenantLoading.value = true;
+  let firstname, lastname;
+  const [splittedfirstname, splittedlastname] = tenantForm.value.FullName.split(" ");
+  firstname = splittedfirstname;
+  lastname = splittedlastname;
+  const toast = useToast();
+  const payload = {
+    emailAddress: tenantForm.value.emailAddress,
+    firstname,
+    lastname: lastname || "",
+    dob: "",
+    phoneNumber: tenantForm.value.phoneNumber,
+    accountType: 0,
+    accountRefNumber: "",
+    contractRequest: {
+      unitId: tenantForm.value.unitId,
+      isActive: true,
+      startDate: tenantForm.value.leasestartDate,
+      endDate: tenantForm.value.leaseendDate,
+      rentRate: 0,
+    },
+  };
+  console.log(payload, "payload");
+  const response = await AddTenants(payload)
+  console.log(response.result);
+  if (response.result.responseCode == "00") {
+    toast.success("Successfully created");
+    tenantLoading.value = false;
+  } else {
+    toast.error(response.result.responseDescription);
+    tenantLoading.value = false;
+  }
+  tenantLoading.value == false;
+  showAddTenantModal.value = false;
+};
 const showAddTenantModal = ref(false)
 const viewUnitModal = ref(false)
 const tenantTab= ref('single')

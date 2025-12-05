@@ -123,8 +123,10 @@
                     <span
                       class="w-[13px] rounded-[4px] h-[13px] bg-[#FA922A]"
                     ></span>
-                    Under Review</span
-                  ><span> {{ pendingRequests.length }} </span>
+                    Awaiting Payment</span
+                  ><span>
+                    {{ AccomodationApplicationsCount.awaitingPayment }}
+                  </span>
                 </div>
                 <div class="flex justify-between w-full">
                   <span class="flex gap-[8px] items-center">
@@ -206,7 +208,7 @@
                       class="w-[13px] rounded-[4px] h-[13px] bg-[#67ABFF]"
                     ></span>
                     Ongoing</span
-                  ><span> 0 </span>
+                  ><span> {{ serviceRequestsCount.ongoing }} </span>
                 </div>
 
                 <div class="flex justify-between w-full">
@@ -214,8 +216,8 @@
                     <span
                       class="w-[13px] rounded-[4px] h-[13px] bg-[#FA922A]"
                     ></span>
-                    Under Review</span
-                  ><span> 0 </span>
+                    Pending</span
+                  ><span> {{ serviceRequestsCount.pending }} </span>
                 </div>
                 <div class="flex justify-between w-full">
                   <span class="flex gap-[8px] items-center">
@@ -223,7 +225,7 @@
                       class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
                     ></span>
                     Approved</span
-                  ><span> 0 </span>
+                  ><span> {{ serviceRequestsCount.completed }} </span>
                 </div>
               </div>
             </div>
@@ -721,8 +723,12 @@ import Table from "@/components/Table.vue";
 import dashboardTable from "@/components/icons/dashboardTable.vue";
 import { h } from "vue";
 import { LoadingOutlined } from "@ant-design/icons-vue";
-import { FetchServiceRequests } from "@/api/serviceRequest";
-import { AccomodationApplications, MyTenants } from "@/api/dashboard";
+
+import {
+  AccomodationApplications,
+  MyTenants,
+  serviceRequests,
+} from "@/api/dashboard";
 import { useUserStore } from "@/store";
 import { AddTenants } from "@/api/properties";
 import { addPropertyManager } from "@/api/dashboard";
@@ -803,6 +809,11 @@ export default {
         tenants: false,
       },
       serviceRequests: [],
+      serviceRequestsCount: {
+        completed: 0,
+        ongoing: 0,
+        pending: 0,
+      },
       ongoingRequests: [],
       pendingRequests: [],
       chartData: {
@@ -907,19 +918,13 @@ export default {
     handleFetchServiceRequest() {
       this.loading.serviceRequestCompleted = true;
       this.loading.serviceOngoingCompleted = true;
-      FetchServiceRequests().then((response) => {
+      serviceRequests().then((response) => {
         this.loading.serviceRequestCompleted = false;
         this.loading.serviceOngoingCompleted = false;
         if (response.responseCode == "00") {
-          this.serviceRequests = response.serviceRequests.filter(
-            (req) => req.serviceStatus == 3
-          );
-          this.ongoingRequests = response.serviceRequests.filter(
-            (req) => req.serviceStatus == 2
-          );
-          this.pendingRequests = response.serviceRequests.filter(
-            (req) => req.serviceStatus == 1
-          );
+          this.serviceRequestsCount.completed = response.completed;
+          this.serviceRequestsCount.ongoing = response.ongoing;
+          this.serviceRequestsCount.pending = response.pending;
         } else handleError(response);
       });
     },
@@ -949,7 +954,11 @@ export default {
     handleAccomodationApplication() {
       AccomodationApplications(this.store.userProfile.referenceID)
         .then((response) => {
-          this.AccomodationApplicationsCount = { ...response };
+          this.AccomodationApplicationsCount = {
+            awaitingPayment: response.awaitingPayment,
+            ongoing: response.ongoing,
+            completed: response.completed,
+          };
         })
         .catch((err) => {
           console.log(err);
