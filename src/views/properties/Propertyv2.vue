@@ -922,10 +922,10 @@
       </template>
       <div class="flex gap-[8px]">
         <div>
-          <img :src="propertyDetails.imageUrls[0]" />
+          <img :width="616" :height="414" class="rounded-[12px]" :src="propertyDetails.imageUrls[0]" />
         </div>
         <div class="flex flex-col gap-[8px]">
-          <img v-for="img in propertyDetails.imageUrls" :src="img" />
+          <img v-for="img in propertyDetails.imageUrls" class="rounded-[8px]" :src="img" />
         </div>
       </div>
 
@@ -1281,20 +1281,19 @@
       </div> -->
       <template #title>
         <div
-          class="flex items-center justify-between border-b border-[#C7C7C7] py-[12px]"
+          class="flex items-center justify-between  py-[12px]"
         >
-          <button
-            @click="editUnitModal = false"
-            class="cursor-pointer flex items-center gap-[8px] text-txt_dark text-[18px] font-medium"
-          >
-            <ArrowLeftOutlined
-              @click="goBack"
-              class="text-[18px] text-[#808097]"
-            />
-            Back
-          </button>
-          <span class="modal-title">Edit Units</span>
+          <span class="modal-title font-redwing text-[24px] font-medium leading-[100%] text-[#000000]">Edit Units</span>
           <span></span>
+            <button
+            @click="editUnitModal = false"
+            class="cursor-pointer flex items-center gap-[8px]  text-[18px] font-medium"
+          >
+            <CloseOutlined
+              @click="goBack"
+              class="text-[18px] text-[#323232]"
+            />
+          </button>
         </div>
       </template>
       <div>
@@ -1320,7 +1319,7 @@
       </div>
 
       <a-form>
-        <p class="text-[#404164] font-redwing text-[14px]  font-medium mt-[16px]">
+        <p class="text-[#000000] p-0 m-0 mb-3.5 font-redwing text-[14px]  font-medium mt-[16px]">
           Unit Information
         </p>
         <a-form-item name="rentRate" required>
