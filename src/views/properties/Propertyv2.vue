@@ -1055,7 +1055,13 @@
     <template #overlay>
       <a-menu>
         <a-menu-item>
-          <a href="#" @click="viewUnitModal = true">View details</a>
+          <a href="#" @click="() => {
+            ViewUnitDetailModal = true
+            selectedUnit = {...unit, availabilityDate: dayjs(
+                                    unit.availabilityDate
+                                  ),
+                                  unitImg: unit.unitImg || []}
+            }">View details</a>
         </a-menu-item>
         <a-menu-item>
           <a @click="() => {
@@ -1263,9 +1269,126 @@
         </a-tab-pane>
       </a-tabs>
     </a-modal>
+  <a-modal
+      :visible="ViewUnitDetailModal"
+      :footer="null"
+      centered
+      :closable="false"
+    >
+     <template #title>
+        <div
+          class="flex items-center justify-between  py-[12px]"
+        >
+          <span class="modal-title font-redwing text-[24px] font-medium leading-[100%] text-[#000000]">{{ selectedUnit.name ||  "Studio 1" }} {{ selectedUnit.referenceNumber || 'RN-846-00-01' }}</span>
+          <span></span>
+            <button
+            @click="ViewUnitDetailModal = false"
+            class="cursor-pointer flex items-center gap-[8px]  text-[18px] font-medium"
+          >
+            <CloseOutlined
+              class="text-[18px] text-[#323232]"
+            />
+          </button>
+        </div>
+      </template>
+
+      <div class="grid grid-cols-2 gap-6 bg-[#F9F9F9] p-[15px] rounded-[8px]">
+        <div class="flex flex-col gap-1 ">
+          <p class="text-[#000000] p-0 m-0 font-inter text-[12px] font-semibold ">Unit Type</p>
+          <p class="text-[#00000099]
+           font-inter text-[12px] font-semibold  m-0 p-0
+          ">{{selectedUnit.unitType}}</p>
+        </div>
+
+          <div class="flex flex-col gap-1 ">
+          <p class="text-[#000000] p-0 m-0 font-inter text-[12px] font-semibold ">Packing Type</p>
+          <p class="text-[#00000099]
+           font-inter text-[12px] font-semibold  m-0 p-0
+          ">{{selectedUnit.partkingType || "nill"}}</p>
+        </div>
+
+          <div class="flex flex-col gap-1 ">
+          <p class="text-[#000000] p-0 m-0 font-inter text-[12px] font-semibold ">Ref. Number</p>
+          <p class="text-[#00000099]
+           font-inter text-[12px] font-semibold  m-0 p-0
+          ">{{selectedUnit.referenceNumber || "nill"}}</p>
+        </div>
+
+          <div class="flex flex-col gap-1 ">
+          <p class="text-[#000000] p-0 m-0 font-inter text-[12px] font-semibold ">Pets</p>
+          <p class="text-[#00000099]
+           font-inter text-[12px] font-semibold  m-0 p-0
+          ">{{selectedUnit.pets || "nill"}}</p>
+        </div>
+
+          <div class="flex flex-col gap-1 ">
+          <p class="text-[#000000] p-0 m-0 font-inter text-[12px] font-semibold ">No. of Bathroom(s)</p>
+          <p class="text-[#00000099]
+           font-inter text-[12px] font-semibold  m-0 p-0
+          ">{{selectedUnit.bathrooms || "nill"}}</p>
+        </div>
+
+          <div class="flex flex-col gap-1 ">
+          <p class="text-[#000000] p-0 m-0 font-inter text-[12px] font-semibold ">AC Type</p>
+          <p class="text-[#00000099]
+           font-inter text-[12px] font-semibold  m-0 p-0
+          ">{{selectedUnit.acType || "nill"}}</p>
+        </div>
 
 
-    <!-- Unit details -->
+         <div class="flex flex-col gap-1 ">
+          <p class="text-[#000000] p-0 m-0 font-inter text-[12px] font-semibold ">AC Type</p>
+          <p class="text-[#00000099]
+           font-inter text-[12px] font-semibold  m-0 p-0
+          ">{{selectedUnit.acType || "nill"}}</p>
+        </div>
+
+         <div class="flex flex-col gap-1 ">
+          <p class="text-[#000000] p-0 m-0 font-inter text-[12px] font-semibold ">Occupancy Status</p>
+          <p class="text-[#00000099]
+           font-inter text-[12px] font-semibold  m-0 p-0
+          ">{{selectedUnit.occupancyStatus || "nill"}}</p>
+        </div>
+
+         <div class="flex flex-col gap-1 ">
+          <p class="text-[#000000] p-0 m-0 font-inter text-[12px] font-semibold ">Heating Type</p>
+          <p class="text-[#00000099]
+           font-inter text-[12px] font-semibold  m-0 p-0
+          ">{{selectedUnit.heatingType || "nill"}}</p>
+        </div>
+
+         <div class="flex flex-col gap-1 ">
+          <p class="text-[#000000] p-0 m-0 font-inter text-[12px] font-semibold ">Rent</p>
+          <p class="text-[#00000099]
+           font-inter text-[12px] font-semibold  m-0 p-0
+          ">{{selectedUnit.rentPerMonth || "nill"}}</p>
+        </div>
+
+         <div class="flex flex-col gap-1 ">
+          <p class="text-[#000000] p-0 m-0 font-inter text-[12px] font-semibold ">Laundry Type</p>
+          <p class="text-[#00000099]
+           font-inter text-[12px] font-semibold  m-0 p-0
+          ">{{selectedUnit.laundryType || "nill"}}</p>
+        </div>
+
+         <div class="flex flex-col gap-1 ">
+          <p class="text-[#000000] p-0 m-0 font-inter text-[12px] font-semibold ">Security Deposit</p>
+          <p class="text-[#00000099]
+           font-inter text-[12px] font-semibold  m-0 p-0
+          ">{{selectedUnit.securityDeposit || "nill"}}</p>
+        </div>
+
+         <div class="flex flex-col gap-1 ">
+          <p class="text-[#000000] p-0 m-0 font-inter text-[12px] font-semibold ">Availability Date</p>
+          <p class="text-[#00000099]
+           font-inter text-[12px] font-semibold  m-0 p-0
+          ">{{selectedUnit.availabilityDate || "nill"}}</p>
+        </div>
+      </div>
+      
+    </a-modal>
+
+    <!-- Edit Unit details -->
      <a-modal
       :footer="null"
       width="458px"
@@ -1441,8 +1564,7 @@
       </a-form>
     </a-modal>
 
-    <!-- End unit details -->
-
+  
 
 
   </div>
@@ -1450,7 +1572,6 @@
 </template>
 
 <script setup>
-import IconProperties from "@/components/icons/IconProperties.vue";
 import {
   CreateNewProperty,
   getProvinces,
@@ -1479,6 +1600,7 @@ import UniversalButton from "@/components/Button/UniversalButton.vue";
 import PropertyCard from "@/components/PropertyCard.vue";
 import Loader from "@/components/Loader.vue";
 import { getPropertyInfo } from "@/api/properties";
+
 const editUnitModal = ref(false)
 const selectedUnit = ref({
   referenceNumber: "",
@@ -1488,6 +1610,7 @@ const selectedUnit = ref({
   occupancyStatus: 1,
   unitImg: []
 });
+const ViewUnitDetailModal = ref(false)
 
 const SubmitEditUnit = async () => {
   const payload = {
