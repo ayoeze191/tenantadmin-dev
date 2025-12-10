@@ -143,6 +143,11 @@
             >Register Admin User</router-link
           >
         </a-menu-item>
+        <a-menu-item key="kyc-verification">
+          <router-link :to="{ name: 'kyc-verification' }"
+            >KYC Verification</router-link
+          >
+        </a-menu-item>
       </a-sub-menu>
       <a-sub-menu key="roles" title="Roles" v-if="userType == 'NN1'">
         <template #icon><roles-icon /></template>

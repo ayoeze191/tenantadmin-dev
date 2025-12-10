@@ -34,9 +34,9 @@ import SetUpProperties from "@/views/properties/SetUpProperties.vue";
 import Audit from "@/views/Logs/Audit.vue";
 import Otp from "@/views/auth/otp.vue";
 
-
 //temp
 import AddProperties from "@/views/properties/Propertyv2.vue";
+import Kyc from "@/views/kyc/Kyc.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -81,6 +81,7 @@ const router = createRouter({
       name: "register",
       component: SignUpPage,
     },
+
     {
       path: "/app",
       name: "10ants-admin",
@@ -206,6 +207,11 @@ const router = createRouter({
           path: "/users/roles",
           name: "admin-users-roles",
           component: ViewRoles,
+        },
+        {
+          path: "/users/kyc",
+          name: "kyc-verification",
+          component: Kyc,
         },
         {
           path: "/users/roles/add",

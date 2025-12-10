@@ -4,7 +4,10 @@
       class="rounded-[16px] mt-4 h-full font-inter border-[#36363633] border-[0.75px] border-solid"
     >
       <div class="flex gap-2.5 items-center">
-        <table-header :total-item-count="totalItemCount" title="Tenants">
+        <table-header
+          :total-item-count="landlordList.length"
+          title="KYC Verification"
+        >
           <div class="flex gap-[10px]">
             <filter-button />
           </div>
@@ -21,64 +24,16 @@
           <template #action="{ record }">
             <div class="relative flex justify-center items-center group">
               <!-- Hidden div -->
-              <div
-                class="absolute z-[50] text-[12px] right-2 top-0 p-5 border-[0.75px] border-solid rounded-[16px] bg-white opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300"
-              >
-                <div
-                  class="flex items-center gap-[8px] p-[10px] rounded-[10px] border-[0.75px] border-solid border-[#36363633]"
-                >
-                  <div class="flex h-[34px] w-[34px]">
-                    <img src="/src/assets/TenantImage.svg" />
-                  </div>
-                  <div>
-                    <p class="m-0 p-0">
-                      {{ record.name }}
-                    </p>
-                    <p class="m-0 p-0 mt-[2px]">{{ record.email }}</p>
-                  </div>
-                </div>
-                <!-- asa -->
-                <div class="mt-4 m-0">
-                  <p class="text-[#000000]">
-                    <span
-                      class="text-[#00000099] text-[12px] font-medium leading-[20px]"
-                      >Apartment:</span
-                    >
-                    {{ record.properties || "nill" }}
-                  </p>
-                  <p>
-                    <span class="text-[#00000099]">Rent Amount:</span> ${{
-                      record.bills
-                    }}
-                  </p>
-                  <p>
-                    <span class="text-[#00000099]">Rent Due:</span>
-                    {{ record.due || "nill" }}
-                  </p>
-                  <p>
-                    <span class="text-[#00000099]">Lease Expires:</span>
-                    {{ record.rent || "nill" }}
-                  </p>
-                  <div>
-                    <span class="text-[#00000099]">Lease:</span> View Tenant
-                  </div>
-                </div>
-
-                <UniversalButton
-                  label="Send notification to Tenant"
-                  @click="
-                    () => {
-                      selectedTenant = record;
-                      showModal = true;
-                      form.email = record.email;
-                    }
-                  "
-                  customClass="py-[8px] w-full flex items-center justify-center bg-[#000130] text-white mt-6 text-[14px] rounded-[8px]"
-                />
-              </div>
               <a-button
+                @click="
+                  () => {
+                    selectedKYC = record;
+                    showModal = true;
+                    stage = 0;
+                  }
+                "
                 class="bg-[#000130] bg-inherit text-black cursor-pointer"
-                >View Info</a-button
+                >View Details</a-button
               >
             </div>
           </template>
@@ -94,7 +49,6 @@
         />
       </div>
     </div>
-
     <a-modal
       :footer="null"
       width="437px"
@@ -106,9 +60,9 @@
     >
       <template #title>
         <div class="flex items-center justify-between py-[12px]">
-          <span class="font-redwing text-2 leading-[100%] font-medium"
-            >Tenant information</span
-          >
+          <span class="font-redwing text-2 leading-[100%] font-medium">{{
+            modalTitles[stage]
+          }}</span>
           <span
             @click="
               () => {
@@ -134,69 +88,116 @@
           </span>
         </div>
       </template>
-      <div
-        class="border-[#36363633] border-[0.75px] bg-[#FFFFFF] py-[10px] gap-2.5 flex items-center rounded-[16px] border-solid border-b-[0.75px] px-[14px]"
-      >
-        <div><img src="/src/assets/TenantImage.svg" /></div>
-        <div class="h-full">
-          <p
-            class="m-0 p-0 text-[#000000] font-inter font-medium leading-[100%]"
-          >
-            {{ selectedTenant?.name }}
-          </p>
-          <p
-            class="m-0 p-0 text-[#00000066] text-[10px] font-inter font-medium leading-[100%] mt-[4px]"
-          >
-            Thristlebrook Lane, Mistwood, Ontario, K8N 3P5
-          </p>
+      <div v-if="stage == 0">
+        <div
+          class="border-[#36363633] border-[0.75px] bg-[#FFFFFF] py-[10px] gap-2.5 flex items-center rounded-[16px] border-solid border-b-[0.75px] px-[14px]"
+        >
+          <div><img src="/src/assets/TenantImage.svg" /></div>
+          <div class="h-full">
+            <p
+              class="m-0 p-0 text-[14px] text-[#000000] font-inter font-medium leading-[100%]"
+            >
+              {{ selectedKYC?.name }}
+            </p>
+            <p
+              class="m-0 p-0 text-[#00000066] text-[12px] font-inter font-medium leading-[100%] mt-[4px]"
+            >
+              {{ selectedKYC.emailAddress }}
+            </p>
+          </div>
         </div>
-      </div>
-      <p
-        class="m-0 p-0 text-[#000000] text-[14px] font-inter font-medium leading-[100%] mt-4 mb-3"
-      >
-        Send Notification
-      </p>
-      <div>
-        <BaseInput
-          v-model="form.email"
-          type="email"
-          placeholder="Email address"
-        />
-      </div>
-      <div class="mt-4">
-        <BaseInput
-          v-model="form.message"
-          type="textarea"
-          placeholder="Enter Message"
-          :rows="5"
-        />
-      </div>
-      <div class="flex flex-wrap gap-2.5 mt-3">
-        <a-button
-          @click="form.message = value"
-          v-for="value in messages"
-          class="py-[12px] flex rounded-[100px] items-center hover:bg-[#F0F0F0] bg-[#FFFFFF] px-[15px] font-inter font-medium text-[12px]"
+
+        <div
+          class="bg-[#F7F7F7] flex flex-col gap-[2px] px-[12px] py-[8.5px] mt-4 rounded-[8px]"
         >
-          {{ value }}
-        </a-button>
-      </div>
-      <div
-        class="pt-[16px] border-t-[0.75px] text-[14px] flex gap-[10px] mt-[16px]"
-      >
-        <a-button
-          :loading="sendingmailtoteneant"
-          @click="handleSendEmail"
-          class="w-full py-[8px] flex items-center bg-[#000130] text-white justify-center rounded-[8px]"
+          <span class="text-[#00000066] text-[10px] font-inter leading-[100%]"
+            >Country of Residence</span
+          >
+          <span
+            class="text-[14px] mt-[2px] leading-[100%] font-medium font-inter text-[#000000]"
+            >Canada</span
+          >
+        </div>
+
+        <div
+          class="border-[0.75px] grid grid-cols-2 gap-4 mt-4 border-[#36363626] border-solid rounded-[12px] p-4"
         >
-          Send to Tenant
-        </a-button>
+          <div v-for="value in kycModalDetails" class="flex flex-col gap-[4px]">
+            <p
+              class="text-[#000000] p-0 m-0 text-[12px] font-inter leading-[20px] font-semibold"
+            >
+              {{ value.label }}
+            </p>
+            <span v-if="value.keys == 'status'">
+              {{ selectedKYC[value.keys] }}
+            </span>
+            <p class="m-0 p-0 text-[#00000099] text-[12px]" v-else>
+              {{ selectedKYC[value.keys] || "nill" }}
+            </p>
+          </div>
+        </div>
+        <button
+          @click="stage = 1"
+          v-if="
+            selectedKYC?.status !== 'Completed' ||
+            selectedKYC?.status !== 'Reject'
+          "
+          class="bg-[#A00000] mt-6 rounded-[8px] text-white py-[6px] px-[12px]"
+        >
+          Decline
+        </button>
+        <button
+          v-if="
+            selectedKYC?.status !== 'Completed' ||
+            selectedKYC?.status !== 'Reject'
+          "
+          @click="() => handleApproveKYC(true)"
+          class="bg-[#000130] ml-3 rounded-[8px] text-white py-[6px] px-[12px]"
+        >
+          Approve
+        </button>
+      </div>
+      <div v-else>
+        <div class="flex flex-wrap gap-2.5 mt-3">
+          <a-button
+            @click="form.message = value"
+            v-for="value in messages"
+            class="py-[12px] text-[#000000] flex rounded-[100px] items-center hover:bg-[#F0F0F0] bg-[#FFFFFF] px-[15px] font-inter font-medium text-[12px]"
+          >
+            {{ value }}
+          </a-button>
+        </div>
+        <div class="mt-4">
+          <span
+            class="text-[#000000] text-[12px] font-semibold leading-[20px] font-inter"
+            >Other Message</span
+          >
+          <BaseInput
+            v-model="form.message"
+            type="textarea"
+            placeholder="Enter Message"
+            :rows="5"
+          />
+        </div>
+        <div
+          class="pt-[16px] border-t-[0.75px] text-[14px] flex gap-[10px] mt-[16px]"
+        >
+          <UniversalButton
+            :loading="sendingmailtoteneant"
+            @click="handleApproveKYC(false)"
+            class="w-full py-[8px] flex items-center bg-[#000130] text-white justify-center rounded-[8px]"
+          >
+            Send
+          </UniversalButton>
+        </div>
       </div>
     </a-modal>
   </div>
 </template>
 
 <script>
-import { FetchTenants, SignUpLandlord, VerifyLandlord } from "@/api/auth";
+import { SignUpLandlord, VerifyLandlord } from "@/api/auth";
+import { fetchKYC, ApproveORejectKYCRequest } from "@/api/kyc";
 import IconEdit from "@/components/icons/IconEdit.vue";
 import V2Table from "@/components/V2Table.vue";
 import handleError from "@/utils/handleError";
@@ -212,6 +213,7 @@ import UniversalButton from "@/components/Button/UniversalButton.vue";
 import { ref } from "vue";
 import { useUserStore } from "@/store";
 import Loader from "@/components/Loader.vue";
+import { comment } from "postcss";
 export default {
   components: {
     "table-component": V2Table,
@@ -224,11 +226,29 @@ export default {
     Loader,
   },
   async created() {
-    this.handleFetchLandlords();
+    this.handleFetchKycs();
     this.store.setisLoading(false);
   },
   data() {
     return {
+      modalTitles: ["KYC Details", "Why do you want to decline"],
+      stage: 0,
+      kycModalDetails: [
+        { keys: ["homeAddress"], label: "Home Address" },
+        { keys: ["dob"], label: "Date Of Birth" },
+        { keys: ["city"], label: "City" },
+        { keys: ["socialInsuranceNumber"], label: "Social Security Number" },
+        { keys: ["postalCode"], label: "Postal Code" },
+        { keys: ["idType"], label: "Id Type" },
+        { keys: ["status"], label: "Status" },
+      ],
+      statusLiteral: [
+        "Pending",
+        "Review In Progress",
+        "Need Correction",
+        "Completed",
+        "Reject",
+      ],
       sendingmailtoteneant: false,
       isFetching: false,
       messages: [
@@ -244,17 +264,11 @@ export default {
       totalItemCount: 0,
       currentPage: 1,
       pageSize: 8,
-      selectedTenant: null,
+      selectedKYC: null,
       headers: [
         {
           title: "Name",
           dataIndex: "name",
-          align: "left",
-        },
-        {
-          title: "Property",
-          dataIndex: "properties",
-          className: "properties",
           align: "left",
         },
         {
@@ -264,17 +278,18 @@ export default {
           align: "center",
         },
         {
-          title: "verified",
-          dataIndex: "isVerified",
+          title: "Home Address",
+          dataIndex: "homeAddress",
+          className: "properties",
+          align: "left",
+        },
+        {
+          title: "Status",
+          dataIndex: "status",
           align: "center",
         },
         {
-          title: "Last Login",
-          dataIndex: "lastLoginDate",
-          align: "center",
-        },
-        {
-          title: "action",
+          title: "",
           dataIndex: "action",
           align: "center",
           slotName: "action",
@@ -313,10 +328,24 @@ export default {
         this.tableDropdown = "";
       } else this.tableDropdown = data;
     },
+    handleApproveKYC(status) {
+      const payload = {
+        requestId: this.selectedKYC.id,
+        isCompleted: status,
+        comment: this.form.message || "",
+      };
+      ApproveORejectKYCRequest(payload).then((response) => {
+        if (response.responseCode == "00") {
+          handleToast("KYC Updated Successfully", "success");
+          this.showModal = false;
+          this.handleFetchKycs(this.currentPage);
+        } else handleError(response);
+      });
+    },
     handleSendEmail() {
       this.sendingmailtoteneant = true;
       const body = {
-        tenantId: this.selectedTenant.accountId,
+        tenantId: this.selectedKYC.accountId,
         subject: "Notification from Property Management",
         body: this.form.message,
         sendEmail: true,
@@ -332,28 +361,31 @@ export default {
         } else handleError(response);
       });
     },
-    async handleFetchLandlords(page = 1) {
+    async handleFetchKycs(page = 1) {
       const query = {
         size: this.pageSize,
         page: page,
         query: "",
       };
       this.isFetching = true;
-      FetchTenants(query)
+      fetchKYC(query)
         .then((response) => {
           this.isFetching = false;
-          if (response.accountList) {
-            this.landlordList = response.accountList.items.map(
-              (landlord) =>
-                landlord && {
-                  name: landlord.firstname + " " + landlord.lastname,
-                  email: landlord.emailAddress,
-                  isVerified: landlord.isVerified ? "Yes" : "No",
-                  lastLoginDate: this.formatDate(landlord.lastLoginDate),
-                  accountId: landlord.accountId,
+          console.log("KYC RESPONSE", response);
+          if (response.accountKYCs) {
+            this.landlordList = response.accountKYCs.items.map((kyc) => {
+              return (
+                kyc && {
+                  ...kyc,
+                  name: `${kyc.tenant?.firstname || ""} ${
+                    kyc.tenant?.lastname || ""
+                  }`,
+                  email: kyc.tenant?.emailAddress || "Nill",
+                  status: kyc.status ? this.statusLiteral[kyc.status] : "Nill",
                 }
-            );
-            this.totalItemCount = response.accountList.totalItemCount;
+              );
+            });
+            // this.totalItemCount = response.accountList.totalItemCount;
           } else handleError(response);
         })
         .finally(() => {
@@ -377,7 +409,7 @@ export default {
     },
     onPageChange(page) {
       this.currentPage = page;
-      this.handleFetchLandlords(page);
+      this.handleFetchKycs(page);
     },
     handleSignUpLandlord(landlord) {
       SignUpLandlord(landlord.accountId).then((response) => {
@@ -394,7 +426,7 @@ export default {
       VerifyLandlord(payload).then((response) => {
         if (response.result.responseCode == "00") {
           handleToast("Landlord Verified Successfully", "success");
-          this.handleFetchLandlords(this.currentPage);
+          this.handleFetchKycs(this.currentPage);
         } else handleError(response);
       });
     },
