@@ -5,20 +5,16 @@
     >
       <div class="flex gap-2.5 items-center">
         <table-header
-          :total-item-count="landlordList.length"
-          title="KYC Verification"
+          :total-item-count="propertyList.length"
+          title="Property Verification"
         >
-          <div class="flex gap-[10px]">
-            <filter-button />
-          </div>
         </table-header>
       </div>
-
       <div class="w-full mt-4 h-full">
         <table-component
           :title="tenants"
           :columns="headers"
-          :data-source="landlordList"
+          :data-source="propertyList"
           :loading="isFetching"
         >
           <template #action="{ record }">
@@ -108,18 +104,22 @@
         </div>
 
         <div
+          v-for="value in source"
           class="bg-[#F7F7F7] flex flex-col gap-[2px] px-[12px] py-[8.5px] mt-4 rounded-[8px]"
         >
-          <span class="text-[#00000066] text-[10px] font-inter leading-[100%]"
-            >Country of Residence</span
+          <span
+            class="text-[#00000066] text-[10px] font-inter leading-[100%]"
+            >{{ value.label }}</span
           >
           <span
             class="text-[14px] mt-[2px] leading-[100%] font-medium font-inter text-[#000000]"
-            >Canada</span
+          >
+            {{ selectedKYC[value.keys] || "nill" }}</span
           >
         </div>
+        asa
 
-        <div
+        <!-- <div
           class="border-[0.75px] grid grid-cols-2 gap-4 mt-4 border-[#36363626] border-solid rounded-[12px] p-4"
         >
           <div v-for="value in kycModalDetails" class="flex flex-col gap-[4px]">
@@ -131,35 +131,11 @@
             <span v-if="value.keys == 'status'">
               {{ selectedKYC[value.keys] }}
             </span>
-
             <p class="m-0 p-0 text-[#00000099] text-[12px]" v-else>
               {{ selectedKYC[value.keys] || "nill" }}
             </p>
           </div>
-        </div>
-        <p
-          class="p-0 m-0 mt-6 mb-3 font-redwing text-[14px] leading-[20px] font-medium"
-        >
-          UPLOADED IMAGES
-        </p>
-        <div class="flex gap-3">
-          <a
-            class="py-4 px-4 bg-[#F9F9F9]"
-            :href="selectedKYC?.idFrontPg"
-            target="_blank"
-          >
-            <DocumentIcon />
-            front.png
-          </a>
-          <a
-            class="py-4 px-4 bg-[#F9F9F9]"
-            :href="selectedKYC.idBackPg"
-            target="_blank"
-          >
-            <DocumentIcon />
-            back.png
-          </a>
-        </div>
+        </div> -->
         <button
           @click="stage = 1"
           v-if="
@@ -181,47 +157,17 @@
           Approve
         </button>
       </div>
-      <div v-else>
-        <div class="flex flex-wrap gap-2.5 mt-3">
-          <a-button
-            @click="form.message = value"
-            v-for="value in messages"
-            class="py-[12px] text-[#000000] flex rounded-[100px] items-center hover:bg-[#F0F0F0] bg-[#FFFFFF] px-[15px] font-inter font-medium text-[12px]"
-          >
-            {{ value }}
-          </a-button>
-        </div>
-        <div class="mt-4">
-          <span
-            class="text-[#000000] text-[12px] font-semibold leading-[20px] font-inter"
-            >Other Message</span
-          >
-          <BaseInput
-            v-model="form.message"
-            type="textarea"
-            placeholder="Enter Message"
-            :rows="5"
-          />
-        </div>
-        <div
-          class="pt-[16px] border-t-[0.75px] text-[14px] flex gap-[10px] mt-[16px]"
-        >
-          <UniversalButton
-            :loading="sendingmailtoteneant"
-            @click="handleApproveKYC(false)"
-            class="w-full py-[8px] flex items-center bg-[#000130] text-white justify-center rounded-[8px]"
-          >
-            Send
-          </UniversalButton>
-        </div>
-      </div>
     </a-modal>
   </div>
 </template>
 
 <script>
 import { SignUpLandlord, VerifyLandlord } from "@/api/auth";
-import { fetchKYC, ApproveORejectKYCRequest } from "@/api/kyc";
+import {
+  fetchKYC,
+  ApproveORejectKYCRequest,
+  newlyCreatedProperty,
+} from "@/api/kyc";
 import IconEdit from "@/components/icons/IconEdit.vue";
 import V2Table from "@/components/V2Table.vue";
 import handleError from "@/utils/handleError";
@@ -234,11 +180,8 @@ import { h } from "vue";
 import { sendEmailToTenant } from "@/api/tenancy";
 import FilterButton from "@/components/icons/FilterButton.vue";
 import UniversalButton from "@/components/Button/UniversalButton.vue";
-import { ref } from "vue";
 import { useUserStore } from "@/store";
 import Loader from "@/components/Loader.vue";
-import { comment } from "postcss";
-import DocumentIcon from "@/components/icons/DocumentIcon.vue";
 export default {
   components: {
     "table-component": V2Table,
@@ -249,10 +192,9 @@ export default {
     FilterButton,
     UniversalButton,
     Loader,
-    DocumentIcon,
   },
   async created() {
-    this.handleFetchKycs();
+    this.handleFetchPropertyKycs();
     this.store.setisLoading(false);
   },
   data() {
@@ -260,6 +202,7 @@ export default {
       modalTitles: ["KYC Details", "Why do you want to decline"],
       stage: 0,
       kycModalDetails: [
+        { keys: ["homeAddress"], label: "Home Address" },
         { keys: ["dob"], label: "Date Of Birth" },
         { keys: ["city"], label: "City" },
         { keys: ["socialInsuranceNumber"], label: "Social Security Number" },
@@ -304,7 +247,7 @@ export default {
         },
         {
           title: "Home Address",
-          dataIndex: "homeAddress",
+          dataIndex: "address",
           className: "properties",
           align: "left",
         },
@@ -314,13 +257,18 @@ export default {
           align: "center",
         },
         {
+          title: "Date Submitted",
+          dataIndex: "dateCreated",
+          align: "center",
+        },
+        {
           title: "",
           dataIndex: "action",
           align: "center",
           slotName: "action",
         },
       ],
-      landlordList: [],
+      propertyList: [],
       tableDropdown: "",
     };
   },
@@ -342,6 +290,7 @@ export default {
         this.onPageChange(this.currentPage);
       }
     },
+
     isActive(data) {
       if (this.tableDropdown == data) {
         return true;
@@ -362,7 +311,7 @@ export default {
         if (response.responseCode == "00") {
           handleToast("KYC Updated Successfully", "success");
           this.showModal = false;
-          this.handleFetchKycs(this.currentPage);
+          this.handleFetchPropertyKycs(this.currentPage);
         } else handleError(response);
       });
     },
@@ -385,27 +334,26 @@ export default {
         } else handleError(response);
       });
     },
-    async handleFetchKycs(page = 1) {
+    async handleFetchPropertyKycs(page = 1) {
       const query = {
         size: this.pageSize,
         page: page,
         query: "",
       };
       this.isFetching = true;
-      fetchKYC(query)
+      newlyCreatedProperty(query)
         .then((response) => {
           this.isFetching = false;
-          console.log("KYC RESPONSE", response);
-          if (response.accountKYCs) {
-            this.landlordList = response.accountKYCs.items.map((kyc) => {
+          if (response) {
+            this.propertyList = response.propertyRecords.items.map((prop) => {
+              console.log(this.statusLiteral[prop.verificationStatus]);
               return (
-                kyc && {
-                  ...kyc,
-                  name: `${kyc.tenant?.firstname || ""} ${
-                    kyc.tenant?.lastname || ""
-                  }`,
-                  email: kyc.tenant?.emailAddress || "Nill",
-                  status: kyc.status ? this.statusLiteral[kyc.status] : "Nill",
+                prop && {
+                  ...prop,
+                  dateCreated: prop.dateCreated
+                    ? this.formatDate(prop.dateCreated)
+                    : "Nill",
+                  status: this.statusLiteral[prop.verificationStatus],
                 }
               );
             });
@@ -433,7 +381,7 @@ export default {
     },
     onPageChange(page) {
       this.currentPage = page;
-      this.handleFetchKycs(page);
+      this.handleFetchPropertyKycs(page);
     },
     handleSignUpLandlord(landlord) {
       SignUpLandlord(landlord.accountId).then((response) => {
@@ -450,7 +398,7 @@ export default {
       VerifyLandlord(payload).then((response) => {
         if (response.result.responseCode == "00") {
           handleToast("Landlord Verified Successfully", "success");
-          this.handleFetchKycs(this.currentPage);
+          this.handleFetchPropertyKycs(this.currentPage);
         } else handleError(response);
       });
     },

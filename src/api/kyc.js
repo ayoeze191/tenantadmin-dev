@@ -31,3 +31,17 @@ export const fetchKYC = async (query, landlordId) => {
     console.log(err, "error");
   }
 };
+
+export const newlyCreatedProperty = async (query, landlordId) => {
+  let response;
+  try {
+    if (landlordId == "NN1") {
+      response = await getApi(`Accommodation/GetNewlyCreatedProperties`);
+      return response.data;
+    }
+    response = await getApi(`Accommodation/GetNewlyCreatedProperties`);
+    return response.data;
+  } catch (err) {
+    console.log(err);
+  }
+};

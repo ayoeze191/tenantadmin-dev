@@ -148,6 +148,11 @@
             >KYC Verification</router-link
           >
         </a-menu-item>
+        <a-menu-item key="property-verification">
+          <router-link :to="{ name: 'property-verification' }"
+            >Property Verification</router-link
+          >
+        </a-menu-item>
       </a-sub-menu>
       <a-sub-menu key="roles" title="Roles" v-if="userType == 'NN1'">
         <template #icon><roles-icon /></template>

@@ -37,6 +37,7 @@ import Otp from "@/views/auth/otp.vue";
 //temp
 import AddProperties from "@/views/properties/Propertyv2.vue";
 import Kyc from "@/views/kyc/Kyc.vue";
+import PropertyVerification from "@/views/kyc/PropertyVerification.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -111,7 +112,7 @@ const router = createRouter({
         {
           path: "/property/verification",
           name: "property-verification",
-          component: Verification,
+          component: PropertyVerification,
         },
         // {
         //   path: "/applications/:id",
