@@ -277,11 +277,11 @@ export default {
       sendingmailtoteneant: false,
       isFetching: false,
       messages: [
-        "Your lease Would Expire Soon",
-        "A noise complain has b...",
-        "Your service request has been sorted",
-        "Your rent is still unpaid",
-        "Kindly pay your rent please",
+        "Different names",
+        "Expired document",
+        "Document too old",
+        "Wrong document type",
+        "Address doesn’t match",
       ],
       form: { email: "", message: "" },
       store: useUserStore(),
@@ -405,7 +405,7 @@ export default {
                     kyc.tenant?.lastname || ""
                   }`,
                   email: kyc.tenant?.emailAddress || "Nill",
-                  status: kyc.status ? this.statusLiteral[kyc.status] : "Nill",
+                  status: this.statusLiteral[kyc.status],
                 }
               );
             });

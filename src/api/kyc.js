@@ -45,3 +45,17 @@ export const newlyCreatedProperty = async (query, landlordId) => {
     console.log(err);
   }
 };
+
+export const approveOrdeclinedProperperty = async (payload) => {
+  let response;
+  try {
+    if (landlordId == "NN1") {
+      response = await postApi(`Accommodation/VerifyNewProperty`);
+      return response.data;
+    }
+    response = await postApi(`Accommodation/VerifyNewProperty`);
+    return response.data;
+  } catch (err) {
+    console.log(err);
+  }
+};

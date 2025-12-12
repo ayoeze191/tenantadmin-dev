@@ -176,7 +176,7 @@
       <a-menu-item key="admin-users-notification" v-if="userType == 'NN1'">
         <router-link :to="{ name: 'admin-users-notification' }">
           <template #icon><notification-icon /></template>
-          User Notification
+          Notification
         </router-link>
       </a-menu-item>
 

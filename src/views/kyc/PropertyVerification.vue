@@ -47,7 +47,7 @@
     </div>
     <a-modal
       :footer="null"
-      width="437px"
+      width="657px"
       :visible="showModal"
       centered
       :bodyStyle="{ padding: '0' }"
@@ -98,45 +98,118 @@
             <p
               class="m-0 p-0 text-[#00000066] text-[12px] font-inter font-medium leading-[100%] mt-[4px]"
             >
-              {{ selectedKYC.emailAddress }}
+              Property Owner
             </p>
           </div>
         </div>
-
-        <div
-          v-for="value in source"
-          class="bg-[#F7F7F7] flex flex-col gap-[2px] px-[12px] py-[8.5px] mt-4 rounded-[8px]"
-        >
-          <span
-            class="text-[#00000066] text-[10px] font-inter leading-[100%]"
-            >{{ value.label }}</span
-          >
-          <span
-            class="text-[14px] mt-[2px] leading-[100%] font-medium font-inter text-[#000000]"
-          >
-            {{ selectedKYC[value.keys] || "nill" }}</span
-          >
-        </div>
-        asa
-
-        <!-- <div
-          class="border-[0.75px] grid grid-cols-2 gap-4 mt-4 border-[#36363626] border-solid rounded-[12px] p-4"
-        >
-          <div v-for="value in kycModalDetails" class="flex flex-col gap-[4px]">
+        <div class="flex">
+          <div class="w-[50%]">
+            <div>
+              <p
+                class="text-[14px] font-medium font-redwing leading-[20px] text-black mt-4"
+              >
+                BASIC INFORMATION
+              </p>
+              <div class="flex flex-col gap-3 mt-[10px] rounded-[12px]">
+                <div
+                  v-for="value in ModalBasicinfo"
+                  class="flex bg-[#F7F7F7] flex-col px-[12px] py-[8.5px] rounded-[8px]"
+                >
+                  <p
+                    class="text-[#00000066] p-0 m-0 text-[10px] font-inter leading-[20px] font-normal"
+                  >
+                    {{ value.label }}
+                  </p>
+                  <span v-if="value.keys == 'status'">
+                    {{ selectedKYC[value.keys] }}
+                  </span>
+                  <p
+                    class="m-0 p-0 text-[#000000] font-medium text-[14px]"
+                    v-else
+                  >
+                    {{ selectedKYC[value.keys] || "nill" }}
+                  </p>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-4 mt-4 rounded-[12px]">
+                <div
+                  v-for="value in SecondBasicinfo"
+                  class="flex bg-[#F7F7F7] flex-col gap-[2px] px-[12px] py-[8.5px] rounded-[8px]"
+                >
+                  <p
+                    class="text-[#00000066] p-0 m-0 text-[12px] font-inter leading-[20px] font-normal"
+                  >
+                    {{ value.label }}
+                  </p>
+                  <span v-if="value.keys == 'status'">
+                    {{ selectedKYC[value.keys] }}
+                  </span>
+                  <p
+                    class="m-0 p-0 text-[#000000] font-medium text-[14px]"
+                    v-else
+                  >
+                    {{ selectedKYC[value.keys] || "nill" }}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-6">
+              <p class="text-[14px] font-medium font-redwing leading-[20px]">
+                REQUIRED DOCUMENT
+              </p>
+              <div
+                class="rounded-[12px] border-[0.75px] border-solid border-[#36363626] p-4"
+              >
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2.5">
+                    <CheckOutlined class="text-[#3ACB85]" />
+                    <p
+                      class="m-0 p-0 text-[#000000] text-[12px] font-inter font-medium leading-[20px]"
+                    >
+                      Certificate of Ownership.doc
+                    </p>
+                  </div>
+                  <a
+                    class="m-0 p-0 text-[#001045] text-[12px] font-medium leading-[18px] underline"
+                    >View</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="w-1/2">
             <p
-              class="text-[#000000] p-0 m-0 text-[12px] font-inter leading-[20px] font-semibold"
+              class="m-0 pl-4 mt-4 p-0 font-redwing text-[14px] leading-[20px] font-medium"
             >
-              {{ value.label }}
+              PROPERTY IMAGES
             </p>
-            <span v-if="value.keys == 'status'">
-              {{ selectedKYC[value.keys] }}
-            </span>
-            <p class="m-0 p-0 text-[#00000099] text-[12px]" v-else>
-              {{ selectedKYC[value.keys] || "nill" }}
+            <div class="mt-2.5 ml-4 w-full">
+              <img src="/src/assets/propertyImage.svg" class="w-full" />
+            </div>
+
+            <p
+              class="m-0 pl-4 mt-4 p-0 font-redwing text-[14px] leading-[20px] font-medium"
+            >
+              AMENITIES PROVIDED
             </p>
+            <div></div>
+
+            <p
+              class="text-[14px] ml-4 mt-4 font-medium font-redwing leading-[20px]"
+            >
+              DESCRIPTION
+            </p>
+            <div
+              class="rounded-[12px] text-[12px] font-inter font-medium ml-4 border-[0.75px] border-solid border-[#36363626] p-4"
+            >
+              Discover the height of luxury living at Luxe Heights Apartments,
+              an exclusive residential development nestled in the serene,
+              tree-lined streets of New Brunswick, Canada.
+            </div>
           </div>
-        </div> -->
-        <button
+        </div>
+        <UniversalButton
+          :loading="requesting"
           @click="stage = 1"
           v-if="
             selectedKYC?.status !== 'Completed' ||
@@ -145,17 +218,18 @@
           class="bg-[#A00000] mt-6 rounded-[8px] text-white py-[6px] px-[12px]"
         >
           Decline
-        </button>
-        <button
+        </UniversalButton>
+        <UniversalButton
+          :loading="requesting"
           v-if="
             selectedKYC?.status !== 'Completed' ||
             selectedKYC?.status !== 'Reject'
           "
-          @click="() => handleApproveKYC(true)"
+          @click="() => handleApproveProperty(true)"
           class="bg-[#000130] ml-3 rounded-[8px] text-white py-[6px] px-[12px]"
         >
           Approve
-        </button>
+        </UniversalButton>
       </div>
     </a-modal>
   </div>
@@ -167,6 +241,7 @@ import {
   fetchKYC,
   ApproveORejectKYCRequest,
   newlyCreatedProperty,
+  approveOrdeclinedProperperty,
 } from "@/api/kyc";
 import IconEdit from "@/components/icons/IconEdit.vue";
 import V2Table from "@/components/V2Table.vue";
@@ -199,17 +274,21 @@ export default {
   },
   data() {
     return {
-      modalTitles: ["KYC Details", "Why do you want to decline"],
+      modalTitles: ["Property Verification"],
       stage: 0,
-      kycModalDetails: [
-        { keys: ["homeAddress"], label: "Home Address" },
-        { keys: ["dob"], label: "Date Of Birth" },
-        { keys: ["city"], label: "City" },
-        { keys: ["socialInsuranceNumber"], label: "Social Security Number" },
-        { keys: ["postalCode"], label: "Postal Code" },
-        { keys: ["idType"], label: "Id Type" },
-        { keys: ["status"], label: "Status" },
+      ModalBasicinfo: [
+        { keys: ["propertyType"], label: "Property Type" },
+        { keys: ["name"], label: "Property Title" },
+        { keys: ["address"], label: "Address" },
+        { keys: ["province"], label: "Province" },
       ],
+      SecondBasicinfo: [
+        { keys: ["bedroom"], label: "No of Bedrooms" },
+        { keys: ["bathroom"], label: "No of Bathrooms" },
+        { keys: ["Availability"], label: "Availability Date" },
+        { keys: ["occupancyStatus"], label: "Occupancy Status" },
+      ],
+
       statusLiteral: [
         "Pending",
         "Review In Progress",
@@ -231,6 +310,7 @@ export default {
       showModal: false,
       totalItemCount: 0,
       currentPage: 1,
+      requesting: false,
       pageSize: 8,
       selectedKYC: null,
       headers: [
@@ -301,13 +381,15 @@ export default {
         this.tableDropdown = "";
       } else this.tableDropdown = data;
     },
-    handleApproveKYC(status) {
+    handleApproveProperty(status) {
+      this.requesting = true;
       const payload = {
-        requestId: this.selectedKYC.id,
-        isCompleted: status,
+        accommodationId: this.selectedKYC.accommodationId,
+        verificationStatus: status,
         comment: this.form.message || "",
       };
       ApproveORejectKYCRequest(payload).then((response) => {
+        this.requesting = false;
         if (response.responseCode == "00") {
           handleToast("KYC Updated Successfully", "success");
           this.showModal = false;

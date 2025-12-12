@@ -134,14 +134,15 @@
       </p>
       <p class="p-0 m-0 mb-[10px]">
         <span class="text-[#00000099] p-0 m-0">Number:</span
-        >{{ selectedTenant.apartmentNumber || "nill" }}
+        >{{ selectedTenant.tenantPhoneNo || "nill" }}
       </p>
       <p class="p-0 m-0 mb-[10px]">
-        <span class="text-[#00000099] p-0 m-0">Email Address</span>The faucet in
-        the kitchen is leaking and needs immediate repair.
+        <span class="text-[#00000099] p-0 m-0">Email Address</span
+        >{{ selectedTenant.tenantEmail }}
       </p>
       <p class="p-0 m-0 mb-[10px]">
         <span class="text-[#00000099] p-0 m-0">Current Rent: </span>
+        {{ selectedTenant.rentRate || "nill" }}
       </p>
       <p class="p-0 m-0 mb-[10px]" v-if="selectedType === 'aggreement'">
         <span class="text-[#00000099] p-0 m-0 mr-[15px]"

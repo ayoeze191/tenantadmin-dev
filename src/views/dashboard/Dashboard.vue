@@ -143,11 +143,12 @@
 
             <div class="flex justify-between items-center px-[10px] py-[14px]">
               <span>View All Details</span>
-              <span
+              <router-link
+                to="/applications"
                 class="text-[#000000] bg-[#FFFFFF] rounded-[6px] px-[10px] py-[6px] border-[0.75px] border-solid border-[#36363633]"
               >
                 View
-              </span>
+              </router-link>
             </div>
           </div>
           <div
@@ -232,11 +233,12 @@
 
             <div class="flex justify-between items-center px-[10px] py-[14px]">
               <span>View All Details</span>
-              <span
+              <router-link
+                link="/service-requests"
                 class="text-[#000000] bg-[#FFFFFF] rounded-[6px] px-[10px] py-[6px] border-[0.75px] border-solid border-[#36363633]"
               >
                 View
-              </span>
+              </router-link>
             </div>
           </div>
           <div

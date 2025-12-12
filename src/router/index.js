@@ -38,6 +38,7 @@ import Otp from "@/views/auth/otp.vue";
 import AddProperties from "@/views/properties/Propertyv2.vue";
 import Kyc from "@/views/kyc/Kyc.vue";
 import PropertyVerification from "@/views/kyc/PropertyVerification.vue";
+import Notifications from "@/views/Notifications.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -222,7 +223,7 @@ const router = createRouter({
         {
           path: "/notification",
           name: "admin-users-notification",
-          component: Dashboard,
+          component: Notifications,
         },
         {
           path: "/audit-logs",

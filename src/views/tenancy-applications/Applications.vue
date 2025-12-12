@@ -365,7 +365,11 @@
           </Button>
           <div class="flex gap-3">
             <Button @click="handleNext">Next</Button>
-            <Button type="danger">Decline</Button>
+            <Button
+              type="danger"
+              v-if="selectedApplication.status !== 'Completed'"
+              >Decline</Button
+            >
           </div>
         </div>
         <div
