@@ -289,13 +289,7 @@ export default {
         { keys: ["occupancyStatus"], label: "Occupancy Status" },
       ],
 
-      statusLiteral: [
-        "Pending",
-        "Review In Progress",
-        "Need Correction",
-        "Completed",
-        "Reject",
-      ],
+      statusLiteral: ["Pending", "Approved", "Denied", "Suspended"],
       sendingmailtoteneant: false,
       isFetching: false,
       messages: [

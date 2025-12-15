@@ -4,84 +4,34 @@
       class="rounded-[16px] mt-4 h-full font-inter border-[#36363633] border-[0.75px] border-solid"
     >
       <div class="flex gap-2.5 items-center">
-        <TableHeader :total-item-count="totalItemCount" title="Audit Logs">
+        <table-header :total-item-count="totalItemCount" title="Audit Logs">
           <div class="flex gap-[10px]">
-            <FilterButton />
+            <a-input
+              v-model:value="searchQuery"
+              placeholder="Search by name, gender, age.."
+              class="py-[9px] border-[#D0D5DD] mr-[10px] border-[1px] rounded-[8px] w-[338px] border-solid"
+            >
+              <template #prefix>
+                <SearchOutlined class="text-[#BEC1C6] text-[20px]" />
+              </template>
+            </a-input>
+            <a-date-picker
+              v-model:value="selectedDate"
+              placeholder="Date"
+              class="w-[80px]"
+            />
           </div>
-        </TableHeader>
+        </table-header>
       </div>
-    </div>
-    <div class="w-full mt-4 h-full">
-      <v2-table
-        :title="tenants"
-        :columns="headers"
-        :data-source="filteredLogs"
-        :loading="isFetching"
-      >
-        <template #action="{ record }">
-          <div class="relative flex justify-center items-center group">
-            <!-- Hidden div -->
-            <div
-              class="absolute z-[50] text-[12px] right-2 top-0 p-5 border-[0.75px] border-solid rounded-[16px] bg-white opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300"
-            >
-              <div
-                class="flex items-center gap-[8px] p-[10px] rounded-[10px] border-[0.75px] border-solid border-[#36363633]"
-              >
-                <div class="flex h-[34px] w-[34px]">
-                  <img src="/src/assets/TenantImage.svg" />
-                </div>
-                <div>
-                  <p class="m-0 p-0">
-                    {{ record.name }}
-                  </p>
-                  <p class="m-0 p-0 mt-[2px]">{{ record.email }}</p>
-                </div>
-              </div>
-              <!-- asa -->
-              <div class="mt-4 m-0">
-                <p class="text-[#000000]">
-                  <span
-                    class="text-[#00000099] text-[12px] font-medium leading-[20px]"
-                    >Apartment:</span
-                  >
-                  {{ record.properties || "nill" }}
-                </p>
-                <p>
-                  <span class="text-[#00000099]">Rent Amount:</span> ${{
-                    record.bills
-                  }}
-                </p>
-                <p>
-                  <span class="text-[#00000099]">Rent Due:</span>
-                  {{ record.due || "nill" }}
-                </p>
-                <p>
-                  <span class="text-[#00000099]">Lease Expires:</span>
-                  {{ record.rent || "nill" }}
-                </p>
-                <div>
-                  <span class="text-[#00000099]">Lease:</span> View Tenant
-                </div>
-              </div>
-
-              <UniversalButton
-                label="Send notification to Tenant"
-                @click="
-                  () => {
-                    selectedTenant = record;
-                    showModal = true;
-                    form.email = record.email;
-                  }
-                "
-                customClass="py-[8px] w-full flex items-center justify-center bg-[#000130] text-white mt-6 text-[14px] rounded-[8px]"
-              />
-            </div>
-            <a-button class="bg-[#000130] bg-inherit text-black cursor-pointer"
-              >View Info</a-button
-            >
-          </div>
-        </template>
-      </v2-table>
+      <div class="w-full mt-4 h-full">
+        <table-component
+          :title="'Audits'"
+          :columns="headers"
+          :data-source="auditLists"
+          :loading="isFetching"
+        >
+        </table-component>
+      </div>
       <BasePagination
         :currentPage="currentPage"
         :totalPages="totalPages"
@@ -92,134 +42,338 @@
         @change="onPageChange"
       />
     </div>
-    <!-- 
-    <a-table
-      :columns="columns"
-      :data-source="filteredLogs"
-      :loading="loading"
-      :pagination="pagination"
-      @change="handleTableChange"
-      row-key="id"
-      bordered
+
+    <a-modal
+      :footer="null"
+      width="437px"
+      :visible="showModal"
+      centered
+      :bodyStyle="{ padding: '0' }"
+      class=""
+      :closable="false"
     >
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'action'">
-          <span
-            class="px-2 py-1 rounded text-white text-sm"
-            :class="{
-              'bg-green-500': record.function === 'LOGIN',
-              'bg-yellow-500': record.function === 'UPDATE',
-              'bg-red-500': record.function === 'DELETE',
-              'bg-blue-500': record.function === 'CREATE',
-            }"
+      <template #title>
+        <div class="flex items-center justify-between py-[12px]">
+          <span class="font-redwing text-2 leading-[100%] font-medium"
+            >Tenant information</span
           >
-            {{ record.function }}
+          <span
+            @click="
+              () => {
+                form.email = '';
+                form.message = '';
+                showModal = false;
+              }
+            "
+            class="cursor-pointer"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z"
+                fill="#323232"
+              />
+            </svg>
           </span>
-        </template>
-        <template v-else>
-          {{ record[column.dataIndex] }}
-        </template>
+        </div>
       </template>
-    </a-table> -->
+      <div
+        class="border-[#36363633] border-[0.75px] bg-[#FFFFFF] py-[10px] gap-2.5 flex items-center rounded-[16px] border-solid border-b-[0.75px] px-[14px]"
+      >
+        <div><img src="/src/assets/TenantImage.svg" /></div>
+        <div class="h-full">
+          <p
+            class="m-0 p-0 text-[#000000] font-inter font-medium leading-[100%]"
+          >
+            {{ selectedTenant?.name }}
+          </p>
+          <p
+            class="m-0 p-0 text-[#00000066] text-[10px] font-inter font-medium leading-[100%] mt-[4px]"
+          >
+            Thristlebrook Lane, Mistwood, Ontario, K8N 3P5
+          </p>
+        </div>
+      </div>
+      <p
+        class="m-0 p-0 text-[#000000] text-[14px] font-inter font-medium leading-[100%] mt-4 mb-3"
+      >
+        Send Notification
+      </p>
+      <div>
+        <BaseInput
+          v-model="form.email"
+          type="email"
+          placeholder="Email address"
+        />
+      </div>
+      <div class="mt-4">
+        <BaseInput
+          v-model="form.message"
+          type="textarea"
+          placeholder="Enter Message"
+          :rows="5"
+        />
+      </div>
+      <div class="flex flex-wrap gap-2.5 mt-3">
+        <a-button
+          @click="form.message = value"
+          v-for="value in messages"
+          class="py-[12px] flex rounded-[100px] items-center hover:bg-[#F0F0F0] bg-[#FFFFFF] px-[15px] font-inter font-medium text-[12px]"
+        >
+          {{ value }}
+        </a-button>
+      </div>
+      <div
+        class="pt-[16px] border-t-[0.75px] text-[14px] flex gap-[10px] mt-[16px]"
+      >
+        <a-button
+          :loading="sendingmailtoteneant"
+          @click="handleSendEmail"
+          class="w-full py-[8px] flex items-center bg-[#000130] text-white justify-center rounded-[8px]"
+        >
+          Send to Tenant
+        </a-button>
+      </div>
+    </a-modal>
   </div>
 </template>
-
-<script setup>
-import FilterButton from "@/components/icons/FilterButton.vue";
-import { ref, computed, onMounted } from "vue";
-import { message } from "ant-design-vue";
-import axios from "axios";
-import { audit_mock } from "./data";
-import { auditsLogs } from "@/api/audits";
-import TableHeader from "@/components/TableHeader.vue";
+<script>
+import { SignUpLandlord, VerifyLandlord } from "@/api/auth";
+import IconEdit from "@/components/icons/IconEdit.vue";
 import V2Table from "@/components/V2Table.vue";
-const logs = ref([]);
-const search = ref("");
-const dateRange = ref([]);
-const loading = ref(false);
-const isFetching = ref(false);
-const pagination = ref({
-  current: 1,
-  pageSize: 10,
-  total: 0,
-  showSizeChanger: false,
-});
+import handleError from "@/utils/handleError";
+import { handleToast } from "@/utils/helper";
+import dayjs from "dayjs";
+import TableHeader from "@/components/TableHeader.vue";
+import BasePagination from "@/components/BasePagination.vue";
+import BaseInput from "@/components/BaseInput.vue";
+import { h } from "vue";
+import { sendEmailToTenant } from "@/api/tenancy";
+import FilterButton from "@/components/icons/FilterButton.vue";
+import UniversalButton from "@/components/Button/UniversalButton.vue";
+import { ref } from "vue";
+import { useUserStore } from "@/store";
+import Loader from "@/components/Loader.vue";
+import { auditsLogs } from "@/api/audits";
+export default {
+  components: {
+    "table-component": V2Table,
+    "table-header": TableHeader,
+    "edit-icon": IconEdit,
+    BasePagination: BasePagination,
+    BaseInput: BaseInput,
+    FilterButton,
+    UniversalButton,
+    Loader,
+  },
+  async created() {
+    this.handleFetchLandlords();
+    this.store.setisLoading(false);
+  },
+  watch: {
+    searchQuery() {
+      this.currentPage = 1;
+      this.handleFetchLandlords(1);
+    },
+    selectedDate() {
+      this.currentPage = 1;
+      this.handleFetchLandlords(1);
+    },
+  },
+  data() {
+    return {
+      value1: null,
+      searchQuery: "",
+      selectedDate: "",
+      sendingmailtoteneant: false,
+      isFetching: false,
+      messages: [
+        "Your lease Would Expire Soon",
+        "A noise complain has b...",
+        "Your service request has been sorted",
+        "Your rent is still unpaid",
+        "Kindly pay your rent please",
+      ],
+      form: { email: "", message: "" },
+      store: useUserStore(),
+      showModal: false,
+      totalItemCount: 0,
+      currentPage: 1,
+      pageSize: 8,
+      selectedTenant: null,
+      headers: [
+        {
+          title: "Name",
+          dataIndex: "userId",
+          align: "left",
+        },
+        {
+          title: "Description",
+          dataIndex: "description",
+          className: "description",
+          align: "left",
+        },
+        {
+          title: "Function",
+          className: "function",
+          dataIndex: "function",
+          align: "center",
+        },
+        {
+          title: "Date",
+          dataIndex: "createDate",
+          align: "center",
+        },
+      ],
+      auditLists: [],
+      tableDropdown: "",
+    };
+  },
+  computed: {
+    totalPages() {
+      return Math.ceil(this.totalItemCount / this.pageSize);
+    },
+    filteredAuditLists() {
+      let data = this.auditLists;
 
-const columns = [
-  { title: "User", dataIndex: "userId" },
-  { title: "Date", dataIndex: "createDate" },
-  { title: "function", dataIndex: "function" },
-  { title: "Description", dataIndex: "description" },
-];
-const headers = [
-  {
-    title: "User",
-    dataIndex: "userId",
-    align: "left",
-  },
-  {
-    title: "Date",
-    dataIndex: "createDate",
-    className: "createDate",
-    align: "left",
-  },
-  {
-    title: "Function",
-    className: "function",
-    dataIndex: "function",
-    align: "center",
-  },
-  {
-    title: "Description",
-    dataIndex: "description",
-    align: "center",
-  },
-  {
-    title: "Last Login",
-    dataIndex: "lastLoginDate",
-    align: "center",
-  },
-  {
-    title: "action",
-    dataIndex: "action",
-    align: "center",
-    slotName: "action",
-  },
-];
+      // 🔍 Text search
+      if (this.searchQuery) {
+        const q = this.searchQuery.toLowerCase();
+        data = data.filter(
+          (item) =>
+            item.userId?.toLowerCase().includes(q) ||
+            item.function?.toLowerCase().includes(q) ||
+            item.description?.toLowerCase().includes(q)
+        );
+      }
 
-const handleTableChange = async (paginationInfo) => {
-  pagination.value.current = paginationInfo.current;
-  fetchLogs();
+      // 📅 Date filter
+      if (this.value1) {
+        const selectedDate = dayjs(this.value1).format("YYYY-MM-DD");
+        data = data.filter(
+          (item) => dayjs(item.createDate).format("YYYY-MM-DD") === selectedDate
+        );
+      }
+
+      return data;
+    },
+  },
+  methods: {
+    onPrev() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+        this.onPageChange(this.currentPage);
+      }
+    },
+    onNext() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+        this.onPageChange(this.currentPage);
+      }
+    },
+
+    isActive(data) {
+      if (this.tableDropdown == data) {
+        return true;
+      } else return false;
+    },
+    toggleTableDropdown(data) {
+      if (this.isActive(data)) {
+        this.tableDropdown = "";
+      } else this.tableDropdown = data;
+    },
+    handleSendEmail() {
+      this.sendingmailtoteneant = true;
+      const body = {
+        tenantId: this.selectedTenant.accountId,
+        subject: "Notification from Property Management",
+        body: this.form.message,
+        sendEmail: true,
+        sendPush: true,
+      };
+      sendEmailToTenant(body).then((response) => {
+        this.sendingmailtoteneant = false;
+        if (response.success == true) {
+          handleToast("Email Sent Successfully", "success");
+          this.form.email = "";
+          this.form.message = "";
+          this.showModal = false;
+        } else handleError(response);
+      });
+    },
+    async handleFetchLandlords(page = 1) {
+      const params = {
+        page,
+        size: this.pageSize,
+        userId: this.searchQuery || null,
+        fxn: null,
+        dateFrom: this.selectedDate
+          ? dayjs(this.selectedDate).startOf("day").toISOString()
+          : null,
+        dateTo: this.selectedDate
+          ? dayjs(this.selectedDate).endOf("day").toISOString()
+          : null,
+      };
+      this.isFetching = true;
+      auditsLogs(params)
+        .then((response) => {
+          this.isFetching = false;
+          if (response) {
+            this.auditLists = response.items.map((item) => ({
+              ...item,
+              createDate: this.formatDate(item.createDate),
+            }));
+            this.totalItemCount = response.totalItemCount;
+          } else handleError(response);
+        })
+        .finally(() => {
+          // this.store.setisLoading(false);
+        });
+    },
+    formatDate(date) {
+      return dayjs(date).format("DD MMM,YYYY");
+    },
+    editLandlord(item) {
+      this.$router.push({ name: "edit-users-landlord", query: item });
+    },
+    itemRender(current, type, originalElement) {
+      if (type === "prev") {
+        return h("a", "Previous");
+      }
+      if (type === "next") {
+        return h("a", "Next");
+      }
+      return originalElement;
+    },
+    onPageChange(page) {
+      this.currentPage = page;
+      this.handleFetchLandlords(page);
+    },
+    handleSignUpLandlord(landlord) {
+      SignUpLandlord(landlord.accountId).then((response) => {
+        if (response.responseCode == "00") {
+          handleToast("Success", "success");
+          this.toggleTableDropdown("");
+        } else handleError(response);
+      });
+    },
+    handleVerifyLandlord(accountId) {
+      const payload = {
+        AdminUserID: accountId,
+      };
+      VerifyLandlord(payload).then((response) => {
+        if (response.responseCode == "00") {
+          handleToast("Landlord Verified Successfully", "success");
+          this.handleFetchLandlords(this.currentPage);
+        } else handleError(response);
+      });
+    },
+  },
 };
-
-const fetchLogs = async () => {
-  try {
-    loading.value = true;
-    auditsLogs(pagination.value.current).then((data) => {
-      logs.value = data.items;
-      pagination.value.total = data.totalItemCount;
-    });
-  } catch (err) {
-    message.error("Failed to fetch logs");
-  } finally {
-    loading.value = false;
-  }
-};
-
-const filteredLogs = computed(() => {
-  return logs.value.filter((log) =>
-    // log.userId.toLowerCase().includes(search.value.toLowerCase()) ||
-    log.function.toLowerCase().includes(search.value.toLowerCase())
-  );
-});
-
-onMounted(fetchLogs);
 </script>
-
-<style scoped>
-.ant-table {
-  background: white;
-  border-radius: 0.75rem;
-  overflow: hidden;
-}
-</style>
+<style></style>
