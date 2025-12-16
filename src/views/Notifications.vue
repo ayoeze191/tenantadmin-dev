@@ -6,25 +6,42 @@
       <div class="flex gap-2.5 items-center">
         <table-header :total-item-count="totalItemCount" title="Notifications">
           <div class="flex gap-[10px]">
-            <filter-button />
+            <a-input
+              @change="handleSearch"
+              v-model:value="searchQuery"
+              placeholder="Search by name, gender, age.."
+              class="py-[9px] border-[#D0D5DD] mr-[10px] border-[1px] rounded-[8px] w-[338px] border-solid"
+            >
+              <template #prefix>
+                <SearchOutlined class="text-[#BEC1C6] text-[20px]" />
+              </template>
+            </a-input>
           </div>
         </table-header>
       </div>
 
       <div class="w-full mt-4 h-full">
-        <Notification />
+        <Notification
+          @click="
+            () => {
+              showModal = true;
+              selectedTenant = value;
+            }
+          "
+          v-for="value in computedData"
+          :value="value"
+        />
         <BasePagination
           :currentPage="currentPage"
           :totalPages="totalPages"
-          :total="totalItemCount"
+          :total="computedData.length"
           :pageSize="pageSize"
-          @prev="onPrev"
-          @next="onNext"
-          @change="onPageChange"
+          @prev="handlePrev"
+          @next="handleNext"
+          @change="handlePageChange"
         />
       </div>
     </div>
-
     <a-modal
       :footer="null"
       width="437px"
@@ -36,36 +53,16 @@
     >
       <template #title>
         <div class="flex items-center justify-between py-[12px]">
-          <span class="font-redwing text-2 leading-[100%] font-medium"
-            >Tenant information</span
+          <span class="font-redwing text-[24px] leading-[100%] font-medium"
+            >Notification</span
           >
-          <span
-            @click="
-              () => {
-                form.email = '';
-                form.message = '';
-                showModal = false;
-              }
-            "
-            class="cursor-pointer"
-          >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 14 14"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z"
-                fill="#323232"
-              />
-            </svg>
+          <span @click="showModal = false" class="cursor-pointer">
+            <CloseOutlined />
           </span>
         </div>
       </template>
       <div
-        class="border-[#36363633] border-[0.75px] bg-[#FFFFFF] py-[10px] gap-2.5 flex items-center rounded-[16px] border-solid border-b-[0.75px] px-[14px]"
+        class="bg-[#FFFFFF] gap-2.5 flex items-center rounded-[16px] mb-[24px]"
       >
         <div><img src="/src/assets/TenantImage.svg" /></div>
         <div class="h-full">
@@ -82,43 +79,26 @@
         </div>
       </div>
       <p
-        class="m-0 p-0 text-[#000000] text-[14px] font-inter font-medium leading-[100%] mt-4 mb-3"
+        class="m-0 p-0 text-[14px] font-redwing leading-[20px] font-medium uppercase"
       >
-        Send Notification
+        APPLICATION UNDER REVIEW
       </p>
-      <div>
-        <BaseInput
-          v-model="form.email"
-          type="email"
-          placeholder="Email address"
-        />
-      </div>
-      <div class="mt-4">
-        <BaseInput
-          v-model="form.message"
-          type="textarea"
-          placeholder="Enter Message"
-          :rows="5"
-        />
-      </div>
-      <div class="flex flex-wrap gap-2.5 mt-3">
-        <a-button
-          @click="form.message = value"
-          v-for="value in messages"
-          class="py-[12px] flex rounded-[100px] items-center hover:bg-[#F0F0F0] bg-[#FFFFFF] px-[15px] font-inter font-medium text-[12px]"
-        >
-          {{ value }}
-        </a-button>
-      </div>
-      <div
-        class="pt-[16px] border-t-[0.75px] text-[14px] flex gap-[10px] mt-[16px]"
+      <p
+        class="m-0 p-0 mt-1 text-[#00000066] text-[12px] leading-[100%] font-inter"
       >
-        <a-button
-          :loading="sendingmailtoteneant"
-          @click="handleSendEmail"
-          class="w-full py-[8px] flex items-center bg-[#000130] text-white justify-center rounded-[8px]"
+        {{ formatDate(selectedTenant.sendDate) }}
+      </p>
+      <div
+        class="bg-[#F7F7F7] text-[#000000B2] font-semibold font-inter text-[12px] rounded-[12px] p-2.5 mt-2.5"
+      >
+        <span>{{ selectedTenant.message }}</span>
+      </div>
+      <div class="flex gap-2.5 mt-4 ml-auto w-fit">
+        <a-button class="text-[#121212] text-[14px]"> Mark as Read </a-button
+        ><a-button
+          class="ml-2.5 bg-[#000130] leading-[24px] text-[14px] text-white flex items-center font-medium font-inter px-[12px] py-[6px]"
         >
-          Send to Tenant
+          View Listings
         </a-button>
       </div>
     </a-modal>
@@ -127,6 +107,7 @@
 
 <script>
 import { FetchTenants, SignUpLandlord, VerifyLandlord } from "@/api/auth";
+import { fetchNotifications } from "@/api/notifications";
 import IconEdit from "@/components/icons/IconEdit.vue";
 import V2Table from "@/components/V2Table.vue";
 import handleError from "@/utils/handleError";
@@ -151,16 +132,32 @@ export default {
     BasePagination: BasePagination,
     BaseInput: BaseInput,
     Notification,
-    FilterButton,
     UniversalButton,
     Loader,
   },
   async created() {
-    this.handleFetchLandlords();
+    this.handleFetchNotification();
     this.store.setisLoading(false);
+  },
+  computed: {
+    totalPages() {
+      return Math.ceil(this.notificationlist.length / this.pageSize);
+    },
+    computedData() {
+      // let filtered = this.searchRequests(
+      //   this.notificationlist,
+      //   this.searchQuery
+      // );
+      const start = (this.currentPage - 1) * this.pageSize;
+      const end = start + this.pageSize;
+      // console.log(filtered, "filtered");
+      return this.notificationlist.slice(start, end);
+    },
   },
   data() {
     return {
+      searchQuery: "",
+      handleSearch: "",
       sendingmailtoteneant: false,
       isFetching: false,
       messages: [
@@ -212,29 +209,34 @@ export default {
           slotName: "action",
         },
       ],
-      landlordList: [],
+      notificationlist: [],
       tableDropdown: "",
     };
   },
-  computed: {
-    totalPages() {
-      return Math.ceil(this.totalItemCount / this.pageSize);
-    },
-  },
   methods: {
-    onPrev() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
-        this.onPageChange(this.currentPage);
-      }
+    // searchRequests() {
+    //   if (!this.searchQuery) return this.data;
+    //   const lower = this.searchQuery.toLowerCase();
+    //   return this.notificationlist.filter((item) => {
+    //     return (
+    //       item.subject?.toString().toLowerCase().includes(lower) ||
+    //       item.message?.toLowerCase().includes(lower)
+    //     );
+    //   });
+    // },
+    handlePrev() {
+      if (this.currentPage > 1) this.currentPage--;
     },
-    onNext() {
-      if (this.currentPage < this.totalPages) {
-        this.currentPage++;
-        this.onPageChange(this.currentPage);
-      }
+    handleNext() {
+      if (this.currentPage < this.totalPages) this.currentPage++;
     },
-
+    handlePageChange(page) {
+      this.currentPage = page;
+    },
+    handleSelect(option) {
+      this.selectedStatus = option.value;
+      // console.log("Selected:", option);
+    },
     isActive(data) {
       if (this.tableDropdown == data) {
         return true;
@@ -264,28 +266,19 @@ export default {
         } else handleError(response);
       });
     },
-    async handleFetchLandlords(page = 1) {
+    async handleFetchNotification(page = 1) {
       const query = {
         size: this.pageSize,
         page: page,
         query: "",
       };
       this.isFetching = true;
-      FetchTenants(query)
+      fetchNotifications()
         .then((response) => {
           this.isFetching = false;
-          if (response.accountList) {
-            this.landlordList = response.accountList.items.map(
-              (landlord) =>
-                landlord && {
-                  name: landlord.firstname + " " + landlord.lastname,
-                  email: landlord.emailAddress,
-                  isVerified: landlord.isVerified ? "Yes" : "No",
-                  lastLoginDate: this.formatDate(landlord.lastLoginDate),
-                  accountId: landlord.accountId,
-                }
-            );
-            this.totalItemCount = response.accountList.totalItemCount;
+          if (response) {
+            this.notificationlist = response;
+            this.totalItemCount = response.length;
           } else handleError(response);
         })
         .finally(() => {
@@ -309,7 +302,7 @@ export default {
     },
     onPageChange(page) {
       this.currentPage = page;
-      this.handleFetchLandlords(page);
+      this.handleFetchNotification(page);
     },
     handleSignUpLandlord(landlord) {
       SignUpLandlord(landlord.accountId).then((response) => {
@@ -326,7 +319,7 @@ export default {
       VerifyLandlord(payload).then((response) => {
         if (response.result.responseCode == "00") {
           handleToast("Landlord Verified Successfully", "success");
-          this.handleFetchLandlords(this.currentPage);
+          this.handleFetchNotification(this.currentPage);
         } else handleError(response);
       });
     },

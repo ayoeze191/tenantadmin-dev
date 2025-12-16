@@ -208,28 +208,30 @@
             </div>
           </div>
         </div>
-        <UniversalButton
-          :loading="requesting"
-          @click="stage = 1"
-          v-if="
-            selectedKYC?.status !== 'Completed' ||
-            selectedKYC?.status !== 'Reject'
-          "
-          class="bg-[#A00000] mt-6 rounded-[8px] text-white py-[6px] px-[12px]"
-        >
-          Decline
-        </UniversalButton>
-        <UniversalButton
-          :loading="requesting"
-          v-if="
-            selectedKYC?.status !== 'Completed' ||
-            selectedKYC?.status !== 'Reject'
-          "
-          @click="() => handleApproveProperty(true)"
-          class="bg-[#000130] ml-3 rounded-[8px] text-white py-[6px] px-[12px]"
-        >
-          Approve
-        </UniversalButton>
+        <div class="flex items-center mt-6 ml-auto w-fit">
+          <a-button
+            :loading="requesting"
+            @click="() => handleApproveProperty(2)"
+            v-if="
+              selectedKYC?.status !== 'Completed' ||
+              selectedKYC?.status !== 'Reject'
+            "
+            class="bg-[#A00000] flex items-center rounded-[8px] text-white py-[6px] px-[12px]"
+          >
+            Decline
+          </a-button>
+          <a-button
+            :loading="requesting"
+            v-if="
+              selectedKYC?.status !== 'Completed' ||
+              selectedKYC?.status !== 'Reject'
+            "
+            @click="() => handleApproveProperty(1)"
+            class="bg-[#000130] ml-3 rounded-[8px] flex items-center text-white py-[6px] px-[12px]"
+          >
+            Approve
+          </a-button>
+        </div>
       </div>
     </a-modal>
   </div>
@@ -237,11 +239,11 @@
 
 <script>
 import { SignUpLandlord, VerifyLandlord } from "@/api/auth";
+import { approveOrdeclinedProperperty } from "@/api/kyc";
 import {
   fetchKYC,
   ApproveORejectKYCRequest,
   newlyCreatedProperty,
-  approveOrdeclinedProperperty,
 } from "@/api/kyc";
 import IconEdit from "@/components/icons/IconEdit.vue";
 import V2Table from "@/components/V2Table.vue";
@@ -382,7 +384,7 @@ export default {
         verificationStatus: status,
         comment: this.form.message || "",
       };
-      ApproveORejectKYCRequest(payload).then((response) => {
+      approveOrdeclinedProperperty(payload).then((response) => {
         this.requesting = false;
         if (response.responseCode == "00") {
           handleToast("KYC Updated Successfully", "success");
