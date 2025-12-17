@@ -6,6 +6,7 @@ import SignUpPage from "../views/auth/SignUp.vue";
 import CreatePasswordPage from "../views/auth/CreatePassword.vue";
 import Dashboard from "../views/dashboard/Dashboard.vue";
 import ServiceRequest from "../views/service-requests/ServiceRequest.vue";
+import Roles from "@/views/roles/Roles.vue";
 import PrivateLayout from "@/components/PrivateLayout.vue";
 import { requireAuth } from "@/utils/auth";
 import Applications from "@/views/tenancy-applications/Applications.vue";
@@ -207,8 +208,13 @@ const router = createRouter({
         },
         {
           path: "/users/roles",
-          name: "admin-users-roles",
+          name: "admin-users-role",
           component: ViewRoles,
+        },
+        {
+          path: "/users/prev-roles",
+          name: "admin-users-roles",
+          component: Roles,
         },
         {
           path: "/users/kyc",

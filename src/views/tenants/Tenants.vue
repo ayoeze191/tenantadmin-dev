@@ -3,15 +3,14 @@
     <div
       class="rounded-[16px] mt-4 h-full font-inter border-[#36363633] border-[0.75px] border-solid"
     >
-      <div class="flex gap-2.5 items-center">
+      <div class="flex gap-2.5">
         <table-header :total-item-count="totalItemCount" title="Tenants">
           <div class="flex gap-[10px]">
             <filter-button />
           </div>
         </table-header>
       </div>
-
-      <div class="w-full mt-4 h-full">
+      <div class="w-full mt-4">
         <table-component
           :title="tenants"
           :columns="headers"

@@ -385,12 +385,23 @@
           </Button>
           <div class="flex gap-3">
             <Button
+              v-if="selectedApplication.status !== 'Completed'"
               @click="handleMovingDate"
               :disabled="
                 selectedApplication.status == 'Confirming Move-inDate' ||
                 this.form.moveInDate == null
               "
               >Confirm Date</Button
+            >
+            <Button
+              v-if="selectedApplication.status == 'Completed'"
+              @click="
+                async () => {
+                  await this.handleGetLeaseReview();
+                  stage = 4;
+                }
+              "
+              >View Lease</Button
             >
             <Button type="danger">Decline</Button>
           </div>

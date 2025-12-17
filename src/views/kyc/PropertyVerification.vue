@@ -23,9 +23,7 @@
               <a-button
                 @click="
                   () => {
-                    selectedKYC = record;
-                    showModal = true;
-                    stage = 0;
+                    fetchPropertyInfo(record);
                   }
                 "
                 class="bg-[#000130] bg-inherit text-black cursor-pointer"
@@ -202,9 +200,7 @@
             <div
               class="rounded-[12px] text-[12px] font-inter font-medium ml-4 border-[0.75px] border-solid border-[#36363626] p-4"
             >
-              Discover the height of luxury living at Luxe Heights Apartments,
-              an exclusive residential development nestled in the serene,
-              tree-lined streets of New Brunswick, Canada.
+              {{ selectedKYC?.description || "Nill" }}
             </div>
           </div>
         </div>
@@ -259,6 +255,7 @@ import FilterButton from "@/components/icons/FilterButton.vue";
 import UniversalButton from "@/components/Button/UniversalButton.vue";
 import { useUserStore } from "@/store";
 import Loader from "@/components/Loader.vue";
+import { getPropertyInfo } from "@/api/properties";
 export default {
   components: {
     "table-component": V2Table,
@@ -354,6 +351,20 @@ export default {
     },
   },
   methods: {
+    fetchPropertyInfo(record) {
+      getPropertyInfo(record.accommodationId).then((response) => {
+        if (response.responseCode == "00") {
+          this.selectedKYC = {
+            ...record,
+            ...response.propertydata,
+            propertyunits: [...response.propertyunits],
+          };
+          this.showModal = true;
+          this.stage = 0;
+          this.propertyDetails = response.propertyDetails;
+        } else handleError(response);
+      });
+    },
     onPrev() {
       if (this.currentPage > 1) {
         this.currentPage--;

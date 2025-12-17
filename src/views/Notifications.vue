@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import { FetchTenants, SignUpLandlord, VerifyLandlord } from "@/api/auth";
+import { SignUpLandlord, VerifyLandlord } from "@/api/auth";
 import { fetchNotifications } from "@/api/notifications";
 import IconEdit from "@/components/icons/IconEdit.vue";
 import V2Table from "@/components/V2Table.vue";

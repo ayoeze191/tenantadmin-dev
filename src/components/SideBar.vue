@@ -76,11 +76,11 @@
             >Add Properties</router-link
           >
         </a-menu-item>
-        <a-menu-item key="admin-properties">
+        <!-- <a-menu-item key="admin-properties">
           <router-link :to="{ name: 'admin-properties' }"
             >View Properties</router-link
           >
-        </a-menu-item>
+        </a-menu-item> -->
         <a-menu-item key="setup-properties">
           <router-link :to="{ name: 'setup-properties' }"
             >Setup Properties
