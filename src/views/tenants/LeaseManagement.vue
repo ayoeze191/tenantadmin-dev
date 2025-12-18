@@ -120,7 +120,7 @@
         <p
           class="m-0 p-0 text-[#00000066] text-[10px] font-inter font-medium leading-[100%] mt-[4px]"
         >
-          franktho37@gmail.com
+          {{ selectedTenant.tenantEmail || "franktho37@gmail.com" }}
         </p>
       </div>
     </div>
@@ -137,7 +137,7 @@
         >{{ selectedTenant.tenantPhoneNo || "nill" }}
       </p>
       <p class="p-0 m-0 mb-[10px]">
-        <span class="text-[#00000099] p-0 m-0">Email Address</span
+        <span class="text-[#00000099] p-0 m-0">Email Address: </span
         >{{ selectedTenant.tenantEmail }}
       </p>
       <p class="p-0 m-0 mb-[10px]">
@@ -300,6 +300,8 @@ export default {
             requestTypeName: lease.requestTypeName,
             contractType: lease.contractType,
             contractRequestId: lease.contractRequestId || "nill",
+            tenantPhoneNo: lease.tenantPhoneNo || "nill",
+            tenantEmail: lease.tenantEmail || "nill",
           }));
         } else handleError(response);
       });

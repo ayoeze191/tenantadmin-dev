@@ -504,6 +504,7 @@
                 </p>
                 <div>
                   <FIleUploader
+                  type="image/*"
                     v-model:fileList="propertyImagesList"
                     :customRequest="
                       (options) => customPropertyImageUpload(options, index)
@@ -906,7 +907,8 @@
         >
       </div>
     </a-modal>
-    <a-modal :open="showPropertyDetailsModal" :closable="false">
+    <a-modal :open="showPropertyDetailsModal" :closable="false"
+    :footer="null">
       <template #title>
         <div class="flex items-center justify-between">
           <div>
@@ -1094,6 +1096,9 @@
               
                   </a-tab-pane>
         </a-tabs>
+      </div>
+      <div class="mt-4">
+        <a-button @click="showEditPropertyModal = true" class="bg-[#000130] rounded-[8px]  text-[14px] font-inter font-medium leading-[24px] flex items-center justify-center ml-auto text-[#FFFFFF]">Edit Property Application</a-button>
       </div>
     </a-modal>
 
@@ -1564,7 +1569,227 @@
       </a-form>
     </a-modal>
 
-  
+    <a-modal
+      :visible="showEditPropertyModal"
+      :footer="null"
+      width="768px"
+      class="px-0"
+      :closable="false"
+    >
+       <template #title>
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="font-redwing text-[24px] font-medium text-[]">
+              Edit Property
+            </span>
+          </div>
+          <span></span>
+          <button @click="showEditPropertyModal = false">
+            <CloseOutlined />
+          </button>
+        </div>
+      </template>
+      <div class="px-[32px]">
+        <li
+          class="font-redwing text-[16px] font-medium"
+        >
+          Building Amenities
+        </li>
+        <a-checkbox-group
+          v-model:value="editPropertyform.amenities"
+          class="grid grid-cols-2 gap-2 amenities"
+        >
+          <a-checkbox
+            v-for="option in amenityOptions"
+            :key="option.value"
+            :value="option.value"
+            class="flex items-center gap-2"
+          >
+            <span class="text-[20px] text-[#808097]">{{ option.label }}</span>
+          </a-checkbox>
+        </a-checkbox-group>
+
+        <button
+          class="border-0 text-[#C7C7C7] text-[20px] font-sf mt-[24px] mb-[24px]"
+        >
+          <PlusOutlined /> Add Amenity
+        </button>
+        <div class="flex gap-4">
+          <a-form-item name="packingType" class="flex-1"
+          >
+            <div
+              class="form-labels text-base mb-4 font-light leading-[100%] font-sf"
+            >
+              Packing Type
+            </div>
+            <a-select
+              ref="select"
+              v-model:value="editPropertyform.parking"
+              style="width: 200px"
+              placeholder="Select Rental Unit"
+              :getPopupContainer="(node) => node.parentNode"
+              class="w-full h-[52px]"
+              @focus="focus"
+              @change="handleChange"
+            >
+              <a-select-option :value="1">Garage</a-select-option>
+              <a-select-option :value="2">Drive way Parking</a-select-option>
+              <a-select-option :value="3">Off Street Parking</a-select-option>
+              <a-select-option :value="4">Parking Available</a-select-option>
+              <a-select-option :value="5">One Car Garage</a-select-option>
+              <a-select-option :value="6">Two Car Garage</a-select-option>
+              <a-select-option :value="7">Three Car Garage</a-select-option>
+              <a-select-option :value="8">Four Car Garage</a-select-option>
+              <a-select-option :value="9">Underground Parking</a-select-option>
+              >
+            </a-select>
+          </a-form-item>
+          <a-form-item name="pets" class="flex-1 form-labels">
+            <div
+              class="form-labels text-base mb-4 font-light leading-[100%] font-sf"
+            >
+              Pets
+            </div>
+            <a-select
+              ref="select"
+              style="width: 200px"
+              placeholder="Select Pet"
+              class="w-full h-[52px]"
+              @focus="focus"
+              @change="handleChange"
+              v-model:value="editPropertyform.pets"
+              :getPopupContainer="(node) => node.parentNode"
+            >
+              <a-select-option :value="2">Yes</a-select-option>
+              <a-select-option :value="1">No</a-select-option>
+              <a-select-option :value="3">Conditional</a-select-option>
+            </a-select>
+          </a-form-item>
+        </div>
+
+        <div class="flex gap-4">
+          <a-form-item name="heating" class="flex-1 form-labels">
+            <div
+              class="form-labels text-base mb-4 font-light leading-[100%] font-sf"
+            >
+              Heating Type
+            </div>
+            <a-select
+              v-model:value="editPropertyform.heating"
+              ref="select"
+              style="width: 200px"
+              placeholder="Select Heating Type"
+              class="w-full h-[52px]"
+              @focus="focus"
+              @change="handleChange"
+              :getPopupContainer="(node) => node.parentNode"
+            >
+              <a-select-option :value="1">Central Heating</a-select-option>
+              <a-select-option :value="2">Electric Heating</a-select-option>
+              <a-select-option :value="3">Gas Heating</a-select-option>
+              <a-select-option :value="4">Heating Available</a-select-option>
+            </a-select>
+          </a-form-item>
+          <a-form-item name="ac_type" class="flex-1 form-labels">
+            <div
+              class="form-labels text-base mb-4 font-light leading-[100%] font-sf"
+            >
+              AC Type
+            </div>
+            <a-select
+              v-model:value="editPropertyform.ac"
+              ref="select"
+              style="width: 200px"
+              placeholder="Select AC Type"
+              class="w-full h-[52px]"
+              @focus="focus"
+              @change="handleChange"
+              :getPopupContainer="(node) => node.parentNode"
+            >
+              <a-select-option :value="1">CentralAC</a-select-option>
+              <a-select-option :value="2">Conditional</a-select-option>
+              <a-select-option :value="3">AC Available</a-select-option>
+              <a-select-option :value="4">AC Not Available</a-select-option>
+            </a-select>
+          </a-form-item>
+        </div>
+        <a-form-item name="laundry" class="flex-1 form-labels">
+          <div
+            class="form-labels text-base mb-4 font-light leading-[100%] font-sf"
+          >
+            Laundry Type
+          </div>
+          <a-select
+            v-model:value="editPropertyform.laundry"
+            ref="select"
+            style="width: 200px"
+            placeholder="Select Laundry Type"
+            class="w-full h-[52px]"
+            @focus="focus"
+            @change="handleChange"
+            :getPopupContainer="(node) => node.parentNode"
+          >
+            <a-select-option :value="1">In Unit</a-select-option>
+            <a-select-option :value="2">Shared Laundry</a-select-option>
+          </a-select>
+        </a-form-item>
+
+        <a-form-item name="lease_type" class="flex-1 form-labels">
+          <div
+            class="form-labels text-base mb-4 font-light leading-[100%] font-sf"
+          >
+            Lease Type Allowed
+            <a-checkbox-group
+              class="grid grid-cols-1 gap-5"
+              v-model:value="editPropertyform.leaseType"
+            >
+              <a-checkbox
+                key="Yearly Lease"
+                value="Yearly Lease"
+                class="flex items-center gap-2 mt-[16px]"
+              >
+                <span class="text-[20px] text-[#808097]"> Yearly Lease </span>
+              </a-checkbox>
+
+              <a-checkbox
+                key="Month to Month"
+                value="Month to Month"
+                class="flex items-center gap-2"
+              >
+                <span class="text-[20px] text-[#808097]"> Month to Month </span>
+              </a-checkbox>
+            </a-checkbox-group>
+          </div>
+        </a-form-item>
+
+        <a-form-item name="description">
+          <p
+            class="form-labels text-base mb-4 font-light leading-[100%] font-sf"
+          >
+            Description
+          </p>
+          <a-textarea
+            class="p-[18px]"
+            v-model:value="editPropertyform.description"
+            placeholder="Describe your property..."
+            :auto-size="{ minRows: 5, maxRows: 5 }"
+          />
+        </a-form-item>
+        <div class="flex gap-2.5 ml-auto w-fit">
+          <button
+            class="border-[#000130] border-solid px-2 border-[0.75px] text-[#000130] rounded-[8px]  text-[14px] font-inter font-medium leading-[24px] flex items-center justify-center ml-auto "
+          >
+            Cancel
+          </button>
+          <a-button
+            class="bg-[#000130] rounded-[8px]  text-[14px] font-inter font-medium leading-[24px] flex items-center justify-center ml-auto text-[#FFFFFF]"
+            @click="EditProperty"
+          >
+            Save
+          </a-button>
+        </div>
+      </div>
+    </a-modal>
 
 
   </div>
@@ -1578,6 +1803,7 @@ import {
   FetchProperties,
   FetchUnitTypes,
 } from "@/api/properties";
+import { UpdateProperty } from "@/api/properties";
 import { AddTenants, EditPropertyUnit } from "@/api/properties";
 import Button from "@/components/Button/Button.vue";
 import Table from "@/components/V2Table.vue";
@@ -1600,8 +1826,33 @@ import UniversalButton from "@/components/Button/UniversalButton.vue";
 import PropertyCard from "@/components/PropertyCard.vue";
 import Loader from "@/components/Loader.vue";
 import { getPropertyInfo } from "@/api/properties";
-
+const showEditPropertyModal = ref(false)
 const editUnitModal = ref(false)
+const UnitImageFileList = ref([])
+const customUnitImageUpload = async (options) => {
+  const { file, onSuccess, onError } = options;
+  const formData = new FormData();
+  formData.append('Image', file);
+  formData.append('UploadType', 1);
+  formData.append('ImageTitle', file.name);
+  try {
+    const res = await uploadImage(formData);
+    // const url = res.url;
+    const imageUrl = res.url   
+    const imageId = res.imageId // assuming backend returns an imageId
+    // from backend
+     selectedUnit.value.unitImg.push({
+      imageId,                // keep track of backend id if you need it
+      imageTitle: file.name,
+      image: imageUrl
+    })
+
+    onSuccess({ url: imageUrl }, file);
+  } catch (err) {
+    message.error(`${file.name} upload failed.`);
+    onError(err);
+  }
+};
 const selectedUnit = ref({
   referenceNumber: "",
   price: "",
@@ -1686,7 +1937,16 @@ const handleViewProperty = async (id) => {
   propertyAmenitiess.value = propertyAmenities;
   showPropertyDetailsModal.value = true;
   loadingItem.value = false
-};
+  editPropertyform.accommodationId = propertydata.accommodationId
+  editPropertyform.ac =  propertydata.ac,
+    editPropertyform.heating = propertydata.heating,
+    editPropertyform.laundry = propertydata.laundry,
+    editPropertyform.parking = propertydata.parking,
+    editPropertyform.pets = propertydata.pet,
+    editPropertyform.leaseType = propertydata.leaseType,
+    editPropertyform.description = propertydata.description,
+    editPropertyform.amenities = propertyAmenities.map(a => a.amenityId) 
+}
 const propertyDetails = ref(null)
 const propertyAmenitiess = ref(null)
 const propertyUnitIInfo = ref(null)
@@ -1892,10 +2152,10 @@ const form = reactive({
       unitType: null,
       quantity: "",
       securityDeposit: "",
-      rentPerMonth: 0,
+      rentPerMonth: null,
       availabilityDate: null,
-      numberOfBathrooms: 0,
-      numberOfBedrooms: 0,
+      numberOfBathrooms: null,
+      numberOfBedrooms: null,
       unitImg: [],
       fileList: [],
     },
@@ -2042,6 +2302,34 @@ function disableNext() {
   }
 }
 
+const editPropertyform = reactive({
+  accommodationId: "",
+  parkingType: "",
+  pets: "",
+  heatingType: "",
+  acType: "",
+  laundryType: "",
+  leaseType: [],
+  amenities: [],
+  description: "",
+});
+const EditProperty = async () => {
+  try {
+    const res = await UpdateProperty({
+      ...editPropertyform,
+
+      amenities: editPropertyform.amenities,
+      leaseType: editPropertyform.leaseType.join(","),
+    });
+    console.log(res);
+    form.amenities;
+    showEditPropertyModal.value = false;
+  handleFetchProperties();
+    
+  } catch (err) {
+    console.log(err);
+  }
+};
 const SubmitCreateProperty = async () => {
   submitting.value = true;
   console.log("here");

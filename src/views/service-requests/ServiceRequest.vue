@@ -36,7 +36,7 @@
           </button> -->
         </table-header>
       </div>
-      <div class="w-full mt-4 h-full">
+      <div class="w-full mt-4">
         <table-component
           title="Service Requests"
           :columns="headers"
@@ -383,7 +383,7 @@ export default {
       toast: useToast(),
       searchQuery: "",
       currentPage: 1,
-      pageSize: 6,
+      pageSize: 8,
       messages: ["Your service request has been sorted"],
       store: useUserStore(),
       showModal: false,

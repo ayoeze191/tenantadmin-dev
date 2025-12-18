@@ -181,8 +181,32 @@
             >
               PROPERTY IMAGES
             </p>
-            <div class="mt-2.5 ml-4 w-full">
-              <img src="/src/assets/propertyImage.svg" class="w-full" />
+            <div
+              class="mt-2.5 ml-4 relative w-full rounded-xl flex gap-2 items-center justify-center"
+            >
+              <a-image-preview-group>
+                <a-image
+                  :src="selectedKYC.imageUrls[currentImageIndex]"
+                  :width="'100%'"
+                  class="w-full object-cover h-[193px] rounded-xl cursor-pointer"
+                  :preview="{ visible: false }"
+                />
+                <button
+                  @click="prevImage"
+                  style="backdrop-filter: blur(20px)"
+                  class="absolute left-2 top-1/2 -translate-y-1/2 bg-[#00000033] hover:bg-white shadow rounded-full p-1 px-[12.5px] py-[10px] z-10"
+                  aria-label="Previous image"
+                >
+                  <LeftOutlined />
+                </button>
+                <button
+                  @click="nextImage"
+                  class="absolute right-2 top-1/2 -translate-y-1/2 bg-[#00000033] hover:bg-white shadow rounded-full px-[12.5px] py-[10px] z-10"
+                  aria-label="Next image"
+                >
+                  <RightOutlined />
+                </button>
+              </a-image-preview-group>
             </div>
 
             <p
@@ -273,6 +297,7 @@ export default {
   },
   data() {
     return {
+      currentImageIndex: 0,
       modalTitles: ["Property Verification"],
       stage: 0,
       ModalBasicinfo: [
@@ -351,6 +376,19 @@ export default {
     },
   },
   methods: {
+    nextImage() {
+      console.log("clicked");
+      if (this.selectedKYC.imageUrls.length == 0) return;
+      this.currentImageIndex =
+        (this.currentImageIndex + 1) % this.selectedKYC.imageUrls.length;
+    },
+    prevImage() {
+      console.log("clicked");
+      if (this.selectedKYC.imageUrls.length == 0) return;
+      this.currentImageIndex =
+        (this.currentImageIndex - 1 + this.selectedKYC.imageUrls.length) %
+        this.selectedKYC.imageUrls.length;
+    },
     fetchPropertyInfo(record) {
       getPropertyInfo(record.accommodationId).then((response) => {
         if (response.responseCode == "00") {

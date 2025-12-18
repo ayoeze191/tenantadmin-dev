@@ -37,6 +37,20 @@
               >
             </div>
           </template>
+          <template #status="{ record }">
+            <div class="relative flex justify-center items-center group">
+              <!-- Hidden div -->
+              <a-button
+                :class="{
+                  'bg-red-500 text-white': record.status === 'Reject',
+                  'bg-green-500 text-white': record.status === 'Completed',
+                  'bg-yellow-500 text-white':
+                    record.status !== 'Reject' && record.status !== 'Completed',
+                }"
+                >{{ record.status }}</a-button
+              >
+            </div>
+          </template>
         </table-component>
         <BasePagination
           :currentPage="currentPage"
@@ -312,6 +326,7 @@ export default {
           title: "Status",
           dataIndex: "status",
           align: "center",
+          slotName: "status",
         },
         {
           title: "",

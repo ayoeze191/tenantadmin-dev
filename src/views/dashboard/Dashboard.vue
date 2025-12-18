@@ -234,7 +234,7 @@
             <div class="flex justify-between items-center px-[10px] py-[14px]">
               <span>View All Details</span>
               <router-link
-                link="/service-requests"
+                to="/service-requests"
                 class="text-[#000000] bg-[#FFFFFF] rounded-[6px] px-[10px] py-[6px] border-[0.75px] border-solid border-[#36363633]"
               >
                 View
@@ -272,9 +272,9 @@
               <div class="flex justify-between py-[14px]">
                 <span
                   class="text-[#000000B2] text-[14px] font-inter leading-[100%]"
-                  >Target</span
+                  >Total</span
                 >
-                <span>00</span>
+                <span>{{ tenantsCounts }}</span>
               </div>
               <div class="flex gap-[2px] m-0 mb-[10px]">
                 <div
@@ -289,7 +289,7 @@
                       class="w-[13px] rounded-[4px] h-[13px] bg-[#26C779]"
                     ></span>
                     Complete</span
-                  ><span> {{ tenantsCounts }} </span>
+                  ><span> 0 </span>
                 </div>
 
                 <div class="flex justify-between w-full">
@@ -305,11 +305,12 @@
 
             <div class="flex justify-between items-center px-[10px] py-[14px]">
               <span>View All Details</span>
-              <span
+              <router-link
+                to="/tenants"
                 class="text-[#000000] bg-[#FFFFFF] rounded-[6px] px-[10px] py-[6px] border-[0.75px] border-solid border-[#36363633]"
               >
                 View
-              </span>
+              </router-link>
             </div>
           </div>
           <div
