@@ -21,64 +21,14 @@
           :loading="isFetching"
         >
           <template #action="{ record }">
-            <div class="relative flex justify-center items-center group">
-              <!-- Hidden div -->
-              <div
-                class="absolute z-[50] text-[12px] right-2 top-0 p-5 border-[0.75px] border-solid rounded-[16px] bg-white opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300"
-              >
-                <div
-                  class="flex items-center gap-[8px] p-[10px] rounded-[10px] border-[0.75px] border-solid border-[#36363633]"
-                >
-                  <div class="flex h-[34px] w-[34px]">
-                    <img src="/src/assets/TenantImage.svg" />
-                  </div>
-                  <div>
-                    <p class="m-0 p-0">
-                      {{ record.name }}
-                    </p>
-                    <p class="m-0 p-0 mt-[2px]">{{ record.email }}</p>
-                  </div>
-                </div>
-                <!-- asa -->
-                <div class="mt-4 m-0">
-                  <p class="text-[#000000]">
-                    <span
-                      class="text-[#00000099] text-[12px] font-medium leading-[20px]"
-                      >Apartment:</span
-                    >
-                    {{ record.properties || "nill" }}
-                  </p>
-                  <p>
-                    <span class="text-[#00000099]">Rent Amount:</span> ${{
-                      record.bills
-                    }}
-                  </p>
-                  <p>
-                    <span class="text-[#00000099]">Rent Due:</span>
-                    {{ record.due || "nill" }}
-                  </p>
-                  <p>
-                    <span class="text-[#00000099]">Lease Expires:</span>
-                    {{ record.rent || "nill" }}
-                  </p>
-                  <div>
-                    <span class="text-[#00000099]">Lease:</span> View Tenant
-                  </div>
-                </div>
-
-                <UniversalButton
-                  label="Send notification to Tenant"
-                  @click="
-                    () => {
-                      selectedTenant = record;
-                      showModal = true;
-                      form.email = record.email;
-                    }
-                  "
-                  customClass="py-[8px] w-full flex items-center justify-center bg-[#000130] text-white mt-6 text-[14px] rounded-[8px]"
-                />
-              </div>
+            <div class="flex justify-center items-center group">
               <a-button
+                @click="
+                  () => {
+                    showModal = true;
+                    selectedTenant = record;
+                  }
+                "
                 class="bg-[#000130] bg-inherit text-black cursor-pointer"
                 >View Info</a-button
               >
@@ -96,7 +46,6 @@
         />
       </div>
     </div>
-
     <a-modal
       :footer="null"
       width="437px"
@@ -109,18 +58,9 @@
       <template #title>
         <div class="flex items-center justify-between py-[12px]">
           <span class="font-redwing text-2 leading-[100%] font-medium"
-            >Tenant information</span
+            >Lease Details</span
           >
-          <span
-            @click="
-              () => {
-                form.email = '';
-                form.message = '';
-                showModal = false;
-              }
-            "
-            class="cursor-pointer"
-          >
+          <span @click="showModal = false" class="cursor-pointer">
             <svg
               width="14"
               height="14"
@@ -144,54 +84,93 @@
           <p
             class="m-0 p-0 text-[#000000] font-inter font-medium leading-[100%]"
           >
-            {{ selectedTenant?.name }}
+            {{ selectedTenant.tenantName || "Frank Thomas" }}
           </p>
           <p
             class="m-0 p-0 text-[#00000066] text-[10px] font-inter font-medium leading-[100%] mt-[4px]"
           >
-            Thristlebrook Lane, Mistwood, Ontario, K8N 3P5
+            {{ selectedTenant.email || "franktho37@gmail.com" }}
           </p>
         </div>
       </div>
-      <p
-        class="m-0 p-0 text-[#000000] text-[14px] font-inter font-medium leading-[100%] mt-4 mb-3"
-      >
-        Send Notification
-      </p>
-      <div>
-        <BaseInput
-          v-model="form.email"
-          type="email"
-          placeholder="Email address"
-        />
-      </div>
-      <div class="mt-4">
-        <BaseInput
-          v-model="form.message"
-          type="textarea"
-          placeholder="Enter Message"
-          :rows="5"
-        />
-      </div>
-      <div class="flex flex-wrap gap-2.5 mt-3">
-        <a-button
-          @click="form.message = value"
-          v-for="value in messages"
-          class="py-[12px] flex rounded-[100px] items-center hover:bg-[#F0F0F0] bg-[#FFFFFF] px-[15px] font-inter font-medium text-[12px]"
-        >
-          {{ value }}
-        </a-button>
+      <div class="flex flex-col mt-4">
+        <p class="p-0 m-0 mb-[10px]">
+          <span class="text-[#00000099] p-0 m-0">Apartment: </span
+          >{{
+            selectedTenant.apartmentName ||
+            "Thistlebrook Lane, Mistwood, Ontario, K8N 3P5"
+          }}
+        </p>
+        <p class="p-0 m-0 mb-[10px]">
+          <span class="text-[#00000099] p-0 m-0">Number:</span
+          >{{ selectedTenant.tenantPhoneNo || "nill" }}
+        </p>
+        <p class="p-0 m-0 mb-[10px]">
+          <span class="text-[#00000099] p-0 m-0">Email Address: </span
+          >{{ selectedTenant.email }}
+        </p>
+        <p class="p-0 m-0 mb-[10px]">
+          <span class="text-[#00000099] p-0 m-0">Current Rent: </span>
+          {{ selectedTenant.rentRate || "nill" }}
+        </p>
+        <p class="p-0 m-0 mb-[10px]" v-if="selectedType === 'aggreement'">
+          <span class="text-[#00000099] p-0 m-0 mr-[15px]"
+            >Lease Status: {{ selectedTenant.contractType }}</span
+          >
+        </p>
+        <p class="p-0 m-0 mb-[10px]" v-else>
+          <span class="text-[#00000099] p-0 m-0 mr-[15px]"
+            >Request Type: {{ selectedTenant.requestTypeName }}</span
+          >
+          <!-- <StatusButton :service-status="selectedTenant.serviceStatus" /> -->
+        </p>
+
+        <p class="p-0 m-0 mb-[10px]">
+          <a
+            :href="selectedTenant.contractDoc"
+            class="bg-[#F9F9F9] flex flex-col py-4 w-full justify-center gap-4 items-center rounded-[10px]"
+          >
+            <DocumentIcon />
+            Contract Doc
+          </a>
+        </p>
+        <div>
+          <p
+            class="m-0 p-0 text-[#000000] text-[14px] font-inter font-medium leading-[100%] mt-4 mb-3"
+          >
+            Send Notification
+          </p>
+          <div>
+            <BaseInput v-model="form.message" placeholder="Enter Message" />
+          </div>
+          <p class="m-0 p-0 mt-4 mb-3">Choose saved messages</p>
+
+          <div class="flex flex-wrap gap-2.5">
+            <a-button
+              @click="form.message = value"
+              v-for="value in messages"
+              class="py-[12px] flex rounded-[100px] items-center hover:bg-[#F0F0F0] bg-[#FFFFFF] px-[15px] font-inter font-medium text-[12px]"
+            >
+              {{ value }}
+            </a-button>
+          </div>
+        </div>
       </div>
       <div
-        class="pt-[16px] border-t-[0.75px] text-[14px] flex gap-[10px] mt-[16px]"
+        class="border-t-[0.75px] w-full gap-[10px] border-[#36363533] mt-4 flex"
       >
-        <a-button
-          :loading="sendingmailtoteneant"
-          @click="handleSendEmail"
-          class="w-full py-[8px] flex items-center bg-[#000130] text-white justify-center rounded-[8px]"
+        <button
+          @click="HandleDeclineLease"
+          class="bg-[#ffffff] border-solid border-[1px] border-[#D0D5DD] py-[8px] flex font-inter items-center justify-center text-[#000000] w-full mt-4 rounded-[8px]"
         >
-          Send to Tenant
-        </a-button>
+          Decline
+        </button>
+        <button
+          @click="HandleDeclineLease"
+          class="bg-[#000130] py-[8px] flex font-inter items-center justify-center text-white w-full mt-4 rounded-[8px]"
+        >
+          Approve Requests
+        </button>
       </div>
     </a-modal>
   </div>
@@ -199,7 +178,8 @@
 
 <script>
 import { FetchTenants, SignUpLandlord, VerifyLandlord } from "@/api/auth";
-import { fetchWaitingLeases } from "@/api/lease";
+import { fetchWaitingLeases, ApproveDeclineLease } from "@/api/lease";
+
 import IconEdit from "@/components/icons/IconEdit.vue";
 import V2Table from "@/components/V2Table.vue";
 import handleError from "@/utils/handleError";
@@ -294,6 +274,35 @@ export default {
     },
   },
   methods: {
+    HandleDeclineLease() {
+      const body = {
+        requestId: this.selectedTenant.contractRequestId,
+        status: 3,
+      };
+      ApproveDeclineLease(body).then((response) => {
+        console.log(response.data);
+        if (response.responseCode == "00") {
+          handleToast("Successfully Declined");
+          this.handleFetchLandlords();
+
+          this.showModal = false;
+        }
+      });
+    },
+    HandleApproveLease() {
+      const body = {
+        requestId: this.selectedTenant.contractRequestId,
+        status: 2,
+      };
+      ApproveDeclineLease(body).then((response) => {
+        if (response.responseCode == "00") {
+          handleToast("Successfully Declined");
+
+          this.showModal = false;
+          this.handleFetchLandlords();
+        }
+      });
+    },
     onPrev() {
       if (this.currentPage > 1) {
         this.currentPage--;
@@ -349,6 +358,7 @@ export default {
           if (response.serviceRequests) {
             this.requestLists = response.serviceRequests.items.map((req) => {
               return {
+                contractRequestId: req.contractRequestId,
                 tenantName: req.tenant.firstname + " " + req.tenant.lastname,
                 email: req.tenant.emailAddress,
                 apartmentName: req.apartmentName,
