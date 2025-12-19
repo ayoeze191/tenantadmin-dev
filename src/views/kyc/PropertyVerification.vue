@@ -223,13 +223,23 @@
                 </button>
               </a-image-preview-group>
             </div>
-
+            
             <p
-              class="m-0 pl-4 mt-4 p-0 font-redwing text-[14px] leading-[20px] font-medium"
+              class="m-0 pl-4 mb-2.5 mt-4 p-0 font-redwing text-[14px] leading-[20px] font-medium"
             >
               AMENITIES PROVIDED
             </p>
-            <div></div>
+            <div class="rounded-[12px]  text-[12px] font-inter font-medium ml-4 border-[0.75px] border-solid list-none border-[#36363626] p-4">  
+              <li v-for="option in amenityOptions" style="color: #808097 !important; " class="text-[#808097] grid-cols-2 gap-[12px] list-none text-[14px] font-sf leading-[100%] ">
+                  
+                <li
+                        class="list-none  text-[12px] text-[#000000] leading-[20px] font-inter font-medium"
+                          v-if="
+                            selectedKYC.propertyamenities.find((ame) => ame.amenityId == option.value)
+                          "
+                          >{{ option.label || 'nill' }}</li>
+                      </li>
+            </div>
 
             <p
               class="text-[14px] ml-4 mt-4 font-medium font-redwing leading-[20px]"
@@ -285,6 +295,8 @@ import V2Table from "@/components/V2Table.vue";
 import handleError from "@/utils/handleError";
 import { handleToast } from "@/utils/helper";
 import dayjs from "dayjs";
+import { useOptionsStore } from "@/stores/options";
+
 import TableHeader from "@/components/TableHeader.vue";
 import BasePagination from "@/components/BasePagination.vue";
 import BaseInput from "@/components/BaseInput.vue";
@@ -307,11 +319,21 @@ export default {
     Loader,
   },
   async created() {
+  await this.optionsStore.fetchAmenities();
+
+    this.amenityOptions = this.optionsStore.amenities.map((a) => ({
+      label: a.name,
+      value: a.amenityId,
+      image: a.image || a.icon || null,
+    }));
+
     this.handleFetchPropertyKycs();
     this.store.setisLoading(false);
   },
   data() {
     return {
+      optionsStore: useOptionsStore(),
+      amenityOptions: null,
       selectedProps: null,
       currentImageIndex: 0,
       modalTitles: ["Property Verification"],
@@ -415,6 +437,7 @@ export default {
             ...record,
             ...response.propertydata,
             propertyunits: [...response.propertyunits],
+            propertyamenities: [...response.propertyAmenities],
           };
           this.showModal = true;
           this.stage = 0;

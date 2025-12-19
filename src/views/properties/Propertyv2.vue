@@ -444,7 +444,7 @@
               <div
                 class="flex gap-4"
                 v-if="
-                  form.rental_unit == 'condo' || form.rental_unit == 'house'
+                  form.rental_unit == 'apartment' || form.rental_unit == 'shared_house' || form.rental_unit == 'shared_condo'
                 "
               >
                 <a-form-item
@@ -464,6 +464,8 @@
                     Bedroom
                   </div>
                   <a-input
+                    class="h-[48px]"
+
                     type="number"
                     placeholder="Enter Bedroom No"
                     v-model:value.number="
@@ -488,6 +490,8 @@
                     Bathroom
                   </div>
                   <a-input
+                    class="h-[48px]"
+
                     type="number"
                     placeholder="Enter Bathroom No"
                     v-model:value.number="
@@ -637,6 +641,7 @@
                       placeholder="Select Heating Type"
                       class="w-full h-[52px]"
                       @focus="focus"
+                      :getPopupContainer="(node) => node.parentNode"
                       @change="handleChange"
                     >
                       <a-select-option :value="1"
@@ -820,16 +825,27 @@
           </div>
         </div>
       </div>
+      <div class="flex items-center justify-between w-full mt-[24px] ">
+       <button
+        :disabled="disablePrev()"
+        @click="handlePrev"
+        :loading="submitting"
+        class="bg-[#000130] disabled:bg-[#000130] disabled:text-[#FFFFFF] disabled:opacity-70 disabled:cursor-not-allowed   text-white rounded-[8px] w-[85px] h-[36px] flex items-center justify-center"
+      >
+
+        Previous
+      </button>
       <button
         :disabled="disableNext()"
         @click="handleNext"
         :loading="submitting"
-        class="bg-[#000130] disabled:bg-[#000130] disabled:text-[#FFFFFF] disabled:opacity-70 disabled:cursor-not-allowed ml-auto mt-[24px] text-white rounded-[8px] w-[85px] h-[36px] flex items-center justify-center"
+        class="bg-[#000130] disabled:bg-[#000130] disabled:text-[#FFFFFF] disabled:opacity-70 disabled:cursor-not-allowed   text-white rounded-[8px] w-[85px] h-[36px] flex items-center justify-center"
       >
         <span v-if="loading">Loading...</span>
 
         Continue
       </button>
+      </div>
     </a-modal>
 
     <a-modal
@@ -1829,6 +1845,14 @@ import { getPropertyInfo } from "@/api/properties";
 const showEditPropertyModal = ref(false)
 const editUnitModal = ref(false)
 const UnitImageFileList = ref([])
+const handlePrev = () => {
+  if(stage.value !== 0){
+    stage.value -= 1;
+  }
+}
+const disablePrev = () => {
+  return stage.value === 0;
+}
 const customUnitImageUpload = async (options) => {
   const { file, onSuccess, onError } = options;
   const formData = new FormData();
