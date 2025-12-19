@@ -195,7 +195,11 @@
 </template>
 
 <script>
-import { FetchTenants, SignUpLandlord, VerifyLandlord } from "@/api/auth";
+import {
+  FetchTenantsWithProp,
+  SignUpLandlord,
+  VerifyLandlord,
+} from "@/api/auth";
 import IconEdit from "@/components/icons/IconEdit.vue";
 import V2Table from "@/components/V2Table.vue";
 import handleError from "@/utils/handleError";
@@ -223,7 +227,7 @@ export default {
     Loader,
   },
   async created() {
-    this.handleFetchLandlords();
+    this.handleFetchTenants();
     this.store.setisLoading(false);
   },
   data() {
@@ -252,7 +256,7 @@ export default {
         },
         {
           title: "Property",
-          dataIndex: "properties",
+          dataIndex: "property",
           className: "properties",
           align: "left",
         },
@@ -331,28 +335,29 @@ export default {
         } else handleError(response);
       });
     },
-    async handleFetchLandlords(page = 1) {
+    async handleFetchTenants(page = 1) {
       const query = {
         size: this.pageSize,
         page: page,
         query: "",
       };
       this.isFetching = true;
-      FetchTenants(query)
+      FetchTenantsWithProp(query)
         .then((response) => {
           this.isFetching = false;
-          if (response.accountList) {
-            this.landlordList = response.accountList.items.map(
-              (landlord) =>
-                landlord && {
-                  name: landlord.firstname + " " + landlord.lastname,
-                  email: landlord.emailAddress,
-                  isVerified: landlord.isVerified ? "Yes" : "No",
-                  lastLoginDate: this.formatDate(landlord.lastLoginDate),
-                  accountId: landlord.accountId,
+          if (response.landLordList) {
+            this.landlordList = response.landLordList.items.map(
+              (tenant) =>
+                tenant && {
+                  name: tenant.name,
+                  email: tenant.email,
+                  isVerified: tenant.isVerified ? "Yes" : "No",
+                  lastLoginDate: this.formatDate(tenant.lastLogin),
+                  accountId: tenant.accountId,
+                  property: tenant.propertyName,
                 }
             );
-            this.totalItemCount = response.accountList.totalItemCount;
+            this.totalItemCount = response.landLordList.totalItemCount;
           } else handleError(response);
         })
         .finally(() => {
@@ -376,7 +381,7 @@ export default {
     },
     onPageChange(page) {
       this.currentPage = page;
-      this.handleFetchLandlords(page);
+      this.handleFetchTenants(page);
     },
     handleSignUpLandlord(landlord) {
       SignUpLandlord(landlord.accountId).then((response) => {
@@ -393,7 +398,7 @@ export default {
       VerifyLandlord(payload).then((response) => {
         if (response.result.responseCode == "00") {
           handleToast("Landlord Verified Successfully", "success");
-          this.handleFetchLandlords(this.currentPage);
+          this.handleFetchTenants(this.currentPage);
         } else handleError(response);
       });
     },

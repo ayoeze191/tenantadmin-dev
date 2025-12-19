@@ -61,6 +61,17 @@ export const FetchTenants = async (query) => {
     handleError(error);
   }
 };
+
+export const FetchTenantsWithProp = async (query) => {
+  try {
+    const response = await getApi(
+      `Account/AccountListWithProperty?PageSize=${query.size}&CurrentPage=${query.page}&accountType=0`
+    );
+    return response.data;
+  } catch (error) {
+    handleError(error);
+  }
+};
 export const FetchAdmins = async () => {
   try {
     const response = await getApi(`AdminUser/GetAllAdminUser`);

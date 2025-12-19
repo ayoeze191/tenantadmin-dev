@@ -190,7 +190,17 @@
               class="mt-2.5 ml-4 relative w-full rounded-xl flex gap-2 items-center justify-center"
             >
               <a-image-preview-group>
+                <a-img
+                  v-if="
+                    !selectedKYC.imageUrls || selectedKYC.imageUrls.length === 0
+                  "
+                  src="/placeholder.png"
+                  class="w-[100%] object-cover h-full rounded-t-xl top-0 left-0 z-0 transition-opacity duration-300"
+                  alt="No image available"
+                  loading="lazy"
+                />
                 <a-image
+                  v-else
                   :src="selectedKYC.imageUrls[currentImageIndex]"
                   :width="'100%'"
                   class="w-full object-cover h-[193px] rounded-xl cursor-pointer"
