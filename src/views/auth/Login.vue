@@ -80,12 +80,17 @@
               class="p-0 m-0 text-[#626262] text-[14px] leading-[21px] mb-[24px] mt-[24px]"
             >
               By proceeding you agree to your
-              <span class="text-[#020332] underline cursor-pointer"
-                >Privacy Policy</span
+              <router-link
+                to="/privacy-policy"
+                class="text-[#020332] underline cursor-pointer"
+                >Privacy Policy</router-link
               >
               and
-              <span class="text-[#020332] underline cursor-pointer">
-                Terms & Conditions</span
+              <router-link
+                to="/terms-of-service"
+                class="text-[#020332] underline cursor-pointer"
+              >
+                Terms & Conditions</router-link
               >
             </p>
             <Button

@@ -41,6 +41,9 @@ import Kyc from "@/views/kyc/Kyc.vue";
 import PropertyVerification from "@/views/kyc/PropertyVerification.vue";
 import Notifications from "@/views/Notifications.vue";
 import Payment from "@/views/payments/Payment.vue";
+import PrivacyPolicy from "@/views/PrivacyPolicy.vue";
+import TermsOfService from "@/views/TermsOfService.vue";
+import CookiePolicy from "@/views/CookiePolicy.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -49,6 +52,21 @@ const router = createRouter({
       path: "/",
       name: "home",
       redirect: "login",
+    },
+    {
+      path: "/privacy-policy",
+      name: "privacy-policy",
+      component: PrivacyPolicy,
+    },
+    {
+      path: "/terms-of-service",
+      name: "services-policy",
+      component: TermsOfService,
+    },
+    {
+      path: "/cookie-policy",
+      name: "cookie-policy",
+      component: CookiePolicy,
     },
     {
       path: "/login",
