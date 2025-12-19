@@ -8,11 +8,12 @@
           :total-item-count="totalItemCount || 0"
           title="Approval Requests"
         >
-          <button
+          <router-link
+            :to="'/tenants/contract-requests'"
             class="border-solid border-[1px] px-[12px] py-[8px] text-[#000000B2] leading-[24px] font-inter rounded-[8px]"
           >
             See all requests
-          </button>
+          </router-link>
         </table-header>
       </div>
       <div

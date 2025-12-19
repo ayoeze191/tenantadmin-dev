@@ -21,8 +21,13 @@
             <div class="relative flex justify-center items-center group">
               <!-- Hidden div -->
               <a-button
+                :loading="
+                  record.accommodationId == selectedProps &&
+                  fetchingPropertyInfo
+                "
                 @click="
                   () => {
+                    selectedProps = record.accommodationId;
                     fetchPropertyInfo(record);
                   }
                 "
@@ -297,6 +302,7 @@ export default {
   },
   data() {
     return {
+      selectedProps: null,
       currentImageIndex: 0,
       modalTitles: ["Property Verification"],
       stage: 0,
@@ -331,6 +337,7 @@ export default {
       requesting: false,
       pageSize: 8,
       selectedKYC: null,
+      fetchingPropertyInfo: false,
       headers: [
         {
           title: "Name",
@@ -390,7 +397,9 @@ export default {
         this.selectedKYC.imageUrls.length;
     },
     fetchPropertyInfo(record) {
+      this.fetchingPropertyInfo = true;
       getPropertyInfo(record.accommodationId).then((response) => {
+        this.fetchingPropertyInfo = false;
         if (response.responseCode == "00") {
           this.selectedKYC = {
             ...record,

@@ -108,7 +108,13 @@
             >
           </a-menu-item>
         </a-sub-menu>
-        <a-sub-menu key="payments" title="My Payments">
+        <a-menu-item key="payments">
+          <router-link :to="{ name: 'all-payments' }">
+            <!-- <template #icon><application-icon /></template> -->
+            Payments
+          </router-link>
+        </a-menu-item>
+        <!-- <a-sub-menu key="payments" title="My Payments">
           <template #icon><payments-icon /></template>
           <a-menu-item key="admin-payments-due">
             <router-link :to="{ name: 'admin-payments-due' }"
@@ -135,7 +141,7 @@
               >Maintenance Fee</router-link
             >
           </a-menu-item>
-        </a-sub-menu>
+        </a-sub-menu> -->
         <a-sub-menu key="users" title="Users" v-if="userType == 'NN1'">
           <template #icon><users-icon /></template>
           <a-menu-item key="admin-users-landlord">
@@ -199,9 +205,8 @@
         </a-menu-item>
       </a-menu>
     </div>
-
     <div
-      class="bg-[#FFFFFF] flex justify-between mt-auto mx-4 rounded-[8px] border-[0.75px] border-[#36363633] px-[8px] py-[10px]"
+      class="bg-[#FFFFFF] mt-[100%] flex justify-between mx-4 rounded-[8px] border-[0.75px] border-[#36363633] px-[8px] py-[10px]"
     >
       <div class="flex gap-2">
         <div><UserOutlined class="text-[#000000] text-[20px]" /></div>
